@@ -66,7 +66,7 @@
     <!-- Подсветка синтаксиса -->
     <xsl:param name="highlight.source" select="1"/>
     <xsl:param name="highlight.xslthl.config"
-        >file:/g:/Дистрибутивы/Программирование/Базы%20данных/СУБД/Firebird/Firebird/fbdoc/fbdoc40/firebird-russian-documentation/xsl/highlighting/xslthl-config.xml</xsl:param>
+        >file:/G:/fbdoc/langref40/xsl/highlighting/xslthl-config.xml</xsl:param>
     <!-- формат нумерации страниц -->
     <xsl:template name="initial.page.number">auto</xsl:template>
     <xsl:template name="page.number.format">1</xsl:template>

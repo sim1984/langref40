@@ -58,7 +58,7 @@
 
 	<xsl:param name="highlight.source" select="1"/>
     <xsl:param name="highlight.xslthl.config"
-        >file:/g:/Дистрибутивы/Программирование/Базы%20данных/СУБД/Firebird/Firebird/fbdoc/fbdoc40/firebird-russian-documentation/xsl/highlighting/xslthl-config.xml</xsl:param>
+        >file:/G:/fbdoc/langref40/xsl/highlighting/xslthl-config.xml</xsl:param>
 
     <!-- Подсветка строк в теге programlising language="sql" -->
     <xsl:template match="xslthl:string" mode="xslthl">
