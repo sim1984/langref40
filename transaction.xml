@@ -1,0 +1,1099 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="transaction" xml:lang="ru">
+    <info>
+        <title>Управление транзакциями</title>
+    </info>
+    <para>Всё в Firebird выполняется в рамках транзакций. Транзакция — логическая единица
+        изолированной работы группы последовательных операций над базой данных. Изменения над
+        данными остаются обратимыми до тех пор, пока клиентское приложение не выдаст серверу
+        инструкцию COMMIT.</para>
+    <section xml:id="transaction-statements">
+        <title>Операторы управления транзакциями</title>
+        <para>Firebird имеет небольшое количество SQL операторов, которые могут использоваться
+            клиентскими приложениями для старта, управления, подтверждения или отмены транзакций, но
+            достаточное для всех задач над базой данных: <itemizedlist>
+                <listitem>
+                    <para><link linkend="transaction-set_transaction">SET TRANSACTION</link> —
+                        задание параметров транзакции и её старт;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="transaction-commit">COMMIT</link> — завершение транзакции и
+                        сохранение изменений;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="transaction-rollback">ROLLBACK</link> — отмена изменений
+                        произошедший в рамках транзакции;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="transaction-savepoint">SAVEPOINT</link> — установка точки
+                        сохранения для частичного отката изменений, если это необходимо;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="transaction-realese_savepoint">RELEASE SAVEPOINT</link> —
+                        удаление точки сохранения.</para>
+                </listitem>
+            </itemizedlist></para>
+
+        <section xml:id="transaction-set_transaction">
+            <info>
+                <title>SET TRANSACTION</title>
+                <keywordset>
+                    <keyword>SET TRANSACTION</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SET TRANSACTION</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Задаёт параметры транзакции и стартует её.</para>
+            </formalpara>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+SET TRANSACTION
+  [NAME <replaceable>tr_name</replaceable>]
+  [READ WRITE | READ ONLY]
+  [[ISOLATION LEVEL] {  
+       SNAPSHOT [TABLE STABILITY]
+     | READ COMMITTED [[NO] RECORD_VERSION] }]
+  [NO WAIT | WAIT [LOCK TIMEOUT <replaceable>seconds</replaceable>]]
+  [NO AUTO UNDO]
+  [IGNORE LIMBO]
+  [RESTART REQUESTS]
+  [AUTO COMMIT]
+  [RESERVING <replaceable>&lt;tables&gt;</replaceable> | USING <replaceable>&lt;dbhandles&gt;</replaceable>]
+ 
+<replaceable>&lt;tables&gt;</replaceable> ::= <replaceable>&lt;table_spec&gt;</replaceable> [, <replaceable>&lt;table_spec&gt;</replaceable> ...]
+
+<replaceable>&lt;table_spec&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...]
+  [FOR [SHARED | PROTECTED] {READ | WRITE}]
+
+<replaceable>&lt;dbhandles&gt;</replaceable> ::= <replaceable>dbhandle</replaceable> [, <replaceable>dbhandle</replaceable> ...]              
+                </programlisting>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET TRANSACTION</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>tr_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя транзакции. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>seconds</replaceable></entry>
+                                <entry>
+                                    <para>Время ожидания оператора (statement) в секундах при
+                                        возникновении конфликта.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>tables</replaceable></entry>
+                                <entry>
+                                    <para>Список таблиц для резервирования.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>dbhandles</replaceable></entry>
+                                <entry>
+                                    <para>Список баз данных, к которым база данных может получить
+                                        доступ. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>table_spec</replaceable></entry>
+                                <entry>
+                                    <para>Спецификация резервирования таблицы.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>tablename</replaceable></entry>
+                                <entry>
+                                    <para>Имя таблицы для резервирования.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>dbhandle</replaceable></entry>
+                                <entry>
+                                    <para>Хендл базы данных, к которой транзакция может получить
+                                        доступ. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор SET TRANSACTION задаёт параметры транзакции и стартует её. Старт
+                транзакции осуществляется только клиентскими приложениями, но не сервером (за
+                исключением автономных транзакций и некоторых фоновых системных потоков/процессов,
+                например, таких как sweep). </para>
+            <para>Каждое клиентское приложение может запускать произвольное количество одновременно
+                выполняющихся транзакций. Фактически есть ограничение на общее количество
+                выполняемых транзакций во всех клиентских приложениях, работающих с одной конкретной
+                базой данных с момента последнего восстановления базы данных с резервной копии или с
+                момента первоначального создания базы данных. Это количество равняется числу
+                    2<superscript>48</superscript> - 1, то есть ~ 2,8 x
+                    10<superscript>14</superscript>. В API и MON$ таблицах номер транзакции
+                представляет собой 64 битное число.</para>
+            <para>Все предложения в операторе SET TRANSACTION являются необязательными. Если в
+                операторе запуска транзакции на выполнение не задано никакого предложения, то
+                предполагается старт транзакции со значениями всех характеристик по умолчанию (режим
+                доступа, режим разрешения блокировок и уровень изолированности).</para>
+            <para>По умолчанию транзакция стартует со следующими характеристиками.
+                <programlisting language="sql"> 
+SET TRANSACTION
+READ WRITE
+WAIT ISOLATION LEVEL SNAPSHOT;                
+            </programlisting>
+            </para>
+            <para>При старте со стороны клиента любой транзакции (заданной явно или по умолчанию)
+                сервер передаёт клиенту дескриптор транзакции (целое число). На стороне сервера
+                транзакциям последовательно присваиваются номера. Этот номер средствами SQL можно
+                получить, используя контекстную переменную CURRENT_TRANSACTION.</para>
+
+            <section xml:id="transaction-set_transaction-params">
+                <title>Параметры транзакции</title>
+                <para>Основными характеристиками транзакции являются: <itemizedlist>
+                        <listitem>
+                            <para>режим доступа к данным (READ WRITE, READ ONLY);</para>
+                        </listitem>
+                        <listitem>
+                            <para>режим разрешения блокировок (WAIT, NO WAIT) с возможным
+                                дополнительным уточнением LOCK TIMEOUT;</para>
+                        </listitem>
+                        <listitem>
+                            <para>уровень изоляции (READ COMMITTED, SNAPSHOT, TABLE
+                                STABILITY);</para>
+                        </listitem>
+                        <listitem>
+                            <para>средства резервирования или освобождения таблиц (предложение
+                                RESERVING).</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <section xml:id="transaction-set_transaction-name">
+                    <title>Имя транзакции</title>
+                    <para>Необязательное предложение NAME задаёт имя транзакции. Предложение NAME
+                        доступно только в Embedded SQL. Если предложение NAME не указано, то
+                        оператор SET TRANSACTION применяется к транзакции по умолчанию. За счёт
+                        именованных транзакций позволяется одновременный запуск нескольких активных
+                        транзакций в одном приложении. При этом должна быть объявлена и
+                        инициализирована одноименная переменная базового языка. В DSQL, это
+                        ограничение предотвращает динамическую спецификацию имён транзакций.</para>
+                </section>
+
+                <section xml:id="transaction-set_transaction-access_mode">
+                    <title>Режим доступа</title>
+                    <para>Для транзакций существует два режима доступа к данным базы данных: READ
+                        WRITE и READ ONLY.</para>
+
+                    <itemizedlist>
+                        <listitem>
+                            <indexterm>
+                                <primary>SET TRANSACTION</primary>
+                                <secondary>READ WRITE</secondary>
+                            </indexterm>
+                            <para>При режиме доступа READ WRITE операции в контексте данной
+                                транзакции могут быть как операциями чтения, так и операциями
+                                изменения данных. Это режим по умолчанию.</para>
+                        </listitem>
+                        <listitem>
+                            <indexterm>
+                                <primary>SET TRANSACTION</primary>
+                                <secondary>READ ONLY</secondary>
+                            </indexterm>
+                            <para>В режиме READ ONLY в контексте данной транзакции могут выполняться
+                                только операции выборки данных SELECT. Любая попытка изменения
+                                данных в контексте такой транзакции приведёт к исключениям базы
+                                данных. Однако это не относиться к глобальным временным таблицам
+                                (GTT), которые разрешено модифицировать в READ ONLY
+                                транзакциях.</para>
+                        </listitem>
+                    </itemizedlist>
+                </section>
+
+                <section xml:id="transaction-set_transaction-lock_resolution_mode">
+                    <title>Режим разрешения блокировок</title>
+                    <para>При работе с одной и той же базой данных нескольких клиентских приложений
+                        могут возникать блокировки. Блокировки могут возникать, когда одна
+                        транзакция вносит неподтверждённые изменения в строку таблицы или удаляет
+                        строку, а другая транзакция пытается изменять или удалять эту же строку.
+                        Такие блокировки называются конфликтом обновления.</para>
+                    <para>Блокировки также могут возникнуть и в других ситуациях при использовании
+                        некоторых уровней изоляции транзакций.</para>
+                    <para>Существуют два режима разрешения блокировок: WAIT и NO WAIT.</para>
+
+                    <section xml:id="transaction-set_transaction-wait_mode">
+                        <title>Режим WAIT</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>WAIT</secondary>
+                        </indexterm>
+                        <para>В режиме WAIT (режим по умолчанию) при появлении конфликта с
+                            параллельными транзакциями, выполняющими конкурирующие обновления данных
+                            в той же базе данных, такая транзакция будет ожидать завершения
+                            конкурирующей транзакции путём её подтверждения (COMMIT) или отката
+                            (ROLLBACK). Иными словами, клиентское приложение будет переведено в
+                            режим ожидания до момента разрешения конфликта.</para>
+                        <para>Если для режима WAIT задать предложение LOCK TIMEOUT, то ожидание
+                            будет продолжаться только указанное в этом предложении количество
+                            секунд. По истечении этого срока будет выдано сообщение об ошибке:
+                            &quot;Lock time-out on wait transaction&quot; (Истечение времени
+                            ожидания блокировки для транзакции WAIT).</para>
+                        <para>Этот режим даёт несколько отличные формы поведения в зависимости от
+                            уровня изоляции транзакций.</para>
+                    </section>
+                    <section xml:id="transaction-set_transaction-no_wait_mode">
+                        <title>Режим NO WAIT</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>NO WAIT</secondary>
+                        </indexterm>
+                        <para>Если установлен режим разрешения блокировок NO WAIT, то при появлении
+                            конфликта блокировки данная транзакция немедленно вызовет исключение
+                            базы данных.</para>
+                    </section>
+                </section>
+                <section xml:id="transaction-set_transaction-isolation_level">
+                    <title>ISOLATION LEVEL</title>
+
+                    <para>Уровень изолированности транзакций — значение, определяющее уровень, при
+                        котором в транзакции допускаются несогласованные данные, то есть степень
+                        изолированности одной транзакции от другой. Изменения, внесённые некоторым
+                        оператором, будут видны всем последующим операторам, запущенным в рамках
+                        этой же транзакции, независимо от её уровня изолированности. Изменения
+                        произведённые в рамках другой транзакции остаются невидимыми для текущей
+                        транзакции до тех пор пока они не подтверждены. Уровень изолированности, а
+                        иногда, другие атрибуты, определяет, как транзакции будут взаимодействовать
+                        с другой транзакцией, которая хочет подтвердить изменения.</para>
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>ISOLATION LEVEL</secondary>
+                    </indexterm>
+                    <para>Необязательное предложение ISOLATION LEVEL задаёт уровень изолированности
+                        запускаемой транзакции. Это самая важная характеристика транзакции, которая
+                        определяет её поведение по отношению к другим одновременно выполняющимся
+                        транзакциям.</para>
+
+                    <para>Существует три уровня изолированности транзакции: <itemizedlist>
+                            <listitem>
+                                <para>SNAPSHOT</para>
+                            </listitem>
+                            <listitem>
+                                <para>SNAPSHOT TABLE STABILITY</para>
+                            </listitem>
+                            <listitem>
+                                <para>READ COMMITTED с двумя уточнениями (NO RECORD_VERSION и
+                                    RECORD_VERSION)</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <section xml:id="transaction-isolation_level-snapshot">
+                        <title>Уровень изолированности SNAPSHOT</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>ISOLATION LEVEL</secondary>
+                            <tertiary>SNAPSHOT</tertiary>
+                        </indexterm>
+                        <para>Уровень изолированности SNAPSHOT (уровень изолированности по
+                            умолчанию) означает, что этой транзакции видны лишь те изменения,
+                            фиксация которых произошла не позднее момента старта этой транзакции.
+                            Любые подтверждённые изменения, сделанные другими конкурирующими
+                            транзакциями, не будут видны в такой транзакции в процессе ее активности
+                            без её перезапуска. Чтобы увидеть эти изменения, нужно завершить
+                            транзакцию (подтвердить её или выполнить полный откат, но не откат на
+                            точку сохранения) и запустить транзакцию заново. </para>
+                        <note>
+                            <para>Изменения, вносимые автономными транзакциями, также не будут видны
+                                в контексте той (&quot;внешней&quot;) транзакции, которая запустила
+                                эти автономные транзакции, если она работает в режиме SNAPSHOT.
+                            </para>
+                        </note>
+                    </section>
+                    <section xml:id="transaction-isolation_level-snapshot_table_stability">
+                        <title>Уровень изолированности SNAPSHOT TABLE STABILITY</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>ISOLATION LEVEL</secondary>
+                            <tertiary>SNAPSHOT TABLE STABILITY</tertiary>
+                        </indexterm>
+                        <para>Уровень изоляции транзакции SNAPSHOT TABLE STABILITY позволяет, как и
+                            в случае SNAPSHOT, также видеть только те изменения, фиксация которых
+                            произошла не позднее момента старта этой транзакции. При этом после
+                            старта такой транзакции в других клиентских транзакциях невозможно
+                            выполнение изменений ни в каких таблицах этой базы данных, уже
+                            каким-либо образом измененных первой транзакцией. Все такие попытки в
+                            параллельных транзакциях приведут к исключениям базы данных.
+                            Просматривать любые данные другие транзакции могут совершенно
+                            свободно.</para>
+                        <para>При помощи предложения резервирования (RESERVING) можно разрешить
+                            другим транзакциям изменять данные в некоторых таблицах. </para>
+                        <para>Если на момент старта клиентом транзакции с уровнем изоляции SNAPSHOT
+                            TABLE STABILITY какая-нибудь другая транзакция выполнила
+                            неподтверждённое изменение данных любой таблицы базы данных, то запуск
+                            транзакции с таким уровнем изоляции приведёт к ошибке базы данных.
+                        </para>
+                    </section>
+                    <section xml:id="transaction-isolation_level-read_commited">
+                        <title>Уровень изолированности READ COMMITTED</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>ISOLATION LEVEL</secondary>
+                            <tertiary>READ COMMITTED</tertiary>
+                        </indexterm>
+                        <para>Уровень изолированности READ COMMITTED позволяет в транзакции без её
+                            перезапуска видеть все подтверждённые изменения данных базы данных,
+                            выполненные в других параллельных транзакциях. Неподтверждённые
+                            изменения не видны в транзакции и этого уровня изоляции.</para>
+                        <para>Для получения обновлённого списка строк интересующей таблицы
+                            необходимо лишь повторное выполнение оператора SELECT в рамках активной
+                            транзакции READ COMMITTED без её перезапуска.</para>
+                        <section xml:id="transaction-isolation_level-read_commited-record_version">
+                            <title>RECORD_VERSION</title>
+                            <para>Для этого уровня изолированности можно указать один из двух
+                                значений дополнительной характеристики в зависимости от желаемого
+                                способа разрешения конфликтов: RECORD_VERSION и NO RECORD_VERSION.
+                                Как видно из их имён они являются взаимоисключающими.</para>
+
+                            <para><itemizedlist>
+                                    <listitem>
+                                        <para>NO RECORD_VERSION (значение по умолчанию) является в
+                                            некотором роде механизмом двухфазной блокировки. В этом
+                                            случае транзакция не может прочитать любую запись,
+                                            которая была изменена параллельной активной
+                                            (неподтвержденной) транзакцией.</para>
+                                        <para>Если указана стратегия разрешения блокировок NO WAIT,
+                                            то будет немедленно выдано соответствующее
+                                            исключение.</para>
+                                        <para>Если указана стратегия разрешения блокировок WAIT, то
+                                            это приведёт к ожиданию завершения или откату
+                                            конкурирующей транзакции. Если конкурирующая транзакция
+                                            откатывается, или, если она завершается и её
+                                            идентификатор старее (меньше), чем идентификатор текущей
+                                            транзакции, то изменения в текущей транзакции
+                                            допускаются. Если конкурирующая транзакция завершается и
+                                            её идентификатор новее (больше), чем идентификатор
+                                            текущей транзакции, то будет выдана ошибка конфликта
+                                            блокировок.</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>При задании RECORD_VERSION транзакция всегда читает
+                                            последнюю подтверждённую версию записей таблиц,
+                                            независимо от того, существуют ли изменённые и ещё не
+                                            подтверждённые версии этих записей. В этом случае режим
+                                            разрешения блокировок (WAIT или NO WAIT) никак не влияет
+                                            на поведение транзакции при её старте.</para>
+                                    </listitem>
+                                </itemizedlist></para>
+                            <para/>
+                        </section>
+                    </section>
+                </section>
+                <section xml:id="transaction-no_auto_undo">
+                    <title>NO AUTO UNDO</title>
+
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>NO AUTO UNDO</secondary>
+                    </indexterm>
+                    <para>При использовании опции NO AUTO UNDO оператор ROLLBACK только помечает
+                        транзакцию как отменённую без удаления созданных в этой транзакции версий,
+                        которые будут удалены позднее в соответствии с выбранной политикой сборки
+                        мусора (см. параметр <parameter>GCPolicy</parameter> в
+                            <filename>firebird.conf</filename>).</para>
+                    <para> Эта опция может быть полезна при выполнении транзакции, в рамках которой
+                        производится много отдельных операторов, изменяющих данные, и при этом есть
+                        уверенность, что эта транзакция будет чаще всего завершаться успешно, а не
+                        откатываться. </para>
+                    <para>Для транзакций, в рамках которых не выполняется никаких изменений, опция
+                        NO AUTO UNDO игнорируется.</para>
+                </section>
+                <section xml:id="transaction-ignore_limbo">
+                    <title>IGNORE LIMBO</title>
+
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>IGNORE LIMBO</secondary>
+                    </indexterm>
+                    <para>При указании опции IGNORE LIMBO игнорируются записи, создаваемые
+                        &quot;потерянными&quot; (т.е. не завершёнными) транзакциями (limbo
+                        transaction). Транзакции считается &quot;потерянной&quot;, если не завершён
+                        второй этап двухфазного подтверждения (two-phase commit).</para>
+                </section>
+                <section xml:id="transaction-auto_commit">
+                    <title>AUTO COMMIT</title>
+
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>IGNORE LIMBO</secondary>
+                    </indexterm>
+                    <para>При указании опции AUTO COMMIT транзакция автоматически подтверждается
+                        после успешного выполнения любого оператора. Если в процессе выполнения
+                        оператора произойдёт ошибка, то транзакция будет откачена. После
+                        подтверждения или отката транзакция продолжает оставаться активной, сохраняя
+                        свой идентификатор.</para>
+                    <important>
+                        <para>Опция AUTO COMMIT использует <quote>мягкое</quote> подтверждение
+                            (COMMIT RETAIN) и <quote>мягкий</quote> откат (ROLLBACK RETAIN)
+                            транзакции. Мягкое подтверждение не освобождает ресурсов сервера и
+                            удерживает сборку мусора, что может негативно отразится на
+                            производительности.</para>
+                    </important>
+                </section>
+                <section xml:id="transaction-set_transaction-reserving">
+                    <info>
+                        <title>RESERVING</title>
+                    </info>
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>RESERVING</secondary>
+                    </indexterm>
+                    <para>Предложение RESERVING в операторе SET TRANSACTION резервирует указанные в
+                        списке таблицы. Резервирование запрещает другим транзакциям вносить в эти
+                        таблицы изменения или (при определённых установках характеристик предложения
+                        резервирования) даже читать данные из этих таблиц, в то время как
+                        выполняется данная транзакция. Либо, наоборот, в этом предложении можно
+                        указать список таблиц, в которые параллельные транзакции могут вносить
+                        изменения, даже если запускается транзакция с уровнем изоляции SNAPSHOT
+                        TABLE STABILITY.</para>
+                    <para>В одном предложении резервирования можно указать произвольное количество
+                        резервируемых таблиц используемой базы данных.</para>
+                    <para>Если опущено одно из ключевых слов SHARED или PROTECTED, то предполагается
+                        SHARED. Если опущено все предложение FOR, то предполагается FOR SHARED READ.
+                        Варианты осуществления резервирования таблиц по их названиям не являются
+                        очевидными. </para>
+                    <para>
+                        <table frame="all">
+                            <title>Совместимости различных блокировок</title>
+                            <tgroup cols="5">
+                                <thead>
+                                    <row>
+                                        <entry align="center"> </entry>
+                                        <entry align="center"> SHARED READ </entry>
+                                        <entry align="center"> SHARED WRITE </entry>
+                                        <entry align="center"> PROTECTED READ </entry>
+                                        <entry align="center"> PROTECTED WRITE </entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry align="center"> SHARED READ </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                    </row>
+                                    <row>
+                                        <entry align="center"> SHARED WRITE </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> нет </entry>
+                                    </row>
+                                    <row>
+                                        <entry align="center"> PROTECTED READ </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                    </row>
+                                    <row>
+                                        <entry align="center"> PROTECTED WRITE </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> нет</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </para>
+                    <para>Для транзакции запущенной в режиме изолированности SNAPSHOT для таблиц,
+                        указанных в предложении RESERVING, в параллельных транзакциях в зависимости
+                        от их уровня изоляции допустимы при различных способах их резервирования
+                        следующие варианты поведения: <itemizedlist spacing="compact">
+                            <listitem>
+                                <para>SHARED READ — не оказывает никакого влияния на выполнение
+                                    параллельных транзакций;</para>
+                            </listitem>
+                            <listitem>
+                                <para>SHARED WRITE — на поведение параллельных транзакций с уровнями
+                                    изолированности SNAPSHOT и READ COMMITTED не оказывает никакого
+                                    влияния, для транзакций с уровнем изолированности SNAPSHOT TABLE
+                                    STABILITY запрещает не только запись, но также и чтение данных
+                                    из указанных таблиц;</para>
+                            </listitem>
+                            <listitem>
+                                <para>PROTECTED READ — допускает только чтение данных из
+                                    резервируемых таблиц для параллельных транзакций с любым уровнем
+                                    изолированности, попытка внесения изменений приводит к
+                                    исключению базы данных;</para>
+                            </listitem>
+                            <listitem>
+                                <para>PROTECTED WRITE — для параллельных транзакций с уровнями
+                                    изолированности SNAPSHOT и READ COMMITTED запрещает запись в
+                                    указанные таблицы, для транзакций с уровнем изолированности
+                                    SNAPSHOT TABLE STABILITY запрещает также и чтение данных из
+                                    резервируемых таблиц.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>Для транзакции запущенной в режиме изолированности SNAPSHOT TABLE
+                        STABILITY для таблиц, указанных в предложении RESERVING, в параллельных
+                        транзакциях в зависимости от их уровня изолированности допустимы при
+                        различных способах их резервирования следующие варианты поведения:
+                            <itemizedlist spacing="compact">
+                            <listitem>
+                                <para>SHARED READ — позволяет всем параллельным транзакциям
+                                    независимо от их уровня изолированности не только читать, но и
+                                    выполнять любые изменения в резервируемых таблицах (если
+                                    параллельная транзакция имеет режим доступа READ WRITE);</para>
+                            </listitem>
+                            <listitem>
+                                <para>SHARED WRITE — для всех параллельных транзакций с уровнем
+                                    доступа READ WRITE и с уровнями изолированности SNAPSHOT и READ
+                                    COMMITTED позволяет читать данные из таблиц и писать данные в
+                                    указанные таблицы, для транзакций с уровнем изолированности
+                                    SNAPSHOT TABLE STABILITY запрещает не только запись, но также и
+                                    чтение данных из указанных таблиц;</para>
+                            </listitem>
+                            <listitem>
+                                <para>PROTECTED READ — допускает только лишь чтение данных из
+                                    резервируемых таблиц для параллельных транзакций с любым уровнем
+                                    изолированности;</para>
+                            </listitem>
+                            <listitem>
+                                <para>PROTECTED WRITE — для параллельных транзакций с уровнями
+                                    изолированности SNAPSHOT и READ COMMITTED запрещает запись в
+                                    указанные таблицы, для транзакций с уровнем изолированности
+                                    SNAPSHOT TABLE STABILITY запрещает также и чтение данных из
+                                    резервируемых таблиц.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>Для транзакции запущенной в режиме изолированности READ COMMITTED для
+                        таблиц, указанных в предложении RESERVING, в параллельных транзакциях в
+                        зависимости от их уровня изоляции допустимы при различных способах их
+                        резервирования следующие варианты поведения: <itemizedlist spacing="compact">
+                            <listitem>
+                                <para>SHARED READ — позволяет всем параллельным транзакциям
+                                    независимо от их уровня изолированности не только читать, но и
+                                    выполнять любые изменения в резервируемых таблицах (при уровне
+                                    доступа READ WRITE);</para>
+                            </listitem>
+                            <listitem>
+                                <para>SHARED WRITE — для всех транзакций с уровнем доступа READ
+                                    WRITE и с уровнями изолированности SNAPSHOT и READ COMMITTED
+                                    позволяет читать и писать данные в указанные таблицы, для
+                                    транзакций с уровнем изолированности SNAPSHOT TABLE STABILITY
+                                    запрещает не только запись, но также и чтение данных из
+                                    указанных таблиц;</para>
+                            </listitem>
+                            <listitem>
+                                <para>PROTECTED READ — допускает только чтение данных из
+                                    резервируемых таблиц для параллельных транзакций с любым уровнем
+                                    изолированности;</para>
+                            </listitem>
+                            <listitem>
+                                <para>PROTECTED WRITE — для параллельных транзакций с уровнями
+                                    изолированности SNAPSHOT и READ COMMITTED разрешает только
+                                    чтение данных и запрещает запись в указанные в данном списке
+                                    таблицы, для транзакций с уровнем изолированности SNAPSHOT TABLE
+                                    STABILITY запрещает не только изменение данных, но и чтение
+                                    данных из резервируемых таблиц.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <tip>
+                        <para>Предложение USING может быть использовано для сохранения системных
+                            ресурсов за счёт ограничения количества баз данных, к которым имеет
+                            доступ транзакция. Доступно только в Embedded SQL.</para>
+                    </tip>
+                    <formalpara>
+                        <title>См. также:</title>
+
+                        <para>
+                            <link linkend="transaction-commit">COMMIT</link>, <link
+                                linkend="transaction-rollback">ROLLBACK</link>. </para>
+                    </formalpara>
+                </section>
+            </section>
+        </section>
+        <section xml:id="transaction-commit">
+            <info>
+                <title>COMMIT</title>
+                <keywordset>
+                    <keyword>COMMIT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>COMMIT</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Подтверждение транзакции.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+COMMIT [WORK] [TRANSACTION <replaceable>tr_name</replaceable>] 
+  [RELEASE] [RETAIN [SNAPSHOT]];                                                    
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора COMMIT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>tr_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя транзакции. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор COMMIT подтверждает все изменения в данных, выполненные в контексте
+                данной транзакции (добавления, изменения, удаления). Новые версии записей становятся
+                доступными для других транзакций, и если предложение RETAIN не используется
+                освобождаются все ресурсы сервера, связанные с выполнением данной транзакции.</para>
+            <para>Если в процессе подтверждения транзакции возникли ошибки в базе данных, то
+                транзакция не подтверждается. Пользовательская программа должна обработать ошибочную
+                ситуацию и заново подтвердить транзакцию или выполнить ее откат.</para>
+            <para>Необязательное предложение TRANSACTION задаёт имя транзакции. Предложение
+                TRANSACTION доступно только в Embedded SQL. Если предложение TRANSACTION не указано,
+                то оператор COMMIT применяется к транзакции по умолчанию.</para>
+            <note>
+                <para>За счёт именованных транзакций позволяется одновременный запуск нескольких
+                    активных транзакций в одном приложении. При этом должна быть объявлена и
+                    инициализирована одноименная переменная базового языка. В DSQL, это ограничение
+                    предотвращает динамическую спецификацию имён транзакций.</para>
+            </note>
+            <para>Необязательное ключевое слово WORK может быть использовано лишь для совместимости
+                с другими системами управления реляционными базами данных.</para>
+            <para>Ключевое слово RELEASE доступно только в Embedded SQL. Оно позволяет отключиться
+                ото всех баз данных после завершения текущей транзакции. RELEASE поддерживается
+                только для обратной совместимости со старыми версиями INTERBASE. В настоящее время
+                вместо него используется оператор ESQL DISCONNECT.</para>
+            <para>Если используется предложение RETAIN [SNAPSHOT], то выполняется так называемое
+                мягкое (soft) подтверждение. Выполненные действия в контексте данной транзакции
+                фиксируются в базе данных, а сама транзакция продолжает оставаться активной,
+                сохраняя свой идентификатор, а также состояние курсоров, которое было до мягкой
+                фиксации транзакции. В этом случае нет необходимости опять стартовать транзакцию и
+                заново выполнять оператор SELECT для получения данных.</para>
+            <para>Если уровень изоляции такой транзакции SNAPSHOT или SNAPSHOT TABLE STABILITY, то
+                после мягкого подтверждения транзакция продолжает видеть то состояние базы данных,
+                которое было при первоначальном запуске транзакции, то есть клиентская программа не
+                видит новых подтверждённых результатов изменения данных других транзакций. Кроме
+                того, мягкое подтверждение не освобождает ресурсов сервера (открытые курсоры не
+                закрываются).</para>
+            <tip>
+                <para>Для транзакций, которые выполняют только чтение данных из базы данных,
+                    рекомендуется также использовать оператор COMMIT, а не ROLLBACK, поскольку этот
+                    вариант требует меньшего количества ресурсов сервера и улучшает
+                    производительность всех последующих транзакций.</para>
+            </tip>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="transaction-set_transaction">SET TRANSACTION</link>, <link
+                        linkend="transaction-rollback">ROLLBACK</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="transaction-rollback">
+            <info>
+                <title>ROLLBACK</title>
+                <keywordset>
+                    <keyword>ROLLBACK</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>ROLLBACK</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Откат транзакции.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+ROLLBACK [WORK] [TRANSACTION <replaceable>tr_name</replaceable>] 
+  [RETAIN [SNAPSHOT] | TO SAVEPOINT sp_name] [RELEASE];                                                    
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ROLLBACK</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>tr_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя транзакции. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>sp_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя точки сохранения. Доступно только в DSQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор ROLLBACK отменяет все изменения данных базы данных (добавление,
+                изменение, удаление), выполненные в контексте этой транзакции. Оператор ROLLBACK
+                никогда не вызывает ошибок. Если не указано предложение RETAIN, то при его
+                выполнении освобождаются все ресурсы сервера, связанные с выполнением данной
+                транзакции.</para>
+            <para>Необязательное предложение TRANSACTION задаёт имя транзакции. Предложение
+                TRANSACTION доступно только в Embedded SQL. Если предложение TRANSACTION не указано,
+                то оператор ROLLBACK применяется к транзакции по умолчанию.</para>
+            <note>
+                <para>За счёт именованных транзакций позволяется одновременный запуск нескольких
+                    активных транзакций в одном приложении. При этом должна быть объявлена и
+                    инициализирована одноименная переменная базового языка. В DSQL, это ограничение
+                    предотвращает динамическую спецификацию имён транзакций.</para>
+            </note>
+            <para>Необязательное ключевое слово WORK может быть использовано лишь для совместимости
+                с другими системами управления реляционными базами данных.</para>
+            <para>Ключевое слово RETAIN указывает, что все действия по изменению данных в контексте
+                этой транзакции, отменяются, а сама транзакция продолжает оставаться активной,
+                сохраняя свой идентификатор, а также состояние курсоров, которое было до мягкой
+                фиксации транзакции. Таким образом, выделенные ресурсы для транзакции не
+                освобождаются.</para>
+            <para>Для уровней изоляции SNAPSHOT и SNAPSHOT TABLE STABILITY состояние базы данных
+                остаётся в том виде, которое база данных имела при первоначальном старте такой
+                транзакции, однако в случае уровня изоляции READ COMMITTED база данных будет иметь
+                вид, соответствующий новому состоянию на момент выполнения оператора ROLLBACK
+                RETAIN. В случае отмены транзакции с сохранением её контекста нет необходимости
+                заново выполнять оператор SELECT для получения данных из таблицы.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="transaction-set_transaction">SET TRANSACTION</link>, <link
+                        linkend="transaction-commit">COMMIT</link>. </para>
+            </formalpara>
+            <section xml:id="transaction-rollback-to_savepoint">
+                <info>
+                    <title>ROLLBACK TO SAVEPOINT</title>
+                    <keywordset>
+                        <keyword>ROLLBACK TO SAVEPOINT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm>
+                    <primary>ROLLBACK</primary>
+                    <secondary>TO SAVEPOINT</secondary>
+                </indexterm>
+                <para>Необязательное предложение TO SAVEPOINT в операторе ROLLBACK задаёт имя точки
+                    сохранения, на которую происходит откат. В этом случае отменяются все изменения,
+                    произошедшие в рамках транзакции, начиная с созданной точки сохранения
+                    (SAVEPOINT).</para>
+                <para>Оператор ROLLBACK TO SAVEPOINT выполняет следующие операции: <itemizedlist
+                        spacing="compact">
+                        <listitem>
+                            <para>Все изменения в базе данных, выполненные в рамках транзакции
+                                начиная с созданной точки сохранения, отменяются. Пользовательские
+                                переменные, заданные с помощью функции RDB$SET_CONTEXT() остаются
+                                неизменными;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Все точки сохранения, создаваемые после названной, уничтожаются.
+                                Все более ранние точки сохранения, как сама точка сохранения,
+                                остаются. Это означает, что можно откатываться к той же точке
+                                сохранения несколько раз;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Все явные и неявные блокированные записи, начиная с точки
+                                сохранения, освобождаются. Другие транзакции, запросившие ранее
+                                доступ к строкам, заблокированным после точки сохранения, должны
+                                продолжать ожидать, пока транзакция не фиксируется или откатывается.
+                                Другие транзакции, которые ещё не запрашивали доступ к этим строкам,
+                                могут запросить и сразу же получить доступ к разблокированным
+                                строкам.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="transaction-savepoint">SAVEPOINT</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="transaction-savepoint">
+            <info>
+                <title>SAVEPOINT</title>
+                <keywordset>
+                    <keyword>SAVEPOINT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SAVEPOINT</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Создание точки сохранения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+SAVEPOINT <replaceable>sp_name</replaceable>                                                    
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SAVEPOINT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>sp_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя точки сохранения. Должно быть уникальным в рамках
+                                        транзакции.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор SAVEPOINT создаёт SQL 99 совместимую точку сохранения, к которой можно
+                позже откатывать работу с базой данных, не отменяя все действия, выполненные с
+                момента старта транзакции. Механизмы точки сохранения также известны под термином
+                &quot;вложенные транзакции&quot; (&quot;nested transactions&quot;).</para>
+            <para>Если имя точки сохранения уже существует в рамках транзакции, то существующая
+                точка сохранения будет удалена, и создаётся новая с тем же именем.</para>
+            <para>Для отката изменений к точке сохранения используется оператор <link
+                    linkend="transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>. </para>
+            <note>
+                <para>Внутренний механизм точек сохранения может использовать большие объёмы памяти,
+                    особенно если вы обновляете одни и те же записи многократно в одной транзакции.
+                    Если точка сохранения уже не нужна, но вы ещё не готовы закончить транзакцию, то
+                    можно ее удалить оператором <link linkend="transaction-realese_savepoint"
+                        >RELEASE SAVEPOINT</link>, тем самым освобождая ресурсы.</para>
+            </note>
+            <para><emphasis>Примеры:</emphasis></para>
+            <example>
+                <title>DSQL сессия с использованием точек сохранения</title>
+                <para><programlisting language="sql">
+CREATE TABLE TEST (ID INTEGER);
+COMMIT;
+INSERT INTO TEST VALUES (1);
+COMMIT;
+INSERT INTO TEST VALUES (2);
+SAVEPOINT Y;
+DELETE FROM TEST;
+SELECT * FROM TEST; -- возвращает пустую строку
+ROLLBACK TO Y;
+SELECT * FROM TEST; -- возвращает две строки
+ROLLBACK;
+SELECT * FROM TEST; -- возвращает одну строку                 
+                </programlisting></para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>,
+                        <link linkend="transaction-realese_savepoint">RELEASE SAVEPOINT</link>.
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="transaction-realese_savepoint">
+            <info>
+                <title>RELEASE SAVEPOINT</title>
+                <keywordset>
+                    <keyword>RELEASE SAVEPOINT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>RELEASE SAVEPOINT</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Удаление точки сохранения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+RELEASE SAVEPOINT <replaceable>sp_name</replaceable> [ONLY]                                                   
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора RELEASE SAVEPOINT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>sp_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя точки сохранения.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор RELEASE SAVEPOINT удаляет именованную точку сохранения, освобождая все
+                связанные с ней ресурсы. По умолчанию удаляются также все точки сохранения,
+                создаваемые после указанной. Если указано предложение ONLY, то удаляется только
+                точка сохранения с заданным именем.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="transaction-savepoint">SAVEPOINT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="transaction-savepoint-inner">
+            <info>
+                <title>Внутренние точки сохранения</title>
+            </info>
+            <para>По умолчанию сервер использует автоматическую системную точку сохранения уровня
+                транзакции для выполнения её отката. При выполнении оператора ROLLBACK, все
+                изменения, выполненные в транзакции, откатываются до системной точки сохранения и
+                после этого транзакция подтверждается.</para>
+            <para>Когда объем изменений, выполняемых под системной точкой сохранения уровня
+                транзакции, становится большим (затрагивается порядка 50000 записей) сервер
+                освобождает системную точку сохранения и, при необходимости отката транзакции,
+                использует механизм TIP.</para>
+            <tip>
+                <para>Если вы ожидаете, что объем изменений в транзакции будет большим, то можно
+                    задать опцию NO AUTO UNDO в операторе SET TRANSACTION, или – если используется
+                    API – установить флаг TPB isc_tpb_no_auto_undo. В обеих вариантах
+                    предотвращается создание системной точки сохранения уровня транзакции.</para>
+            </tip>
+        </section>
+        <section xml:id="transaction-savepoint-psql">
+            <info>
+                <title>Точки сохранения и PSQL</title>
+            </info>
+            <para>Использование операторов управления транзакциями в PSQL не разрешается, так как
+                это нарушит атомарность оператора, вызывающего процедуру. Но Firebird поддерживает
+                вызов и обработку исключений в PSQL, так, чтобы действия, выполняемые в хранимых
+                процедурах и триггерах, могли быть выборочно отменены без полного отката всех
+                действий в них. Внутренне автоматические точки сохранения используется для:
+                    <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>отмены всех действий внутри блока BEGIN ... END, где происходит
+                            исключение;</para>
+                    </listitem>
+                    <listitem>
+                        <para>отмены всех действий, выполняемых в хранимой процедуре/триггере (или,
+                            в случае селективной хранимой процедуры, всех действий, выполненных с
+                            момента последнего оператора SUSPEND), если они завершаются
+                            преждевременно из-за непредусмотренной ошибки или исключения.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Каждый блок обработки исключений PSQL также ограничен автоматическими точками
+                сохранения сервера.</para>
+            <note>
+                <para>Сами по себе блок BEGIN..END не создаёт автоматическую точку сохранения. Она
+                    создаётся только в блоках, которых присутствует блок WHEN для обработки
+                    исключений или ошибок.</para>
+            </note>
+        </section>
+    </section>
+</chapter>

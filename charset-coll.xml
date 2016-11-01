@@ -1,0 +1,795 @@
+<!DOCTYPE appendix>
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="charset-coll"
+    xml:lang="ru">
+    <info>
+        <title>Наборы символов и порядки сортировки</title>
+    </info>
+
+    <para>
+        <table frame="all">
+            <title>Наборы символов и порядки сортировки</title>
+            <tgroup cols="5">
+                <colspec colname="c1" colnum="1" colwidth="0.7*" align="justify"/>
+                <colspec colname="c2" colnum="2" colwidth="0.15*" align="justify"/>
+                <colspec colname="c3" colnum="3" colwidth="0.35*" align="justify"/>
+                <colspec colname="c4" colnum="4" colwidth="0.9*" align="justify"/>
+                <colspec colname="c5" colnum="5" colwidth="1.6*" align="justify"/>
+                <thead>
+                    <row>
+                        <entry align="center"> Название </entry>
+                        <entry align="center"> ID </entry>
+                        <entry align="center"> Байтов на символ </entry>
+                        <entry align="center"> Порядок сортировки </entry>
+                        <entry align="center"> Язык </entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>ASCII</entry>
+                        <entry>2</entry>
+                        <entry>1</entry>
+                        <entry>ASCII </entry>
+                        <entry>Английский </entry>
+                    </row>
+                    <row>
+                        <entry>BIG_5</entry>
+                        <entry>56</entry>
+                        <entry>2</entry>
+                        <entry>BIG_5 </entry>
+                        <entry>
+                            <para>Китайский, Вьетнамский, Корейский. </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">CP943C</entry>
+                        <entry morerows="1">68</entry>
+                        <entry morerows="1">2</entry>
+                        <entry>CP943C</entry>
+                        <entry>Японский.</entry>
+                    </row>
+                    <row>
+                        <entry>CP943C_UNICODE</entry>
+                        <entry>Японский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="2">CYRL</entry>
+                        <entry morerows="2">50</entry>
+                        <entry morerows="2">1</entry>
+                        <entry>CYRL </entry>
+                        <entry>Русский. </entry>
+                    </row>
+                    <row>
+                        <entry>DB_RUS</entry>
+                        <entry>Русский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_CYRL</entry>
+                        <entry>Русский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="12">DOS437</entry>
+                        <entry morerows="12">10</entry>
+                        <entry morerows="12">1</entry>
+                        <entry>DOS437 </entry>
+                        <entry>Английский — США. </entry>
+                    </row>
+                    <row>
+                        <entry>DB_DEU437</entry>
+                        <entry>Немецкий dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_ESP437</entry>
+                        <entry>Испанский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_FIN437</entry>
+                        <entry>Финский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_FRA437</entry>
+                        <entry>Французский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_ITA437</entry>
+                        <entry>Итальянский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_NLD437</entry>
+                        <entry>Голландский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_SVE437</entry>
+                        <entry>Шведский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_UK437</entry>
+                        <entry>Английский (Великобритания) dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_US437</entry>
+                        <entry>Английский (США) dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_ASCII</entry>
+                        <entry>Кодовая страница Paradox — ASCII.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_SWEDFIN</entry>
+                        <entry>Шведский / Финский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_INTL</entry>
+                        <entry>Международный английский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry>DOS737</entry>
+                        <entry>9</entry>
+                        <entry>1</entry>
+                        <entry>DOS737 </entry>
+                        <entry>Греческий. </entry>
+                    </row>
+                    <row>
+                        <entry>DOS775</entry>
+                        <entry>15</entry>
+                        <entry>1</entry>
+                        <entry>DOS775 </entry>
+                        <entry>Балтийский. </entry>
+                    </row>
+                    <row>
+                        <entry morerows="10">DOS850</entry>
+                        <entry morerows="10">11</entry>
+                        <entry morerows="10">1</entry>
+                        <entry>DOS850 </entry>
+                        <entry>Латинский I (нет символа Евро). </entry>
+                    </row>
+                    <row>
+                        <entry>DB_DEU850</entry>
+                        <entry>Немецкий.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_ESP850</entry>
+                        <entry>Испанский.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_FRA850</entry>
+                        <entry>Французский.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_FRC850</entry>
+                        <entry>Французский — Канада.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_ITA850</entry>
+                        <entry>Итальянский.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_NLD850</entry>
+                        <entry>Голландский.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_PTB850</entry>
+                        <entry>Португальский — Бразилия.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_SVE850</entry>
+                        <entry>Шведский.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_UK850</entry>
+                        <entry>Английский — Великобритания.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_US850</entry>
+                        <entry>Английский — США.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="7">DOS852</entry>
+                        <entry morerows="7">45</entry>
+                        <entry morerows="7">1</entry>
+                        <entry>DOS852</entry>
+                        <entry>Латинский II.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_CSY</entry>
+                        <entry>Чешский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_PLK</entry>
+                        <entry>Польский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_SLO</entry>
+                        <entry>Словацкий dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_CSY</entry>
+                        <entry>Чешский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_HUN</entry>
+                        <entry>Венгерский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_PLK</entry>
+                        <entry>Польский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_SLO</entry>
+                        <entry>Словацкий Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">DOS857</entry>
+                        <entry morerows="1">46</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>DOS857 </entry>
+                        <entry>Турецкий. </entry>
+                    </row>
+                    <row>
+                        <entry>DB_TRK</entry>
+                        <entry>Турецкий dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DOS858</entry>
+                        <entry>16</entry>
+                        <entry>1</entry>
+                        <entry>DOS858 </entry>
+                        <entry>Латинский I с символом Евро. </entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">DOS860</entry>
+                        <entry morerows="1">13</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>DOS860 </entry>
+                        <entry>Португальский. </entry>
+                    </row>
+                    <row>
+                        <entry>DB_PTG860</entry>
+                        <entry>Португальский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">DOS861</entry>
+                        <entry morerows="1">47</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>DOS861 </entry>
+                        <entry>Исландский. </entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_ISL</entry>
+                        <entry>Исландский Paradox.</entry>
+                    </row>
+                    <row>
+                        <entry>DOS862</entry>
+                        <entry>17</entry>
+                        <entry>1</entry>
+                        <entry>DOS862 </entry>
+                        <entry>Иврит. </entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">DOS863</entry>
+                        <entry morerows="1">14</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>DOS863 </entry>
+                        <entry>Французский — Канада. </entry>
+                    </row>
+                    <row>
+                        <entry>DB_FRC863</entry>
+                        <entry>Французский dBase — Канада.</entry>
+                    </row>
+                    <row>
+                        <entry>DOS864</entry>
+                        <entry>18</entry>
+                        <entry>1</entry>
+                        <entry>DOS864 </entry>
+                        <entry>Арабский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="3">DOS865</entry>
+                        <entry morerows="3">12</entry>
+                        <entry morerows="3">1</entry>
+                        <entry>DOS865 </entry>
+                        <entry>Скандинавские. </entry>
+                    </row>
+                    <row>
+                        <entry>DB_DAN865</entry>
+                        <entry>Датский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>DB_NOR865</entry>
+                        <entry>Норвежский dBase.</entry>
+                    </row>
+                    <row>
+                        <entry>PDOX_NORDAN4</entry>
+                        <entry>Paradox Норвегия и Дания.</entry>
+                    </row>
+                    <row>
+                        <entry>DOS866</entry>
+                        <entry>48</entry>
+                        <entry>1</entry>
+                        <entry>DOS866 </entry>
+                        <entry>Русский. </entry>
+                    </row>
+                    <row>
+                        <entry>DOS869</entry>
+                        <entry>49</entry>
+                        <entry>1</entry>
+                        <entry>DOS869 </entry>
+                        <entry>Современный греческий. </entry>
+                    </row>
+                    <row>
+                        <entry>EUCJ_0208</entry>
+                        <entry>6</entry>
+                        <entry>2</entry>
+                        <entry>EUCJ_0208 </entry>
+                        <entry>Японские EUC. </entry>
+                    </row>
+                    <row>
+                        <entry>GB_2312</entry>
+                        <entry>57</entry>
+                        <entry>2</entry>
+                        <entry>GB_2312 </entry>
+                        <entry>Упрощенный китайский (Гонконг, Корея). </entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">GB18030</entry>
+                        <entry morerows="1">69</entry>
+                        <entry morerows="1">4</entry>
+                        <entry>GB18030</entry>
+                        <entry>Китайский.</entry>
+                    </row>
+                    <row>
+                        <entry>GB18030_UNICODE</entry>
+                        <entry>Китайский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">GBK</entry>
+                        <entry morerows="1">67</entry>
+                        <entry morerows="1">2</entry>
+                        <entry>GBK</entry>
+                        <entry>Китайский.</entry>
+                    </row>
+                    <row>
+                        <entry>GBK_UNICODE</entry>
+                        <entry>Китайский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="17">ISO8859_1</entry>
+                        <entry morerows="17">21</entry>
+                        <entry morerows="17">1</entry>
+                        <entry>ISO8859_1</entry>
+                        <entry>Латинский I.</entry>
+                    </row>
+                    <row>
+                        <entry>DA_DA</entry>
+                        <entry>Датский.</entry>
+                    </row>
+                    <row>
+                        <entry>DE_DE</entry>
+                        <entry>Немецкий.</entry>
+                    </row>
+                    <row>
+                        <entry>DU_NL</entry>
+                        <entry>Голландский.</entry>
+                    </row>
+                    <row>
+                        <entry>EN_UK</entry>
+                        <entry>Английский, Великобритания.</entry>
+                    </row>
+                    <row>
+                        <entry>EN_US</entry>
+                        <entry>Английский, США.</entry>
+                    </row>
+                    <row>
+                        <entry>ES_ES</entry>
+                        <entry>Испанский.</entry>
+                    </row>
+                    <row>
+                        <entry>ES_ES_CI_AI</entry>
+                        <entry>Испанский не чувствительный к регистру символов и к акцентам
+                            (ударению).</entry>
+                    </row>
+                    <row>
+                        <entry>FI_FI</entry>
+                        <entry>Финский.</entry>
+                    </row>
+                    <row>
+                        <entry>FR_CA</entry>
+                        <entry>Французский, Канада.</entry>
+                    </row>
+                    <row>
+                        <entry>FR_FR</entry>
+                        <entry>Французский.</entry>
+                    </row>
+                    <row>
+                        <entry>FR_FR_CI_AI</entry>
+                        <entry>Французский — не чувствительный к регистру символов и к акцентам
+                            (ударению).</entry>
+                    </row>
+                    <row>
+                        <entry>IS_IS</entry>
+                        <entry>Исландский.</entry>
+                    </row>
+                    <row>
+                        <entry>IT_IT</entry>
+                        <entry>Итальянский.</entry>
+                    </row>
+                    <row>
+                        <entry>NO_NO</entry>
+                        <entry>Норвежский.</entry>
+                    </row>
+                    <row>
+                        <entry>PT_PT</entry>
+                        <entry>Португальский.</entry>
+                    </row>
+                    <row>
+                        <entry>PT_BR</entry>
+                        <entry>Португальский, Бразилия.</entry>
+                    </row>
+                    <row>
+                        <entry>SV_SV</entry>
+                        <entry>Шведский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="3">ISO8859_2</entry>
+                        <entry morerows="3">22</entry>
+                        <entry morerows="3">1</entry>
+                        <entry>ISO8859_2</entry>
+                        <entry>Латинский 2 — Центральная Европа (хорватский, чешский, венгерский,
+                            польский, румынский, сербский, словацкий, словенский).</entry>
+                    </row>
+                    <row>
+                        <entry>CS_CZ</entry>
+                        <entry>Чешский.</entry>
+                    </row>
+                    <row>
+                        <entry>ISO_HUN</entry>
+                        <entry>Венгерский — не чувствительный к регистру и чувствительный к 
+                        акценту (ударению).</entry>
+                    </row>
+                    <row>
+                        <entry>ISO_PLK</entry>
+                        <entry>Польский.</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_3</entry>
+                        <entry>23</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_3</entry>
+                        <entry>Латинский 3 — Южная Европа (мальтийский, эсперанто).</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_4</entry>
+                        <entry>34</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_4</entry>
+                        <entry>Латинский 4 — Северная Европа (эстонский, латвийский, литовский,
+                            гренландский, саамский).</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_5</entry>
+                        <entry>35</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_5</entry>
+                        <entry>Кириллица (русский).</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_6</entry>
+                        <entry>36</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_6</entry>
+                        <entry>Арабский.</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_7</entry>
+                        <entry>37</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_7</entry>
+                        <entry>Греческий.</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_8</entry>
+                        <entry>38</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_8</entry>
+                        <entry>Иврит.</entry>
+                    </row>
+                    <row>
+                        <entry>ISO8859_9</entry>
+                        <entry>39</entry>
+                        <entry>1</entry>
+                        <entry>ISO8859_9</entry>
+                        <entry>Латинский 5.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">ISO8859_13</entry>
+                        <entry morerows="1">40</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>ISO8859_13</entry>
+                        <entry>Латинский 7 — Балтика.</entry>
+                    </row>
+                    <row>
+                        <entry>LT_LT</entry>
+                        <entry>Литовский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">KOI8R</entry>
+                        <entry morerows="1">63</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>KOI8R</entry>
+                        <entry>Русский. Словарное упорядочение.</entry>
+                    </row>
+                    <row>
+                        <entry>KOI8R_RU</entry>
+                        <entry>Русский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">KOI8U</entry>
+                        <entry morerows="1">64</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>KOI8U</entry>
+                        <entry>Украинский. Словарное упорядочение.</entry>
+                    </row>
+                    <row>
+                        <entry>KOI8U_UA</entry>
+                        <entry>Украинский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">KSC_5601</entry>
+                        <entry morerows="1">44</entry>
+                        <entry morerows="1">2</entry>
+                        <entry>KSC_5601</entry>
+                        <entry>Корейский.</entry>
+                    </row>
+                    <row>
+                        <entry>KSC_DICTIONARY</entry>
+                        <entry>Корейский — словарный порядок сортировки.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="5">NEXT</entry>
+                        <entry morerows="5">19</entry>
+                        <entry morerows="5">1</entry>
+                        <entry>NEXT</entry>
+                        <entry>Кодирование NeXTSTEP.</entry>
+                    </row>
+                    <row>
+                        <entry>NXT_DEU</entry>
+                        <entry>Немецкий.</entry>
+                    </row>
+                    <row>
+                        <entry>NXT_ESP</entry>
+                        <entry>Испанский.</entry>
+                    </row>
+                    <row>
+                        <entry>NXT_FRA</entry>
+                        <entry>Французский.</entry>
+                    </row>
+                    <row>
+                        <entry>NXT_ITA</entry>
+                        <entry>Итальянский.</entry>
+                    </row>
+                    <row>
+                        <entry>NXT_US</entry>
+                        <entry>Английский, США.</entry>
+                    </row>
+                    <row>
+                        <entry>NONE</entry>
+                        <entry>0</entry>
+                        <entry>1</entry>
+                        <entry>NONE</entry>
+                        <entry>Нейтральная кодовая страница. Перевод в верхний регистр выполняется
+                            только для кодов ASCII 97–122. Постарайтесь сделать так, чтобы этот
+                            набор символов никогда не появлялся в столбцах ваших баз данных.</entry>
+                    </row>
+                    <row>
+                        <entry>OCTETS</entry>
+                        <entry>1</entry>
+                        <entry>1</entry>
+                        <entry>OCTETS</entry>
+                        <entry>Двоичные символы.</entry>
+                    </row>
+                    <row>
+                        <entry>SJIS_0208</entry>
+                        <entry>5</entry>
+                        <entry>2</entry>
+                        <entry>SJIS_0208</entry>
+                        <entry>Японский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">TIS620</entry>
+                        <entry morerows="1">66</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>TIS620</entry>
+                        <entry>Тайский.</entry>
+                    </row>
+                    <row>
+                        <entry>TIS620_UNICODE</entry>
+                        <entry>Тайский.</entry>
+                    </row>
+                    <row>
+                        <entry>UNICODE_FSS</entry>
+                        <entry>3</entry>
+                        <entry>3</entry>
+                        <entry>UNICODE_FSS</entry>
+                        <entry>UNICODE</entry>
+                    </row>
+                    <row>
+                        <entry morerows="4">UTF8</entry>
+                        <entry morerows="4">4</entry>
+                        <entry morerows="4">4</entry>
+                        <entry>UTF8</entry>
+                        <entry>UNICODE 4.0.</entry>
+                    </row>
+                    <row>
+                        <entry>USC_BASIC</entry>
+                        <entry>UNICODE 4.0.</entry>
+                    </row>
+                    <row>
+                        <entry>UNICODE</entry>
+                        <entry>UNICODE 4.0.</entry>
+                    </row>
+                    <row>
+                        <entry>UNICODE_CI</entry>
+                        <entry>UNICODE 4.0. Не чувствительна к регистру символов.</entry>
+                    </row>
+                    <row>
+                        <entry>UNICODE_CI_AI</entry>
+                        <entry>UNICODE 4.0. Не чувствительна к регистру символов и к акцентам
+                            (ударению).</entry>
+                    </row>
+                    <row>
+                        <entry morerows="9">WIN1250</entry>
+                        <entry morerows="9">51</entry>
+                        <entry morerows="9">1</entry>
+                        <entry>WIN1250</entry>
+                        <entry>ANSI — Центральная Европа.</entry>
+                    </row>
+                    <row>
+                        <entry>BS_BA</entry>
+                        <entry>Боснийский.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_CSY</entry>
+                        <entry>Чешский.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_HUN</entry>
+                        <entry>Венгерский — не чувствительный к регистру и чувствительный к акценту
+                            (ударению).</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_HUNDC</entry>
+                        <entry>Венгерский — словарная сортировка.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_PLK</entry>
+                        <entry>Польский.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_SLOV</entry>
+                        <entry>Словенский.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN_CZ</entry>
+                        <entry>Чешский.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN_CZ_CI</entry>
+                        <entry>Чешский без различия строчных и прописных букв.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN_CZ_CI_AI</entry>
+                        <entry>Чешский без различия строчных и прописных букв, нечувствительный к
+                            знакам ударения.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="2">WIN1251</entry>
+                        <entry morerows="2">52</entry>
+                        <entry morerows="2">1</entry>
+                        <entry>WIN1251</entry>
+                        <entry>ANSI кириллица.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1251_UA</entry>
+                        <entry>Украинский.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_CYRL</entry>
+                        <entry>Paradox кириллица (русский).</entry>
+                    </row>
+                    <row>
+                        <entry morerows="6">WIN1252</entry>
+                        <entry morerows="6">53</entry>
+                        <entry morerows="6">1</entry>
+                        <entry>WIN1252</entry>
+                        <entry>ANSI — Латинский I.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_INTL</entry>
+                        <entry>Английский интернациональный.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_INTL850</entry>
+                        <entry>Paradox многоязыковый Латинский I.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_NORDAN4</entry>
+                        <entry>Норвежский и датский.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_SPAN</entry>
+                        <entry>Paradox испанский.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_SWEDFIN</entry>
+                        <entry>Шведский и финский.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN_PTBR</entry>
+                        <entry>Португальский, Бразилия.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">WIN1253</entry>
+                        <entry morerows="1">54</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>WIN1253</entry>
+                        <entry>ANSI греческий.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_GREEK</entry>
+                        <entry>Paradox греческий.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="1">WIN1254</entry>
+                        <entry morerows="1">55</entry>
+                        <entry morerows="1">1</entry>
+                        <entry>WIN1254</entry>
+                        <entry>ANSI турецкий.</entry>
+                    </row>
+                    <row>
+                        <entry>PXW_TURK</entry>
+                        <entry>Paradox турецкий.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1255</entry>
+                        <entry>58</entry>
+                        <entry>1</entry>
+                        <entry>WIN1255</entry>
+                        <entry>ANSI иврит.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1256</entry>
+                        <entry>59</entry>
+                        <entry>1</entry>
+                        <entry>WIN1256</entry>
+                        <entry>ANSI арабский.</entry>
+                    </row>
+                    <row>
+                        <entry morerows="3">WIN1257</entry>
+                        <entry morerows="3">60</entry>
+                        <entry morerows="3">1</entry>
+                        <entry>WIN1257</entry>
+                        <entry>ANSI балтийский.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1257_EE</entry>
+                        <entry>Эстонский. Словарное упорядочение.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1257_LT</entry>
+                        <entry>Литовский. Словарное упорядочение.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1257_LV</entry>
+                        <entry>Латвийский. Словарное упорядочение.</entry>
+                    </row>
+                    <row>
+                        <entry>WIN1258</entry>
+                        <entry>65</entry>
+                        <entry>1</entry>
+                        <entry>WIN1258</entry>
+                        <entry>Вьетнамский.</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </para>
+</appendix>

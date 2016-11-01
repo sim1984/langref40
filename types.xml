@@ -1,0 +1,2317 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="types" xml:lang="ru">
+    <info>
+        <title>Типы данных</title>
+    </info>
+
+    <para>Типы данных используются в случае: <itemizedlist>
+            <listitem>
+                <para>определения столбца в таблице базы данных в операторе CREATE TABLE или для его
+                    изменения с использованием ALTER TABLE;</para>
+            </listitem>
+            <listitem>
+                <para>при объявлении и редактировании домена оператором CREATE DOMAIN/ALTER DOMAIN;
+                </para>
+            </listitem>
+            <listitem>
+                <para>при объявлении локальных переменных в хранимых процедурах, функциях,
+                    PSQL-блоках и триггерах, при указании аргументов хранимых процедур и функций;
+                </para>
+            </listitem>
+            <listitem>
+                <para>при описании внешних функций (UDF – функций, определённых пользователем) для
+                    указания аргументов и возвращаемых значений; </para>
+            </listitem>
+            <listitem>
+                <para>при явном преобразовании типов данных в качестве аргумента для функции CAST.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </para>
+    <para>
+        <table>
+            <?dbfo keep-together='auto'?>
+            <title>Типы данных Firebird</title>
+
+            <tgroup cols="4">
+                <colspec colname="colName" colwidth="1*" align="left"/>
+                <colspec colname="colSize" colwidth="1*" align="left"/>
+                <colspec colname="colPrecision" colwidth="1*" align="left"/>
+                <colspec colname="colDesc" colwidth="2*" align="left"/>
+                <thead>
+                    <row valign="middle">
+                        <entry align="center">Название</entry>
+                        <entry align="center">Размер</entry>
+                        <entry align="center">Диапазон и точность</entry>
+                        <entry align="center">Описание</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>BIGINT</entry>
+                        <entry>64 бита</entry>
+                        <entry>-2<superscript>63</superscript> .. 2<superscript>63</superscript> -
+                            1</entry>
+                        <entry>Тип данных доступен только в 3 диалекте.</entry>
+                    </row>
+                    <row>
+                        <entry>BOOLEAN</entry>
+                        <entry>8 бит</entry>
+                        <entry>false, true, unknown</entry>
+                        <entry>Логический тип данных.</entry>
+                    </row>
+                    <row>
+                        <entry>BLOB</entry>
+                        <entry>Переменный</entry>
+                        <entry>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный размер
+                            поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер BLOB поля
+                            несколько ниже 2 Гб.</entry>
+                        <entry>Тип данных с динамически изменяемым размером для хранения больших
+                            данных, таких как графика, тексты, оцифрованные звуки. Базовая
+                            структурная единица — сегмент. Подтип Blob описывает содержимое.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>CHAR(<replaceable>n</replaceable>)</para>
+                            <para>CHARACTER(<replaceable>n</replaceable>)</para>
+                        </entry>
+                        <entry><replaceable>n</replaceable> символов (размер в байтах зависит от
+                            кодировки, кол-во байт на символ)</entry>
+                        <entry>от 1 до 32 767 байт</entry>
+                        <entry>Символьный тип данных фиксированной длины. При отображении данных,
+                            строка дополняется пробелами справа до указанной длины. Если количество
+                            символов <replaceable>n</replaceable> не указано, то по умолчанию
+                            принимается 1.</entry>
+                    </row>
+                    <row>
+                        <entry>DATE</entry>
+                        <entry>32 бита</entry>
+                        <entry>От 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
+                        <entry>ISC_DATE</entry>
+                    </row>
+                    <row>
+                        <entry>DECIMAL (<replaceable>precision</replaceable>,
+                                <replaceable>scale</replaceable>)</entry>
+                        <entry>Переменный (16, 32 или 64 бита)</entry>
+                        <entry>
+                            <para><replaceable>precision</replaceable> = от 1 до 18, указывает, по
+                                меньшей мере, количество цифр для хранения;</para>
+                            <para><replaceable>scale</replaceable> = от 0 до 18. Задаёт количество
+                                знаков после разделителя </para>
+                        </entry>
+                        <entry><replaceable>scale</replaceable> должно быть меньше или равно
+                                <replaceable>precision</replaceable>. Число с десятичной точкой,
+                            имеющей после точки <replaceable>scale</replaceable> разрядов. Пример:
+                            DECIMAL(10,3) содержит число точно в следующем формате: ppppppp.sss.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>DOUBLE PRECISION</entry>
+                        <entry>64 бита</entry>
+                        <entry>2,225 x 10<superscript>-308</superscript> .. 1,797 x
+                                10<superscript>308</superscript>
+                        </entry>
+                        <entry>IEEE двойной точности, 15 цифр, размер зависит от платформы </entry>
+                    </row>
+                    <row>
+                        <entry>FLOAT</entry>
+                        <entry>32 бита</entry>
+                        <entry>1,175 x 10<superscript>-38</superscript> .. 3,402 x
+                                10<superscript>38</superscript>
+                        </entry>
+                        <entry>IEEE одинарной точности, 7 цифр </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>INTEGER</para>
+                            <para>INT</para>
+                        </entry>
+                        <entry>32 бита</entry>
+                        <entry>–2 147 483 648 .. 2 147 483 647</entry>
+                        <entry>signed long</entry>
+                    </row>
+                    <row>
+                        <entry>NUMERIC (<replaceable>precision</replaceable>,
+                                <replaceable>scale</replaceable>)</entry>
+                        <entry>Переменный (16, 32 или 64 бита)</entry>
+                        <entry>
+                            <para><replaceable>precision</replaceable> = от 1 до 18, указывает, по
+                                меньшей мере, количество цифр для хранения;</para>
+                            <para><replaceable>scale</replaceable> = от 0 до 18. Задаёт количество
+                                знаков после разделителя.</para>
+                        </entry>
+                        <entry><replaceable>scale</replaceable> должно быть меньше или равно
+                            precision. Число с десятичной точкой, имеющей после точки scale
+                            разрядов. Пример: NUMERIC(10,3) содержит число точно в следующем
+                            формате: ppppppp.sss.</entry>
+                    </row>
+                    <row>
+                        <entry>SMALLINT</entry>
+                        <entry>16 бит</entry>
+                        <entry>–32 768 .. 32 767</entry>
+                        <entry>signed short (word)</entry>
+                    </row>
+                    <row>
+                        <entry>TIME</entry>
+                        <entry>32 бита</entry>
+                        <entry>От 0:00 до 23:59:59.9999</entry>
+                        <entry>ISC_TIME </entry>
+                    </row>
+                    <row>
+                        <entry>TIMESTAMP</entry>
+                        <entry>64 бита</entry>
+                        <entry>От 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
+                        <entry>Включает информацию и о времени</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <para>VARCHAR(<replaceable>n</replaceable>)</para>
+                            <para>CHAR VARYING</para>
+                            <para>CHARACTER VARYING</para>
+                        </entry>
+                        <entry><replaceable>n</replaceable> символов (размер в байтах зависит от
+                            кодировки, кол-ва байт на символ) </entry>
+                        <entry>От 1 до 32 765 байтов</entry>
+                        <entry>Размер символов в байтах с учётом их кодировки не может быть больше
+                            32765. Для этого типа данных, в отличие от CHAR (где по умолчанию
+                            предполагается количество символов 1), количество символов n обязательно
+                            должно быть указано.</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </para>
+    <note>
+        <para>Следует иметь в виду, что временной ряд из дат прошлых веков рассматривается без учёта
+            реальных исторических фактов и так, как будто бы во всем этом диапазоне ВСЕГДА
+            действовал только Григорианский календарь. </para>
+    </note>
+    <section xml:id="types-integer">
+        <info>
+            <title>Целочисленные типы данных</title>
+        </info>
+
+        <para>Для целых чисел используют целочисленные типы данных SMALLINT, INTEGER и BIGINT (в 3
+            диалекте). Firebird не поддерживает беззнаковый целочисленный тип данных. </para>
+        <section xml:id="types-integer-smallint">
+            <info>
+                <title>SMALLINT</title>
+            </info>
+            <indexterm><primary>SMALLINT</primary></indexterm>
+            <para>Тип данных SMALLINT представляет собой 16-битное целое. Он применяется в случае,
+                когда не требуется широкий диапазон возможных значений для хранения данных. </para>
+            <para>Числа типа SMALLINT находятся в диапазоне 2<superscript>-15</superscript> ..
+                    2<superscript>15</superscript> - 1, или -32 768 .. 32 767. </para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <programlisting language="sql">  
+CREATE DOMAIN DFLAG AS SMALLINT DEFAULT 0 NOT NULL
+  CHECK (VALUE=-1 OR VALUE=0 OR VALUE=1);
+
+CREATE DOMAIN RGB_VALUE AS SMALLINT;                
+                    </programlisting>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-integer-int">
+            <info>
+                <title>INTEGER</title>
+            </info>
+            <indexterm><primary>INTEGER</primary></indexterm>
+            <para>Тип данных INTEGER представляет собой 32-битное целое. Сокращённый вариант записи
+                типа данных INT.</para>
+            <para>Числа типа INTEGER находятся в диапазоне 2<superscript>-31</superscript> ..
+                    2<superscript>31</superscript> - 1, или -2 147 483 648 .. 2 147 483 647.</para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <programlisting language="sql">  
+CREATE TABLE CUSTOMER (
+  CUST_NO INTEGER NOT NULL,
+  CUSTOMER VARCHAR(25) NOT NULL,
+  CONTACT_FIRST VARCHAR(15),
+  CONTACT_LAST VARCHAR(20),
+  ...
+  PRIMARY KEY (CUST_NO) 
+);               
+                    </programlisting>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-integer-bigint">
+            <info>
+                <title>BIGINT</title>
+            </info>
+            <indexterm><primary>BIGINT</primary></indexterm>
+            <para>BIGINT — это SQL-99-совместимый 64 битный целочисленный тип данных. Он доступен
+                только в 3-м диалекте. При использовании клиентом диалекта 1, передаваемое сервером
+                значение генератора усекается до 32-х битного целого (INTEGER). При подключении в
+                3-м диалекте значение генератора имеет тип BIGINT. </para>
+            <para>Числа типа BIGINT находятся в диапазоне 2<superscript>-63</superscript> ..
+                    2<superscript>63</superscript> - 1, или -9 223 372 036 854 775 808 .. 9 223 372
+                036 854 775 807. </para>
+            <para>Числа типа BIGINT могут быть заданы в шестнадцатеричном виде с 9 — 16
+                шестнадцатеричными цифрами. Более короткие шестнадцатеричные числа интерпретируются
+                как тип данных INTEGER. </para>
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование типа BIGINT</title>
+
+                        <para>
+                            <programlisting language="sql">  
+CREATE TABLE WHOLELOTTARECORDS (
+  ID BIGINT NOT NULL PRIMARY KEY,
+  DESCRIPTION VARCHAR(32)
+);
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-integer-hex">
+            <title>Шестнадцатеричный формат для целых чисел</title>
+            <para>Начиная с Firebird 2.5, константы трех целочисленных типов можно указать в
+                шестнадцатеричном формате с помощью 9-16 шестнадцатеричных цифр для BIGINT или 1 до
+                8 цифр для INTEGER. Запись SMALLINT в шестнадцатеричном представлении не
+                поддерживается в явном виде, но Firebird будет прозрачно преобразовывать
+                шестнадцатеричное число в SMALLINT, если это необходимо, при условии что оно
+                попадает в допустимый диапазон положительных и отрицательных значений для
+                SMALLINT.</para>
+            <para>Использование и диапазоны значений чисел шестнадцатеричной нотации более подробно
+                описаны в ходе обсуждения <link linkend="common-expr-number-constants">целочисленных
+                    констант</link> в главе под названием <citetitle>Общие элементы
+                    языка</citetitle>.</para>
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование целых чисел заданных шестнадцатеричном виде</title>
+
+                        <para>
+                            <programlisting language="sql"> 
+INSERT INTO MYBIGINTS VALUES (
+  -236453287458723,
+  328832607832,
+  22,
+  -56786237632476,
+  0X6F55A09D42, -- 478177959234
+  0X7FFFFFFFFFFFFFFF, -- 9223372036854775807
+  0XFFFFFFFFFFFFFFFF, -- -1
+  0X80000000, -- -2147483648, т.е. INTEGER
+  0X080000000, -- 2147483648, т.е. BIGINT
+  0XFFFFFFFF, -- -1, т.е. INTEGER
+  0X0FFFFFFFF -- 4294967295, т.е. BIGINT
+);               
+                    </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+            <para>Шестнадцатеричный INTEGER автоматически приводится к типу BIGINT перед вставкой в
+                таблицу. Однако это происходит после установки численного значения, так 0x80000000
+                (8 цифр) и 0x080000000 (9 цифр) будут сохранены в разных форматах. Значение
+                0x80000000 (8 цифр) будет сохранено в формате INTEGER, а 0x080000000 (9 цифр) как
+                BIGINT. </para>
+        </section>
+    </section>
+    <section xml:id="types-float">
+        <info>
+            <title>Типы данных с плавающей точкой</title>
+        </info>
+
+        <para>Типы данных с плавающей точкой хранятся в двоичном формате IEEE 745, который включает
+            в себя знак, показатель степени и мантиссу. Точность этого типа является динамической, что
+            соответствует физическому формату хранения, который составляет 4 байта для типа FLOAT
+            и 8 байт для типа DOUBLE PRECISION.</para>
+        <para>Учитывая особенности хранения чисел с плавающей точкой, этот тип данных не
+            рекомендуется использовать для хранения денежных данных. По тем же причинам не
+            рекомендуется использовать столбцы с данными такого типа в качестве ключей и применять к
+            ним ограничения уникальности.</para>
+        <para>При проверке данных столбцов с типами данных с плавающей точкой рекомендуется вместо
+            точного равенства использовать выражения проверки вхождения в диапазон, например
+            BETWEEN.</para>
+        <para>При использовании таких типов данных в выражениях рекомендуется крайне внимательно и
+            серьёзно подойти к вопросу округления результатов расчётов.</para>
+        
+        <section xml:id="types-float-float">
+            <info>
+                <title>FLOAT</title>
+            </info>
+            <indexterm><primary>FLOAT</primary></indexterm>
+            <para>Данный тип данных обладает приблизительной точностью 7 цифр после запятой. Для
+                обеспечения надёжности хранения полагайтесь на 6 цифр.</para>
+        </section>
+        <section xml:id="types-float-double">
+            <info>
+                <title>DOUBLE PRECISION</title>
+            </info>
+            <indexterm><primary>DOUBLE PRECISION</primary></indexterm>
+            <para>При хранении данных, предполагается приблизительная точность 15 цифр.</para>
+        </section>
+    </section>
+    <section xml:id="types-fixed">
+        <info>
+            <title>Типы данных с фиксированной точкой</title>
+        </info>
+
+        <para>Данные типы данных позволяют применять их для хранения денежных значений и
+            обеспечивают предсказуемость операций умножения и деления. </para>
+        <para>Firebird предлагает два типа данных с фиксированной точкой: NUMERIC и DECIMAL. В
+            соответствии со стандартом оба типа ограничивают хранимое число объявленным масштабом
+            (количеством чисел после запятой). При этом подход к тому, как ограничивается точность
+            для типов разный: для столбцов NUMERIC точность является такой, <quote>как
+                объявлено</quote>, в то время как DECIMAL столбцы могут получать числа, чья
+            точность, по меньшей мере, равна тому, что было объявлено. </para>
+        <para>Например, NUMERIC(4, 2) описывает число, состоящее в общей сложности из четырёх цифр,
+            включая 2 цифры после запятой; итого 2 цифры до запятой, 2 после. При записи в столбец с
+            этим типом данных значений 3,1415 в столбце NUMERIC(4, 2) будет сохранено значение 3,14. </para>
+        <para>Для данных с фиксированной точкой общим является форма декларации, например
+                NUMERIC(<replaceable>p</replaceable>, <replaceable>s</replaceable>). Здесь важно
+            понять, что в этой записи <replaceable>s</replaceable> — это масштаб, а не интуитивно
+            предсказываемое <quote>количество знаков после запятой</quote>. Для
+                <quote>визуализации</quote> механизма хранения данных запомните для себя процедуру: </para>
+        <para>
+            <itemizedlist spacing="compact">
+                <listitem>
+                    <para>При сохранении в базу данных число умножается на
+                            10<superscript>s</superscript> (10 в степени
+                            <replaceable>s</replaceable>), превращаясь в целое; </para>
+                </listitem>
+                <listitem>
+                    <para>При чтении данных происходит обратное преобразование числа. </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>Способ физического хранения данных в СУБД зависит от нескольких факторов:
+            декларируемой точности, диалекта базы данных, типа объявления. </para>
+        <para>
+            <table xml:id="table-store-fixed">
+                <?dbfo keep-together='auto'?>
+                <title>Способ физического хранения вещественных чисел</title>
+
+                <tgroup cols="4">
+                    <colspec colname="colScale" colwidth="2*" align="left"/>
+                    <colspec colname="colType" colwidth="3*" align="left"/>
+                    <colspec colname="colDial01" colwidth="3*" align="left"/>
+                    <colspec colname="colDial03" colwidth="3*" align="left"/>
+                    <thead>
+                        <row valign="middle">
+                            <entry align="center">Точность</entry>
+                            <entry align="center">Тип данных</entry>
+                            <entry align="center">Диалект 1</entry>
+                            <entry align="center">Диалект 3</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row valign="middle">
+                            <entry>1 - 4</entry>
+                            <entry>NUMERIC</entry>
+                            <entry>SMALLINT</entry>
+                            <entry>SMALLINT</entry>
+                        </row>
+                        <row valign="middle">
+                            <entry>1 - 4</entry>
+                            <entry>DECIMAL</entry>
+                            <entry>INTEGER</entry>
+                            <entry>INTEGER</entry>
+                        </row>
+                        <row valign="middle">
+                            <entry>5 - 9</entry>
+                            <entry>NUMERIC и DECIMAL</entry>
+                            <entry>INTEGER</entry>
+                            <entry>INTEGER</entry>
+                        </row>
+                        <row valign="middle">
+                            <entry>10 - 18</entry>
+                            <entry>NUMERIC и DECIMAL</entry>
+                            <entry>DOUBLE PRECISION</entry>
+                            <entry>BIGINT</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+        <section xml:id="types-fixed-numeric">
+            <info>
+                <title>NUMERIC</title>
+            </info>
+            <indexterm><primary>NUMERIC</primary></indexterm>
+            <para>Формат объявления данных:
+                <programlisting> 
+NUMERIC(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
+                </programlisting>
+            </para>
+            <para>В зависимости от точности <replaceable>p</replaceable> и масштаба
+                    <replaceable>s</replaceable> СУБД хранит данные по-разному. </para>
+            <para>Приведём примеры того, как СУБД хранит данные в зависимости от формы их
+                объявления:
+                <programlisting> 
+NUMERIC(4)      SMALLINT 
+NUMERIC(4,2)    SMALLINT (data * 10<superscript>2</superscript>)
+NUMERIC(10,4)   DOUBLE PRECISION в 1-ом диалекте
+                BIGINT в 3-ем диалекте (data * 10<superscript>4</superscript>)
+                </programlisting>
+            </para>
+            <caution>
+                <para>Всегда надо помнить, что формат хранения данных зависит от точности. Например,
+                    вы задали тип столбца NUMERIC(2, 2), предполагая, что диапазон значений в нем
+                    будет — 0.99...0.99. Однако в действительности диапазон значений в столбце будет
+                    -327.68..327.68, что объясняется хранением типа данных NUMERIC(2, 2) в формате
+                    SMALLINT. Фактически типы данных NUMERIC(4, 2), NUMERIC(3, 2) и NUMERIC(2, 2)
+                    являются одинаковыми. Т.е. Для реального хранения данных в столбце с типом
+                    данных NUMERIC(2, 2) в диапазоне -0.99...0.99 для него надо создавать
+                    ограничение. </para>
+            </caution>
+        </section>
+        <section xml:id="types-fixed-decimal">
+            <info>
+                <title>DECIMAL</title>
+            </info>
+            <indexterm><primary>DECIMAL</primary></indexterm>
+            <para>Формат объявления данных:
+                <programlisting> 
+DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
+                </programlisting>
+            </para>
+            <para>Формат хранения данных в базе во многом аналогичен NUMERIC, хотя существуют
+                некоторые особенности, которые проще всего пояснить на примере. </para>
+            <para>Приведём примеры того, как СУБД хранит данные в зависимости от формы их
+                объявления:
+                <programlisting> 
+DECIMAL(4)      INTEGER
+DECIMAL(4,2)    INTEGER (data * 10<superscript>2</superscript>)
+DECIMAL(10,4)   DOUBLE PRECISION в 1-ом диалекте 
+                BIGINT в 3-ем диалекте (data * 10<superscript>4</superscript>)
+                </programlisting>
+            </para>
+        </section>
+    </section>
+    <section xml:id="types-datetime">
+        <info>
+            <title>Типы данных для работы с датой и временем</title>
+        </info>
+
+        <para>В СУБД Firebird для работы с данными, содержащими дату и время, используются типы
+            данных DATE, TIME, TIMESTAMP. В 3-м диалекте присутствуют все три вышеназванных типа
+            данных, а в 1-м для операций с датой и временем доступен только тип данных DATE, который
+            не тождественен типу данных DATE 3-го диалекта, а напоминает тип данных TIMESTAMP из
+            3-го диалекта. </para>
+        <note>
+            <para>В диалекте 1 тип DATE может быть объявлен как TIMESTAMP. Такое объявление является
+                рекомендуемым для новых баз данных в 1-м диалекте. </para>
+        </note>
+        <para>В типах DATETIME и TIME Firebird хранит секунды с точностью до десятитысячных долей.
+            Если вам необходима более низкая гранулярность, то точность может быть указана явно в
+            виде тысячных, сотых или десятых долей секунды в базах данных в 3 диалекте и ODS 11 и
+            выше.</para>
+        <note>
+            <title>Несколько полезных сведений о точности секунд</title>
+            <para>Временная часть типов TIME или TIMESTAMP представляет собой 4-байтный целое (WORD)
+                вмещающее значение времени с долями секунды, и хранящаяся как количество
+                десятитысячных долей секунды прошедших с полуночи. Фактическая точность значений
+                полученных из time(stamp) функций и переменных будет следующей: <itemizedlist>
+                    <listitem>
+                        <para>CURRENT_TIME — по умолчанию имеет точность до секунды, точность до
+                            миллисекунд может быть указана следующим образом
+                            <programlisting>CURRENT_TIME (0 | 1 | 2 | 3)</programlisting></para>
+                    </listitem>
+                    <listitem>
+                        <para>CURRENT_TIMESTAMP — по умолчанию имеет точность до миллисекунды,
+                            точность от секунд до миллисекунд может быть указана следующим образом
+                            <programlisting>CURRENT_TIMESTAMP (0 | 1 | 2 | 3)</programlisting></para>
+                    </listitem>
+                    <listitem>
+                        <para>Литерал 'NOW' имеет точность до миллисекунд;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Функции DATEADD и DATEDIFF поддерживают точность до десятых долей
+                            миллисекунд.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Функция EXTRACT возвращает значения с точностью до десятых долей
+                            миллисекунды для аргументов SECOND и MILLISECOND;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </note>
+        <section xml:id="types-datetime-date">
+            <info>
+                <title>DATE</title>
+            </info>
+            <indexterm><primary>DATE</primary></indexterm>
+            <para>В 3-м диалекте тип данных DATE, как это и следует предположить из названия, хранит
+                только одну дату без времени. В 1-м диалекте нет типа данных "только дата". </para>
+            <para>Допустимый диапазон хранения от 1 января 1 г. н.э. до 31 декабря 9999 года. </para>
+            <tip>
+                <para>В случае необходимости сохранять в 1 диалекте только значения даты, без
+                    времени, при записи в таблицу добавляйте время к значению даты в виде литерала
+                    '00:00:00.0000'. </para>
+            </tip>
+        </section>
+        <section xml:id="types-datetime-time">
+            <info>
+                <title>TIME</title>
+            </info>
+            <indexterm><primary>TIME</primary></indexterm>
+            <para>Этот тип данных доступен только в 3-м диалекте. Позволяет хранить время дня в
+                диапазоне от 00:00:00.0000 до 23:59:59.9999. </para>
+            <para>При необходимости получения времени из DATE. в 1-м диалекте можно использовать
+                функцию EXTRACT. </para>
+            <example>
+                <info>
+                    <title>Пример использования EXTRACT</title>
+                </info>
+
+                <para>
+                    <programlisting language="sql">
+EXTRACT (HOUR FROM DATE_FIELD)
+EXTRACT (MINUTE FROM DATE_FIELD)
+EXTRACT (SECOND FROM DATE_FIELD)                    
+                    </programlisting>
+                </para>
+            </example>
+            <para>См. также описание функции <link linkend="internalfunc-func-datetime-extract"
+                    >EXTRACT</link> в главе под названием <citetitle>Встроенные функции и
+                    переменные</citetitle>. </para>
+        </section>
+        <section xml:id="types-datetime-timestamp">
+            <info>
+                <title>TIMESTAMP</title>
+            </info>
+            <indexterm><primary>TIMESTAMP</primary></indexterm>
+            <para>Этот тип данных доступен только в 3-м диалекте, состоит из двух 32-битных слов и
+                хранит дату со временем. Такое хранение эквивалентно типу DATE 1-го диалекта.
+            </para>
+        </section>
+        <section xml:id="types-datetime-operation">
+            <info>
+                <title>Операции, использующие значения даты и времени</title>
+            </info>
+            <para>Благодаря способу хранения даты и времени с этими типами возможны арифметические
+                операции вычитания из более поздней даты (времени) более раннюю. Дата представлена
+                количеством дней с &quot;нулевой даты&quot; – 17 ноября 1858 г. Время представлено
+                количеством секунд (с учётом десятитысячных долей), прошедших с полуночи. </para>
+            <para>
+                <table xml:id="types-datetime-tbl-operation" frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Арифметические операции для типов данных даты и времени</title>
+                    <tgroup cols="4">
+                        <colspec colname="colOp01" colnum="1" colwidth="1*" align="left"/>
+                        <colspec colname="colOp" colnum="2" colwidth="1*" align="center"/>
+                        <colspec colname="colOp02" colnum="3" colwidth="1*" align="left"/>
+                        <colspec colname="colResult" colnum="4" colwidth="2*" align="justify"/>
+                        <thead>
+                            <row valign="middle">
+                                <entry align="center">Операнд 1</entry>
+                                <entry align="center">Оператор</entry>
+                                <entry align="center">Операнд 2</entry>
+                                <entry align="center">Результат</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row valign="middle">
+                                <entry>DATE</entry>
+                                <entry>+</entry>
+                                <entry>TIME</entry>
+                                <entry>TIMESTAMP</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>DATE</entry>
+                                <entry>+</entry>
+                                <entry>
+                                    <replaceable>n</replaceable>
+                                </entry>
+                                <entry>DATE, увеличенная на <replaceable>n</replaceable> целых дней
+                                    (дробная часть игнорируется).</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIME</entry>
+                                <entry>+</entry>
+                                <entry>DATE</entry>
+                                <entry>TIMESTAMP</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIME</entry>
+                                <entry>+</entry>
+                                <entry>
+                                    <replaceable>n</replaceable>
+                                </entry>
+                                <entry>TIME, увеличенное на <replaceable>n</replaceable> секунд
+                                    (дробная часть учитывается)</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIMESTAMP</entry>
+                                <entry>+</entry>
+                                <entry>
+                                    <replaceable>n</replaceable>
+                                </entry>
+                                <entry>TIMESTAMP, где дни увеличены на целую часть числа
+                                        <replaceable>n</replaceable>, плюс дробная часть числа
+                                        <replaceable>n</replaceable> (если указана) как количество
+                                    секунд в дне (с точностью до десятитысячных долей секунды).
+                                </entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>DATE</entry>
+                                <entry>-</entry>
+                                <entry>DATE</entry>
+                                <entry>Количество дней в интервале DECIMAL (9, 0)</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>DATE</entry>
+                                <entry>-</entry>
+                                <entry>
+                                    <replaceable>n</replaceable>
+                                </entry>
+                                <entry>DATE, уменьшенная на <replaceable>n</replaceable> целых дней
+                                    (дробная часть игнорируется)</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIME</entry>
+                                <entry>-</entry>
+                                <entry>TIME</entry>
+                                <entry>Количество секунд в интервале DECIMAL (9, 4)</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIME</entry>
+                                <entry>-</entry>
+                                <entry>
+                                    <replaceable>n</replaceable>
+                                </entry>
+                                <entry>TIME, уменьшенное на <replaceable>n</replaceable> секунд
+                                    (дробная часть учитывается)</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIMESTAMP</entry>
+                                <entry>-</entry>
+                                <entry>TIMESTAMP</entry>
+                                <entry>Количество дней и части дня в интервале DECIMAL (18, 9)
+                                </entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>TIMESTAMP</entry>
+                                <entry>-</entry>
+                                <entry>
+                                    <replaceable>n</replaceable>
+                                </entry>
+                                <entry>TIMESTAMP, где дни уменьшены на целую часть числа
+                                        <replaceable>n</replaceable>, плюс дробная часть числа
+                                        <replaceable>n</replaceable> (если указана) как количество
+                                    секунд в дне (с точностью до десятитысячных долей секунды).
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Одно значение даты/времени может быть вычтено из другого если: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para>Оба значения имеют один и тот же тип даты/времени;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Первый операнд является более поздним, чем второй.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <note>
+                <para>В диалекте 1 тип DATE рассматривается как TIMESTAMP.</para>
+            </note>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="internalfunc-func-datetime-dateadd">DATEADD</link>, <link
+                        linkend="internalfunc-func-datetime-datediff">DATEDIFF</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="types-char">
+        <info>
+            <title>Символьные типы данных</title>
+        </info>
+
+        <para>В СУБД Firebird для работы с символьными данными есть тип данных фиксированной длины
+            CHAR и строковый тип данных VARCHAR переменной длины. Максимальный размер текстовых
+            данных, хранящийся в этих типах данных, составляет 32767 байт для типа CHAR и 32765 байт
+            для типа VARCHAR. Максимальное количество символов, которое поместится в этот объём,
+            зависит от используемого набора символов CHARACTER SET и/или заданного порядка
+            сортировки, который для символьных данных задаётся предложением COLLATE. </para>
+        <para>В случае отсутствия явного указания набора символов при описании текстового объекта
+            базы данных будет использоваться набор символов по умолчанию, заданный при создании базы
+            данных. При отсутствии явного указания набора символов, а также отсутствия набора
+            символов по умолчанию в базе данных, поле получает набор символов CHARACTER SET NONE. </para>
+        <para>Если база данных будет содержать строки только с русским алфавитом, то для неё
+            рекомендуется к использованию кодировка WIN1251. При её использовании на один символ
+            расходуется 1 байт, соответственно максимальный размер текстовых полей для данной
+            кодировки будет 32767 символов. Для стандартных операций сортировки при работе с WIN1251
+            не требуется задавать порядок сортировки (COLLATE). </para>
+        <section xml:id="types-char-unicode">
+            <title>UNICODE</title>
+            <para>В настоящее время все современные средства разработки поддерживают Unicode. При
+                возникновении необходимости использования восточноевропейских текстов в строковых
+                полях базы данных или для более экзотических алфавитов, рекомендуется работать с
+                набором символов UTF8. При этом следует иметь в виду, что на один символ в данном
+                наборе приходится до 4 байт. Следовательно, максимальный размер символов в
+                символьных полях составит 32676/4 (8192) байта на символ. При этом следует обратить
+                внимание, что фактически значение параметра <quote>байт на символ</quote> зависит от
+                диапазона, к которому принадлежит символ: английские буквы занимают 1 байт, русские
+                буквы кодировки WIN1251 — 2 байта, остальные символы — могут занимать до 4-х байт. </para>
+            <para>Набор символов UTF8 поддерживает последнюю версию стандарта Unicode, до 4 байт на
+                символ, поэтому для интернациональных баз рекомендуется использовать именно эту
+                реализацию поддержки Unicode в Firebird. </para>
+        </section>
+        <section xml:id="types-char-clientcharset">
+            <title>Набор символов клиента</title>
+            <para>При работе со строками необходимо помнить и о параметре соединения клиентской
+                программы к базе данных. В нём также задаётся набор символов. В случае различия
+                набора символов, при выдаче результата для строковых столбцов происходит
+                автоматическая перекодировка как при передаче данных с клиента на сервер, так и в
+                обратном направлении с сервера на клиента. То есть, совершенно нормальной является
+                ситуация, когда база создана в кодировке WIN1251, а в настройках клиента в
+                параметрах соединения стоит KOI8R или UTF8. </para>
+        </section>
+        <section xml:id="types-char-specialcharset">
+            <title>Специальные наборы символов</title>
+            <para>Набор символов NONE относится к специальным наборам символов. Его можно
+                охарактеризовать тем, что каждый байт является частью строки, но в системе хранится
+                без указаний, к какому фактическому набору символов они относятся. Разбираться с
+                такими данными должно клиентское приложение, на него возлагается ответственность в
+                правильной трактовке символов из таких полей. </para>
+            <para>Также к специальным наборам символов относится OCTETS. В этом случае данные
+                рассматриваются как байты, которые могут в принципе не интерпретироваться как
+                символы. OCTETS позволяет хранить бинарные данные и/или результаты работы некоторых
+                функций Firebird. Правильное отображение данных пользователю, хранящихся в полях с
+                CHARACTER SET OCTETS, также становится заботой клиентской стороны. При работе с
+                подобными данными следует также помнить, что СУБД не контролирует их содержимое и
+                возможно возникновение исключения при работе кода, когда идёт попытка отображения
+                бинарных данных в желаемой кодировке. </para>
+        </section>
+        <section xml:id="types-char-collate">
+            <title>Последовательность сортировки</title>
+            <para>Каждый текстовый набор символов (CHARACTER SET) имеет последовательность
+                сортировки (COLLATE) по умолчанию, задающий порядок сортировки и способы сравнения.
+                Если необходимо нестандартное поведение строк при указанных выше действиях, то в
+                описании строкового столбца может быть указан параметр COLLATE, который его опишет.
+                Помимо описания объявления столбца, выражение COLLATE может быть добавлено в
+                предложениях SELECT в секции WHERE, когда происходят операции сравнения больше —
+                меньше, в секции ORDER BY при сортировке по символьному полю, а также при операциях
+                группировки для указания специальной последовательности сортировки при выводе в
+                предложении GROUP BY. </para>
+            <section xml:id="types-char-collate-search-casein">
+                <title>Регистронезависимый поиск</title>
+                <para>Для регистронезависимого поиска можно воспользоваться функцией UPPER: </para>
+                <para>
+                    <programlisting language="sql">
+WHERE UPPER(name) = UPPER(:flt_name)                
+            </programlisting>
+                </para>
+                <para>Для строк с набором символов WIN1251 можно для этих же целей воспользоваться
+                    предложением COLLATE PXW_CYRL. </para>
+                <formalpara>
+                    <title>Пример:</title>
+
+                    <para>
+                        <programlisting language="sql">  
+WHERE FIRST_NAME COLLATE PXW_CYRL &gt;= :FLT_NAME                    
+                </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Пример сортировки независимой от регистра символов:</title>
+
+                    <para>
+                        <programlisting language="sql">  
+ORDER BY NAME COLLATE PXW_CYRL                  
+                </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="common-predicats-othercompare-containing">CONTAINING</link>.
+                    </para>
+                </formalpara>
+            </section>
+            <section xml:id="types-char-collate-utf8">
+                <title>Последовательности сортировки для UTF-8</title>
+                <para>Ниже приведена таблица возможных последовательностей сортировки для набора
+                    символов UTF8. </para>
+                <para>
+                    <table xml:id="table-utf8-collation">
+                        <?dbfo keep-together='auto'?>
+                        <title>Последовательности сортировки для UTF8</title>
+
+                        <tgroup cols="2">
+                            <colspec colname="colColl" colwidth="1*" align="left"/>
+                            <colspec colname="colDesc" colwidth="3*" align="justify"/>
+                            <thead>
+                                <row valign="middle">
+                                    <entry align="center">COLLATION</entry>
+                                    <entry align="center">Комментарии</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row valign="middle">
+                                    <entry>UCS_BASIC</entry>
+                                    <entry>Сортировка работает в соответствии с положением символа в
+                                        таблице (бинарная): Пример: A, B, a, b, a... </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>UNICODE</entry>
+                                    <entry>Сортировка работает в соответствии с алгоритмом UCA
+                                        (Unicode Collation Algorithm) (алфавитная). Пример: a, A, a,
+                                        b, B... </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>UTF-8</entry>
+                                    <entry>Сортировка происходит без учёта регистра символа.
+                                    </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>UNICODE_CI_AI</entry>
+                                    <entry>Сортировка происходит без учёта регистра символа, в
+                                        алфавитном порядке.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <para>Пример сортировки строк для набора символов UTF8 без учёта регистра символов
+                    (эквивалент COLLATE PXW_CYRL)
+                    <programlisting language="sql">  
+ORDER BY NAME COLLATE UNICODE_CI_AI                 
+            </programlisting>
+                </para>
+            </section>
+        </section>
+        <section xml:id="types-char-index">
+            <title>Индексирование символьных типов</title>
+            <para>При построении индекса по строковым полям необходимо учитывать ограничение на
+                длину ключа индекса. Максимальная используемая длина ключа индекса равна 1/4 размера
+                страницы, т.е. от 1024 до 4096 байтов. Максимальная длина индексируемой строки на 9
+                байтов меньше, чем максимальная длина ключа. В таблице приведены данные для
+                максимальной длины индексируемой строки (в символах) в зависимости от размера
+                страницы и набора символов, её можно вычислить по следующей формуле:
+                <programlisting>  
+<replaceable>max_char_length</replaceable> = FLOOR((<replaceable>page_size</replaceable> / 4 – 9) / <replaceable>N</replaceable>),                
+            </programlisting>
+                где <replaceable>N</replaceable> — число байтов на представление символа. </para>
+            <para>
+                <table xml:id="types-tbl-charindxsz" frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Длина индексируемой строки и набор символов</title>
+                    <tgroup cols="6">
+                        <colspec colname="colPgsz" colnum="1" colwidth="1*" align="center"/>
+                        <colspec colname="col1B" colnum="2" colwidth="1*" align="center"/>
+                        <colspec colname="col2B" colnum="3" colwidth="1*" align="center"/>
+                        <colspec colname="col3B" colnum="4" colwidth="1*" align="center"/>
+                        <colspec colname="col4B" colnum="5" colwidth="1*" align="center"/>
+                        <colspec colname="col6B" colnum="6" colwidth="1*" align="center"/>
+                        <thead>
+                            <row>
+                                <entry morerows="1">Размер страницы</entry>
+                                <entry namest="col1B" nameend="col6B">Максимальная длина
+                                    индексируемой строки для набора символов, байт/символ</entry>
+                            </row>
+                            <row>
+                                <entry>1</entry>
+                                <entry>2</entry>
+                                <entry>3</entry>
+                                <entry>4</entry>
+                                <entry>6</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>4096</entry>
+                                <entry>1015</entry>
+                                <entry>507</entry>
+                                <entry>338</entry>
+                                <entry>253</entry>
+                                <entry>169</entry>
+                            </row>
+                            <row>
+                                <entry>8192</entry>
+                                <entry>2039</entry>
+                                <entry>1019</entry>
+                                <entry>679</entry>
+                                <entry>509</entry>
+                                <entry>339</entry>
+                            </row>
+                            <row>
+                                <entry>16384</entry>
+                                <entry>4087</entry>
+                                <entry>2043</entry>
+                                <entry>1362</entry>
+                                <entry>1021</entry>
+                                <entry>682</entry>
+                            </row>
+                            <row>
+                                <entry>32768</entry>
+                                <entry>9183</entry>
+                                <entry>4087</entry>
+                                <entry>2721</entry>
+                                <entry>2039</entry>
+                                <entry>1356</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <note>
+                <para>В кодировках, нечувствительных к регистру ("_CI"), один символ в *индексе*
+                    будет занимать не 4, а 6 (шесть) байт, поэтому максимальная длина ключа для
+                    страницы, скажем, 4096 байт, составит 169 символов. </para>
+            </note>
+            <para>Последовательность сортировки (COLLATE) тоже может повлиять на максимальную длину
+                индексируемой строки. Полный список доступных наборов символов и нестандартных
+                порядков сортировки доступен в приложении <link linkend="charset-coll">Наборы
+                    символов и порядки сортировки</link>.</para>
+        </section>
+        <section xml:id="types-char-char">
+            <info>
+                <title>CHAR</title>
+            </info>
+            <indexterm><primary>CHAR</primary></indexterm>
+            <para>CHAR является типом данных фиксированной длины. Если введённое количество символом
+                меньше объявленной длины, то поле дополнится концевыми пробелами. В общем случае
+                символ заполнитель может и не являться пробелом, он зависит от набора символов, так
+                например, для набора символов OCTETS — это ноль. </para>
+            <para>Полное название типа данных CHARACTER, но при работе нет необходимости
+                использовать полные наименования; инструменты по работе с базой прекрасно понимают и
+                короткие имена символьных типов данных. </para>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+CHAR [(<replaceable>length</replaceable>)] [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
+                     </programlisting>
+                </para>
+            </formalpara>
+            <para>В случае если не указана длина, то считается, что она равна единице. </para>
+            <para>Данный тип символьных данных можно использовать для хранения в справочниках кодов,
+                длина которых стандартна и определённой <quote>ширины</quote>. Примером такого может
+                служить почтовый индекс в России – 6 символов. </para>
+        </section>
+        <section xml:id="types-char-varchar">
+            <info>
+                <title>VARCHAR</title>
+            </info>
+            <indexterm><primary>VARCHAR</primary></indexterm>
+            <para>Является базовым строковым типом для хранения текстов переменной длины, поэтому
+                реальный размер хранимой структуры равен фактическому размеру данных плюс 2 байта, в
+                которых задана длина поля.</para>
+            <para>Все символы, которые передаются с клиентского приложения в базу данных, считаются
+                как значимые, включая начальные и конечные пробельные символы.</para>
+            <para>Полное название CHARACTER VARYING. Имеется и сокращённый вариант записи CHAR
+                VARYING. </para>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+VARCHAR (<replaceable>length</replaceable>) [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
+                     </programlisting>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-char-nchar">
+            <info>
+                <title>NCHAR</title>
+            </info>
+            <indexterm><primary>NCHAR</primary></indexterm>
+            <para>Представляет собой символьный тип данных фиксированной длины с предопределённым
+                набором символов ISO8859_1. </para>
+            <formalpara>
+                <title>Синтаксис</title>
+
+                <para>
+                    <programlisting>  
+NCHAR [(<replaceable>length</replaceable>)]                 
+                     </programlisting>
+                </para>
+            </formalpara>
+            <para>Синонимом является написание NATIONAL CHAR. </para>
+            <para>Аналогичный тип данных доступен для строкового типа переменной длины: NATIONAL
+                CHARACTER VARYING. </para>
+        </section>
+        <section xml:id="types-char-literals">
+            <info>
+                <title>Строковые литералы</title>
+            </info>
+            <para>Строковые литералы могут содержать произвольные символы, допустимые для
+                применяемого набора символов. Весь литерал заключается в апострофы. Апостроф внутри
+                символьного литерала должен повторяться два раза, чтобы отличить его от признака
+                завершения литерала. Максимальная длина строкового литерала составляет 65535
+                Байт.</para>
+            <note>
+                <para>Необходимо быть осторожным с длиной строки, если значение должно быть записано
+                    в столбец типа <database>VARCHAR</database>. Максимальная длина строки для типа
+                        <database>VARCHAR</database> составляет 32765 байт (32767 для типа CHAR).
+                    Если значение должно быть записано в столбец типа <database>BLOB</database>, то
+                    максимальная длина строкового литерала составляет 65535 байт.</para>
+            </note>
+            <para>Примеры строковых констант:
+                <programlisting language="sql">  
+'Mrs. Hunt''s husband'                
+                     </programlisting>
+            </para>
+            <section xml:id="types-char-literals-altquotes">
+                <info>
+                    <title>Альтернативы для апострофов в строковых литералах</title>
+                </info>
+                <indexterm><primary>Q</primary></indexterm>
+                <para>Вместо двойного (экранированного) апострофа вы можете использовать другой
+                    символ или пару символов.</para>
+                <para>Ключевое слово q или Q предшествующее строке в кавычках сообщает парсеру, что
+                    некоторые левые и правые пары одинаковых символов являются разделителями для
+                    встроенного строкового литерала.</para>
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para><programlisting>
+<replaceable>&lt;alternate string literal&gt;</replaceable> ::=
+  { q | Q } <replaceable>&lt;quote&gt;</replaceable> <replaceable>&lt;alternate start char&gt;</replaceable> 
+  [ { <replaceable>&lt;char&gt;</replaceable> }... ] 
+  <replaceable>&lt;alternate end char&gt;</replaceable> <replaceable>&lt;quote&gt;</replaceable>
+            </programlisting></para>
+                </formalpara>
+                <para><emphasis>Описание:</emphasis></para>
+                <para>Когда <replaceable>&lt;alternate start char&gt;</replaceable> является одним
+                    из символов '(', '{', '[' или '&lt;', то <replaceable>&lt;alternate end
+                        char&gt;</replaceable> должен быть использован в паре с соответствующим
+                    &quot;партнёром&quot;, а именно ')', '}', ']' или '&gt;'. В других случаях
+                        <replaceable>&lt;alternate end char&gt;</replaceable> совпадает с
+                        <replaceable>&lt;alternate start char&gt;</replaceable>. </para>
+                <para>Внутри строки, т.е. <replaceable>&lt;char&gt;</replaceable> элементах,
+                    одиночные (не экранированные) кавычки могут быть использованы. Каждая кавычка
+                    будет частью результирующей строки. </para>
+                <para><emphasis>Примеры:</emphasis></para>
+                <example>
+                    <title>Использование альтернативных апострофов в строковых литералах</title>
+                    <para>
+                        <programlisting>
+-- result: abc{def}ghi
+<emphasis role="bold">SELECT</emphasis> Q'{abc{def}ghi}' <emphasis role="bold">FROM</emphasis> rdb$database; 
+
+-- result: That's a string
+<emphasis role="bold">SELECT</emphasis> Q'!That's a string!' <emphasis role="bold">FROM</emphasis> rdb$database;                         
+                    </programlisting>
+                        Динамическая сборка запроса использующего строковые литералы.
+                        <programlisting language="sql">
+EXECUTE BLOCK
+RETURNS (
+  RDB$TRIGGER_NAME CHAR(64)
+)
+AS
+  DECLARE VARIABLE S VARCHAR(8191);
+BEGIN
+  S = 'SELECT RDB$TRIGGER_NAME FROM RDB$TRIGGERS WHERE RDB$RELATION_NAME IN ';
+  S = S || Q'! ('SALES_ORDER', 'SALES_ORDER_LINE')!';
+  FOR
+    EXECUTE STATEMENT :S
+    INTO :RDB$TRIGGER_NAME
+  DO
+    SUSPEND;
+END                        
+                    </programlisting>
+                    </para>
+                </example>
+            </section>
+        </section>
+    </section>
+    <section xml:id="types-boolean">
+        <info>
+            <title>BOOLEAN</title>
+        </info>
+        <indexterm><primary>BOOLEAN</primary></indexterm>
+        <para>SQL-2008 совместимый тип данных BOOLEAN (8 бит) включает различные значения истинности
+            TRUE и FALSE. Если не установлено ограничение NOT NULL, то тип данных BOOLEAN
+            поддерживает также значение истинности UNKNOWN как NULL значение. Спецификация не делает
+            различия между значением NULL этого типа и значением истинности UNKNOWN, которое
+            является результатом SQL предиката, поискового условия или выражения логического типа.
+            Эти значения взаимозаменяемы и обозначают одно и то же. </para>
+        <para>Как и в других языках программирования, значения типа BOOLEAN могут быть проверены в
+            неявных значениях истинности. Например, <emphasis role="bold">field1 OR
+                field2</emphasis> или <emphasis role="bold">NOT field1</emphasis> являются
+            допустимыми выражениями. </para>
+        <para>Предикаты могут использовать оператор <link linkend="common-predicats-othercompare-is"
+                >IS [NOT]</link> для проверки соответствия. Например, <emphasis role="bold">field1
+                IS FALSE</emphasis> или <emphasis role="bold">field1 IS NOT TRUE</emphasis>. </para>
+        <note>
+            <para>
+                <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>Представлен в API типом FB_BOOLEAN и константами FB_TRUE и
+                            FB_FALSE;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Операторы эквивалентности (<command>=, !=, &lt;&gt;</command> и др.)
+                            допустимы во всех сравнениях;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Значение TRUE больше чем FALSE;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Несмотря на то, что тип данных BOOLEAN не преобразуется неявно ни к
+                            одному типу, возможно явное преобразование к строке с помощью функции
+                            CAST.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </note>
+        <para><emphasis>Примеры:</emphasis></para>
+        <example>
+            <title>Использование типа BOOLEAN</title>
+
+            <para><programlisting language="sql">
+CREATE TABLE TBOOL (ID INT, BVAL BOOLEAN); 
+COMMIT; 
+
+INSERT INTO TBOOL VALUES (1, TRUE); 
+INSERT INTO TBOOL VALUES (2, 2 = 4); 
+INSERT INTO TBOOL VALUES (3, NULL = 1); 
+COMMIT; 
+
+SELECT * FROM TBOOL 
+</programlisting>
+                <screen>                
+ID           BVAL 
+============ ======= 
+1            &lt;true&gt; 
+2            &lt;false&gt;
+3            &lt;null&gt; 
+</screen>
+                <programlisting language="sql">
+-- Проверка TRUE значения 
+SELECT * FROM TBOOL WHERE BVAL 
+</programlisting>
+                <screen>   
+ID           BVAL 
+============ ======= 
+1            &lt;true&gt; 
+</screen>
+                <programlisting language="sql">
+-- Проверка FALSE значения 
+SELECT * FROM TBOOL WHERE BVAL IS FALSE 
+</programlisting>
+                <screen>   
+ID           BVAL 
+============ ======= 
+2            &lt;false&gt; 
+</screen>
+                <programlisting language="sql">
+-- Проверка UNKNOWN значения 
+SELECT * FROM TBOOL WHERE BVAL IS UNKNOWN 
+</programlisting>
+                <screen>  
+ID           BVAL 
+============ ======= 
+3            &lt;null&gt; 
+</screen>
+                <programlisting language="sql">
+-- Логические значения в SELECT списке 
+SELECT ID, BVAL, BVAL AND ID &lt; 2 
+FROM TBOOL 
+</programlisting>
+                <screen>  
+ID           BVAL 
+============ ======= ======= 
+1            &lt;true&gt; &lt;true&gt; 
+2            &lt;false&gt; &lt;false&gt; 
+3            &lt;null&gt; &lt;false&gt; 
+</screen>
+                <programlisting language="sql">                
+-- PSQL объявления с начальным значением 
+DECLARE VARIABLE VAR1 BOOLEAN = TRUE;
+
+-- Допустимый синтаксис, но как и сравнение 
+-- с NULL, никогда не вернёт ни одной записи 
+SELECT * FROM TBOOL WHERE BVAL = UNKNOWN 
+SELECT * FROM TBOOL WHERE BVAL &lt;&gt; UNKNOWN                
+            </programlisting></para>
+        </example>
+    </section>
+    <section xml:id="types-bynary">
+        <info>
+            <title>Бинарные типы данных</title>
+        </info>
+        <section xml:id="types-bynary-blob">
+            <info>
+                <title>BLOB</title>
+            </info>
+            <indexterm><primary>BLOB</primary></indexterm>
+            <para>BLOB (Binary Large Objects, большие двоичные объекты) представляют собой сложные
+                структуры, предназначенные для хранения текстовых и двоичных данных неопределённой
+                длины, зачастую очень большого объёма. </para>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+BLOB [SUB_TYPE <replaceable>&lt;subtype&gt;</replaceable>]
+[SEGMENT SIZE <replaceable>&lt;seg_length&gt;</replaceable>]
+[CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>]                 
+                </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Сокращённый синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+BLOB (<replaceable>&lt;seg_length&gt;</replaceable>)
+BLOB (<replaceable>&lt;seg_length&gt;</replaceable>, <replaceable>&lt;subtype&gt;</replaceable>)
+BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)                 
+                </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Размер сегмента:</title>
+                <para>Указание размера сегмента BLOB является некоторым атавизмом, оно идёт с тех
+                    времён, когда приложения для работы с данными BLOB писались на C (Embedded SQL)
+                    при помощи GPRE. В настоящий момент размер сегмента при работе с данными BLOB
+                    определяется клиентской частью, причём размер сегмента может превышать размер
+                    страницы данных. </para>
+            </formalpara>
+            <section xml:id="types-bynary-blob-subtype">
+                <title>Подтипы BLOB</title>
+                <para>Подтип BLOB отражает природу данных, записанную в столбце. Firebird
+                    предоставляет два предопределённых подтипа для сохранения пользовательских
+                    данных: <itemizedlist spacing="compact">
+                        <listitem>
+                            <formalpara>
+                                <title>Подтип 0 (BINARY):</title>
+                                <para>Если подтип не указан, то данные считаются нетипизированными и
+                                    значение подтипа принимается равным 0. Псевдоним подтипа 0 —
+                                    BINARY. Этот подтип указывает, что данные имеют форму бинарного
+                                    файла или потока (изображение, звук, видео, файлы текстового
+                                    процессора, PDF и т.д.).</para>
+                            </formalpara>
+                        </listitem>
+                        <listitem>
+                            <formalpara>
+                                <title>Подтип 1 (TEXT):</title>
+                                <para>Подтип 1 имеет псевдоним TEXT, который может быть использован
+                                    вместо указания номера подтипа. Например, BLOB SUBTYPE TEXT. Это
+                                    специализированный подтип, который используется для хранения
+                                    текстовых данных большого объёма. Для текстового подтипа BLOB
+                                    может быть указан набор символов и порядок сортировки COLLATE,
+                                    аналогично символьному полю.</para>
+                            </formalpara>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <para>Кроме того, существует возможность добавления пользовательских подтипов
+                    данных, для них зарезервирован интервал от -1 до -32768. Пользовательские
+                    подтипы с положительными числами не поддерживаются, поскольку Firebird
+                    использует числа больше 2 для внутренних подтипов метаданных.</para>
+            </section>
+            <section xml:id="types-bynary-blob-specifics">
+                <title>Особенности BLOB</title>
+                <para>Максимальный размер поля BLOB ограничен 4Гб и не зависит от варианта сервера,
+                    32 битный или 64 битный (во внутренних структурах, связанных с BLOB присутствуют
+                    4-х байтные счётчики). Для размера страницы 4096 максимальный размер BLOB поля
+                    несколько ниже 2 Гб. </para>
+                <para>Текстовые BLOB любой длины и с любым набором символов (включая multi-byte)
+                    могут быть использованы практически c любыми встроенными функциями и
+                    операторами: <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>Полная поддержка для операторов: <simplelist type="vert">
+                                    <member>= (присвоение);</member>
+                                    <member>=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;= (сравнение); </member>
+                                    <member>|| (конкатенация);</member>
+                                    <member>BETWEEN, IS [NOT] DISTINCT FROM, IN, ANY|SOME и ALL;
+                                    </member>
+                                </simplelist>
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>Частичная поддержка для STARTING [WITH], LIKE и CONTAINING.
+                                (возникает ошибка, в случае если второй аргумент больше или равен 32
+                                Кб); </para>
+                        </listitem>
+                        <listitem>
+                            <para>SELECT DISTINCT, ORDER BY и GROUP BY в своей работе используют
+                                BLOB ID, а не содержимое самого поля. Это одновременно и хорошо и
+                                плохо, кроме того, SELECT DISTINCT ошибочно выдаёт несколько
+                                значений NULL, если они присутствуют. GROUP BY ведёт себя странно в
+                                том, что он объединяет одинаковые строки, если они находятся рядом,
+                                но не делает этого, если они располагаются вдали друг от друга.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <formalpara>
+                    <title>Хранение BLOB:</title>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>По умолчанию, для каждого BLOB создаётся обычная запись,
+                                    хранящаяся на какой-то выделенной для этого странице данных
+                                    (data page). Если весь BLOB на эту страницу поместится, его
+                                    называют BLOB уровня 0. Номер этой специальной записи хранится в
+                                    записи таблицы и занимает 8 байт. </para>
+                            </listitem>
+                            <listitem>
+                                <para>Если BLOB не помещается на одну страницу данных (data page),
+                                    то его содержимое размещается на отдельных страницах, целиком
+                                    выделенных для него (blob page), а в записи о BLOB помещают
+                                    номера этих страниц. Это BLOB уровня 1. </para>
+                            </listitem>
+                            <listitem>
+                                <para>Если массив номеров страниц с данными BLOB не помещается на
+                                    страницу данных (data page), то его (массив) размещают на
+                                    отдельных страницах (blob page), а в запись о BLOB помещают уже
+                                    номера этих страниц. Это BLOB уровня 2.</para>
+                            </listitem>
+                            <listitem>
+                                <para>Уровни выше 2 не поддерживаются. </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="ddl-filter">FILTER</link>, <link linkend="ddl-filter-declare"
+                            >DECLARE FILTER</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="types-array">
+            <info>
+                <title>Массивы</title>
+            </info>
+
+            <para>Поддержка массивов в СУБД Firebird является расширением традиционной реляционной
+                модели. Поддержка в СУБД такого инструмента позволяет проще решать некоторые задачи
+                по обработке однотипных данных. Массивы в Firebird реализованы на базе полей типа
+                BLOB. Массивы могут быть одномерными и многомерными. </para>
+            <informalexample>
+                <para>
+                    <programlisting language="sql">  
+CREATE TABLE SAMPLE_ARR (
+  ID INTEGER NOT NULL PRIMARY KEY,
+  ARR_INT INTEGER [4]);                
+                </programlisting>
+                </para>
+            </informalexample>
+            <para>Так будет создана таблица с полем типа массива из четырёх целых. Индексы данного
+                массива от 1 до 4. Для определения верхней и нижней границы значений индекса следует
+                воспользоваться следующим синтаксисом:
+                <programlisting>  
+[<replaceable>&lt;нижняя&gt;</replaceable>:<replaceable>&lt;верхняя&gt;</replaceable>]                
+            </programlisting>
+            </para>
+            <para>Добавление новой размерности в синтаксисе идёт через запятую. Пример создания
+                таблицы с массивом размерности два, в котором нижняя граница значений начинается с
+                нуля:
+                <programlisting language="sql">  
+CREATE TABLE SAMPLE_ARR2 (
+  ID INTEGER NOT NULL PRIMARY KEY,
+  ARR_INT INTEGER [0:3, 0:3]);             
+            </programlisting>
+            </para>
+            <para>СУБД не предоставляет большого набора инструментов для работы с содержимым
+                массивов. База данных <filename>employee.fdb</filename>, которая находится в
+                дистрибутиве Firebird, содержит пример хранимой процедуры, показывающей возможности
+                работы с массивами. Ниже приведён её текст:
+                <programlisting language="sql">  
+CREATE OR ALTER PROCEDURE SHOW_LANGS (
+  CODE VARCHAR(5),
+  GRADE SMALLINT,
+  CTY VARCHAR(15))
+RETURNS (
+  LANGUAGES VARCHAR(15))
+AS
+  DECLARE VARIABLE I INTEGER;
+BEGIN
+  I = 1;
+  WHILE (I &lt;= 5) DO
+  BEGIN
+    SELECT LANGUAGE_REQ[:I]
+    FROM JOB
+    WHERE (JOB_CODE = :CODE)
+      AND (JOB_GRADE = :GRADE)
+      AND (JOB_COUNTRY = :CTY)
+      AND (LANGUAGE_REQ IS NOT NULL))
+    INTO :LANGUAGES;
+    
+    IF (:LANGUAGES = '') THEN
+      /* PRINTS 'NULL' INSTEAD OF BLANKS */
+      LANGUAGES = 'NULL';
+    I = I +1;
+    SUSPEND;
+  END
+END
+            </programlisting>
+            </para>
+            <para>Если приведённых выше возможностей достаточно для ваших задач, то вы вполне можете
+                применять массивы для своих проектов. В настоящее время совершенствования механизмов
+                обработки массивов средствами СУБД не производится. </para>
+        </section>
+    </section>
+    <section xml:id="types-special">
+        <info>
+            <title>Специальные типы данных</title>
+        </info>
+
+        <section xml:id="types-special-null">
+            <info>
+                <title>Тип данных SQL_NULL</title>
+            </info>
+
+            <para>Данный тип данных содержит не данные, а только состояние: NULL или NOT NULL.
+                Также, этот тип данных не может быть использован при объявлении полей таблицы,
+                переменных PSQL, использован в описании параметров. Этот тип данных добавлен для
+                улучшения поддержки нетипизированных параметров в предикате IS NULL. Такая проблема
+                возникает при использовании <quote>отключаемых фильтров</quote> при написании
+                запросов следующего типа:
+                <programlisting language="sql">  
+WHERE col1 = :param1 OR :param1 IS NULL           
+                </programlisting>
+                после обработки, на уровне API запрос будет выглядеть как
+                <programlisting language="sql">  
+WHERE col1 = ? OR ? IS NULL           
+                </programlisting>
+            </para>
+            <para>В данном случае получается ситуация, когда разработчик при написании SQL запрос
+                рассматривает <replaceable>:param1</replaceable> как одну переменную, которую
+                использует два раза, а на уровне API запрос содержит два отдельных и независимых
+                параметра. Вдобавок к этому, сервер не может определить тип второго параметра,
+                поскольку он идёт в паре с IS NULL. </para>
+            <para>Именно для решения проблемы <quote>? IS NULL</quote> и был добавлен этот
+                специальный тип данных SQL_NULL. </para>
+            <para>После введения данного специального типа данных при передаче запроса и его
+                параметров на сервер будет работать такая схема: приложение передаёт
+                параметризованные запросы на сервер в виде <quote>?</quote>. Это делает невозможным
+                слияние пары <quote>одинаковых</quote> параметров в один. Так, например, для двух
+                фильтров (двух именованных параметров) необходимо передать четыре позиционных
+                параметра (далее предполагается, что читатель имеет некоторое знакомство с Firebird
+                API):
+                <programlisting language="sql">  
+SELECT
+  SH.SIZE, SH.COLOUR, SH.PRICE
+FROM SHIRTS SH
+WHERE (SH.SIZE = ? OR ? IS NULL)
+  AND (SH.COLOUR = ? OR ? IS NULL)          
+                </programlisting>
+            </para>
+            <para>После выполнения isc_dsql_describe_bind() sqltype 2-го и 4-го параметров
+                устанавливается в SQL_NULL. Как уже говорилось выше, сервер Firebird не имеет
+                никакой информации об их связи с 1-м и 3-м параметрами — это полностью прерогатива
+                программиста. Как только значения для 1-го и 3-го параметров были установлены (или
+                заданы как NULL) и запрос подготовлен, каждая пара XSQLVARs должна быть заполнена
+                следующим образом: </para>
+            <formalpara>
+                <title>Пользователь задал параметры</title>
+
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Первый параметр (сравнение значений): set *sqldata в переданное
+                                значение и *sqlind в 0 (для NOT NULL); </para>
+                        </listitem>
+                        <listitem>
+                            <para>Второй параметр (проверка на NULL): set *sqldata в NULL (не
+                                SQL_NULL) и *sqlind в 0 (для NOT NULL). </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Пользователь задал параметры</title>
+
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Оба параметра (проверка на NULL): set *sqldata в NULL (не
+                                SQL_NULL) и *sqlind в -1 (индикация NULL). </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </formalpara>
+            <para>Другими словами: значение параметра сравнения всегда устанавливается как обычно.
+                SQL_NULL параметр устанавливается также, за исключением случая, когда sqldata
+                передаётся как NULL. </para>
+        </section>
+    </section>
+    <section xml:id="types-cast">
+        <info>
+            <title>Преобразование типов данных</title>
+        </info>
+
+        <para>При написании выражения или при задании, например, условий сравнения, нужно стараться
+            использовать совместимые типы данных. В случае необходимости использования смешанных
+            данных различных типов, желательно первоначально выполнить преобразования типов, а уже
+            потом выполнять операции. </para>
+        <para>При рассмотрении вопроса преобразования типов в Firebird большое внимание стоит
+            уделить тому, в каком диалекте база данных. </para>
+        <section xml:id="types-cast-explicit">
+            <info>
+                <title>Явное преобразование типов данных</title>
+            </info>
+
+            <para>В тех случаях, когда требуется выполнить явное преобразование одного типа в
+                другой, используют функцию CAST. </para>
+            <formalpara>
+                <info>
+                    <title>Синтаксис:</title>
+                </info>
+
+                <para>
+                    <programlisting>  
+CAST (<replaceable>&lt;value&gt;</replaceable> | NULL AS <replaceable>&lt;data_type&gt;</replaceable>)
+
+<replaceable>&lt;data_type&gt;</replaceable> ::= 
+     <replaceable>sql_datatype</replaceable>
+  | [TYPE OF] <replaceable>domain</replaceable>
+  | TYPE OF COLUMN <replaceable>relname.colname</replaceable>                
+                   </programlisting>
+                </para>
+            </formalpara>
+            <section xml:id="types-cast-to-domain">
+                <title>Преобразование к домену</title>
+                <para>При преобразовании к домену учитываются объявленные для него ограничения,
+                    например, NOT NULL или описанные в CHECK и если
+                        <replaceable>&lt;value&gt;</replaceable> не пройдёт проверку, то
+                    преобразование не удастся. В случае если дополнительно указывается TYPE OF
+                    (преобразование к базовому типу), при преобразовании игнорируются любые
+                    ограничения домена. При использовании TYPE OF с типом (VAR)CHAR набор символов и
+                    сортировка сохраняются. </para>
+            </section>
+            <section xml:id="types-cast-to-column">
+                <title>Преобразование к типу столбца</title>
+                <para>При преобразовании к типу столбца допускается использовать указание столбца
+                    таблицы или представления. Используется только сам тип столбца; в случае
+                    строковых типов это также включает набор символов, но не сортировку. Ограничения
+                    и значения по умолчанию исходного столбца не применяются. </para>
+                <para><emphasis>Примеры:</emphasis></para>
+                <informalexample>
+                    <para>
+                        <programlisting language="sql">  
+CREATE TABLE TTT (
+  S VARCHAR (40)
+  CHARACTER SET UTF8 COLLATE UNICODE_CI_AI);
+COMMIT;
+
+/* У меня много друзей (шведский)*/
+SELECT
+  CAST ('Jag har manga vanner' AS TYPE OF COLUMN TTT.S)
+FROM RDB$DATABASE;               
+                   </programlisting>
+                    </para>
+                </informalexample>
+            </section>
+            <section xml:id="types-cast-enable">
+                <title>Допустимые преобразования для функции CAST</title>
+                <para>
+                    <table xml:id="table-cast-enable">
+                        <?dbfo keep-together='auto'?>
+                        <title>Допустимые преобразования для функции CAST</title>
+
+                        <tgroup cols="2">
+                            <colspec colname="colFrom" colwidth="1*" align="left"/>
+                            <colspec colname="colTo" colwidth="3*" align="left"/>
+                            <thead>
+                                <row valign="middle">
+                                    <entry align="center">Из типа</entry>
+                                    <entry align="center">В тип</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>Числовые типы</member>
+                                        </simplelist>
+                                    </entry>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>Числовые типы</member>
+                                            <member>[VAR]CHAR</member>
+                                            <member>BLOB</member>
+                                        </simplelist>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>[VAR]CHAR</member>
+                                            <member>BLOB</member>
+                                        </simplelist>
+                                    </entry>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>[VAR]CHAR</member>
+                                            <member>BLOB</member>
+                                            <member>BOOLEAN</member>
+                                            <member>Числовые типы</member>
+                                            <member>DATE</member>
+                                            <member>TIME</member>
+                                            <member>TIMESTAMP</member>
+                                        </simplelist>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>DATE</member>
+                                            <member>TIME</member>
+                                        </simplelist>
+                                    </entry>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>[VAR]CHAR</member>
+                                            <member>BLOB</member>
+                                            <member>TIMESTAMP</member>
+                                        </simplelist>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>TIMESTAMP</member>
+                                        </simplelist>
+                                    </entry>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>[VAR]CHAR</member>
+                                            <member>BLOB</member>
+                                            <member>TIME</member>
+                                            <member>DATE</member>
+                                        </simplelist>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>BOOLEAN</member>
+                                        </simplelist>
+                                    </entry>
+                                    <entry>
+                                        <simplelist type="vert" columns="1">
+                                            <member>[VAR]CHAR</member>
+                                            <member>BLOB</member>
+                                        </simplelist>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <para>Для преобразования строковых типов данных в тип BOOLEAN необходимо чтобы
+                    строковый аргумент был одним из предопределённых литералов логического типа
+                        (<literal>'true'</literal> или <literal>'false'</literal>).</para>
+                <important>
+                    <para>При преобразовании типов следует помнить о возможной частичной потери
+                        данных, например, при преобразовании типа данных TIMESTAMP в DATE. </para>
+                </important>
+            </section>
+            <section xml:id="types-cast-dateliteral">
+                <title>Преобразование литералов дат и времени</title>
+                <para>Для преобразования строковых типов данных в типы DATE, TIME или TIMESTAMP
+                    необходимо чтобы строковый аргумент был либо одним из предопределённых литералов
+                    даты и времени, либо строковое представление даты в одном из разрешённых
+                    форматов. </para>
+                <para><programlisting>
+<replaceable>&lt;datetime_literal&gt;</replaceable> ::= {     
+  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]] |     
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
+  NOW |     
+  TODAY |     
+  TOMORROW |     
+  YERSTERDAY   
+}       
+
+<replaceable>&lt;date_literal&gt;</replaceable> ::= {     
+  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable> |     
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |     
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |     
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |     
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |     
+  TODAY |     
+  TOMORROW |     
+  YERSTERDAY   
+}       
+
+<replaceable>&lt;time_literal&gt;</replaceable> := <replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]       
+
+<replaceable>&lt;p&gt;</replaceable> ::= <replaceable>whitespace</replaceable> | . | : | , | - | /                    
+            </programlisting></para>
+                <para>
+                    <table xml:id="types-tbl-keydesc" frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Описание формата даты и времени</title>
+                        <tgroup cols="2">
+                            <colspec colname="colArg" colnum="1" colwidth="2*" align="left"/>
+                            <colspec colname="colDesc" colnum="2" colwidth="3*" align="left"/>
+                            <thead>
+                                <row valign="middle">
+                                    <entry align="center">Аргумент</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row valign="middle">
+                                    <entry>datetime_literal</entry>
+                                    <entry>Литерал даты-времени.</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>date_literal</entry>
+                                    <entry>Литерал даты.</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>time_literal</entry>
+                                    <entry>Литерал времени.</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>YYYY</entry>
+                                    <entry>Год из четырёх цифр.</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>YY</entry>
+                                    <entry>Последние две цифры года (00-99).</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>MM</entry>
+                                    <entry>Месяц. Может содержать 1 или 2 цифры (1-12 или 01-12). В
+                                        качестве месяца допустимо также указывать трёхбуквенное
+                                        сокращение или полное наименование месяца на английском
+                                        языке, регистр не имеет значение. </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>DD</entry>
+                                    <entry>День. Может содержать 1 или 2 цифры (1-31 или 01-31).
+                                    </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>HH</entry>
+                                    <entry>Час. Может содержать 1 или 2 цифры (0-23 или 00-23).
+                                    </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>mm</entry>
+                                    <entry>Минуты. Может содержать 1 или 2 цифры (0-59 или 00-59).
+                                    </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>SS</entry>
+                                    <entry>Секунды. Может содержать 1 или 2 цифры (0-59 или
+                                        00-59).</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>NNNN</entry>
+                                    <entry>Десятитысячные доли секунды. Может содержать от 1 до 4
+                                        цифр (0-9999). </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>p</entry>
+                                    <entry>Разделитель, любой из разрешённых символов, лидирующие и
+                                        завершающие пробелы игнорируются </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <para>
+                    <table xml:id="types-tbl-dateliteral">
+                        <?dbfo keep-together='auto'?>
+                        <title>Литералы с предопределёнными значениями даты и времени</title>
+
+                        <tgroup cols="4">
+                            <colspec colname="colLit" colwidth="2*" align="left"/>
+                            <colspec colname="colValue" colwidth="3*" align="left"/>
+                            <colspec colname="colDlct01" colwidth="3*" align="left"/>
+                            <colspec colname="colDlct03" colwidth="2*" align="left"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Литерал</entry>
+                                    <entry align="center">Значение</entry>
+                                    <entry align="center">Тип данных для диалекта 1</entry>
+                                    <entry align="center">Тип данных для диалекта 3</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>
+                                        <literal>'NOW'</literal>
+                                    </entry>
+                                    <entry>Текущая дата и время</entry>
+                                    <entry>DATE</entry>
+                                    <entry>TIMESTAMP</entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <literal>'TODAY'</literal>
+                                    </entry>
+                                    <entry>Текущая дата</entry>
+                                    <entry>DATE (c нулевым временем)</entry>
+                                    <entry>DATE (только дата)</entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <literal>'TOMORROW'</literal>
+                                    </entry>
+                                    <entry>Завтрашняя дата</entry>
+                                    <entry>DATE (c нулевым временем)</entry>
+                                    <entry>DATE (только дата)</entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <literal>'YESTERDAY'</literal>
+                                    </entry>
+                                    <entry>Вчерашняя дата</entry>
+                                    <entry>DATE (c нулевым временем)</entry>
+                                    <entry>DATE (только дата)</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <para>Правила: <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>В формате Год-Месяц-День, год обязательно должен содержать 4
+                                цифры;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Для дат в формате с завершающим годом, если в качестве разделителя
+                                дат используется точка <quote>.</quote>, то дата интерпретируется в
+                                форме День-Месяц-Год, для остальных разделителей она
+                                интерпретируется в форме Месяц-День-Год;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если год не указан, то в качестве года берётся текущий год;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если указаны только две цифры года, то для получения столетия
+                                Firebird использует алгоритм скользящего окна. Задача заключается в
+                                интерпретации двухсимвольного значения года как ближайшего к
+                                текущему году в интервале предшествующих и последующих 50
+                                лет;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если не указан один из элементов времени, то оно принимается
+                                равным 0.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <tip>
+                    <para>Настоятельно рекомендуем в литералах дат использовать только формы с
+                        полным указанием года в виде 4 цифр во избежание путаницы. </para>
+                </tip>
+                <formalpara>
+                    <title>Примеры интерпретации литералов дат и времени:</title>
+                    <para><programlisting language="sql">
+SELECT
+  CAST('04.12.2014' AS DATE) AS d1, -- DD.MM.YYYY
+  CAST('04 12 2014' AS DATE) AS d2, -- MM DD YYYY
+  CAST('4-12-2014' AS DATE) AS d3,  -- MM-DD-YYYY
+  CAST('04/12/2014' AS DATE) AS d4, -- MM/DD/YYYY
+  CAST('04,12,2014' AS DATE) AS d5, -- MM,DD,YYYY
+  CAST('04.12.14' AS DATE) AS d6,   -- DD.MM.YY
+  -- DD.MM в качестве года берётся текущий
+  CAST('04.12' AS DATE) AS d7,
+  -- MM/DD в качестве года берётся текущий      
+  CAST('04/12' AS DATE) AS d8,      
+  CAST('2014/12/04' AS DATE) AS d9, -- YYYY/MM/DD
+  CAST('2014 12 04' AS DATE) AS d10, -- YYYY MM DD
+  CAST('2014.12.04' AS DATE) AS d11, -- YYYY.MM.DD
+  CAST('2014-12-04' AS DATE) AS d12, -- YYYY-MM-DD
+  CAST('4 Jan 2014' AS DATE) AS d13, -- DD MM YYYY
+  CAST('2014 Jan 4' AS DATE) AS dt14, -- YYYY MM DD
+  CAST('Jan 4, 2014' AS DATE) AS dt15, -- MM DD, YYYY
+  CAST('11:37' AS TIME) AS t1, -- HH:mm
+  CAST('11:37:12' AS TIME) AS t2, -- HH:mm:ss
+  CAST('11:31:12.1234' AS TIME) AS t3, -- HH:mm:ss.nnnn
+  CAST('11.37.12' AS TIME) AS t4, -- HH.mm.ss
+  -- DD.MM.YYYY HH:mm
+  CAST('04.12.2014 11:37' AS TIMESTAMP) AS dt1, 
+  -- MM/DD/YYYY HH:mm:ss
+  CAST('04/12/2014 11:37:12' AS TIMESTAMP) AS dt2,
+  -- DD.MM.YYYY HH:mm:ss.nnnn 
+  CAST('04.12.2014 11:31:12.1234' AS TIMESTAMP) AS dt3, 
+  -- MM/DD/YYYY HH.mm.ss
+  CAST('04/12/2014 11.37.12' AS TIMESTAMP) AS dt4 
+FROM rdb$database                    
+            </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-cast-cast">CAST</link>. </para>
+                </formalpara>
+            </section>
+            <section xml:id="types-cast-shortdatetime">
+                <info>
+                    <title>Сокращённое приведение типов даты и времени</title>
+                </info>
+
+                <para>При преобразовании строки в типы DATE, TIME или TIMESTAMP, Firebird позволяет
+                    использовать сокращённое &quot;C-style&quot; приведение типов. </para>
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para>
+                        <programlisting>  
+<replaceable>datatype</replaceable> '<replaceable>date/time string</replaceable>'             
+                   </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Примеры:</title>
+
+                    <para>
+                        <programlisting language="sql"> 
+-- 1                            
+  UPDATE PEOPLE
+  SET AGECAT = 'Old'
+  WHERE BIRTHDATE &lt; DATE '1-Jan-1943';
+-- 2
+  INSERT INTO APPOINTMENTS 
+    (EMPLOYEE_ID, CLIENT_ID, APP_DATE, APP_TIME)
+  VALUES (973, 8804, DATE 'today' + 2, TIME '16:00');
+-- 3
+  NEW.LASTMOD = TIMESTAMP 'now';            
+                   </programlisting>
+                    </para>
+                </formalpara>
+                <note>
+                    <para>Обратите внимание, что эти сокращённые выражения вычисляются сразу же во
+                        время синтаксического анализа, то есть, как будто оператор уже подготовлен к
+                        выполнению. Таким образом, даже если запрос выполняется несколько раз,
+                        значение, например, для TIMESTAMP 'NOW' не изменится, независимо от того,
+                        сколько времени проходит. Если вам нужно получать нарастающее значение
+                        времени (т.е. оно должно быть оценено при каждом вызове), используйте полный
+                        синтаксис CAST.
+                        <programlisting language="sql">  
+NEW.CHANGE_DATE = CAST('now' AS TIMESTANP);          
+               </programlisting>
+                    </para>
+                </note>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="types-cast-explicit">Явное преобразование типов
+                        данных</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="types-cast-implicit">
+            <info>
+                <title>Неявное преобразование типов данных</title>
+            </info>
+
+            <para>В 3-м диалекте невозможно неявное преобразование данных, здесь требуется указывать
+                функцию CAST для явной трансляции одного типа в другой. Однако это не относится к
+                операции конкатенации, при которой все другие типы данных будут неявно преобразованы
+                к символьному. </para>
+            <para>При использовании 1-го диалекта во многих выражениях выполняется неявное
+                преобразование одних типов в другой без применение функции CAST. Например, в
+                выражении отбора в диалекте 1 можно записать:
+                <programlisting language="sql"> 
+WHERE DOC_DATE &lt; '31.08.2014'                   
+               </programlisting>
+                и преобразование строки в дату произойдёт неявно. </para>
+            <para>В 1-м диалекте можно смешивать целые данные и числовые строки, строки неявно
+                преобразуются в целое, если это будет возможно, например:
+                <programlisting language="sql">
+2 + '1'                   
+               </programlisting>
+                корректно выполнится. В 3-м диалекте подобное выражение вызовет ошибку, в нем
+                потребуется запись следующего вида:
+                <programlisting language="sql">
+2 + CAST('1' AS SMALLINT)                   
+               </programlisting>
+            </para>
+            <simplesect>
+                <title>Неявное преобразование типов при конкатенации</title>
+                <para>При конкатенации множества элементов разных типов, все не строковые данные
+                    будут неявно преобразованы к строке, если это возможно.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <programlisting language="sql"> 
+SELECT 30||' days hath September, April, June and November' CONCAT$
+FROM RDB$DATABASE                 
+               </programlisting>
+                        <screen>
+CONCAT$
+------------------------------------------------
+30 days hath September, April, June and November                   
+                </screen>
+                    </para>
+                </formalpara>
+            </simplesect>
+        </section>
+    </section>
+    <section xml:id="types-domain">
+        <info>
+            <title>Пользовательские типы данных — домены</title>
+        </info>
+        <para>Домены в СУБД Firebird реализуют широко известный по многим языкам программирования
+            инструмент <quote>типы данных, определённые пользователем</quote>. Когда несколько
+            таблиц в базе данных содержат поля с характеристиками одинаковыми или практически
+            одинаковыми, то есть целесообразность сделать домен, в котором описать набор свойств
+            поля и использовать такой набор свойств, описанный один раз, в нескольких объектах базы
+            данных. Домены могут использоваться помимо описания полей таблиц и представлений (VIEW)
+            и при объявлении входных и выходных параметров, а также при объявлении переменных в коде
+            PSQL. </para>
+        <section xml:id="types-domain-attr">
+            <title>Атрибуты домена</title>
+            <para>Определение домена содержит обязательные и необязательные атрибуты. К
+                обязательному атрибуту относится тип данных. К необязательным относятся: </para>
+            <para>
+                <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>значение по умолчанию;</para>
+                    </listitem>
+                    <listitem>
+                        <para>возможности использования NULL для домена;</para>
+                    </listitem>
+                    <listitem>
+                        <para>ограничения CHECK для данных домена;</para>
+                    </listitem>
+                    <listitem>
+                        <para>набор символов (для символьных типов данных и BLOB полей); </para>
+                    </listitem>
+                    <listitem>
+                        <para>порядок сортировки (для символьных типов данных).</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <formalpara>
+                <title>Пример создания домена</title>
+                <para>
+                    <informalexample>
+                        <para>
+                            <programlisting language="sql">  
+CREATE DOMAIN BOOL3 AS SMALLINT
+			CHECK (VALUE IS NULL OR VALUE IN (0, 1));           
+                   </programlisting>
+                        </para>
+                    </informalexample>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="types-cast-explicit">Явное преобразование типов данных</link>,
+                    где описаны отличия работы механизма преобразования данных при указании доменов
+                    для опций TYPE OF и TYPE OF COLUMN. </para>
+
+            </formalpara>
+
+        </section>
+        <section xml:id="types-domain-override">
+            <title>Переопределение свойств доменов</title>
+            <para>При описании таблиц базы данных некоторые свойства столбцов, базирующихся на
+                доменах, могут быть переопределены. Возможности переопределения атрибутов столбцов
+                на базе доменов приведены в таблице.</para>
+            <para>
+                <table xml:id="types-domain-tbl-override" frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Возможности переопределения атрибутов столбцов на базе доменов</title>
+                    <tgroup cols="3">
+                        <colspec colname="colAtt" colnum="1" colwidth="2*" align="left"/>
+                        <colspec colname="colYesNo" colnum="2" colwidth="2*" align="center"/>
+                        <colspec colname="colComment" colnum="3" colwidth="3*" align="justify"/>
+                        <thead>
+                            <row valign="middle">
+                                <entry align="center">Атрибут</entry>
+                                <entry align="center">Переопределяется?</entry>
+                                <entry align="center">Примечания</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row valign="middle">
+                                <entry>тип данных</entry>
+                                <entry>нет</entry>
+                                <entry/>
+                            </row>
+                            <row valign="middle">
+                                <entry>значение по умолчанию</entry>
+                                <entry>да</entry>
+                                <entry/>
+                            </row>
+                            <row valign="middle">
+                                <entry>текстовый набор символов</entry>
+                                <entry>да</entry>
+                                <entry>также может использоваться, чтобы восстановить для столбца
+                                    значения по умолчанию для базы данных</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>текстовый порядок сортировки</entry>
+                                <entry>да</entry>
+                                <entry/>
+                            </row>
+                            <row valign="middle">
+                                <entry>условия проверки CHECK</entry>
+                                <entry>нет</entry>
+                                <entry>для добавления в проверку новых условий, можно использовать в
+                                    операторах CREATE и ALTER на уровне таблицы соответствующие
+                                    предложения CHECK.</entry>
+                            </row>
+                            <row valign="middle">
+                                <entry>NOT NULL</entry>
+                                <entry>нет</entry>
+                                <entry>во многих случаях лучше оставить при описании домена
+                                    возможность значения NULL, а контроль его допустимости
+                                    осуществлять в описании полей на уровне таблицы.</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+        </section>
+        <section xml:id="types-domain-create">
+            <title>Создание доменов</title>
+
+            <para>Создание домена производится оператором CREATE DOMAIN.</para>
+            <formalpara>
+                <title>Краткий синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+CREATE DOMAIN <replaceable>&lt;name&gt;</replaceable> [AS] <replaceable>&lt;type&gt;</replaceable>
+[DEFAULT {<replaceable>&lt;const&gt;</replaceable> | <replaceable>&lt;literal&gt;</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}]
+[NOT NULL] [CHECK (<replaceable>&lt;condition&gt;</replaceable>)]
+[COLLATE collation];        
+                   </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="ddl-domain-create">CREATE DOMAIN</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-domain-alter">
+            <title>Изменение доменов</title>
+
+            <para>Для редактирования свойств домена используют оператор ALTER DOMAIN языка
+                определения данных (DDL). </para>
+            <para>
+                <itemizedlist>
+                    <title>При редактировании домена можно:</title>
+                    <listitem>
+                        <para>переименовать домен;</para>
+                    </listitem>
+                    <listitem>
+                        <para>изменить тип данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>удалить текущее значение по умолчанию;</para>
+                    </listitem>
+                    <listitem>
+                        <para>установить новое значение по умолчанию;</para>
+                    </listitem>
+                    <listitem>
+                        <para>установить ограничение NOT NULL;</para>
+                    </listitem>
+                    <listitem>
+                        <para>удалить ограничение NOT NULL;</para>
+                    </listitem>
+                    <listitem>
+                        <para>удалить текущее ограничение CHECK;</para>
+                    </listitem>
+                    <listitem>
+                        <para>добавить новое ограничение CHECK.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <formalpara>
+                <title>Краткий синтаксис:</title>
+
+                <para>
+                    <programlisting>
+
+ALTER DOMAIN <replaceable>name</replaceable>
+  [{TO <replaceable>new_name</replaceable>}]
+  [{SET DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>} | 
+    DROP DEFAULT}]
+  [{SET | DROP} NOT NULL]
+  [{ADD [CONSTRAINT] CHECK (<replaceable>&lt;dom_condition&gt;</replaceable>) | 
+    DROP CONSTRAINT}]
+  [{TYPE <replaceable>&lt;datatype&gt;</replaceable>}];  
+                          </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Пример:</title>
+
+                <para>
+                    <programlisting language="sql">  
+ALTER DOMAIN STORE_GRP SET DEFAULT -1;   
+                   </programlisting>
+                </para>
+            </formalpara>
+            <para>При изменении доменов следует учитывать и его зависимости: имеются ли столбцы
+                таблиц; находятся ли в коде PSQL объявления переменных, входных и/или выходных
+                параметров с типом этого домена. При поспешном редактировании без внимательной
+                проверки можно сделать данный код неработоспособным! </para>
+            <important>
+                <para>При смене в домене типа данных не допустимы преобразования, которые могут
+                    привести к потере данных. Также, например, при преобразовании VARCHAR в INTEGER
+                    проверьте, все ли данные, что используют данных домен, смогут пройти
+                    преобразование. </para>
+            </important>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="ddl-domain-alter">ALTER DOMAIN</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-domain-drop">
+            <title>Удаление доменов</title>
+
+            <para>Оператор DROP DOMAIN удаляет из базы данных домена при условии, что он не
+                используется в каком либо из объектов базы данных. </para>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+DROP DOMAIN <replaceable>name</replaceable>;      
+                   </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Пример:</title>
+
+                <para>
+                    <programlisting language="sql">  
+DROP DOMAIN Test_Domain;  
+                   </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="ddl-domain-drop">DROP DOMAIN</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</chapter>

@@ -1,0 +1,32 @@
+<!DOCTYPE appendix>
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="license" xml:lang="ru">
+    <info>
+        <title>Лицензионное соглашение</title>
+    </info>
+
+    <para>Содержание данного Документа распространяется на условиях лицензии <quote>Public
+            Documentation License Version 1.0</quote> (далее <quote>Лицензия</quote>); Вы можете
+        использовать этот Документ, только если согласны с условиями Лицензии. Копии текста Лицензии
+        доступны по адресам <link xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="http://www.firebirdsql.org/pdfmanual/pdl.pdf"
+            >http://www.firebirdsql.org/pdfmanual/pdl.pdf</link> (PDF) и <link
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="http://www.firebirdsql.org/manual/pdl.html"
+            >http://www.firebirdsql.org/manual/pdl.html</link> (HTML). </para>
+    <para>Оригинальное название документа <citetitle>Руководство по языку SQL
+        Firebird</citetitle>.</para>
+    <para>Copyright (C) 2016. Все права защищены. Адрес электронной почты для контакта:
+            <email>case@firebirdsql.org</email>
+    </para>
+    <para>Далее представлен оригинальный текст раздела, так как его перевод не имеет равноценной
+        юридической силы. </para>
+    <para>The contents of this Documentation are subject to the Public Documentation License Version
+        1.0 (the <quote>License</quote>); you may only use this Documentation if you comply with the
+        terms of this License. Copies of the License are available at <link
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="http://www.firebirdsql.org/pdfmanual/pdl.pdf"
+            >http://www.firebirdsql.org/pdfmanual/pdl.pdf</link> (PDF) and <link
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="http://www.firebirdsql.org/manual/pdl.html"
+            >http://www.firebirdsql.org/manual/pdl.html</link> (HTML). </para>
+</appendix>

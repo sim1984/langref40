@@ -1,0 +1,359 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langstruct"
+    xml:lang="ru">
+    <info>
+        <title>Структура языка</title>
+    </info>
+
+    <section xml:id="langstruct-background">
+        <info>
+            <title>Общие сведения</title>
+        </info>
+
+        <section xml:id="langstruct-background-flavors">
+            <info>
+                <title>Подмножества SQL</title>
+                <keywordset>
+                    <keyword>DSQL</keyword>
+                    <keyword>PSQL</keyword>
+                    <keyword>ESQL</keyword>
+                    <keyword>ISQL</keyword>
+                </keywordset>
+            </info>
+
+            <para>SQL имеет четыре подмножества SQL, используемых в различных областях применения: </para>
+            <para>
+                <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>Динамический SQL (DSQL, Dynamic SQL)</para>
+                    </listitem>
+                    <listitem>
+                        <para>Процедурный SQL (PSQL, Procedural SQL)</para>
+                    </listitem>
+                    <listitem>
+                        <para>Встроенный SQL (ESQL, Embedded SQL)</para>
+                    </listitem>
+                    <listitem>
+                        <para>Интерактивный SQL (ISQL, Interactive SQL)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Динамический SQL является основной частью языка, которая соответствует Части 2
+                (SQL/Foundation – SQL/Основы) спецификации SQL. DSQL представляет собой конструкции,
+                которые передаются клиентскими приложениями с помощью Firebird API и обрабатываются
+                сервером базы данных. </para>
+            <para>Процедурный SQL является расширением Динамического SQL, в котором дополнительно
+                присутствуют составные операторы, содержащие локальные переменные, присваивание,
+                циклы и другие процедурные конструкции. PSQL относится к Части 4 (SQL/PSM)
+                спецификации SQL. Изначально расширение PSQL было доступно только лишь в постоянно
+                хранимых в базе модулях (процедурах и триггерах), но сравнительно недавно они стали
+                также доступны в Динамическом SQL (смотри EXECUTE BLOCK). </para>
+            <para>Встроенный SQL определяет подмножество DSQL, поддерживаемое средством Firebird
+                GPRE. GPRE — приложение-препроцессор, которое позволяет вам внедрять SQL конструкции
+                в ваш непосредственный язык программирования (C, C++, Pascal, Cobol и так далее) и
+                производить обработку этих внедрённых конструкций в правильные вызовы Firebird API.
+                Обратите внимание, что ESQL поддерживает только часть конструкций и выражений DSQL. </para>
+            <para>Интерактивный SQL подразумевает собой язык, который может быть использован для
+                работы с приложением командной строки Firebird ISQL для интерактивного доступа к
+                базам данных. <application>isql</application> является обычным клиентским
+                приложением. Для него обычный язык — это язык DSQL. Однако приложение поддерживает
+                несколько дополнительных команд. </para>
+            <para>Оба языковых подмножества, как DSQL, так и PSQL полностью представлены в данном
+                руководстве. Из набора инструментария ни ESQL, ни ISQL не описаны здесь отдельно, за
+                исключением тех мест, где это указано явно. </para>
+        </section>
+        <section xml:id="langstruct-background-dialects">
+            <info>
+                <title>Диалекты SQL</title>
+            </info>
+
+            <para>SQL диалект — это термин, определяющий специфические особенности языка SQL,
+                которые доступны во время доступа с его помощью к базе данных. SQL диалект может
+                быть определён как на уровне базы данных, так и на уровне соединения с базой данных.
+                В настоящее время доступны три диалекта: </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>В 1-м диалекте дата и время хранятся в типе данных DATE, и имеется тип
+                            данных TIMESTAMP, который идентичен DATE. Двойные кавычки используются
+                            для разграничения строковых данных. Точность типов данных NUMERIC и
+                            DECIMAL меньше, чем в 3-м диалекте и в случае, если значение точности
+                            более 9, Firebird хранит такие значения как длинные значения с плавающей
+                            точкой. BIGINT не является доступным типом данных. Идентификаторы
+                            являются регистро-независимыми. Значение генераторов хранится как 64
+                            битное целое, а при выдаче значения усекается до 32 битного целого;
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Диалект 2 доступен только в клиентском соединении к Firebird и не
+                            может быть применён к базе данных. Он предназначен для того, чтобы
+                            помочь в отладке в случае возможных проблем с целостностью данных при
+                            проведении миграции с диалекта 1 на 3; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Диалект 3 базы данных позволяет хранить числа (типы данных DECIMAL и
+                            NUMERIC) в базе данных как длинные значения с фиксированной точкой
+                            (масштабируемые целые числа) в случае если точность числа меньше чем 9.
+                            Тип данных TIME доступен и используется для хранения значения только
+                            времени. Тип данных DATE хранит информацию о дате. Тип данных BIGINT
+                            доступен в качестве целого 64-х битного типа данных. Двойные кавычки
+                            могут использоваться, но только для идентификаторов, которые являются
+                            зависимыми от регистра, а не для строковых данных, для которых
+                            используют одинарные кавычки. Значения генераторов хранятся как 64-ти
+                            битные целые значения. Новую базу данных Firebird создаёт в 3-м
+                            диалекте. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Целью 1-го диалекта является обеспечение поддержки для унаследованных (пре-версия
+                IB6) Interbase приложений для работы с Firebird. Диалект 2 используется как
+                промежуточный и предназначен для разрешения проблем при миграции с 1-го в 3-й
+                диалект. Для вновь разрабатываемых баз данных и приложений настоятельно
+                рекомендуется использовать 3-й диалект. Диалект при соединении с базой данных должен
+                быть таким же, как и базы данных. Исключением является случай миграции с 1-го в 3-й
+                диалект, когда в строке соединения с базой данных используется 2-й диалект. </para>
+            <note>
+                <title>Замечание:</title>
+                <para>По умолчанию это руководство описывает семантику SQL третьего диалекта, если
+                    только в тексте явно не указывается диалект. </para>
+            </note>
+        </section>
+        <section xml:id="langstruct-background-errors">
+            <info>
+                <title>Действия при ошибках</title>
+            </info>
+
+            <para>Обработка любого оператора либо успешно завершается, либо прерывается из-за
+                вызванной определёнными условиями ошибки. Обработку ошибок можно производить, как в
+                клиентском приложении, так и на стороне сервера средствами SQL. </para>
+        </section>
+    </section>
+
+    <section xml:id="langstruct-common">
+        <info>
+            <title>Основные сведения: операторы, предложения, ключевые слова </title>
+        </info>
+
+        <para>Основная конструкция SQL — оператор (statement). Оператор описывает, что должна
+            выполнить система управления базами данных с конкретным объектом данных или метаданных,
+            обычно не указывая, как именно это должно быть выполнено. Достаточно сложные операторы
+            содержат более простые конструкции — предложения (clause) и варианты, альтернативы
+            (options). Предложение описывает некую законченную конструкцию в операторе. Например,
+            предложение WHERE в операторе SELECT и в ряде других операторов (UPDATE, DELETE) задаёт
+            условия поиска данных в таблице (таблицах), подлежащих выборке, изменению, удалению.
+            Предложение ORDER BY задаёт характеристики упорядочения выходного, результирующего,
+            набора данных. Альтернативы, будучи наиболее простыми конструкциями, задаются при помощи
+            конкретных ключевых слов и определяют некоторые дополнительные характеристики элементов
+            предложения (допустимость дублирования данных, варианты использования и др.). </para>
+        <para>В SQL существуют ключевые слова и зарезервированные слова. Ключевые слова — это все
+            слова, входящие в лексику (словарь) языка SQL. Ключевые слова можно (но не
+            рекомендуется) использовать в качестве имён, идентификаторов объектов базы данных,
+            внутренних переменных и параметров. Зарезервированные слова — это те ключевые слова,
+            которые нельзя использовать в качестве имён объектов базы данных, переменных или
+            параметров. </para>
+        <para>Например, следующий оператор будет выполнен без ошибок потому, что ABS является
+            ключевым, но не зарезервированным словом. </para>
+        <programlisting language="sql">
+CREATE TABLE T (ABS INT NOT NULL);
+        </programlisting>
+        <para>При выполнении такого оператора будет выдана ошибка потому, что ADD является ключевым
+            и зарезервированным словом. </para>
+        <programlisting language="sql">
+CREATE TABLE T (ADD INT NOT NULL);
+        </programlisting>
+        <para>Список зарезервированных и ключевых слов представлен в приложении <link
+                linkend="keywords">Зарезервированные и ключевые слова</link>. </para>
+    </section>
+    <section xml:id="langstruct-ids">
+        <info>
+            <title>Идентификаторы</title>
+        </info>
+
+        <para>Все объекты базы данных имеют имена, которые иногда называют идентификаторами.
+            Максимальная длина идентификатора составляет 63 символа. Существует два типа имён —
+            имена, похожие по форме на имена переменных в обычных языках программирования, и имена с
+            разделителями (delimited name), которые являются отличительной особенностью языка SQL. </para>
+        <para>Обычное имя должно начинаться с буквы латинского алфавита, за которой могут следовать
+            буквы (латинского алфавита), цифры, символ подчёркивания и знак доллара. Такое имя
+            нечувствительно к регистру, его можно записывать как строчными, так и прописными
+            буквами. В имени нельзя использовать буквы кириллицы, пробелы, другие специальные
+            символы.</para>
+        <para>Следующие имена с точки зрения системы являются одинаковыми: </para>
+        <para>
+            <programlisting>
+fullname
+FULLNAME
+FuLlNaMe
+FullName
+            </programlisting>
+        </para>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>
+<replaceable>&lt;name&gt;</replaceable> ::=
+  <replaceable>&lt;letter&gt;</replaceable> |
+  <replaceable>&lt;name&gt;</replaceable><replaceable>&lt;letter&gt;</replaceable> |
+  <replaceable>&lt;name&gt;</replaceable><replaceable>&lt;digit&gt;</replaceable> |
+  <replaceable>&lt;name&gt;</replaceable>_ |
+  <replaceable>&lt;name&gt;</replaceable>$
+  
+<replaceable>&lt;letter&gt;</replaceable> ::= <replaceable>&lt;upper letter&gt;</replaceable> | <replaceable>&lt;lower letter&gt;</replaceable>
+
+<replaceable>&lt;upper letter&gt;</replaceable> ::= A | B | C | D | E | F | G | H | I | J | K | L | M 
+    | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+
+<replaceable>&lt;lower letter&gt;</replaceable> ::= a | b | c | d | e | f | g | h | i | j | k | l | m 
+    | n | o | p | q | r | s | t | u | v | w | x | y | z
+
+<replaceable>&lt;digit&gt;</replaceable> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9  
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>Имя с разделителями заключается в двойные кавычки. Оно может содержать любые символы,
+            включая буквы кириллицы, пробелы, специальные символы. В нем также могут присутствовать
+            зарезервированные слова. Такое имя является чувствительным к регистру. Имена с
+            разделителем доступны только в диалекте 3. Подробнее о диалектах см. <link
+                linkend="langstruct-background-dialects">Диалекты SQL</link>
+        </para>
+        <para>
+            <programlisting>  
+<replaceable>&lt;delimited name&gt;</replaceable> ::= "<replaceable>&lt;ASCII char&gt;</replaceable>[<replaceable>&lt;ASCII char&gt;</replaceable> …]"                
+            </programlisting>
+        </para>
+        <para>Следует иметь в виду, что конечные пробелы в именах с разделителями, как и в любых
+            строковых константах, отбрасываются. </para>
+        <para>Существует определённая похожесть и отличие обычных имён и имён с разделителями. Такие
+            имена с разделителями и обычные, как "FULLNAME" и FULLNAME являются одинаковыми, а
+            "FullName" и FULLNAME (так же как, например, и FullName) отличаются. </para>
+    </section>
+    <section xml:id="langstruct-literals">
+        <info>
+            <title>Литералы</title>
+        </info>
+
+        <para>Литералы служат для непосредственного представления данных, ниже приведён список
+            стандартных литералов: </para>
+        <para>
+            <itemizedlist spacing="compact">
+                <listitem>
+                    <para> целочисленные — 0, -34, 45, 0X080000000; </para>
+                </listitem>
+                <listitem>
+                    <para> вещественные — 0.0, -3.14, 3.23e-23; </para>
+                </listitem>
+                <listitem>
+                    <para> строковые — 'текст', 'don''t!'; </para>
+                </listitem>
+                <listitem>
+                    <para> дата — DATE '10.01.2014'; </para>
+                </listitem>
+                <listitem>
+                    <para> время — TIME '15:12:56'; </para>
+                </listitem>
+                <listitem>
+                    <para> временная отметка — TIMESTAMP '10.01.2014 13:32:02'; </para>
+                </listitem>
+                <listitem>
+                    <para> неопределённое состояние — null. </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>Подробней о литералах для каждого из типов данных см. <link linkend="types"
+                >Типы и подтипы данных</link>.</para>
+    </section>
+    <section xml:id="langstruct-operators">
+        <info>
+            <title>Операторы и специальные символы </title>
+        </info>
+
+        <para>Существует набор специальных символов, используемых в качестве разделителей. </para>
+        <para>
+            <programlisting> 
+<replaceable>&lt;special char&gt;</replaceable> ::= <replaceable>&lt;space&gt;</replaceable> | " | % | &amp; | ' | ( | ) 
+    | * | + | , | - | . | / | : | ; | &lt; | = | &gt; | ? | [ | ] 
+    | ^ | { | } | <emphasis role="bold">|</emphasis>               
+            </programlisting>
+        </para>
+        <para>Часть этих символов, а так же их комбинации могут быть использованы как операторы
+            (арифметические, строковые, логические), как разделители команд SQL, для квотирования
+            идентификаторов, и для обозначения границ строковых литералов или комментариев. </para>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>  
+<replaceable>&lt;operator&gt;</replaceable> ::=
+    <replaceable>&lt;string operator&gt;</replaceable> |
+    <replaceable>&lt;arithmetic operator&gt;</replaceable> |
+    <replaceable>&lt;comparison operator&gt;</replaceable> |  
+    <replaceable>&lt;logical operator&gt;</replaceable>
+        
+<replaceable>&lt;string operator&gt;</replaceable> ::= {||}
+                    
+<replaceable>&lt;arithmetic operator&gt;</replaceable> ::= * | / | + | - |
+                    
+<replaceable>&lt;comparison operator&gt;</replaceable> ::=
+    {=} | {&lt;&gt;} | {!=} | {~=} | {^=} |
+    {&gt;} | {&lt;} | {&gt;=} | {&lt;=} | {!&gt;} | {~&gt;} | {^&gt;} |
+    {!&lt;} | {~&lt;} | {^&lt;}
+    
+<replaceable>&lt;logical operator&gt;</replaceable> ::= NOT | AND | OR                    
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>Подробнее об операторах см. <link linkend="common-expr"
+            >Выражения</link>.</para>
+    </section>
+    <section xml:id="langstruct-comments">
+        <info>
+            <title>Комментарии</title>
+        </info>
+
+        <para>В SQL скриптах, операторах SQL и PSQL модулях могут встречаться комментарии.
+            Комментарий — это произвольный текст заданный пользователем, предназначенный для
+            пояснения работы отдельных частей программы. Синтаксический анализатор игнорирует текст
+            комментариев. В Firebird поддерживается два типа комментариев: блочные и однострочные. </para>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>   
+<replaceable>&lt;comment&gt;</replaceable> ::= <replaceable>&lt;block comment&gt;</replaceable> | <replaceable>&lt;single-line comment&gt;</replaceable>
+    
+<replaceable>&lt;block comment&gt;</replaceable> ::=
+    /*<replaceable>&lt;ASCII char&gt;</replaceable>[<replaceable>&lt;ASCII char&gt;</replaceable> …]*/
+    
+<replaceable>&lt;single-line comment&gt;</replaceable> ::=
+    --<replaceable>&lt;ASCII char&gt;</replaceable>[<replaceable>&lt;ASCII char&gt;</replaceable> …]<replaceable>&lt;end line&gt;</replaceable>                    
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>Блочные комментарии начинается с символов /* и заканчивается символами */. Блочные
+            комментарии могут содержать текст произвольной длины и занимать несколько строк. </para>
+        <note>
+            <para>Однако, если в блоке комментария присутствует последовательность символов '*/', то
+                блочный комментарий будет немедленно завершён при обнаружении символов */.</para>
+        </note>
+        <para>Однострочные комментарии начинаются с символов -- и действуют до конца текущей строки. </para>
+        <example>
+            <title>Комментарии</title>
+
+            <para>
+                <programlisting language="sql">
+CREATE PROCEDURE P(APARAM INT)
+RETURNS (B INT)
+AS
+BEGIN
+  /* Данный текст не будет учитываться
+     при работе процедуры, т.к. является комментарием
+   */
+  B = A + 1; -- Однострочный комментарий
+  SUSPEND;
+END
+                </programlisting>
+            </para>
+        </example>
+    </section>
+</chapter>

@@ -1,0 +1,261 @@
+<!DOCTYPE appendix>
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="supplement" xml:lang="ru">
+    <info>
+        <title>Дополнительные статьи</title>
+    </info>
+
+    <section xml:id="valid" xml:lang="ru">
+        <info>
+            <title>Поле RDB$VALID_BLR</title>
+        </info>
+
+        <para> В системных таблицах RDB$PROCEDURES, RDB$FUNCTIONS и RDB$TRIGGERS присутствует поле
+            RDB$VALID_BLR. Оно предназначено для сигнализации о возможной недействительности модуля
+            PSQL (процедуры или триггера) после изменения доменов или столбцов таблиц, от которых он
+            зависит. При возникновении описанной выше ситуации поле RDB$VALID_BLR устанавливается в
+            0 для процедур или триггеров, код которых возможно является недействительным. </para>
+        <section xml:id="valid-how">
+            <title>Как работает инвалидация</title>
+            <para>В триггерах, процедурах и функциях (в том числе и в процедурах и функциях пакетов)
+                зависимости возникают от столбцов таблицы к которой они обращаются, а так же от
+                любого параметра или переменной которые определены в модуле с использованием
+                предложения TYPE OF.</para>
+            <para>После того, как ядро Firebird изменило любой домен, включая неявные домены,
+                создаваемые внутри при определении столбцов или параметров, Firebird производит
+                внутреннюю перекомпиляцию всех зависимостей.</para>
+            <note>
+                <para>Инвалидация происходит для процедур, функций, пакетов и триггеров, но не для
+                    блоков DML операторов, которые выполняются при помощи EXECUTE BLOCK.</para>
+            </note>
+            <para>Любой модуль, который не удалось перекомпилировать из-за несовместимости,
+                возникающей из-за изменения домена, помечается как недействительный (поле
+                    <database>RDB$VALID_BLR</database> устанавливается в 0 в записи соответствующей
+                системной таблице (<database>RDB$PROCEDURES</database> или
+                    <database>RDB$TRIGGERS</database>).</para>
+            <para>Возобновление (установка <database>RDB$VALID_BLR</database> в 1) происходит когда
+                    <orderedlist spacing="compact">
+                    <listitem>
+                        <para>домен изменён снова и его новое определение совместимо с ранее
+                            недействительным определением модуля; или</para>
+                    </listitem>
+                    <listitem>
+                        <para>ранее недействительный модуль изменён так, что соответствовать новому
+                            определению домена.</para>
+                    </listitem>
+                </orderedlist>
+            </para>
+            <para>Нижеприведённый запрос находит процедуры и триггеры, зависящие от определённого
+                домена (в примере это домен 'MYDOMAIN'), и выводит информацию о состоянии поля
+                RDB$VALID_BLR:</para>
+            <para>
+                <programlisting language="sql"> 
+WITH VALID_PSQL (
+    PSQL_TYPE,
+    ROUTE_NAME,
+    VALID)
+AS (SELECT
+        'Procedure',
+        RDB$PROCEDURE_NAME,
+        RDB$VALID_BLR
+    FROM
+        RDB$PROCEDURES
+    WHERE
+          RDB$PROCEDURES.RDB$PACKAGE_NAME IS NULL
+    UNION ALL
+    SELECT
+        'Function',
+        RDB$FUNCTION_NAME,
+        RDB$VALID_BLR
+    FROM
+        RDB$FUNCTIONS
+    WHERE
+          RDB$FUNCTIONS.RDB$PACKAGE_NAME IS NULL
+    UNION ALL
+    SELECT
+        'Package',
+        RDB$PACKAGE_NAME,
+        RDB$VALID_BODY_FLAG
+    FROM
+        RDB$PACKAGES
+    UNION ALL
+    SELECT
+        'Trigger',
+        RDB$TRIGGER_NAME,
+        RDB$VALID_BLR
+    FROM
+        RDB$TRIGGERS
+    WHERE
+          RDB$TRIGGERS.RDB$SYSTEM_FLAG = 0)
+SELECT
+    PSQL_TYPE,
+    ROUTE_NAME,
+    VALID
+FROM
+    VALID_PSQL
+WHERE
+      EXISTS(SELECT
+                 *
+             FROM
+                 RDB$DEPENDENCIES
+             WHERE
+                   RDB$DEPENDENT_NAME = VALID_PSQL.ROUTE_NAME
+               AND RDB$DEPENDED_ON_NAME = 'MYDOMAIN');
+               
+/*
+  Замените MYDOMAIN фактическим именем проверяемого
+  домена. Используйте заглавные буквы, если 
+  домен создавался нечувствительным к регистру — в 
+  противном случае используйте точное написание 
+  имени домена с учётом регистра
+*/               
+        </programlisting>
+            </para>
+            <para>Следующий запрос находит процедуры и триггеры, зависящие от определённого столбца
+                таблицы (в примере это столбец 'MYCOLUMN' таблицы 'MYTABLE'), и выводит информацию о
+                состоянии поля RDB$VALID_BLR:</para>
+            <para>
+                <programlisting language="sql">
+WITH VALID_PSQL (
+    PSQL_TYPE,
+    ROUTE_NAME,
+    VALID)
+AS (SELECT
+        'Procedure',
+        RDB$PROCEDURE_NAME,
+        RDB$VALID_BLR
+    FROM
+        RDB$PROCEDURES
+    WHERE
+          RDB$PROCEDURES.RDB$PACKAGE_NAME IS NULL
+    UNION ALL
+    SELECT
+        'Function',
+        RDB$FUNCTION_NAME,
+        RDB$VALID_BLR
+    FROM
+        RDB$FUNCTIONS
+    WHERE
+          RDB$FUNCTIONS.RDB$PACKAGE_NAME IS NULL
+    UNION ALL
+    SELECT
+        'Package',
+        RDB$PACKAGE_NAME,
+        RDB$VALID_BODY_FLAG
+    FROM
+        RDB$PACKAGES
+    UNION ALL
+    SELECT
+        'Trigger',
+        RDB$TRIGGER_NAME,
+        RDB$VALID_BLR
+    FROM
+        RDB$TRIGGERS
+    WHERE
+          RDB$TRIGGERS.RDB$SYSTEM_FLAG = 0)
+SELECT
+    PSQL_TYPE,
+    ROUTE_NAME,
+    VALID
+FROM
+    VALID_PSQL
+WHERE
+      EXISTS(SELECT
+                 *
+             FROM
+                 RDB$DEPENDENCIES D
+             WHERE
+                   D.RDB$DEPENDENT_NAME = VALID_PSQL.ROUTE_NAME
+               AND D.RDB$DEPENDED_ON_NAME = 'MYTABLE'
+               AND D.RDB$FIELD_NAME = 'MYCOLUMN');
+               
+/*
+  Замените MYTABLE и MYCOLUMN фактическими именами
+  проверяемой таблицы и её столбца. 
+  Используйте заглавные буквы, если таблица и её 
+  столбец создавались нечувствительными к регистру — 
+  в противном случае используйте точное написание 
+  имени таблицы и её столбца с учётом регистра
+*/               
+        </programlisting>
+            </para>
+            <important>
+                <para>Все случаи возникновения недействительных модулей, вызванных изменениями
+                    доменов/столбцов, отражаются в поле <database>RDB$VALID_BLR</database>. Тем не
+                    менее, другие виды изменения, таких как изменения количества входных или
+                    выходных параметров процедур и так далее, не влияют на поле проверки, даже если
+                    потенциально они могут привести к недействительности модуля. Типичные сценарии
+                    могут быть следующими: <orderedlist>
+                        <listitem>
+                            <para>Процедура (B) определена так, что она вызывает другую процедуру
+                                (A) и считывает выходные параметры из неё. В этом случае зависимость
+                                будет зарегистрирована в <database>RDB$DEPENDENCIES</database>. В
+                                последствии вызываемая процедура (A) может быть изменена для
+                                изменения или удаления одного и более выходных параметров. Оператор
+                                ALTER PROCEDURE A приведёт к ошибки при выполнении фиксации
+                                транзакции.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Процедура (B) вызывает процедуру (A), передавая ей значения в
+                                качестве входных параметров. Никаких зависимостей не будет
+                                зарегистрировано в <database>RDB$DEPENDENCIES</database>.
+                                Последующие модификации входных параметров процедуры A будут
+                                позволены. Отказ произойдет во время выполнения, когда В вызовет A с
+                                несогласованным набором входных параметров.</para>
+                        </listitem>
+                    </orderedlist>
+                </para>
+            </important>
+            <note>
+                <title>Другие замечания</title>
+                <para><itemizedlist>
+                        <listitem>
+                            <para>Для модулей PSQL, наследованных от более ранних версий Firebird
+                                (включая многие системные триггеры, даже если база данных
+                                создавалась под версией Firebird 2.1 или выше), поле
+                                    <database>RDB$VALID_BLR</database> имеет значение NULL. Это не
+                                означает, что их BLR является недействительным.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Команды утилиты командной строки <application>isql</application>
+                                SHOW PROCEDURES, SHOW FUNCTIONS и SHOW TRIGGERS при выводе
+                                информации отмечают звёздочкой модули, у которых поле
+                                    <database>RDB$VALID_BLR</database> равно 0. Команды SHOW
+                                PROCEDURE &lt;procname&gt;, SHOW FUNCTION &lt;funcname&gt; и SHOW
+                                TRIGGER &lt;trigname&gt;, выводящие на экран код PSQL модуля, не
+                                сигнализируют пользователя о недопустимом BLR.</para>
+                        </listitem>
+                    </itemizedlist></para>
+            </note>
+        </section>
+    </section>
+    <section xml:id="appendix-supplement-equality">
+        <title>Замечание о равенстве</title>
+
+        <important>
+            <para>Это замечание об операторах равенства и неравенства применяется повсюду в СУБД
+                Firebird.</para>
+        </important>
+
+        <para>Оператор "=", который используется во многих условиях, сравнивает только значения со
+            значениями. В соответствии со стандартом SQL, NULL не является значением и,
+            следовательно, два значения NULL не равны и ни неравны друг с другом. Если необходимо,
+            чтобы значения NULL соответствовали друг другу при объединении, используйте оператор IS
+            NOT DISTINCT FROM. Этот оператор возвращает истину, если операнды имеют то же значение,
+            или, если оба они равны NULL.
+            <programlisting language="sql">
+SELECT *
+FROM A 
+JOIN B ON A.id IS NOT DISTINCT FROM B.code
+                    </programlisting>
+        </para>
+        <para>Точно так же, если вы хотите чтобы значения NULL отличались от любого значения и два
+            значения NULL считались равными, используйте оператор IS DISTINCT FROM вместо оператора
+            "&lt;&gt;".
+            <programlisting language="sql">
+SELECT *
+FROM A 
+JOIN B ON A.id IS DISTINCT FROM B.code
+                    </programlisting>
+        </para>
+    </section>
+</appendix>
