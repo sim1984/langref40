@@ -376,7 +376,6 @@
                 <member>ENGINE</member>
                 <member>END</member>
                 <member>ENTRY_POINT</member>
-                <member>ERROR_MESSAGE</member>
                 <member>ESCAPE</member>
                 <member>EXCEPTION</member>
                 <member>EXCLUDE</member>
@@ -463,6 +462,7 @@
                 <member>MAXIMUM_SEGMENT</member>
                 <member>MAXVALUE</member>
                 <member>MERGE</member>
+                <member>MESSAGE</member>
                 <member>MIDDLENAME</member>
                 <member>MILLISECOND</member>
                 <member>MIN</member>
@@ -530,8 +530,9 @@
                 <member>RAND</member>
                 <member>RANGE</member>
                 <member>RANK</member>
-                <member>RDB$GET_CONTEXT</member>
                 <member>RDB$DB_KEY</member>
+                <member>RDB$GET_CONTEXT</member>               
+                <member>RDB$ERROR</member>
                 <member>RDB$RECORD_VERSION</member>
                 <member>RDB$ROLE_IN_USE</member>
                 <member>RDB$SET_CONTEXT</member>

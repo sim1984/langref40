@@ -5223,41 +5223,6 @@ BEGIN
 END^         
                 </programlisting></para>
                         </example>
-                        <example>
-                            <title>Регистрация ошибке в журнале и повторное её возбуждение в блоке
-                                WHEN</title>
-                            <para><programlisting language="sql">
-CREATE PROCEDURE ADD_COUNTRY (
-    ACountryName COUNTRYNAME,
-    ACurrency VARCHAR(10) )
-AS
-BEGIN
-  INSERT INTO country (country,
-                       currency)
-  VALUES (:ACountryName,
-          :ACurrency);
-  WHEN ANY DO
-  BEGIN
-    -- Записываем ошибку в журнал
-    IN AUTONOMOUS TRANSACTION DO
-      INSERT INTO ERROR_LOG (PSQL_MODULE,
-                             ERROR_TEXT,
-                             EXCEPTION_NAME,                             
-                             GDS_CODE,
-                             SQL_CODE,
-                             SQL_STATE)
-      VALUES ('ADD_COUNTRY',
-              ERROR_MESSAGE, -- интерпретированный текст исключения
-              EXCEPTION, -- имя пользовательского исключения
-              GDSCODE,
-              SQLCODE,
-              SQLSTATE);
-    -- Повторно возбуждаем ошибку
-    EXCEPTION;
-  END
-END        
-                </programlisting></para>
-                        </example>
                     </para>
                 </formalpara>
 
@@ -5366,37 +5331,22 @@ DO <replaceable>&lt;compound_statement&gt;</replaceable>
                     вышестоящем WHEN блоке.</para>
                 <para>Оператор WHEN ... DO должен находиться в самом конце блока операторов перед
                     оператором END.</para>
-                <para>После ключевого слова DO следует составной оператор, в котором выполняют
-                    некоторую обработку возникшей ситуации. Составной оператор — это оператор или
-                    блок операторов, заключённый в операторные скобки BEGIN и END. В этом операторе
-                    доступны контекстные переменные <itemizedlist>
-                        <listitem>
-                            <para><link linkend="internalfunc-contextvar-error_message"
-                                    >ERROR_MESSAGE</link> — интерпретированный текст
-                                исключения;</para>
-                        </listitem>
-                        <listitem>
-                            <para><link linkend="internalfunc-contextvar-exception">EXCEPTION</link>
-                                — имя пользовательского исключения;</para>
-                        </listitem>
-                        <listitem>
-                            <para><link linkend="internalfunc-contextvar-gdscode"
-                                >GDSCODE</link>;</para>
-                        </listitem>
-                        <listitem>
-                            <para><link linkend="internalfunc-contextvar-sqlcode"
-                                >SQLCODE</link>;</para>
-                        </listitem>
-                        <listitem>
-                            <para><link linkend="internalfunc-contextvar-sqlstate"
-                                >SQLSTATE</link>.</para>
-                        </listitem>
-                    </itemizedlist> Там же разрешён оператор повторного вызова ошибки или
-                    исключительной ситуации EXCEPTION (без параметров).</para>
+                <para>После ключевого слова DO следует составной оператор, в котором можно
+                    произвести обработку ошибки или исключения. Составной оператор — это оператор
+                    или блок операторов, заключённый в операторные скобки BEGIN и END. В этом
+                    операторе доступны контекстные переменные <link
+                        linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
+                        linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
+                        linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. Для получения
+                    имени активного пользовательского исключения или текста интерпретированного
+                    сообщения об ошибке вы можете воспользоваться системной функцией <link
+                        linkend="internalfunc-func-error-rdberror">RDB$ERROR</link>. В этом же блоке
+                    доступен оператор повторного вызова ошибки или исключительной ситуации EXCEPTION
+                    (без параметров).</para>
                 <important>
                     <para>После предложения WHEN GDSCODE вы должны использовать символьные имена -
                         такие, как <replaceable>grant_obj_notfound</replaceable> и т.д. Но в
-                        составном операторе после предложения DO доступна контекстная переменная
+                        составном операторе после ключевого слова DO доступна контекстная переменная
                         GDSCODE, которая содержит целое число. Для сравнения его с определённой
                         ошибкой вы должны использовать числовое значение, например, 335544551 для
                             <replaceable>grant_obj_notfound</replaceable>.</para>
@@ -5483,8 +5433,8 @@ BEGIN
                              SQL_CODE,
                              SQL_STATE)
       VALUES ('ADD_COUNTRY',
-              ERROR_MESSAGE, -- текст сообщения об ошибке
-              EXCEPTION, -- имя пользовательского исключения
+              RDB$ERROR(MESSAGE), -- текст сообщения об ошибке
+              RDB$ERROR(EXCEPTION), -- имя пользовательского исключения
               GDSCODE, 
               SQLCODE,
               SQLSTATE 

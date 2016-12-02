@@ -165,7 +165,6 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>END</keyword>
       <keyword>ENGINE</keyword>
       <keyword>ENTRY_POINT</keyword>
-      <keyword>ERROR_MESSAGE</keyword>
       <keyword>ESCAPE</keyword>
       <keyword>EXCEPTION</keyword>
       <keyword>EXCLUDE</keyword>
@@ -253,6 +252,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>MAXIMUM_SEGMENT</keyword>
       <keyword>MAXVALUE</keyword>
       <keyword>MERGE</keyword>
+      <keyword>MESSAGE</keyword>
       <keyword>MIDDLENAME</keyword>
       <keyword>MILLISECOND</keyword>
       <keyword>MIN</keyword>
@@ -319,8 +319,9 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>RAND</keyword>
       <keyword>RANGE</keyword>
       <keyword>RANK</keyword>
-      <keyword>RDB$GET_CONTEXT</keyword>
       <keyword>RDB$DB_KEY</keyword>
+      <keyword>RDB$GET_CONTEXT</keyword>
+      <keyword>RDB$ERROR</keyword>
       <keyword>RDB$RECORD_VERSION</keyword>
       <keyword>RDB$ROLE_IN_USE</keyword>
       <keyword>RDB$SET_CONTEXT</keyword>

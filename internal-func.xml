@@ -535,153 +535,6 @@ END
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-contextvar-error_message">
-            <info>
-                <title>ERROR_MESSAGE</title>
-                <keywordset>
-                    <keyword>ERROR_MESSAGE</keyword>
-                </keywordset>
-            </info>
-
-            <indexterm><primary>ERROR_MESSAGE</primary></indexterm>
-
-            <formalpara>
-                <title>Доступно в:</title>
-
-                <para>Внутри PSQL блока обработки исключений.</para>
-            </formalpara>
-
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-ERROR_MESSAGE                      
-                        </programlisting>
-                </para>
-            </formalpara>
-
-            <formalpara>
-                <title>Тип возвращаемого результата:</title>
-                <para>VARCHAR(1024) CHARACTER SET UTF8</para>
-            </formalpara>
-
-            <para>В блоке обработки ошибок "WHEN ... DO" контекстная переменная ERROR_MESSAGE
-                содержит интерпретированный текст активного исключения.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование переменной ERROR_MESSAGE</title>
-                        <para><programlisting language="sql">
-...
-BEGIN
-  ...
- WHEN ANY DO
-   EXECUTE PROCEDURE P_LOG_EXCEPTION(ERROR_MESSAGE);
- END
-...
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-
-            <note>
-                <para>Переменная ERROR_MESSAGE всегда содержит NULL за пределами блока обработки
-                    исключений.</para>
-            </note>
-
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="internalfunc-contextvar-exception">EXCEPTION</link>, <link
-                        linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
-                        linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
-                        linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
-            </formalpara>
-        </section>
-
-        <section xml:id="internalfunc-contextvar-exception">
-            <info>
-                <title>EXCEPTION</title>
-                <keywordset>
-                    <keyword>EXCEPTION</keyword>
-                </keywordset>
-            </info>
-
-            <indexterm><primary>EXCEPTION</primary></indexterm>
-
-            <formalpara>
-                <title>Доступно в:</title>
-
-                <para>Внутри PSQL блока обработки исключений.</para>
-            </formalpara>
-
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-EXCEPTION                      
-                        </programlisting>
-                </para>
-            </formalpara>
-
-            <formalpara>
-                <title>Тип возвращаемого результата:</title>
-                <para>VARCHAR(63) CHARACTER SET UTF8</para>
-            </formalpara>
-
-            <para>В блоке обработки ошибок "WHEN ... DO" контекстная переменная EXCEPTION содержит
-                имя активного пользовательского исключения.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование переменной EXCEPTION</title>
-                        <para><programlisting language="sql">
-...
-BEGIN
-  ...
- WHEN ANY DO
-   IF (EXCEPTION IS NOT NULL)
-     EXECUTE PROCEDURE P_USR_EXCEPTION(EXCEPTION);
-   ELSE
-     EXECUTE PROCEDURE P_SYS_EXCEPTION;
- END
-...
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-
-            <note>
-                <para>
-                    <itemizedlist spacing="compact">
-                        <listitem>
-                            <para>Переменная EXCEPTION всегда содержит NULL за пределами блока
-                                обработки исключений;</para>
-                        </listitem>
-                        <listitem>
-                            <para>Для системных исключений переменная EXCEPTION содержит
-                                NULL.</para>
-                        </listitem>
-                    </itemizedlist>
-                </para>
-            </note>
-
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="internalfunc-contextvar-error_message">ERROR_MESSAGE</link>,
-                        <link linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
-                        linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
-                        linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
-            </formalpara>
-        </section>
-
         <section xml:id="internalfunc-contextvar-gdscode">
             <info>
                 <title>GDSCODE</title>
@@ -753,9 +606,7 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-contextvar-error_message">ERROR_MESSAGE</link>,
-                        <link linkend="internalfunc-contextvar-exception">EXCEPTION</link>, <link
-                        linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
+                    <link linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
                         linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
             </formalpara>
         </section>
@@ -1169,9 +1020,7 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-contextvar-error_message">ERROR_MESSAGE</link>,
-                        <link linkend="internalfunc-contextvar-exception">EXCEPTION</link>, <link
-                        linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
+                    <link linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
                         linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
             </formalpara>
         </section>
@@ -1251,9 +1100,7 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-contextvar-error_message">ERROR_MESSAGE</link>,
-                        <link linkend="internalfunc-contextvar-exception">EXCEPTION</link>, <link
-                        linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
+                    <link linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
                         linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
                         linkend="error">Коды ошибок SQLSTATE</link>. </para>
             </formalpara>
@@ -2138,6 +1985,84 @@ SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
 
                     <para>
                         <link linkend="security-roles-create">CREATE ROLE</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="internalfunc-func-error">
+            <info>
+                <title>Функции для обработки ошибок</title>
+            </info>
+            <para/>
+            <section xml:id="internalfunc-func-error-rdberror">
+                <info>
+                    <title>RDB$ERROR</title>
+                    <keywordset>
+                        <keyword>RDB$ERROR</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RDB$ERROR</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RDB$ERROR (<replaceable>&lt;context&gt;</replaceable>)   
+                            
+<replaceable>&lt;context&gt;</replaceable> ::= { GDSCODE | SQLCODE | SQLSTATE | EXCEPTION | MESSAGE }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>Зависит от контекста</para>
+                </formalpara>
+                <para>Возвращает значение контекста активного исключения. Тип возвращаемого значения
+                    зависит от контекста.</para>
+                <note>
+                    <para>Функция RDB$ERROR всегда возвращает NULL вне блока обработки ошибок "WHEN
+                        ... DO".</para>
+                </note>
+                <para>Если задан контекст EXCEPTION то функция возвращает имя исключения, если
+                    активно исключение определённое пользователем, и NULL если активно одно из
+                    системных исключений. Для контекста EXCEPTION тип возвращаемого значения:
+                    VARCHAR(63) CHARACTER SET UTF8.</para>
+                <para>Если задан контекст MESSAGE то функция возвращает интерпретированный текст
+                    активного исключения. Для контекста MESSAGE тип возвращаемого значения:
+                    VARCHAR(1024) CHARACTER SET UTF8.</para>
+                <para>Если заданы контексты GDSCODE, SQLCODE или SQLSTATE то функция возвращает
+                    значение соответствующей контекстной переменной.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RDB$ERROR для сохранения текста ошибки в
+                                журнал</title>
+                            <para><programlisting language="sql">
+...
+BEGIN
+...
+WHEN ANY DO
+  EXECUTE PROCEDURE P_LOG_EXCEPTION(RDB$ERROR(MESSAGE));
+END
+...
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="psql-operators-when">WHEN ... DO</link>, <link
+                            linkend="psql-operators-exception">EXCEPTION</link>, <link
+                            linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
+                            linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
+                            linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -10721,18 +10646,18 @@ ID SALARY      S1      S2      S3      S4      S5      S6      S7      S8
         </section>
         <section xml:id="internalfunc-window-naming">
             <title>Именованные окна</title>
-            <para>Для того чтобы не писать каждый раз сложные выражения для задания окна, имя
-                окна можно задать в предложении WINDOW. Имя окна может быть использовано в
-                предложении OVER для ссылки на определение окна, кроме того оно может быть
-                использовано в качестве базового окна для другого именованного или встроенного (в
-                предложении OVER) окна. Окна с рамкой (с предложениями RANGE и ROWS) не могут
-                быть использованы в качестве базового окна (но могут быть использованы в
-                предложении OVER <replaceable>&lt;window name&gt;</replaceable>). Окно, которое
-                использует ссылку на базовое окно, не может иметь предложение PARTITION BY и не
-                может переопределять сортировку с помощью предложения ORDER BY.</para>
+            <para>Для того чтобы не писать каждый раз сложные выражения для задания окна, имя окна
+                можно задать в предложении WINDOW. Имя окна может быть использовано в предложении
+                OVER для ссылки на определение окна, кроме того оно может быть использовано в
+                качестве базового окна для другого именованного или встроенного (в предложении OVER)
+                окна. Окна с рамкой (с предложениями RANGE и ROWS) не могут быть использованы в
+                качестве базового окна (но могут быть использованы в предложении OVER
+                    <replaceable>&lt;window name&gt;</replaceable>). Окно, которое использует ссылку
+                на базовое окно, не может иметь предложение PARTITION BY и не может переопределять
+                сортировку с помощью предложения ORDER BY.</para>
             <formalpara>
                 <title>Пример:</title>
-                
+
                 <para>
                     <example>
                         <title>Использование именованных окон</title>
@@ -10750,7 +10675,7 @@ FROM employee
 WINDOW w1 AS (PARTITION BY department),
        w2 AS (w1 ORDER BY salary)
 ORDER BY department, salary;
-                                </programlisting>    
+                                </programlisting>
                         </para>
                     </example>
                 </para>
