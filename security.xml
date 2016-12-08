@@ -70,22 +70,9 @@
             <section xml:id="security-auth-special-posix">
                 <title>Особенности POSIX</title>
 
-                <para>В POSIX системах, включая MacOSX, Firebird будет трактовать пользователя POSIX
-                    точно так же как и пользователя, хранящегося в собственной базе данных
-                    безопасности Firebird, до тех пор, пока сервер видит клиента в качестве
-                    доверенного хоста. Учетные записи пользователя должны существовать как на
-                    клиенте, так и на сервере. Для того чтобы установить доверительные отношения с
-                    хостом клиента, необходимо на сервере занести соответствующую запись в файл
-                        <filename>/etc/hosts.equiv</filename> или
-                        <filename>/etc/gds_hosts.equiv</filename>. В файле
-                        <filename>hosts.equiv</filename> прописываются доверительные отношения на
-                    уровне операционных систем, которые, соответственно, распространяются на все
-                    сервисы (например, rlogin, rsh, rcp). В файле
-                        <filename>gds_hosts.equiv</filename> устанавливаются доверительные отношения
-                    между хостами, только для Firebird. Формат записи идентичен для обоих файлов, и
-                    выглядит следующим образом: <screen>
-        hostname [username]
-    </screen>
+                <para>В POSIX системах, включая MacOSX, имя пользователя POSIX будет
+                    интерпретировано как имя пользователя Firebird Embedded, если имя пользователя не
+                    указано явно.
                 </para>
 
                 <section xml:id="security-auth-sysdba-posix">
@@ -109,10 +96,10 @@
                     <title>Пользователь <emphasis>root</emphasis> в POSIX</title>
 
                     <para>В POSIX системах пользователь <emphasis>root</emphasis> может выступать в
-                        роли <database class="user">SYSDBA</database>. Firebird в этом случае будет
-                        трактовать имя пользователя <emphasis>root</emphasis> как <database
-                            class="user">SYSDBA</database>, и вы будете иметь доступ ко всем базам
-                        данных сервера.</para>
+                        роли <database class="user">SYSDBA</database>. Firebird Embedded в этом
+                        случае будет трактовать имя пользователя <emphasis>root</emphasis> как
+                            <database class="user">SYSDBA</database>, и вы будете иметь доступ ко
+                        всем базам данных сервера.</para>
                 </section>
             </section>
             <section xml:id="security-auth-special-windows">
@@ -187,12 +174,12 @@
                             <row>
                                 <entry>Пользователь <emphasis>root</emphasis> в POSIX</entry>
                                 <entry>Автоматически</entry>
-                                <entry>Также как SYSDBA.</entry>
+                                <entry>Также как SYSDBA. Только в Firebird Embedded.</entry>
                             </row>
                             <row>
                                 <entry>Суперпользователь в POSIX</entry>
                                 <entry>Автоматически</entry>
-                                <entry>Также как SYSDBA.</entry>
+                                <entry>Также как SYSDBA. Только в Firebird Embedded.</entry>
                             </row>
                             <row>
                                 <entry>Владелец базы данных</entry>
@@ -236,7 +223,7 @@
                                 <entry>Должна быть предварительно выдана и должна быть указана при
                                     входе</entry>
                                 <entry>Также как SYSDBA, но только в тех базах данных, где эта роль
-                                    предоставлена.</entry>
+                                    предоставлена. Только в Firebird Embedded.</entry>
                             </row>
                             <row>
                                 <entry>Пользователь Windows</entry>
@@ -3104,14 +3091,14 @@ SET TRUSTED ROLE
                                 <entry><replaceable>Unix_group</replaceable></entry>
                                 <entry>
                                     <para>Имя группы пользователей в операционных системах семейства
-                                        UNIX. </para>
+                                        UNIX. Только в Firebird Embedded.</para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>Unix_user</replaceable></entry>
                                 <entry>
-                                    <para>Имя пользователя в операционной системе семейства
-                                        UNIX.</para>
+                                    <para>Имя пользователя в операционной системе семейства UNIX.
+                                        Только в Firebird Embedded.</para>
                                 </entry>
                             </row>
                             <row>
@@ -4050,14 +4037,14 @@ GRANT DEFAULT ROLE DIRECTOR TO USER PETROV;
                                 <entry><replaceable>Unix_group</replaceable></entry>
                                 <entry>
                                     <para>Имя группы пользователей в операционных системах семейства
-                                        UNIX. </para>
+                                        UNIX. Только в Firebird Embedded.</para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>Unix_user</replaceable></entry>
                                 <entry>
-                                    <para>Имя пользователя в операционной системе семейства
-                                        UNIX.</para>
+                                    <para>Имя пользователя в операционной системе семейства UNIX.
+                                        Только в Firebird Embedded.</para>
                                 </entry>
                             </row>
                             <row>
