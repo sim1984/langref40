@@ -2782,7 +2782,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -2792,7 +2792,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -4254,7 +4254,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 <entry><replaceable>subtype_num</replaceable></entry>
                                 <entry>
                                     <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -4262,7 +4262,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 <entry><replaceable>subtype_name</replaceable></entry>
                                 <entry>
                                     <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -8378,7 +8378,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                 <entry><replaceable>subtype_num</replaceable></entry>
                                 <entry>
                                     <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -8386,7 +8386,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                 <entry><replaceable>subtype_name</replaceable></entry>
                                 <entry>
                                     <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -9256,7 +9256,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                 <entry><replaceable>subtype_num</replaceable></entry>
                                 <entry>
                                     <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -9264,7 +9264,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                 <entry><replaceable>subtype_name</replaceable></entry>
                                 <entry>
                                     <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -10201,7 +10201,7 @@ END
                                     <entry><replaceable>subtype_num</replaceable></entry>
                                     <entry>
                                         <para>Номер подтипа BLOB. См. <link
-                                                linkend="types-bynary-blob-subtype">Подтипы
+                                                linkend="types-binary-blob-subtype">Подтипы
                                                 BLOB</link>.</para>
                                     </entry>
                                 </row>
@@ -10209,7 +10209,7 @@ END
                                     <entry><replaceable>subtype_name</replaceable></entry>
                                     <entry>
                                         <para>Мнемоника подтипа BLOB. См. <link
-                                                linkend="types-bynary-blob-subtype">Подтипы
+                                                linkend="types-binary-blob-subtype">Подтипы
                                                 BLOB</link>.</para>
                                     </entry>
                                 </row>
@@ -11109,7 +11109,7 @@ END
                                     <entry><replaceable>subtype_num</replaceable></entry>
                                     <entry>
                                         <para>Номер подтипа BLOB. См. <link
-                                                linkend="types-bynary-blob-subtype">Подтипы
+                                                linkend="types-binary-blob-subtype">Подтипы
                                                 BLOB</link>.</para>
                                     </entry>
                                 </row>
@@ -11117,7 +11117,7 @@ END
                                     <entry><replaceable>subtype_name</replaceable></entry>
                                     <entry>
                                         <para>Мнемоника подтипа BLOB. См. <link
-                                                linkend="types-bynary-blob-subtype">Подтипы
+                                                linkend="types-binary-blob-subtype">Подтипы
                                                 BLOB</link>.</para>
                                     </entry>
                                 </row>
@@ -12092,7 +12092,7 @@ DROP EXTERNAL FUNCTION addDay;
             помощью подтипов BLOB. </para>
         <para>Внешние функции для преобразования BLOB типов хранятся в динамических библиотеках и
             загружаются по необходимости.</para>
-        <para>Подробнее о подтипах BLOB см. в разделе <link linkend="types-bynary">Бинарные типы
+        <para>Подробнее о подтипах BLOB см. в разделе <link linkend="types-binary">Бинарные типы
                 данных</link>.</para>
         <section xml:id="ddl-filter-declare">
             <info>
@@ -12152,7 +12152,7 @@ ENTRY_POINT '<replaceable>function_name</replaceable>' MODULE_NAME '<replaceable
                             <row>
                                 <entry><replaceable>sub_type</replaceable></entry>
                                 <entry>
-                                    <para>Подтип BLOB. См. <link linkend="types-bynary-blob-subtype"
+                                    <para>Подтип BLOB. См. <link linkend="types-binary-blob-subtype"
                                             >Подтипы BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -12160,7 +12160,7 @@ ENTRY_POINT '<replaceable>function_name</replaceable>' MODULE_NAME '<replaceable
                                 <entry><replaceable>number</replaceable></entry>
                                 <entry>
                                     <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>
@@ -12168,7 +12168,7 @@ ENTRY_POINT '<replaceable>function_name</replaceable>' MODULE_NAME '<replaceable
                                 <entry><replaceable>mnemonic</replaceable></entry>
                                 <entry>
                                     <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-bynary-blob-subtype">Подтипы
+                                            linkend="types-binary-blob-subtype">Подтипы
                                         BLOB</link>.</para>
                                 </entry>
                             </row>

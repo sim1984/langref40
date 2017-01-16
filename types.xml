@@ -61,6 +61,13 @@
                         <entry>Логический тип данных.</entry>
                     </row>
                     <row>
+                        <entry>BINARY(<replaceable>n</replaceable>)</entry>
+                        <entry><replaceable>n</replaceable> байт</entry>
+                        <entry>от 1 до 32 767 байт</entry>
+                        <entry>Бинарный тип данных фиксированной длины. Является псевдонимом типа
+                                CHAR(<replaceable>n</replaceable>) CHARACTER SET OCTETS.</entry>
+                    </row>
+                    <row>
                         <entry>BLOB</entry>
                         <entry>Переменный</entry>
                         <entry>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный размер
@@ -79,7 +86,7 @@
                         <entry><replaceable>n</replaceable> символов (размер в байтах зависит от
                             кодировки, кол-во байт на символ)</entry>
                         <entry>от 1 до 32 767 байт</entry>
-                        <entry>Символьный тип данных фиксированной длины. При отображении данных,
+                        <entry>Символьный тип данных фиксированной длины. При извлечении данных,
                             строка дополняется пробелами справа до указанной длины. Если количество
                             символов <replaceable>n</replaceable> не указано, то по умолчанию
                             принимается 1.</entry>
@@ -87,7 +94,7 @@
                     <row>
                         <entry>DATE</entry>
                         <entry>32 бита</entry>
-                        <entry>От 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
+                        <entry>от 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
                         <entry>ISC_DATE</entry>
                     </row>
                     <row>
@@ -161,18 +168,28 @@
                     <row>
                         <entry>TIMESTAMP</entry>
                         <entry>64 бита</entry>
-                        <entry>От 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
+                        <entry>от 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
                         <entry>Включает информацию и о времени</entry>
                     </row>
                     <row>
                         <entry>
+                            <para>VARBINARY(<replaceable>n</replaceable>)</para>
+                            <para>BINARY VARYING(<replaceable>n</replaceable>)</para>
+                        </entry>
+                        <entry><replaceable>n</replaceable> байт</entry>
+                        <entry>от 1 до 32 765 байтов</entry>
+                        <entry>Бинарный тип данных переменной длины. Является псевдонимом типа
+                                VARCHAR(<replaceable>n</replaceable>) CHARACTER SET OCTETS.</entry>
+                    </row>
+                    <row>
+                        <entry>
                             <para>VARCHAR(<replaceable>n</replaceable>)</para>
-                            <para>CHAR VARYING</para>
-                            <para>CHARACTER VARYING</para>
+                            <para>CHAR VARYING(<replaceable>n</replaceable>)</para>
+                            <para>CHARACTER VARYING(<replaceable>n</replaceable>)</para>
                         </entry>
                         <entry><replaceable>n</replaceable> символов (размер в байтах зависит от
                             кодировки, кол-ва байт на символ) </entry>
-                        <entry>От 1 до 32 765 байтов</entry>
+                        <entry>от 1 до 32 765 байтов</entry>
                         <entry>Размер символов в байтах с учётом их кодировки не может быть больше
                             32765. Для этого типа данных, в отличие от CHAR (где по умолчанию
                             предполагается количество символов 1), количество символов n обязательно
@@ -327,9 +344,9 @@ INSERT INTO MYBIGINTS VALUES (
         </info>
 
         <para>Типы данных с плавающей точкой хранятся в двоичном формате IEEE 745, который включает
-            в себя знак, показатель степени и мантиссу. Точность этого типа является динамической, что
-            соответствует физическому формату хранения, который составляет 4 байта для типа FLOAT
-            и 8 байт для типа DOUBLE PRECISION.</para>
+            в себя знак, показатель степени и мантиссу. Точность этого типа является динамической,
+            что соответствует физическому формату хранения, который составляет 4 байта для типа
+            FLOAT и 8 байт для типа DOUBLE PRECISION.</para>
         <para>Учитывая особенности хранения чисел с плавающей точкой, этот тип данных не
             рекомендуется использовать для хранения денежных данных. По тем же причинам не
             рекомендуется использовать столбцы с данными такого типа в качестве ключей и применять к
@@ -339,7 +356,7 @@ INSERT INTO MYBIGINTS VALUES (
             BETWEEN.</para>
         <para>При использовании таких типов данных в выражениях рекомендуется крайне внимательно и
             серьёзно подойти к вопросу округления результатов расчётов.</para>
-        
+
         <section xml:id="types-float-float">
             <info>
                 <title>FLOAT</title>
@@ -1241,11 +1258,99 @@ SELECT * FROM TBOOL WHERE BVAL &lt;&gt; UNKNOWN
             </programlisting></para>
         </example>
     </section>
-    <section xml:id="types-bynary">
+    <section xml:id="types-binary">
         <info>
             <title>Бинарные типы данных</title>
         </info>
-        <section xml:id="types-bynary-blob">
+        <section xml:id="types-binary-binary">
+            <info>
+                <title>BINARY</title>
+            </info>
+            <indexterm><primary>BINARY</primary></indexterm>
+            <para>BINARY является типом данных с фиксированной длиной для хранения бинарных данных.
+                Если переданное количество байт меньше объявленной длины, то значение будет
+                дополнено нулями. В случае если не указана длина, то считается, что она равна
+                единице.</para>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>  
+BINARY [(<replaceable>&lt;length&gt;</replaceable>)]            
+                </programlisting>
+                </para>
+            </formalpara>
+            <note>
+                <para>Этот тип является псевдонимом типа CHAR
+                        [(<replaceable>&lt;length&gt;</replaceable>)] CHARACTER SET OCTETS и обратно
+                    совместим с ним.</para>
+            </note>
+            <tip>
+                <para>Данный тип хорошо подходит для хранения уникального идентификатора полученного
+                    с помощью функции <link linkend="internalfunc-func-uuid-gen_uuid"
+                        >GEN_UUID</link>.</para>
+            </tip>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="types-char-char">CHAR</link>,
+                    <link linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="types-binary-varbinary">
+            <info>
+                <title>VARBINARY</title>
+            </info>
+            <indexterm><primary>VARBINARY</primary></indexterm>
+            <indexterm><primary>BINARY VARYING</primary></indexterm>
+            <para>VARBINARY является типом для хранения бинарных данных переменной длины. Реальный
+                размер хранимой структуры равен фактическому размеру данных плюс 2 байта, в которых
+                задана длина поля.</para>
+            <para>Полное название BINARY VARYING.</para>
+            <formalpara>
+                <title>Синтаксис:</title>
+                
+                <para>
+                    <programlisting>  
+    VARBINARY (<replaceable>&lt;length&gt;</replaceable>)             
+  | BINARY VARYING (<replaceable>&lt;length&gt;</replaceable>)            
+                </programlisting>                    
+                </para>
+            </formalpara>  
+            <note>
+                <para>Этот тип является псевдонимом типа VARCHAR
+                    (<replaceable>&lt;length&gt;</replaceable>) CHARACTER SET OCTETS и обратно
+                    совместим с ним.</para>
+            </note>   
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование типов BINARY и VARBINARY</title>
+                        <para>
+                            <programlisting language="sql">
+DECLARE VARIABLE VAR1 VARBINARY(10);
+</programlisting>
+                            <programlisting language="sql">                            
+CREATE TABLE TABLE1 (
+  FIELD1 BINARY(16),
+  FIELD2 VARBINARY(100),
+  FIELD3 BINARY VARYING(1000));
+                      </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>           
+            <formalpara>
+                <title>См. также:</title>
+                
+                <para>
+                    <link linkend="types-char-varchar">VARCHAR</link>,
+                    <link linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
+            </formalpara>            
+        </section>
+        <section xml:id="types-binary-blob">
             <info>
                 <title>BLOB</title>
             </info>
@@ -1283,7 +1388,7 @@ BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)
                     определяется клиентской частью, причём размер сегмента может превышать размер
                     страницы данных. </para>
             </formalpara>
-            <section xml:id="types-bynary-blob-subtype">
+            <section xml:id="types-binary-blob-subtype">
                 <title>Подтипы BLOB</title>
                 <para>Подтип BLOB отражает природу данных, записанную в столбце. Firebird
                     предоставляет два предопределённых подтипа для сохранения пользовательских
@@ -1316,7 +1421,7 @@ BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)
                     подтипы с положительными числами не поддерживаются, поскольку Firebird
                     использует числа больше 2 для внутренних подтипов метаданных.</para>
             </section>
-            <section xml:id="types-bynary-blob-specifics">
+            <section xml:id="types-binary-blob-specifics">
                 <title>Особенности BLOB</title>
                 <para>Максимальный размер поля BLOB ограничен 4Гб и не зависит от варианта сервера,
                     32 битный или 64 битный (во внутренних структурах, связанных с BLOB присутствуют
