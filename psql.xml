@@ -4913,7 +4913,7 @@ POST_EVENT <replaceable>event_name</replaceable>
                 <title>Примеры:</title>
                 <para>
                     <example>
-                        <title>Оповещёние приложения о вставке записи в таблицу SALES</title>
+                        <title>Оповещение приложения о вставке записи в таблицу SALES</title>
 
                         <para><programlisting language="sql"> 
 SET TERM ^;
