@@ -1333,10 +1333,10 @@ BINARY [(<replaceable>&lt;length&gt;</replaceable>)]
 DECLARE VARIABLE VAR1 VARBINARY(10);
 </programlisting>
                             <programlisting language="sql">                            
-CREATE TABLE TABLE1 (
-  FIELD1 BINARY(16),
-  FIELD2 VARBINARY(100),
-  FIELD3 BINARY VARYING(1000));
+CREATE TABLE INFO (
+  GUID BINARY(16),
+  ENCRYPT_KEY VARBINARY(100),
+  ICON BINARY VARYING(32000));
                       </programlisting>
                         </para>
                     </example>
@@ -2106,7 +2106,7 @@ FROM rdb$database
                         времени (т.е. оно должно быть оценено при каждом вызове), используйте полный
                         синтаксис CAST.
                         <programlisting language="sql">  
-NEW.CHANGE_DATE = CAST('now' AS TIMESTANP);          
+NEW.CHANGE_DATE = CAST('now' AS TIMESTAMP);          
                </programlisting>
                     </para>
                 </note>

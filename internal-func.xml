@@ -1536,12 +1536,14 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                 </row>
                                 <row>
                                     <entry>CURRENT_USER</entry>
-                                    <entry> Глобальная переменная CURRENT_USER.</entry>
+                                    <entry>Глобальная переменная CURRENT_USER.</entry>
                                 </row>
                                 <row>
                                     <entry>DB_NAME</entry>
-                                    <entry>Полный путь к базе данных или алиас к базе данных, из
-                                        строки подключения к базе данных.</entry>
+                                    <entry>Каноническое имя текущей базы данных. Это либо имя
+                                        псевдонима (если соединение с помощью имён файлов запрещено
+                                        DatabaseAccess = NONE) или, в противном случае,полностью
+                                        расширенное имя файла базы данных.</entry>
                                 </row>
                                 <row>
                                     <entry>ENGINE_VERSION</entry>
