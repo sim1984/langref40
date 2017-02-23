@@ -1580,6 +1580,19 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     <entry>TRANSACTION_ID</entry>
                                     <entry>Глобальная переменная CURRENT_TRANSACTION.</entry>
                                 </row>
+                                <row>
+                                    <entry>SESSION_IDLE_TIMEOUT</entry>
+                                    <entry>Содержит текущее значение тайм-аут простоя соединения в
+                                        секундах, который был установлен на уровне соединения, или
+                                        ноль, если тайм-аут не был установлен. </entry>
+                                </row>
+                                <row>
+                                    <entry>STATEMENT_TIMEOUT</entry>
+                                    <entry>Содержит текущее значение тайм-аута выполнения оператора
+                                        в миллисекундах, который был установлен на уровне
+                                        подключения, или ноль, если тайм-аут не был
+                                        установлен.</entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

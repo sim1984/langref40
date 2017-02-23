@@ -252,6 +252,27 @@
                                     </itemizedlist></para>
                             </entry>
                         </row>
+                        <row>
+                            <entry>MON$IDLE_TIMEOUT</entry>
+                            <entry>INTEGER</entry>
+                            <entry>Тайм-аут простоя соединения уровня соединения. Содержит значение
+                                тайм-аута простоя уровня соединения, в секундах. Если тайм-аут не
+                                установлен — 0.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$IDLE_TIMER</entry>
+                            <entry>TIMESTAMP</entry>
+                            <entry>Время истечения таймера ожидания. Содержит NULL, если тайм-аут
+                                простоя соединения не установлен, или если таймер не
+                                запущен.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$STATEMENT_TIMEOUT</entry>
+                            <entry>INTEGER</entry>
+                            <entry>Тайм-аут SQL оператора уровня соединения. Содержит значение
+                                тайм-аута, установленное на уровне соединения, в миллисекундах. Если
+                                тайм-аут не установлен — 0.</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
@@ -1137,6 +1158,20 @@ FETCH FIRST 10 ROWS ONLY
                             <entry>MON$EXPLAINED_PLAN </entry>
                             <entry>BLOB TEXT </entry>
                             <entry>План оператора в explain форме. </entry>
+                        </row>
+                        <row>
+                            <entry>MON$STATEMENT_TIMEOUT</entry>
+                            <entry>INTEGER</entry>
+                            <entry>Тайм-аут SQL оператора уровня SQL оператора. Содержит значение
+                                тайм-аута, установленное на уровне соединения/оператора, в
+                                миллисекундах. Если тайм-аут не установлен — 0.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$STATEMENT_TIMER</entry>
+                            <entry>TIMESTAMP</entry>
+                            <entry>Время истечения таймера SQL оператора. Содержит NULL, если
+                                тайм-аут SQL оператора не установлен, или если таймер не
+                                запущен.</entry>
                         </row>
                     </tbody>
                 </tgroup>

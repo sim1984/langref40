@@ -416,6 +416,8 @@
                 <member>HASH</member>
                 <member>HAVING</member>
                 <member>HOUR</member>
+                <member>IDENTITY</member>
+                <member>IDLE</member>
                 <member>IF</member>
                 <member>IGNORE</member>
                 <member>IIF</member>
@@ -590,6 +592,7 @@
                 <member>SENSITIVE</member>
                 <member>SEQUENCE</member>
                 <member>SERVERWIDE</member>
+                <member>SESSION</member>
                 <member>SET</member>
                 <member>SHADOW</member>
                 <member>SHARED</member>

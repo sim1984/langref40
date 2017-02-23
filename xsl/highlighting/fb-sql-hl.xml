@@ -204,6 +204,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>HAVING</keyword>
       <keyword>HOUR</keyword>
       <keyword>IDENTITY</keyword>
+      <keyword>IDLE</keyword>
       <keyword>IF</keyword>
       <keyword>IGNORE</keyword>
       <keyword>IIF</keyword>
@@ -377,6 +378,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>SENSITIVE</keyword>
       <keyword>SEQUENCE</keyword>
       <keyword>SERVERWIDE</keyword>
+      <keyword>SESSION</keyword>
       <keyword>SET</keyword>
       <keyword>SHADOW</keyword>
       <keyword>SHARED</keyword>

@@ -1,0 +1,363 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="special" xml:lang="ru">
+    <info>
+        <title>Специальные возможности</title>
+    </info>
+
+    <section xml:id="special-timeout">
+        <info>
+            <title>Тайм-ауты</title>
+        </info>
+
+        <para>В Firebird существует два вида тайм-аута:<itemizedlist>
+                <listitem>
+                    <para>тайм-аут простоя соединения;</para>
+                </listitem>
+                <listitem>
+                    <para>тайм-аут выполнения SQL оператора.</para>
+                </listitem>
+            </itemizedlist></para>
+
+        <section xml:id="special-timeout-statemen">
+            <title>Тайм-аут выполнения SQL оператора</title>
+
+            <para>Данная функциональность позволяет автоматически прекратить выполнение SQL
+                оператора если он выполняется дольше заданного значения тайм-аута.</para>
+
+            <para>Данная функция может быть полезна для:<itemizedlist>
+                    <listitem>
+                        <para>Администраторов баз данных, которые получают инструмент для
+                            ограничения времени выполнения тяжёлых запросов, которые потребляют
+                            много ресурсов;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Разработчиков приложений, которые могут использовать тайм-ауты SQL
+                            операторов при написании и отладке сложных запросов с заранее
+                            неизвестным временем выполнения;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Тестеров, которые могут использовать тайм-ауты SQL операторов для
+                            обнаружения долго выполняющихся запросов и обеспечения конечного времени
+                            выполнения набора тестов. </para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Эта функциональность работает следующим образом. Когда начинается выполнение
+                оператора (или открывается курсор) Firebird запускает специальный таймер. Выборка
+                записей (fetch) не сбрасывает таймер. Таймер останавливается если выполнение SQL
+                оператора закончено или извлечена (fetch) последняя запись.</para>
+            <para>По истечению тайм-аута:<itemizedlist>
+                    <listitem>
+                        <para>Если выполнение SQL оператора активно, оно останавливается в заданный
+                            момент.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Если SQL оператор не активен в данный момент (например между выборками
+                            (fetch)), то он будет помечен как отменённый, следующая выборка (fetch)
+                            прервёт выполнение и будет возвращена ошибка.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Значение тайм-аута может быть установлено:<itemizedlist>
+                    <listitem>
+                        <para>На уровне базы данных. Значение параметра
+                                <parameter>StatementTimeout</parameter> может быть установлено в
+                                <filename>firebird.conf</filename> (или
+                                <filename>databases.conf</filename>) администратором базы данных.
+                            Область действия все операторы во всех соединениях. Параметр
+                                <parameter>StatementTimeout</parameter> устанавливает тайм-аут в
+                            секундах, по истечении которого выполнение SQL операторов будет
+                            отменено. Ноль означает, что тайм-аут не установлен. Значение по
+                            умолчанию равно 0.</para>
+                    </listitem>
+                    <listitem>
+                        <para>На уровне соединения. Может быть установлен с использованием API (в
+                            миллисекундах) или с помощью SQL оператора <link
+                                linkend="special-timeout-set_statement_timeout">SET STATEMENT
+                                TIMEOUT</link>. Область действия текущее подключение.</para>
+                    </listitem>
+                    <listitem>
+                        <para>На уровне оператора. Может быть установлен с использованием API (в
+                            миллисекундах). Область действия текущий SQL оператор.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Эффективное значение тайм-аута SQL оператора вычисляется каждый раз, когда
+                запускается SQL оператор (открывается курсор), следующим образом:<itemizedlist>
+                    <listitem>
+                        <para>если тайм-аут не установлен на уровне оператора, будет использовано
+                            значение тайм-аута уровня соединения;</para>
+                    </listitem>
+                    <listitem>
+                        <para>если тайм-аут не установлен на уровне соединения, будет использовано
+                            значение тайм-аута уровня базы данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>значение тайм-аута не может быть больше, чем значение установленное на
+                            уровне базы данных. Таким образом, значение тайм-аута может
+                            перекрываться разработчиком приложения в более низких областях, но оно
+                            не может выти за пределы установленные DBA в конфигурации.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Нулевой тайм-аут не обозначает отсутствие тайм-аута, просто в этом случае таймер
+                выполнения оператора не запускается.</para>
+
+            <para>Несмотря на то, что тайм-аут выполнения SQL оператора может быть установлен в
+                миллисекундах, абсолютная точность не гарантируется. При высокой нагрузке он может
+                быть менее точным. Единственная гарантия которую может дать Firebird это то, что
+                тайм-аут не сработает раньше указанного момента. Клиентское приложение может ждать
+                больше времени, чем установленное значение тайм-аута если движку Firebird необходимо
+                отменить множество действий связанных с отменой оператора.</para>
+
+            <para>Тайм-аут выполнения оператора игнорируется для всех внутренних запросов, которые
+                используется движком Firebird. Кроме того, тайм-аут игнорируется для DDL
+                операторов.</para>
+
+            <section xml:id="special-timeout-set_statement_timeout">
+                <info>
+                    <title>SET STATEMENT TIMEOUT</title>
+                    <keywordset>
+                        <keyword>SET STATEMENT TIMEOUT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>SET STATEMENT TIMEOUT</primary></indexterm>
+
+                <formalpara>
+                    <title>Назначение:</title>
+
+                    <para>Установка тайм-аута выполнения SQL операторов на уровне соединения.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para><programlisting>                                       
+SET STATEMENT TIMEOUT <replaceable>value</replaceable> [HOUR | MINUTE | SECOND | MILLISECOND]       
+            </programlisting></para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры оператора SET STATEMENT TIMEOUT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value</replaceable></entry>
+                                    <entry>
+                                        <para>Значение тайм-аута выполнения SQL операторов в
+                                            указанных единицах измерения времени. Если единица
+                                            измерения времени не указано, то по умолчанию значение
+                                            тайм-аута измеряется в секундах.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <para>Устанавливает значение тайм-аута выполнения SQL операторов на уровне текущего
+                    соединения. Если единица времени не указана, то по умолчанию тайм-аут будет
+                    учитываться в секундах.</para>
+
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями и
+                        вступают в силу немедленно.</para>
+                </note>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <informalexample>
+                            <para><programlisting language="sql">
+SET STATEMENT TIMEOUT 2 MINUTE            
+            </programlisting></para>
+                        </informalexample>
+                    </para>
+                </formalpara>
+
+                <note>
+                    <para>Интерактивный инструмент isql дополнительно поддерживает команду:
+                        <programlisting>
+SET LOCAL_TIMEOUT <replaceable>int</replaceable>
+            </programlisting>
+                        Эта команда позволяет установить тайм-аут выполнения оператора (в
+                        миллисекундах) для следующего оператора. После выполнения SQL оператора он
+                        автоматически сбрасывается в ноль. </para>
+                </note>
+            </section>
+
+        </section>
+
+        <section xml:id="special-timeout-idle_session">
+            <title>Тайм-аут простоя соединения</title>
+
+            <para>Данная функциональность позволяет автоматически закрывать пользовательские
+                подключения после периода бездействия. Она может быть использована администраторами
+                баз данных, чтобы принудительно закрывать старые неактивные соединения и освобождать
+                связанные с ними ресурсы. Приложения и инструменты разработчика могут использовать
+                её как замену самодельного контроля за временем жизни подключения.</para>
+
+            <para>Рекомендуется (но не обязательно) устанавливать тай-аут простоя в разумное большое
+                значение, например, несколько часов. По умолчанию эта функция отключена.</para>
+
+            <para>Эта функциональность работает следующим образом. Когда пользовательский вызов API
+                покидает движок, запускается специальный таймер связанный с текущим подключением.
+                Как только пользовательский вызов входит в движок, таймер ожидания останавливается.
+                Если тайм-аут простоя истечёт движок закроет соединение так как будто произошло
+                асинхронная отмена подключения:<itemizedlist>
+                    <listitem>
+                        <para>все активные операторы и курсоры закрываются;</para>
+                    </listitem>
+                    <listitem>
+                        <para>все активные транзакции откатываются;</para>
+                    </listitem>
+                    <listitem>
+                        <para>сетевые соединения не закрываются в данный момент. Это позволяет
+                            клиентскому приложение получить точный код ошибки при следующем вызове
+                            API. Сетевое соединение будет закрыто на стороне сервера после того, как
+                            ошибка сообщена, или если клиентская сторона отключится по истечению
+                            тайм-аута сети.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Тайм-аут простоя соединения может быть установлен: <itemizedlist>
+                    <listitem>
+                        <para>На уровне базы данных. Значение параметра
+                                <parameter>ConnectionIdleTimeout</parameter> может быть установлено
+                            в <filename>firebird.conf</filename> (или
+                                <filename>databases.conf</filename>) администратором базы данных.
+                            Область действия все пользовательские подключения, исключая системные
+                            подключения (garbage collector, cache writer, и др.). Параметр
+                                <parameter>ConnectionIdleTimeout</parameter> устанавливает тайм-аут
+                            в минутах, по истечении которого неактивное соединение будет разорвано
+                            движком. Ноль означает, что тайм-аут не установлен. Значение по
+                            умолчанию равно 0.</para>
+                    </listitem>
+                    <listitem>
+                        <para>На уровне подключения. Может быть установлен с использованием API (в
+                            секундах) или с помощью SQL оператора <link
+                                linkend="special-timeout-set_session_idle_timeout">SET SESSION IDLE
+                                TIMEOUT</link>. Область действия все операторы в текущем
+                            подключении.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Эффективное значение тайм-аута простоя вычисляется каждый раз, когда
+                пользовательский вызов API покидает движок, следующим образом:<itemizedlist>
+                    <listitem>
+                        <para>если тайм-аут не установлен на уровне подключения, будет использовано
+                            значение уровня базы данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>значение тайм-аута не может быть больше, чем значение установленное на
+                            уровне базы данных. Таким образом, значение тайм-аута простоя может
+                            перекрываться разработчиком приложения для заданного подключения, но оно
+                            не может выти за пределы установленные DBA в конфигурации.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Нулевой тайм-аут не обозначает отсутствие тайм-аута, просто в этом случае таймер
+                ожидания не запускается.</para>
+
+            <para>Несмотря на то, что тайм-аут простоя может быть установлен в секундах, абсолютная
+                точность не гарантируется. При высокой нагрузке он может быть менее точным.
+                Единственная гарантия которую может дать Firebird это то, что тайм-аут не сработает
+                раньше указанного момента.</para>
+
+            <section xml:id="special-timeout-set_session_idle_timeout">
+                <info>
+                    <title>SET SESSION IDLE TIMEOUT</title>
+                    <keywordset>
+                        <keyword>SET SESSION IDLE TIMEOUT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>SET SESSION IDLE TIMEOUT</primary></indexterm>
+
+                <formalpara>
+                    <title>Назначение:</title>
+
+                    <para>Установка тайм-аута простоя соединения на уровне соединения.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para><programlisting>                                       
+SET SESSION IDLE TIMEOUT <replaceable>value</replaceable> [HOUR | MINUTE | SECOND]       
+            </programlisting></para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры оператора SET SESSION IDLE TIMEOUT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value</replaceable></entry>
+                                    <entry>
+                                        <para>Значение тайм-аута простоя в указанных единицах
+                                            измерения времени. Если единица измерения времени не
+                                            указано, то по умолчанию значение тайм-аута измеряется в
+                                            минутах.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <para>Устанавливает значение тайм-аута простоя на уровне текущего соединения. Если
+                    единица времени не указана, то по умолчанию тайм-аут будет учитываться в
+                    минутах.</para>
+
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями и
+                        вступают в силу немедленно.</para>
+                </note>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <informalexample>
+                            <para><programlisting language="sql">
+SET SESSION IDLE TIMEOUT 8 HOUR            
+            </programlisting></para>
+                        </informalexample>
+                    </para>
+                </formalpara>
+            </section>
+
+        </section>
+    </section>
+</chapter>
