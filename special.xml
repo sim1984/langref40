@@ -192,7 +192,8 @@ SET STATEMENT TIMEOUT 2 MINUTE
                 </formalpara>
 
                 <note>
-                    <para>Интерактивный инструмент isql дополнительно поддерживает команду:
+                    <para>Интерактивный инструмент <application>isql</application> дополнительно
+                        поддерживает команду:
                         <programlisting>
 SET LOCAL_TIMEOUT <replaceable>int</replaceable>
             </programlisting>
