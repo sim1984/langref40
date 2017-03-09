@@ -242,7 +242,8 @@ CURRENT_TIME [(<replaceable>&lt;precision&gt;</replaceable>)]
             </formalpara>
 
             <para>Переменная CURRENT_TIME возвращает текущее время сервера. Точность определяет,
-                сколько учитывать знаков после запятой в долях секунды.</para>
+                сколько учитывать знаков после запятой в долях секунды. По умолчанию точность равна
+                0.</para>
 
             <note>
                 <para>В блоке кода PSQL (процедура, триггер, исполняемый блок) значение CURRENT_TIME
@@ -317,7 +318,7 @@ CURRENT_TIMESTAMP [(<replaceable>&lt;precision&gt;</replaceable>)]
                             <row>
                                 <entry><replaceable>precision</replaceable></entry>
                                 <entry>
-                                    <para>Точность. Значение по умолчанию 0. Не поддерживается в
+                                    <para>Точность. Значение по умолчанию 3. Не поддерживается в
                                         ESQL.</para>
                                 </entry>
                             </row>
@@ -332,7 +333,8 @@ CURRENT_TIMESTAMP [(<replaceable>&lt;precision&gt;</replaceable>)]
             </formalpara>
 
             <para>Переменная CURRENT_TIMESTAMP возвращает текущую дату и время сервера. Точность
-                определяет, сколько учитывать знаков после запятой в долях секунды. </para>
+                определяет, сколько учитывать знаков после запятой в долях секунды. Точность по
+                умолчанию равна 3.</para>
             <note>
                 <para>В блоке кода PSQL (процедура, триггер, исполняемый блок) значение
                     CURRENT_TIMESTAMP не меняется по мере выполнения. При вызове вложенного кода,

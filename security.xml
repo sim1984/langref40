@@ -986,7 +986,7 @@ CREATE USER <replaceable>username</replaceable> PASSWORD '<replaceable>password<
   [MIDDLENAME '<replaceable>middlename</replaceable>']
   [LASTNAME '<replaceable>lastname</replaceable>']
   [ACTIVE | INACTIVE]
-  [USING PLUGIN '<replaceable>pluginname</replaceable>'] 
+  [USING PLUGIN <replaceable>pluginname</replaceable>] 
   [TAGS (<replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> ...]] )]
   [GRANT ADMIN ROLE];
 
@@ -1266,7 +1266,7 @@ ALTER {USER <replaceable>username</replaceable> | CURRENT USER}
   [ACTIVE | INACTIVE]
   [TAGS (<replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> ...] )]
 }
-[USING PLUGIN '<replaceable>pluginname</replaceable>'] 
+[USING PLUGIN <replaceable>pluginname</replaceable>] 
 [{GRANT | REVOKE} ADMIN ROLE];
   
 <replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
@@ -1532,7 +1532,7 @@ CREATE OR ALTER USER <replaceable>username</replaceable>
   [ACTIVE | INACTIVE]
   [TAGS (<replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> ...] )]
 }
-[USING PLUGIN '<replaceable>pluginname</replaceable>'] 
+[USING PLUGIN <replaceable>pluginname</replaceable>] 
 [{GRANT | REVOKE} ADMIN ROLE];
   
 <replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
@@ -1669,7 +1669,7 @@ INACTIVE;
 
                 <para><programlisting>
 DROP USER <replaceable>username</replaceable>
-[USING PLUGIN '<replaceable>pluginname</replaceable>'];
+[USING PLUGIN <replaceable>pluginname</replaceable>];
                 </programlisting></para>
             </formalpara>
             <para>
