@@ -291,6 +291,7 @@
                 <member>BIN_SHR</member>
                 <member>BIN_XOR</member>
                 <member>BINARY</member>
+                <member>BIND</member>
                 <member>BIT_LENGTH</member>
                 <member>BLOB</member>
                 <member>BLOCK</member>
@@ -320,6 +321,7 @@
                 <member>COMMIT</member>
                 <member>COMMITTED</member>
                 <member>COMMON</member>
+                <member>COMPARE_DECFLOAT</member>
                 <member>COMPUTED</member>
                 <member>CONDITIONAL</member>
                 <member>CONNECT</member>
@@ -354,6 +356,7 @@
                 <member>DAY</member>
                 <member>DDL</member>
                 <member>DEC</member>
+                <member>DECFLOAT</member>
                 <member>DECIMAL</member>
                 <member>DECLARE</member>
                 <member>DECODE</member>
@@ -479,10 +482,12 @@
                 <member>NAME</member>
                 <member>NAMES</member>
                 <member>NATIONAL</member>
+                <member>NATIVE</member>
                 <member>NATURAL</member>
                 <member>NCHAR</member>
                 <member>NEXT</member>
                 <member>NO</member>
+                <member>NORMALIZE_DECFLOAT</member>
                 <member>NOT</member>
                 <member>NTH_VALUE</member>
                 <member>NTILE</member>
@@ -533,6 +538,7 @@
                 <member>PRIVILEGES</member>
                 <member>PROCEDURE</member>
                 <member>PROTECTED</member>
+                <member>QUANTIZE</member>
                 <member>RAND</member>
                 <member>RANGE</member>
                 <member>RANK</member>
@@ -638,8 +644,10 @@
                 <member>TIMEOUT</member>
                 <member>TIMESTAMP</member>
                 <member>TO</member>
+                <member>TOTALORDER</member>
                 <member>TRAILING</member>
                 <member>TRANSACTION</member>
+                <member>TRAPS</member>
                 <member>TRIGGER</member>
                 <member>TRIM</member>
                 <member>TRUE</member>

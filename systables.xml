@@ -1120,6 +1120,12 @@
                                             <para>23 – BOOLEAN;</para>
                                         </listitem>
                                         <listitem>
+                                            <para>24 – DECFLOAT(16);</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>25 - DECFLOAT(34);</para>
+                                        </listitem>
+                                        <listitem>
                                             <para>27 – DOUBLE PRECISION;</para>
                                         </listitem>
                                         <listitem>

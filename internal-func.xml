@@ -6312,6 +6312,291 @@ FROM RDB$DATABASE
             </section>
         </section>
 
+        <section xml:id="internalfunc-func-decfloat">
+            <info>
+                <title>Функции для работы с типом DECFLOAT</title>
+            </info>
+
+            <section xml:id="internalfunc-func-decfloat-compare_decfloat">
+                <info>
+                    <title>COMPARE_DECFLOAT</title>
+                    <keywordset>
+                        <keyword>COMPARE_DECFLOAT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>COMPARE_DECFLOAT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+COMPARE_DECFLOAT (<replaceable>value1</replaceable>, <replaceable>value2</replaceable>)                                                    
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции COMPARE_DECFLOAT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value1</replaceable>,
+                                            <replaceable>value2</replaceable></entry>
+                                    <entry>
+                                        <para>Значения типа DECFLOAT.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>SMALLINT.</para>
+                </formalpara>
+
+                <para>Функция COMPARE_DECFLOAT сравнивает два значения типа DECFLOAT, которые могут
+                    быть одинаковыми, разными или неупорядоченными.</para>
+
+                <para>Функция возвращает: <itemizedlist>
+                        <listitem>
+                            <para>0 - если значения равны;</para>
+                        </listitem>
+                        <listitem>
+                            <para>1 - если первое значение меньше чем второе;</para>
+                        </listitem>
+                        <listitem>
+                            <para>2 - если первое значение больше чем второе;</para>
+                        </listitem>
+                        <listitem>
+                            <para>3 - значения не упорядочены (одно или оба NAN / SNAN).</para>
+                        </listitem>
+                    </itemizedlist></para>
+
+                <para>В отличие от операторов сравнения (&lt;, &gt;, = и др.) сравнение с помощью
+                    COMPARE_DECFLOAT является точным, т.е.
+                    <programlisting language="sql">
+COMPARE_DECFLOAT(2.17, 2.170)                       
+                    </programlisting>
+                    вернёт 2, а не 0. </para>
+            </section>
+
+            <section xml:id="internalfunc-func-decfloat-normalize_decfloat">
+                <info>
+                    <title>NORMALIZE_DECFLOAT</title>
+                    <keywordset>
+                        <keyword>NORMALIZE_DECFLOAT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>NORMALIZE_DECFLOAT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+NORMALIZE_DECFLOAT (<replaceable>value</replaceable>)                                                    
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции NORMALIZE_DECFLOAT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value</replaceable></entry>
+                                    <entry>
+                                        <para>Значение типа DECFLOAT.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>DECFLOAT.</para>
+                </formalpara>
+
+                <para>Функция NORMALIZE_DECFLOAT возвращает число в нормализованном виде. Это
+                    обозначает, что ля любого ненулевого значения удаляются завершающие нули с
+                    соответствующей коррекцией экспоненты.</para>
+
+                <example>
+                    <title>Нормализация различных значений типа DECFLOAT</title>
+
+                    <para>
+                        <programlisting language="sql"> 
+NORMALIZE_DECFLOAT(12.00) -- возвращает 12
+NORMALIZE_DECFLOAT(120) -- возвращает 1.2E+2
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+
+            <section xml:id="internalfunc-func-decfloat-quantize">
+                <info>
+                    <title>QUANTIZE</title>
+                    <keywordset>
+                        <keyword>QUANTIZE</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>QUANTIZE</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+QUANTIZE (<replaceable>value</replaceable>, <replaceable>pattern</replaceable>)                                                    
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции NORMALIZE_DECFLOAT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value</replaceable></entry>
+                                    <entry>
+                                        <para>Значение типа DECFLOAT.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>pattern</replaceable></entry>
+                                    <entry>
+                                        <para>Значение шаблона типа DECFLOAT, по которому будет
+                                            отмасштабирован значение первого аргумента.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>DECFLOAT.</para>
+                </formalpara>
+                <para>Функция QUANTIZE возвращает значение первого аргумента масштабированным с
+                    использованием второго значения в качестве шаблона. Другими словами функция
+                    QUANTIZE возвращает значение DECFLOAT, равное по значению (за исключением любого
+                    округления) и знаку <replaceable>value</replaceable>, а также экспонент, равный
+                    по значению экспоненту <replaceable>pattern</replaceable>. Функцию QUANTIZE
+                    можно использовать для реализации округления с точностью до нужного знака,
+                    например, округление до ближайшего цента с использованием установленного режима
+                    округления DECFLOAT.</para>
+            </section>
+
+            <section xml:id="internalfunc-func-decfloat-totalorder">
+                <info>
+                    <title>TOTALORDER</title>
+                    <keywordset>
+                        <keyword>TOTALORDER</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>TOTALORDER</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+TOTALORDER (<replaceable>value1</replaceable>, <replaceable>value2</replaceable>)                                                    
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции TOTALORDER</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value1</replaceable>,
+                                            <replaceable>value2</replaceable></entry>
+                                    <entry>
+                                        <para>Значения типа DECFLOAT.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>SMALLINT.</para>
+                </formalpara>
+                <para>Функция TOTALORDER сравнивает два значения типа DECFLOAT, включая специальные
+                    значения. Сравнение является точным. </para>
+                <para>Функция возвращает:<itemizedlist>
+                        <listitem>
+                            <para>-1 — если первое значение меньше второго;</para>
+                        </listitem>
+                        <listitem>
+                            <para>0 — если значения равны;</para>
+                        </listitem>
+                        <listitem>
+                            <para>1 — если первое значение больше второго.</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>Значения DEFLOAT в следующем виде:
+                    <programlisting>
+-nan &lt; -snan &lt; -inf &lt; -0.1 &lt; -0.10 &lt; -0 &lt; 0 &lt; 0.10 &lt; 0.1 &lt; inf &lt; snan &lt; nan                                                
+                        </programlisting>
+                </para>
+            </section>
+        </section>
+
         <section xml:id="internalfunc-func-cast">
             <info>
                 <title>Функции преобразования типов</title>

@@ -78,6 +78,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>BIN_SHR</keyword>
       <keyword>BIN_XOR</keyword>
       <keyword>BINARY</keyword>
+      <keyword>BIND</keyword>
       <keyword>BIT_LENGTH</keyword>
       <keyword>BLOB</keyword>
       <keyword>BLOCK</keyword>
@@ -107,6 +108,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>COMMIT</keyword>
       <keyword>COMMITTED</keyword>
       <keyword>COMMON</keyword>
+      <keyword>COMPARE_DECFLOAT</keyword>
       <keyword>COMPUTED</keyword>
       <keyword>CONDITIONAL</keyword>
       <keyword>CONNECT</keyword>
@@ -139,8 +141,9 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>DATEADD</keyword>
       <keyword>DATEDIFF</keyword>
       <keyword>DAY</keyword>
-      <keyword>DEC</keyword>
       <keyword>DDL</keyword>
+      <keyword>DEC</keyword>     
+      <keyword>DECFLOAT</keyword>
       <keyword>DECIMAL</keyword>
       <keyword>DECLARE</keyword>
       <keyword>DECODE</keyword>
@@ -266,10 +269,12 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>NAME</keyword>
       <keyword>NAMES</keyword>
       <keyword>NATIONAL</keyword>
+      <keyword>NATIVE</keyword>
       <keyword>NATURAL</keyword>
       <keyword>NCHAR</keyword>
       <keyword>NEXT</keyword>
       <keyword>NO</keyword>
+      <keyword>NORMALIZE_DECFLOAT</keyword>
       <keyword>NOT</keyword>
       <keyword>NTH_VALUE</keyword>
       <keyword>NTILE</keyword>
@@ -319,6 +324,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>PRIVILEGES</keyword>
       <keyword>PROCEDURE</keyword>
       <keyword>PROTECTED</keyword>
+      <keyword>QUANTIZE</keyword>
       <keyword>RAND</keyword>
       <keyword>RANGE</keyword>
       <keyword>RANK</keyword>
@@ -424,7 +430,9 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>TIMEOUT</keyword>
       <keyword>TIMESTAMP</keyword>
       <keyword>TO</keyword>
+      <keyword>TOTALORDER</keyword>
       <keyword>TRAILING</keyword>
+      <keyword>TRAPS</keyword>
       <keyword>TRANSACTION</keyword>
       <keyword>TRIGGER</keyword>
       <keyword>TRIM</keyword>

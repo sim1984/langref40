@@ -114,6 +114,14 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>DECFLOAT (<replaceable>precision</replaceable>)</entry>
+                        <entry>8 или 16 байт</entry>
+                        <entry><replaceable>precision</replaceable> = 16 | 34, количество значащих
+                            цифр (точность)</entry>
+                        <entry>DB2-совместимый тип данных десятичных чисел с плавающей запятой,
+                            основанный на стандарте IEEE754r.</entry>
+                    </row>
+                    <row>
                         <entry>DOUBLE PRECISION</entry>
                         <entry>64 бита</entry>
                         <entry>2,225 x 10<superscript>-308</superscript> .. 1,797 x
@@ -343,19 +351,22 @@ INSERT INTO MYBIGINTS VALUES (
             <title>Типы данных с плавающей точкой</title>
         </info>
 
-        <para>Типы данных с плавающей точкой хранятся в двоичном формате IEEE 745, который включает
-            в себя знак, показатель степени и мантиссу. Точность этого типа является динамической,
-            что соответствует физическому формату хранения, который составляет 4 байта для типа
-            FLOAT и 8 байт для типа DOUBLE PRECISION.</para>
+        <para>Типы данных с плавающей точкой хранятся в двоичном формате IEEE 754, который включает
+            в себя знак, показатель степени и мантиссу.</para>
+        <para>Точность этого типов FLOAT и DOUBLE PRECISION является динамической, что соответствует
+            физическому формату хранения, который составляет 4 байта для типа FLOAT и 8 байт для
+            типа DOUBLE PRECISION.</para>
         <para>Учитывая особенности хранения чисел с плавающей точкой, этот тип данных не
             рекомендуется использовать для хранения денежных данных. По тем же причинам не
             рекомендуется использовать столбцы с данными такого типа в качестве ключей и применять к
-            ним ограничения уникальности.</para>
+            ним ограничения уникальности. </para>
         <para>При проверке данных столбцов с типами данных с плавающей точкой рекомендуется вместо
             точного равенства использовать выражения проверки вхождения в диапазон, например
             BETWEEN.</para>
         <para>При использовании таких типов данных в выражениях рекомендуется крайне внимательно и
             серьёзно подойти к вопросу округления результатов расчётов.</para>
+        <para>Для обхода проблем типов FLOAT и DOUBLE PRECISION был введён тип DECFLOAT, который
+            хранит точное значение числа и обладает повышенной точностью до 34 знаков.</para>
 
         <section xml:id="types-float-float">
             <info>
@@ -364,6 +375,34 @@ INSERT INTO MYBIGINTS VALUES (
             <indexterm><primary>FLOAT</primary></indexterm>
             <para>Данный тип данных обладает приблизительной точностью 7 цифр после запятой. Для
                 обеспечения надёжности хранения полагайтесь на 6 цифр.</para>
+            <para>
+                <table frame="all">
+                    <title>Диапазон значений FLOAT</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="3">
+                        <colspec colname="c1" colnum="1" colwidth="0.5*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="0.5*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.4*" align="left"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Точность (знаков)</entry>
+                                <entry align="center">Размер</entry>
+                                <entry align="center">Диапазон</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><para>~7</para></entry>
+                                <entry>
+                                    <para>32 бита</para>
+                                </entry>
+                                <entry>1,175 x 10<superscript>-38</superscript> .. 3,402 x
+                                        10<superscript>38</superscript></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
         </section>
         <section xml:id="types-float-double">
             <info>
@@ -371,6 +410,596 @@ INSERT INTO MYBIGINTS VALUES (
             </info>
             <indexterm><primary>DOUBLE PRECISION</primary></indexterm>
             <para>При хранении данных, предполагается приблизительная точность 15 цифр.</para>
+            <para>
+                <table frame="all">
+                    <title>Диапазон значений DOUBLE PRECISION</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="3">
+                        <colspec colname="c1" colnum="1" colwidth="0.5*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="0.5*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.4*" align="left"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Точность (знаков)</entry>
+                                <entry align="center">Размер</entry>
+                                <entry align="center">Диапазон</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><para>~15</para></entry>
+                                <entry>
+                                    <para>64 бита</para>
+                                </entry>
+                                <entry>2,225 x 10<superscript>-308</superscript> .. 1,797 x
+                                        10<superscript>308</superscript></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+        </section>
+        <section xml:id="types-float-decfloat">
+            <info>
+                <title>DECFLOAT</title>
+            </info>
+            <indexterm><primary>DECFLOAT</primary></indexterm>
+            <para>DB2-совместимый числовой тип. DECFLOAT точно сохраняет десятичные значения (в
+                отличие от FLOAT или DOUBLE PRECISION, которые обеспечивают двоичное приближение),
+                поэтому является идеальным выбором для бизнес-приложений. Firebird в соответствии со
+                стандартом IEEE 754r (754-2008) поддерживает точность DECFLOAT 16 и 34 значащих цифр
+                и занимает 8 и 16 байт памяти соответственно.</para>
+            <para>Все промежуточные вычисления осуществляются с использованием 34-значными
+                значениями.</para>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+DECFLOAT(<replaceable>&lt;precision&gt;</replaceable>)
+
+<replaceable>&lt;precision&gt;</replaceable> ::= 16 | 34                        
+</programlisting>
+                </para>
+            </formalpara>
+            <para>Тип DECFLOAT следует использовать если вам необходима вычисление и хранение чисел
+                с большой точностью.</para>
+            <para>
+                <table frame="all">
+                    <title>Диапазон значений DECFLOAT</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="3">
+                        <colspec colname="c1" colnum="1" colwidth="0.5*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="0.5*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.4*" align="left"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Точность (знаков)</entry>
+                                <entry align="center">Размер (байт)</entry>
+                                <entry align="center">Диапазон</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><para>16</para></entry>
+                                <entry>
+                                    <para>8</para>
+                                </entry>
+                                <entry>-9.999999999999999 x 10<superscript>384</superscript> .. -1.0
+                                    x 10<superscript>-383</superscript> : 1.0 x
+                                        10<superscript>-383</superscript> .. 9.999999999999999 x
+                                        10<superscript>384</superscript></entry>
+                            </row>
+                            <row>
+                                <entry><para>34</para></entry>
+                                <entry>
+                                    <para>16</para>
+                                </entry>
+                                <entry>-9.999999999999999999999999999999999 x
+                                        10<superscript>6144</superscript> .. -1.0 x
+                                        10<superscript>-6143</superscript> : 1.0 x
+                                        10<superscript>-6143</superscript> ..
+                                    9.999999999999999999999999999999999 x
+                                        10<superscript>6144</superscript></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Использование типа DECFLOAT при определении таблицы</title>
+                        <para>
+                            <programlisting language="sql"> 
+CREATE TABLE stockPrice (
+  id    INT NOT NULL PRIMARY KEY,
+  stock DECFLOAT(16),
+  ...
+);                                
+</programlisting>
+                        </para>
+                    </example>
+                    <example>
+                        <title>Использование типа DECFLOAT в PSQL</title>
+                        <para>
+                            <programlisting language="sql"> 
+DECLARE VARIABLE v DECFLOAT(34);                               
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+            <para>Математические функции ABS, CEILING, EXP, FLOOR, LN, LOG, LOG10, POWER, SIGN, SQRT
+                поддерживают работу со значениями типа DEFLOAT. Агрегатные функции SUM, AVG, MIN и
+                MAX тоже работают с типом DEFLOAT. Все статистические агрегатные функции (такие как
+                STDDEV или CORR, но не ограничено ими) могут работать с данными типа
+                DECFLOAT.</para>
+
+            <para>Firebird поддерживает 4 функции, которые созданы специально для поддержки типа
+                DECFLOAT: <link linkend="internalfunc-func-decfloat-compare_decfloat"
+                    >COMPARE_DECFLOAT</link>, <link
+                    linkend="internalfunc-func-decfloat-normalize_decfloat"
+                    >NORMALIZE_DECFLOAT</link>, <link linkend="internalfunc-func-decfloat-quantize"
+                    >QUANTIZE</link>, <link linkend="internalfunc-func-decfloat-totalorder"
+                    >TOTALORDER</link>.</para>
+
+            <section xml:id="types-float-decfloat-round-mode">
+                <info>
+                    <title>Режимы округления</title>
+                </info>
+                <indexterm><primary>SET DECFLOAT ROUND</primary></indexterm>
+                <para>Округление происходит, когда точность результата выражения больше точности,
+                    поддерживаемой типом данных. DECFLOAT поддерживает все режимы округления,
+                    которые требуются в большинстве приложений. Поддерживаются следующие режимы
+                    округления совместимые со стандартом IEEE: <itemizedlist>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>CEILING</secondary>
+                                </indexterm>
+                                <emphasis role="bold">CEILING</emphasis>. Округление сверху. Если
+                                все отбрасываемые цифры равны нулю или знак числа отрицателен,
+                                последняя неотбрасываемая цифра не меняется. В противном случае
+                                последняя неотбрасываемая цифра инкрементируется на единицу
+                                (округляется в большую сторону).</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>UP</secondary>
+                                </indexterm>
+                                <emphasis role="bold">UP</emphasis>. Округление по направлению от
+                                нуля (усечение с приращением). Отбрасываемые значения
+                                игнорируются.</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>HALF_UP</secondary>
+                                </indexterm>
+                                <emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
+                                значению. Если результат равноудаленный, выполняется округление в
+                                большую сторону. Если отбрасываемые значения больше чем или равны
+                                половине (0,5) единицы в следующей левой позиции, последняя
+                                неотбрасываемая цифра инкрементируется на единицу (округляется в
+                                большую сторону). В противном случае отбрасываемые значения
+                                игнорируются.</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>HALF_EVEN</secondary>
+                                </indexterm>
+                                <emphasis role="bold">HALF_EVEN</emphasis>. Округление к ближайшему
+                                значению. Если результат равноудаленный, выполняется округление так,
+                                чтобы последняя цифра была четной. Если отбрасываемые значения
+                                больше половины (0,5) единицы в следующей левой позиции, последняя
+                                неотбрасываемая цифра инкрементируется на единицу (округляется в
+                                большую сторону). Если они меньше половины, результат не
+                                корректируется (то есть отбрасываемые знаки игнорируются). В
+                                противном случае, когда отбрасываемые значения точно равны половине,
+                                последняя неотбрасываемая цифра не меняется, если она является
+                                четной и инкрементируется на единицу (округляется в большую сторону)
+                                в противном случае (чтобы получить четную цифру). Этот режим
+                                округления называется также банковским округлением и дает ощущение
+                                справедливого округления. Он является режимом по умолчанию в DB2,
+                                согласно спецификации IEEE.</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>HALF_DOWN</secondary>
+                                </indexterm>
+                                <emphasis role="bold">HALF_DOWN</emphasis>. Округление к ближайшему
+                                значению. Если результат равноудаленный, выполняется округление в
+                                меньшую сторону. Если отбрасываемые значения больше чем или равны
+                                половине (0,5) единицы в следующей левой позиции, последняя
+                                неотбрасываемая цифра декрементируется на единицу (округляется в
+                                меньшую сторону). В противном случае отбрасываемые значения
+                                игнорируются.</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>DOWN</secondary>
+                                </indexterm>
+                                <emphasis role="bold">DOWN</emphasis>. Округление по направлению к
+                                нулю (усечение). Отбрасываемые значения игнорируются.</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>FLOOR</secondary>
+                                </indexterm>
+                                <emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
+                                отбрасываемые цифры равны нулю или знак положителен, последняя
+                                неотбрасываемая цифра не меняется. В противном случае (знак
+                                отрицателен) последняя неотбрасываемая цифра инкрементируется на
+                                единицу.</para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <indexterm>
+                                    <primary>SET DECFLOAT ROUND</primary>
+                                    <secondary>REROUND</secondary>
+                                </indexterm>
+                                <emphasis role="bold">REROUND</emphasis>. Округление к большему
+                                значению, если округляется 0 или 5, в противном случае округление
+                                происходит к меньшему значению.</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>
+                    <table frame="all">
+                        <title>Режимы округления</title>
+                        <?dbfo keep-together='auto'?>
+                        <tgroup cols="7">
+                            <thead>
+                                <row>
+                                    <entry align="center">Режим округления</entry>
+                                    <entry align="center">12.341</entry>
+                                    <entry align="center">12.345</entry>
+                                    <entry align="center">12.349</entry>
+                                    <entry align="center">12.355</entry>
+                                    <entry>12.405</entry>
+                                    <entry align="center">-12.345</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>CEILING</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>UP</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.35</entry>
+                                </row>
+                                <row>
+                                    <entry>HALF_UP</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.35</entry>
+                                </row>
+                                <row>
+                                    <entry>HALF_EVEN</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>HALF_DOWN</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>DOWN</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>FLOOR</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.35</entry>
+                                </row>
+                                <row>
+                                    <entry>REROUND</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <para>Режим округления можно изменить для текущей сессии используя оператор
+                        <database>SET DECFLOAT ROUND</database>.</para>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>                      
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Примеры:</title>
+
+                    <para>
+                        <example>
+                            <title>Изменение режима округления</title>
+
+                            <para><programlisting language="sql"> 
+SET DECFLOAT ROUND HALF_DOWN;
+                </programlisting>
+                            </para>
+                        </example>
+                    </para>
+                </formalpara>
+            </section>
+            <section xml:id="types-float-decfloat-comparation">
+                <info>
+                    <title>Семантика сравнения</title>
+                </info>
+
+                <para>Замыкающие нули в значениях десятичных чисел с плавающей запятой сохраняются.
+                    Например, 1.0 и 1.00 — это два различных представления. Это порождает различные
+                    семантики сравнения для типа данных DECFLOAT, как показано ниже.</para>
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para><emphasis role="bold">Сравнение числовых значений</emphasis>.
+                                Замыкающие нули игнорируются в сравнениях. Например, 1.0 равно 1.00.
+                                По умолчанию такой тип сравнения используется для индексирования,
+                                сортировки, разбивки таблицы, оценки предикатов и других функций —
+                                короче говоря, везде, где сравнение выполняется неявно или в
+                                предикатах.</para>
+                            <para>
+                                <example>
+                                    <title>Сравнение числовых значений</title>
+
+                                    <para><programlisting language="sql"> 
+create table stockPrice (stock DECFLOAT(16));
+
+insert into stockPrice 
+values (4.2); 
+
+insert into stockPrice 
+values (4.2000); 
+
+insert into stockPrice 
+values (4.6125); 
+
+insert into stockPrice 
+values (4.20);
+
+commit;
+
+select * from stockPrice where stock = 4.2;
+-- Возвращает три значения 4.2, 4.2000, 4.20
+
+select * from stockPrice where stock > 4.20;
+-- Возвращает одно значение 4.6125
+
+select * from stockPrice order by stock;
+-- Возвращает все значения, 4.2, 4.2000, 4.20, 4.6125. 
+-- Первые три значения возвращаются в неопределенном порядке.
+                </programlisting>
+                                    </para>
+                                </example>
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para><emphasis role="bold">Сравнение TotalOrder</emphasis>. Замыкающие
+                                нули учитываются при сравнении. Например, 1.0 > 1.00. Каждое
+                                значение DECFLOAT имеет порядок в семантике сравнения
+                                TotalOrder.</para>
+                            <para>Согласно семантике TotalOrder, порядок различных значений
+                                определяется так, как показано в следующем примере:
+                                <screen>
+-nan &lt; -snan &lt; -inf &lt; -0.1 &lt; -0.10 &lt; -0 &lt; 0 &lt; 0.10 &lt; 0.1 &lt; inf &lt; snan &lt; nan
+                            </screen>
+                            </para>
+                            <important>
+                                <para>Обратите внимание на то, что отрицательный нуль меньше
+                                    положительного нуля при сравнении TotalOrder</para>
+                            </important>
+                            <para>Запросить сравнение TotalOrder в предикатах можно при помощи
+                                встроенной функции <link
+                                    linkend="internalfunc-func-decfloat-totalorder"
+                                    >TOTALORDER()</link>.</para>
+                            <para>
+                                <example>
+                                    <title>Сравнение TotalOrder</title>
+
+                                    <para>Для курсов акций может быть важным знать точность данных.
+                                        Например, если курсы обычно указываются с точностью в пять
+                                        знаков после запятой, а курс равен $4.2, тогда неясно, равна
+                                        цена $4.2000, $4.2999 или чему-то, лежащему между этими
+                                        двумя значениями.
+                                        <programlisting language="sql"> 
+create table stockPrice (stock DECFLOAT(16));
+
+insert into stockPrice 
+values (4.2); 
+
+insert into stockPrice 
+values (4.2000); 
+
+insert into stockPrice 
+values (4.6125); 
+
+insert into stockPrice 
+values (4.20);
+
+commit;
+
+select * from stockPrice where TOTALORDER(stock, 4.2000) = 0;
+-- Возвращает только значение 4.2000 
+
+select * from stockPrice where TOTALORDER(stock, 4.20) = 1;
+-- Возвращает два значения 4.2 и 4.6125, которое больше 4.20
+                </programlisting>
+                                    </para>
+                                </example>
+                            </para>
+                            <para>Порядок, в котором возвращаются арифметически одинаковые значения,
+                                имеющие различное количество замыкающих нулей, не определен.
+                                Следовательно, ORDER BY по столбцу DECFLOAT со значениями 1.0 и 1.00
+                                возвращает два значения в произвольном порядке. Аналогично, DISTINCT
+                                возвращает либо 1.0, либо 1.00.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </section>
+            <section xml:id="types-float-decfloat-trap">
+                <info>
+                    <title>Обработка ошибок</title>
+                </info>
+                <para>В процессе вычисления выражений могут возникнуть различные ситуации, которые
+                    могут вызвать исключение или проигнорированы. Установить какие ситуации приведут
+                    к возбуждению исключения можно с помощью оператора SET DECFLOAT TRAPS TO.</para>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>      
+                            
+<replaceable>&lt;traps list&gt;</replaceable> ::= <replaceable>&lt;trap&gt;</replaceable>[, <replaceable>&lt;trap&gt;</replaceable>[, ... <replaceable>&lt;trap&gt;</replaceable>]]        
+                            
+<replaceable>&lt;trap&gt;</replaceable> ::= 
+    Division_by_zero 
+  | Inexact
+  | Invalid_operation
+  | Overflow 
+  | Underflow                           
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
+                    Invalid_operation, Overflow, Underflow.</para>
+                <example>
+                    <title>Установка ситуаций для которых будет генерироваться исключение</title>
+
+                    <para>
+                        <programlisting language="sql"> 
+SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Underflow;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+
+            <section xml:id="types-float-decfloat-bind">
+                <info>
+                    <title>Поддержка в клиентских приложениях</title>
+                </info>
+                <para>Библиотека fbclient версии 4.0 имеет нативную поддержку типа DECFLOAT. Однако
+                    более старые версии клиентской библиотеки ничего не знают о типе DECFLOAT. Для
+                    того чтобы старые приложения умели работать с типом DECFLOAT вы можете настроить
+                    отображение значений DECFLOAT на другие доступные типы данных.</para>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>      
+                            
+<replaceable>&lt;bind-type&gt;</replaceable> ::= 
+    NATIVE 
+  | CHAR[ACTER]
+  | DOUBLE PRECISION
+  | BIGINT[, <replaceable>scale</replaceable>]                          
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры оператора SET DECFLOAT BIND</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>scale</replaceable></entry>
+                                    <entry>
+                                        <para>Точность (количество знаков после запятой).</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <para>Оператор SET DECFLOAT BIND управляет каким образом значения типа DEСFLOAT
+                    будут представлены во внешнем мире. Допустимые типы для привязки: <itemizedlist>
+                        <listitem>
+                            <para>NATIVE — используется IEEE754 двоичное представление;</para>
+                        </listitem>
+                        <listitem>
+                            <para>CHAR[ACTER] — ASCII строка;</para>
+                        </listitem>
+                        <listitem>
+                            <para>DOUBLE PRECISION — используется 8 байтное представление с
+                                плавающей точкой, тоже самое что и для полей типа DOUBLE
+                                PRECISION;</para>
+                        </listitem>
+                        <listitem>
+                            <para>BIGINT — используется целое с указанным масштабом, тоже самое что
+                                поле NUMERIC(18, <replaceable>scale</replaceable>).</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>Различные привязки полезны, если вы планируете использовать значения DECFLOAT
+                    со старым клиентом, не поддерживающим собственный формат. Можно выбирать между
+                    строками (идеальная точность, но плохая поддержка для дальнейшей обработки),
+                    значения с плавающей запятой (идеальная поддержка для дальнейшей обработки, но с
+                    плохой точностью) или масштабированные целые числа (хорошая поддержка дальнейшей
+                    обработки и требуемая точность, но диапазон значений очень ограничен). Когда
+                    используется инструмент, подобный универсальному GUI-клиенту, выбор привязки к
+                    CHAR подходит в большинстве случаев.</para>
+            </section>
         </section>
     </section>
     <section xml:id="types-fixed">
@@ -1294,8 +1923,8 @@ BINARY [(<replaceable>&lt;length&gt;</replaceable>)]
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="types-char-char">CHAR</link>,
-                    <link linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
+                    <link linkend="types-char-char">CHAR</link>, <link
+                        linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
             </formalpara>
         </section>
         <section xml:id="types-binary-varbinary">
@@ -1310,19 +1939,19 @@ BINARY [(<replaceable>&lt;length&gt;</replaceable>)]
             <para>Полное название BINARY VARYING.</para>
             <formalpara>
                 <title>Синтаксис:</title>
-                
+
                 <para>
                     <programlisting>  
     VARBINARY (<replaceable>&lt;length&gt;</replaceable>)             
   | BINARY VARYING (<replaceable>&lt;length&gt;</replaceable>)            
-                </programlisting>                    
+                </programlisting>
                 </para>
-            </formalpara>  
+            </formalpara>
             <note>
                 <para>Этот тип является псевдонимом типа VARCHAR
-                    (<replaceable>&lt;length&gt;</replaceable>) CHARACTER SET OCTETS и обратно
+                        (<replaceable>&lt;length&gt;</replaceable>) CHARACTER SET OCTETS и обратно
                     совместим с ним.</para>
-            </note>   
+            </note>
             <formalpara>
                 <title>Примеры:</title>
                 <para>
@@ -1341,14 +1970,14 @@ CREATE TABLE INFO (
                         </para>
                     </example>
                 </para>
-            </formalpara>           
+            </formalpara>
             <formalpara>
                 <title>См. также:</title>
-                
+
                 <para>
-                    <link linkend="types-char-varchar">VARCHAR</link>,
-                    <link linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
-            </formalpara>            
+                    <link linkend="types-char-varchar">VARCHAR</link>, <link
+                        linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
+            </formalpara>
         </section>
         <section xml:id="types-binary-blob">
             <info>

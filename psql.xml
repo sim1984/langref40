@@ -1745,6 +1745,7 @@ DECLARE [VARIABLE] <replaceable>varname</replaceable> <replaceable>&lt;type&gt;<
     {SMALLINT | INT[EGER] | BIGINT}
   | BOOLEAN
   | {FLOAT | DOUBLE PRECISION}
+  | DECFLOAT({16 | 34})
   | {DATE | TIME | TIMESTAMP}
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])]
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
