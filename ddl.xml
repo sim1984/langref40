@@ -2514,9 +2514,10 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
 <replaceable>&lt;col_constraint&gt;</replaceable> ::= [CONSTRAINT <replaceable>constr_name</replaceable>] 
 {   UNIQUE [<replaceable>&lt;using_index&gt;</replaceable>] 
   | PRIMARY KEY [<replaceable>&lt;using_index&gt;</replaceable>] 
-  | REFERENCES other_table [(<replaceable>other_col</replaceable>)] [<replaceable>&lt;using_index&gt;</replaceable>] 
+  | REFERENCES other_table [(<replaceable>other_col</replaceable>)]  
       [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}]
       [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+      [<replaceable>&lt;using_index&gt;</replaceable>]
   | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
 }          
 
@@ -2524,9 +2525,10 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
 {   UNIQUE (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
   | PRIMARY KEY (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
   | FOREIGN KEY (<replaceable>&lt;col_list&gt;</replaceable>) 
-    REFERENCES <replaceable>other_table</replaceable> [(<replaceable>&lt;col_list&gt;</replaceable>)] [<replaceable>&lt;using_index&gt;</replaceable>] 
+    REFERENCES <replaceable>other_table</replaceable> [(<replaceable>&lt;col_list&gt;</replaceable>)]  
       [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
       [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+      [<replaceable>&lt;using_index&gt;</replaceable>]
   | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
 }    
 
@@ -4098,9 +4100,10 @@ ALTER TABLE <replaceable>tablename</replaceable>
   [CONSTRAINT <replaceable>constr_name</replaceable>] 
   {   UNIQUE [<replaceable>&lt;using_index&gt;</replaceable>] 
     | PRIMARY KEY [<replaceable>&lt;using_index&gt;</replaceable>] 
-    | REFERENCES other_table [(<replaceable>other_col</replaceable>)] [<replaceable>&lt;using_index&gt;</replaceable>] 
+    | REFERENCES other_table [(<replaceable>other_col</replaceable>)]  
         [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}]
         [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+        [<replaceable>&lt;using_index&gt;</replaceable>]
     | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
   }          
 
@@ -4109,9 +4112,10 @@ ALTER TABLE <replaceable>tablename</replaceable>
   {   UNIQUE (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
     | PRIMARY KEY (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
     | FOREIGN KEY (<replaceable>&lt;col_list&gt;</replaceable>) 
-      REFERENCES <replaceable>other_table</replaceable> [(<replaceable>&lt;col_list&gt;</replaceable>)] [<replaceable>&lt;using_index&gt;</replaceable>] 
+      REFERENCES <replaceable>other_table</replaceable> [(<replaceable>&lt;col_list&gt;</replaceable>)]  
         [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
         [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+        [<replaceable>&lt;using_index&gt;</replaceable>]
     | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
   }    
 
