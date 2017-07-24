@@ -895,7 +895,7 @@ ROW_COUNT
                             получена строка данных и 0 в противном случае;</para>
                     </listitem>
                     <listitem>
-                        <para>В цикле <link linkend="psql-operators-forselect">FOR SELECT</link>
+                        <para>В цикле <link linkend="psql-statements-forselect">FOR SELECT</link>
                             переменная ROW_COUNT увеличивается на каждой итерации (начиная с 0 в
                             качестве первого значения);</para>
                     </listitem>
@@ -2079,8 +2079,8 @@ END
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="psql-operators-when">WHEN ... DO</link>, <link
-                            linkend="psql-operators-exception">EXCEPTION</link>, <link
+                        <link linkend="psql-statements-when">WHEN ... DO</link>, <link
+                            linkend="psql-statements-exception">EXCEPTION</link>, <link
                             linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
                             linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
                             linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>

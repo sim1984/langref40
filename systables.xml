@@ -1970,8 +1970,8 @@
                             <entry>BOOLEAN</entry>
                             <entry>С какими правами выполняется функция: TRUE — с правами
                                 определяющего пользователя (SQL SECURITY DEFINER); FALSE — с правами
-                                вызывающего пользователя (SQL SECURITY INVOKER); NULL — контекст
-                                безопасности наследуется от пакета.</entry>
+                                вызывающего пользователя (SQL SECURITY INVOKER); NULL — привилегии
+                                выполнения наследуется от пакета.</entry>
                         </row>
                     </tbody>
                 </tgroup>
@@ -2731,8 +2731,8 @@
                             <entry>BOOLEAN</entry>
                             <entry>С какими правами выполняется процедура: TRUE — с правами
                                 определяющего пользователя (SQL SECURITY DEFINER); FALSE — с правами
-                                вызывающего пользователя (SQL SECURITY INVOKER); NULL — контекст
-                                безопасности наследуется от пакета.</entry>
+                                вызывающего пользователя (SQL SECURITY INVOKER); NULL — привилегии
+                                выполнения наследуется от пакета.</entry>
                         </row>
                     </tbody>
                 </tgroup>
@@ -3784,8 +3784,8 @@
                             <entry>BOOLEAN</entry>
                             <entry>С какими правами выполняется триггер: TRUE — с правами
                                 определяющего пользователя (SQL SECURITY DEFINER); FALSE — с правами
-                                вызывающего пользователя (SQL SECURITY INVOKER); NULL — контекст
-                                безопасности наследуется от таблиц.</entry>
+                                вызывающего пользователя (SQL SECURITY INVOKER); NULL — привилегии
+                                выполнения наследуется от таблицы.</entry>
                         </row>
                     </tbody>
                 </tgroup>

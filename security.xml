@@ -71,9 +71,8 @@
                 <title>Особенности POSIX</title>
 
                 <para>В POSIX системах, включая MacOSX, имя пользователя POSIX будет
-                    интерпретировано как имя пользователя Firebird Embedded, если имя пользователя не
-                    указано явно.
-                </para>
+                    интерпретировано как имя пользователя Firebird Embedded, если имя пользователя
+                    не указано явно. </para>
 
                 <section xml:id="security-auth-sysdba-posix">
                     <title>Пользователь <database class="user">SYSDBA</database> в POSIX</title>
@@ -174,22 +173,26 @@
                             <row>
                                 <entry>Пользователь <emphasis>root</emphasis> в POSIX</entry>
                                 <entry>Автоматически</entry>
-                                <entry>Также как SYSDBA. Только в Firebird Embedded.</entry>
+                                <entry>Также как <database class="user">SYSDBA</database>. Только в
+                                    Firebird Embedded.</entry>
                             </row>
                             <row>
                                 <entry>Суперпользователь в POSIX</entry>
                                 <entry>Автоматически</entry>
-                                <entry>Также как SYSDBA. Только в Firebird Embedded.</entry>
+                                <entry>Также как <database class="user">SYSDBA</database>. Только в
+                                    Firebird Embedded.</entry>
                             </row>
                             <row>
                                 <entry>Владелец базы данных</entry>
                                 <entry>Автоматически</entry>
-                                <entry>Также как SYSDBA, но только в этой базе данных.</entry>
+                                <entry>Также как <database class="user">SYSDBA</database>, но только
+                                    в этой базе данных.</entry>
                             </row>
                             <row>
                                 <entry>Администраторы Windows</entry>
                                 <entry>Устанавливается в CURRENT_ROLE, если вход успешен</entry>
-                                <entry><para>Также как SYSDBA, если соблюдены следующие условия:<itemizedlist>
+                                <entry><para>Также как <database class="user">SYSDBA</database>,
+                                        если соблюдены следующие условия:<itemizedlist>
                                             <listitem>
                                                 <para>В файле конфигурации
                                                   <filename>firebird.conf</filename> (параметр
@@ -215,24 +218,25 @@
                                 <entry>Обычный пользователь</entry>
                                 <entry>Должна быть предварительно выдана и должна быть указана при
                                     входе</entry>
-                                <entry>Также как SYSDBA, но только в тех базах данных, где эта роль
-                                    предоставлена.</entry>
+                                <entry>Также как <database class="user">SYSDBA</database>, но только
+                                    в тех базах данных, где эта роль предоставлена.</entry>
                             </row>
                             <row>
                                 <entry>Пользователь POSIX</entry>
                                 <entry>Должна быть предварительно выдана и должна быть указана при
                                     входе</entry>
-                                <entry>Также как SYSDBA, но только в тех базах данных, где эта роль
-                                    предоставлена. Только в Firebird Embedded.</entry>
+                                <entry>Также как <database class="user">SYSDBA</database>, но только
+                                    в тех базах данных, где эта роль предоставлена. Только в
+                                    Firebird Embedded.</entry>
                             </row>
                             <row>
                                 <entry>Пользователь Windows</entry>
                                 <entry>Должна быть предварительно выдана и должна быть указана при
                                     входе</entry>
-                                <entry>Также как SYSDBA, но только в тех базах данных, где эта роль
-                                    предоставлена. Доступно только если в файле конфигурации
-                                        <filename>firebird.conf</filename> (параметр
-                                        <parameter>AuthServer</parameter>) в списке плагинов
+                                <entry>Также как <database class="user">SYSDBA</database>, но только
+                                    в тех базах данных, где эта роль предоставлена. Доступно только
+                                    если в файле конфигурации <filename>firebird.conf</filename>
+                                    (параметр <parameter>AuthServer</parameter>) в списке плагинов
                                     присутствовал провайдер Win_Sspi. Кроме того, этот плагин должен
                                     присутствовать и в списке плагинов клиентской стороны (параметр
                                         <parameter>AuthClient</parameter>).</entry>
@@ -393,7 +397,8 @@ TO { USER | ROLE } [<replaceable>to_name</replaceable>]
                         планируете использовать другую базу данных, например, для целей
                         использования собственного поставщика, то вам необходимо создать таблицу в
                         ней и назвать её RDB$MAP с той же структурой, что и RDB$MAP в базе данных
-                        Firebird 3 и дать доступ на запись только для SYSDBA. </para>
+                        Firebird 3 и дать доступ на запись только для <database class="user"
+                            >SYSDBA</database>. </para>
                 </note>
                 <indexterm>
                     <primary>CREATE MAPPING</primary>
@@ -667,7 +672,7 @@ TO { USER | ROLE } [<replaceable>to_name</replaceable>]
                     <itemizedlist>
                         <title>Изменить отображение могут:</title>
                         <listitem>
-                            <para>SYSDBA;</para>
+                            <para><database class="user">SYSDBA</database>;</para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных (если отображение локальное);</para>
@@ -4376,8 +4381,8 @@ REVOKE ALL ON ALL FROM IVAN;
             </section>
         </section>
 
-        <section xml:id="security-priv-context">
-            <title>Контекст безопасности для метаданных</title>
+        <section xml:id="security-sql_security">
+            <title>Привилегии выполнения SQL кода</title>
             <indexterm>
                 <primary>SQL SECURITY</primary>
             </indexterm>
@@ -4401,13 +4406,12 @@ REVOKE ALL ON ALL FROM IVAN;
                 объект метаданных будет выполняться с привилегиями определяющего пользователя
                 (владельца). Эти привилегии будут дополнены привилегиями выданные самому PSQL модулю
                 с помощью оператора GRANT.</para>
-            <para>Контекст безопасности, с которым по умолчанию создаётся любой PSQL модуль можно
-                изменить с помощью оператора 
+            <para>Привилегии выполнения, с которым по умолчанию создаётся любой PSQL модуль можно
+                изменить с помощью оператора
                 <programlisting>
 ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
   </programlisting>
-                Для сохранения обратной совместимости по умолчанию используется опция INVOKER.
-            </para>
+                Для сохранения обратной совместимости по умолчанию используется опция INVOKER. </para>
             <note>
                 <title>Замечания:</title>
                 <para>
@@ -4417,14 +4421,14 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                                 определяющего пользователя (владельца);</para>
                         </listitem>
                         <listitem>
-                            <para>По умолчанию триггеры наследуют контекст безопасности который был
-                                указан у таблицы. Этот контекст может быть переопределён в самом
-                                триггере;</para>
+                            <para>По умолчанию триггеры наследуют привилегии выполнения которые были
+                                указаны у таблицы. Привилегии выполнения могут быть переопределены в
+                                самом триггере;</para>
                         </listitem>
                         <listitem>
-                            <para>Процедуры и функции пакета всегда наследуют контекст безопасности
-                                указанный при определении пакета. Этот контекст безопасности не
-                                может быть переопределён в самих процедурах и функция пакета;</para>
+                            <para>Процедуры и функции пакета всегда наследуют привилегии выполнения
+                                указанный при определении пакета. Привилегии выполнения не могут
+                                быть переопределены в самих процедурах и функция пакета;</para>
                         </listitem>
                         <listitem>
                             <para>Анонимные PSQL блоки (EXECUTE BLOCK) всегда выполняются с правами
@@ -4606,9 +4610,9 @@ COMMIT;
                     </para>
                 </example>
                 <example>
-                    <title>Удаление контекста безопасности у триггера</title>
+                    <title>Удаление привилегий выполнения у триггера</title>
                     <para>Если триггеру явно установлена опция SQL SECURITY, то для того чтобы
-                        наследовать контекст безопасности у таблицы, необходимо выполнить следующий
+                        наследовать привилегии выполнения у таблицы, необходимо выполнить следующий
                         оператор.
                         <programlisting language="sql">
 ALTER TRIGGER tr_ins DROP SQL SECURITY;
@@ -4658,15 +4662,15 @@ SELECT pk.f(3) FROM rdb$database;
                     </para>
                 </example>
                 <example>
-                    <title>Изменение контекста безопасности по умолчанию</title>
-                    <para>После выполнения данного оператора PSQL модули 
-                        по умолчанию будут создаваться с опцией SQL SECURITY DEFINER</para>
+                    <title>Изменение привилегий выполнения по умолчанию</title>
+                    <para>После выполнения данного оператора PSQL модули по умолчанию будут
+                        создаваться с опцией SQL SECURITY DEFINER</para>
                     <para>
                         <programlisting language="sql">
 ALTER DATABASE SET DEFAULT SQL SECURITY DEFINER;
                 </programlisting>
                     </para>
-                </example>                
+                </example>
             </section>
         </section>
 

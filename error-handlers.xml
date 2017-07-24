@@ -21,7 +21,7 @@
             для использования в PSQL, с текстами сообщений до 1021 символов. Подробности см. <link
                 linkend="ddl-exception-create">CREATE EXCEPTION</link> главы DDL.
             Подробности использования пользовательских исключений см. <link
-                linkend="psql-operators-exception">EXCEPTION</link> главы PSQL.</para>
+                linkend="psql-statements-exception">EXCEPTION</link> главы PSQL.</para>
     </note>
 
     <para>В большинстве случаев, коды ошибок SQLCODE не соотносятся с кодами SQLSTATE &quot;один в

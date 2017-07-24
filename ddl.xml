@@ -870,8 +870,8 @@ ALTER DATABASE SET DEFAULT CHARACTER SET WIN1251;
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="ddl-database-alter-security">
-                <title>Изменение контекста безопасности по умолчанию</title>
+            <section xml:id="ddl-database-alter-sql_security">
+                <title>Изменение привилегий выполнения по умолчанию</title>
                 <indexterm>
                     <primary>ALTER DATABASE</primary>
                     <secondary>SET DEFAULT SQL SECURITY</secondary>
@@ -885,15 +885,15 @@ ALTER DATABASE SET DEFAULT CHARACTER SET WIN1251;
                     то объект метаданных будет выполняться с привилегиями определяющего пользователя
                     (владельца). Если при создании PSQL модуля или таблицы предложение SQL SECURITY
                     не задано, то по умолчанию используется опция INVOKER.</para>
-                <para>Предложение <database>SET DEFAULT SQL SECURITY</database> изменяет контекст
-                    безопасности с которым по умолчанию создаются PSQL модули (хранимые процедуры,
+                <para>Предложение <database>SET DEFAULT SQL SECURITY</database> изменяет привилегии
+                    выполнения с которым по умолчанию создаются PSQL модули (хранимые процедуры,
                     функции и пакеты).</para>
                 <formalpara>
                     <title>Примеры:</title>
 
                     <para>
                         <example>
-                            <title>Изменение контекста безопасности по умолчанию</title>
+                            <title>Изменение привилегий выполнения по умолчанию</title>
 
                             <para>После выполнения данного оператора PSQL модули по умолчанию будут
                                 создаваться с опцией SQL SECURITY DEFINER</para>
@@ -913,12 +913,12 @@ ALTER DATABASE SET DEFAULT SQL SECURITY DEFINER;
                     <secondary>SET LINGER</secondary>
                 </indexterm>
                 <para>Предложение <database>SET LINGER</database> позволяет установить задержку
-                    закрытия базы данных. Этот механизм позволяет ядру SuperServer, сохранять базу
-                    данных в открытом состоянии в течение некоторого времени после того как
-                    последние соединение закрыто, т.е. иметь механизм задержки закрытия базы данных.
-                    Это может помочь улучшить производительность и уменьшить издержки в случаях,
-                    когда база данных часто открывается и закрывается, сохраняя при этом ресурсы
-                        <quote>разогретыми</quote> до следующего открытия. </para>
+                    закрытия базы данных. Этот механизм позволяет Firebird в режиме SuperServer,
+                    сохранять базу данных в открытом состоянии в течение некоторого времени после
+                    того как последние соединение закрыто, т.е. иметь механизм задержки закрытия
+                    базы данных. Это может помочь улучшить производительность и уменьшить издержки в
+                    случаях, когда база данных часто открывается и закрывается, сохраняя при этом
+                    ресурсы <quote>разогретыми</quote> до следующего открытия. </para>
                 <tip>
                     <para>Такой режим может быть полезен для Web приложений, в которых коннект к
                         базе обычно <quote>живёт</quote> очень короткое время. </para>
@@ -3086,7 +3086,7 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                         данных.</para>
                 </tip>
                 <section xml:id="ddl-table-create-column-computed-sql_security">
-                    <title>Контекст безопасности</title>
+                    <title>Привилегии выполнения</title>
                     <indexterm>
                         <primary>CREATE TABLE</primary>
                         <secondary>COMPUTED BY</secondary>
@@ -3103,10 +3103,10 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                         пользователя. Если выбрана опция DEFINER, то вычисляемые столбцы вычисляются
                         с привилегиями определяющего пользователя (владельца). По умолчанию
                         вычисляемые столбцы вычисляются с привилегиями вызывающего пользователя.
-                        Кроме триггеры наследуют контекст безопасности таблицы, если он не
-                        переопределён у самих триггеров.</para>
+                        Кроме триггеры наследуют привилегии выполнения таблицы, если они не
+                        переопределены у самих триггеров.</para>
                     <tip>
-                        <para>Контекст безопасности по умолчанию для вновь создаваемых объектов
+                        <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов
                             метаданных можно изменить с помощью оператора
                             <programlisting>
 ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
@@ -3640,7 +3640,7 @@ ID           NAME
            3 Computer
 </screen>
                     </para>
-                </example>                
+                </example>
                 <example>
                     <title>Создание таблицы со столбцом идентификации с начальным значением равным
                         10 и приращением равным 2</title>
@@ -3694,8 +3694,8 @@ CREATE TABLE SALARY_HISTORY
 SQL SECURITY DEFINER;                   
                 </programlisting></para>
                     <para>Тоже самое, но вычисляемые столбцы вычисляются с правами определяющего
-                        пользователя (владельца таблицы). Кроме триггеры наследуют контекст
-                        безопасности таблицы, если он не переопределён у самих триггеров.</para>
+                        пользователя (владельца таблицы). Кроме триггеры наследуют привилегии
+                        выполнения таблицы, если они не переопределены у самих триггеров.</para>
                 </example>
             </section>
             <section xml:id="ddl-table-create-gtt">
@@ -4525,11 +4525,11 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     <primary>ALTER TABLE</primary>
                     <secondary>DROP SQL SECURITY</secondary>
                 </indexterm>
-                <para>Предложение <database>DROP SQL SECURITY</database> удаляет контекст
-                    безопасности для таблицы. После удаления контекста безопасности вычисляемые
-                    столбцы таблицы будут вычисляться с привилегиями вызывающего пользователя.
-                    Триггеры также будут выполняться с привилегиями вызывающего пользователя. если
-                    их контекст безопасности не переопределён в триггере явно.</para>
+                <para>Предложение <database>DROP SQL SECURITY</database> удаляет привилегии
+                    выполнения для таблицы. После удаления привилегий выполнения вычисляемые столбцы
+                    таблицы будут вычисляться с привилегиями вызывающего пользователя. Триггеры
+                    также будут выполняться с привилегиями вызывающего пользователя, если их
+                    привилегии выполнения не переопределены в триггере явно.</para>
             </section>
 
             <section xml:id="ddl-table-alter-alter-column">
@@ -4762,8 +4762,8 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     INVOKER, то вычисляемые столбцы вычисляются с привилегиями вызывающего
                     пользователя. Если выбрана опция DEFINER, то вычисляемые столбцы вычисляются с
                     привилегиями определяющего пользователя (владельца). По умолчанию вычисляемые
-                    столбцы вычисляются с привилегиями вызывающего пользователя. Кроме триггеры
-                    наследуют контекст безопасности таблицы, если он не переопределён у самих
+                    столбцы вычисляются с привилегиями вызывающего пользователя. Кроме того триггеры
+                    наследуют привилегии выполнения у таблицы, если они не переопределены у самих
                     триггеров.</para>
             </section>
             <section xml:id="ddl-table-alter-who">
@@ -4810,8 +4810,7 @@ ALTER TABLE COUNTRY
                 </example>
                 <example>
                     <title>Изменение привилегий с которыми будут вычисляться вычисляемые столбцы и
-                        выполняться триггеры, если в них не переопределён контекст
-                        безопасности</title>
+                        выполняться триггеры, если в них не переопределены привилегии выполнения </title>
                     <para>
                         <programlisting language="sql">
 ALTER TABLE COUNTRY
@@ -6030,7 +6029,7 @@ AS <replaceable>&lt;select_statement&gt;</replaceable>
             </section>
 
             <section xml:id="ddl-view-create-sql_security">
-                <title>Контекст безопасности</title>
+                <title>Привилегии выполнения</title>
                 <para>Выполнение SQL кода представлений всегда осуществляется с привилегиями
                     определяющего пользователя (владельца).</para>
             </section>
@@ -6757,10 +6756,14 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -6865,8 +6868,8 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                             <row>
                                 <entry><replaceable>declarations</replaceable></entry>
                                 <entry>
-                                    <para>Секция объявления локальных переменных и именованных
-                                        курсоров. </para>
+                                    <para>Секция объявления локальных переменных, подпрограмм и
+                                        именованных курсоров. </para>
                                 </entry>
                             </row>
                             <row>
@@ -6891,7 +6894,7 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                 триггеров), фазу триггера, событие (или события) на которые срабатывает триггер и
                 позицию. Имя триггера должно быть уникальным среди имён других триггеров.</para>
             <section xml:id="ddl-trigger-create-sql_security">
-                <title>Контекст безопасности</title>
+                <title>Привилегии выполнения</title>
                 <indexterm>
                     <primary>CREATE TRIGGER</primary>
                     <secondary>SQL SECURITY</secondary>
@@ -6901,7 +6904,7 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                     привилегиями вызывающего пользователя. Если выбрана опция DEFINER, то триггер
                     выполняется с привилегиями определяющего пользователя (владельца). Эти
                     привилегии будут дополнены привилегиями выданные самому триггеру с помощью
-                    оператора GRANT. По умолчанию триггер наследует контекст безопасности указанный
+                    оператора GRANT. По умолчанию триггер наследует привилегии выполнения указанные
                     для таблицы. Триггера на события базы данных по умолчанию выполняются с
                     привилегиями определяющего пользователя (владельца).</para>
             </section>
@@ -6991,11 +6994,11 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                             описаны локальные переменные триггера, именованные курсоры и
                             подпрограммы (подпроцедуры и подфункции). Подробности вы можете
                             посмотреть в главе <quote>Процедурный язык PSQL</quote> в разделах <link
-                                linkend="psql-operators-declare-var">DECLARE VARIABLE</link> и <link
-                                linkend="psql-operators-declare-cursor">DECLARE CURSOR</link>, <link
-                                linkend="psql-operators-declare-procedure">DECLARE PROCEDURE</link>,
-                                <link linkend="psql-operators-declare-function">DECLARE
-                                FUNCTION</link>.</para>
+                                linkend="psql-statements-declare-var">DECLARE VARIABLE</link> и
+                                <link linkend="psql-statements-declare-cursor">DECLARE
+                            CURSOR</link>, <link linkend="psql-statements-declare-procedure">DECLARE
+                                PROCEDURE</link>, <link linkend="psql-statements-declare-function"
+                                >DECLARE FUNCTION</link>.</para>
                         <para>После необязательной секции деклараций обязательно следует составной
                             оператор. Составной оператор состоит из одного или нескольких PSQL
                             операторов, заключенных между ключевыми словами BEGIN и END. Составной
@@ -7887,10 +7890,9 @@ ALTER TRIGGER <replaceable>trigname</replaceable>
                             <para>Позицию срабатывания;</para>
                         </listitem>
                         <listitem>
-                            <para>Контекст безопасности, т.е. с какими привилегиями выполняется
-                                триггер: вызывающего пользователя (SQL SECURITY INVOKER),
-                                определяющего пользователя (SQL SECURITY DEFINER) или наследует у
-                                таблицы (DROP SQL SECURITY);</para>
+                            <para>Привилегии выполнения триггера: вызывающего пользователя (SQL
+                                SECURITY INVOKER), определяющего пользователя (SQL SECURITY DEFINER)
+                                или наследует у таблицы (DROP SQL SECURITY);</para>
                         </listitem>
                         <listitem>
                             <para>Код тела триггера.</para>
@@ -7972,7 +7974,7 @@ INACTIVE AFTER INSERT OR UPDATE;
                 </programlisting></para>
                 </example>
                 <example>
-                    <title>Изменение контекста безопасности триггера</title>
+                    <title>Изменение привилегий выполнения триггера</title>
                     <para>После выполнения данного оператора триггер будет выполняться с
                         привилегиями определяющего пользователя
                         (владельца).<programlisting language="sql">
@@ -7981,10 +7983,10 @@ SQL SECURITY DEFINER;
                 </programlisting></para>
                 </example>
                 <example>
-                    <title>Удаление контекста безопасности триггера</title>
-                    <para>После удаления контекста безопасности триггера, триггер выполняется с
-                        привилегиями унаследованными от таблицы. Если у таблицы не определён
-                        контекст безопасности, то триггер будет выполняться с привилегиями
+                    <title>Удаление привилегий выполнения триггера</title>
+                    <para>После удаления привилегий выполнения триггера, триггер выполняется с
+                        привилегиями унаследованными от таблицы. Если у таблицы не определены
+                        привилегии выполнения, то триггер будет выполняться с привилегиями
                         вызывающего
                         пользователя.<programlisting language="sql">
 ALTER TRIGGER TR_CUST_LOG
@@ -8338,10 +8340,14 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -8402,16 +8408,24 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>declare_subfunc</replaceable></entry>
+                                <entry><replaceable>subfunc_decl</replaceable></entry>
                                 <entry>
                                     <para>Объявление подпрограммы – функции.</para>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>declare_subproc</replaceable></entry>
+                                <entry><replaceable>subproc_decl</replaceable></entry>
                                 <entry>
                                     <para>Объявление подпрограммы – процедуры. </para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>subfunc_impl</replaceable></entry>
+                                <entry>Реализация подпрограммы – функции.</entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>subproc_impl</replaceable></entry>
+                                <entry>Реализация подпрограммы – процедуры.</entry>
                             </row>
                             <row>
                                 <entry><replaceable>literal</replaceable></entry>
@@ -8627,7 +8641,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                 </section>
             </section>
             <section xml:id="ddl-procedure-create-sql_security">
-                <title>Контекст безопасности</title>
+                <title>Привилегии выполнения</title>
                 <indexterm>
                     <primary>CREATE PROCEDURE</primary>
                     <secondary>SQL SECURITY</secondary>
@@ -8640,7 +8654,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                     выданные самой хранимой процедуре с помощью оператора GRANT. По умолчанию
                     хранимая процедура выполняется с привилегиями вызывающего пользователя.</para>
                 <tip>
-                    <para>Контекст безопасности по умолчанию для вновь создаваемых объектов
+                    <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов
                         метаданных можно изменить с помощью оператора
                         <programlisting>
 ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
@@ -8658,10 +8672,10 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         отношении спецификации типа данных локальные переменные подчиняются тем же
                         правилам, что и входные и выходные параметры процедуры. Подробности вы
                         можете посмотреть в главе <quote>Процедурный язык PSQL</quote> в разделах
-                            <link linkend="psql-operators-declare-var">DECLARE VARIABLE</link> и
-                            <link linkend="psql-operators-declare-cursor">DECLARE CURSOR</link>,
-                            <link linkend="psql-operators-declare-procedure">DECLARE
-                            PROCEDURE</link>, <link linkend="psql-operators-declare-function"
+                            <link linkend="psql-statements-declare-var">DECLARE VARIABLE</link> и
+                            <link linkend="psql-statements-declare-cursor">DECLARE CURSOR</link>,
+                            <link linkend="psql-statements-declare-procedure">DECLARE
+                            PROCEDURE</link>, <link linkend="psql-statements-declare-function"
                             >DECLARE FUNCTION</link>.</para>
                     <para>После необязательной секции деклараций обязательно следует составной
                         оператор. Составной оператор состоит из одного или нескольких PSQL
@@ -9223,10 +9237,14 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -9282,16 +9300,26 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>declare_subfunc</replaceable></entry>
+                                <entry><replaceable>subfunc_decl</replaceable></entry>
                                 <entry>
                                     <para>Объявление подпрограммы – функции.</para>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>declare_subproc</replaceable></entry>
+                                <entry><replaceable>subproc_decl</replaceable></entry>
                                 <entry>
                                     <para>Объявление подпрограммы – процедуры. </para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>subfunc_impl</replaceable></entry>
+                                <entry>
+                                    <para>Реализация подпрограммы – функции.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>subproc_impl</replaceable></entry>
+                                <entry>Реализация подпрограммы – процедуры. </entry>
                             </row>
                             <row>
                                 <entry><replaceable>literal</replaceable></entry>
@@ -9558,7 +9586,7 @@ SELECT n, fn_t() FROM t
             </section>
 
             <section xml:id="ddl-function-create-sql_security">
-                <title>Контекст безопасности</title>
+                <title>Привилегии выполнения</title>
                 <indexterm>
                     <primary>CREATE FUNCTION</primary>
                     <secondary>SQL SECURITY</secondary>
@@ -9571,7 +9599,7 @@ SELECT n, fn_t() FROM t
                     хранимой функции с помощью оператора GRANT. По умолчанию хранимая функция
                     выполняется с привилегиями вызывающего пользователя.</para>
                 <tip>
-                    <para>Контекст безопасности по умолчанию для вновь создаваемых объектов
+                    <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов
                         метаданных можно изменить с помощью оператора
                         <programlisting>
 ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
@@ -9590,11 +9618,11 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         (подпроцедуры и подфункции). Локальные переменные подчиняются тем же
                         правилам что и входные параметры функции в отношении спецификации типа
                         данных. Подробности вы можете посмотреть в главе <quote>Процедурный язык
-                            PSQL</quote> в разделах <link linkend="psql-operators-declare-var"
-                            >DECLARE VARIABLE</link> и <link linkend="psql-operators-declare-cursor"
-                            >DECLARE CURSOR</link>, <link linkend="psql-operators-declare-procedure"
-                            >DECLARE PROCEDURE</link>, <link
-                            linkend="psql-operators-declare-function">DECLARE
+                            PSQL</quote> в разделах <link linkend="psql-statements-declare-var"
+                            >DECLARE VARIABLE</link> и <link
+                            linkend="psql-statements-declare-cursor">DECLARE CURSOR</link>, <link
+                            linkend="psql-statements-declare-procedure">DECLARE PROCEDURE</link>,
+                            <link linkend="psql-statements-declare-function">DECLARE
                         FUNCTION</link>.</para>
                     <para>После необязательной секции деклараций обязательно следует составной
                         оператор. Составной оператор состоит из одного или нескольких PSQL
@@ -10391,7 +10419,7 @@ END
                         вызвана процедура/функция пакета. </para>
                 </note>
                 <section xml:id="ddl-package-create-sql_security">
-                    <title>Контекст безопасности</title>
+                    <title>Привилегии выполнения</title>
                     <indexterm>
                         <primary>CREATE PACKAGE</primary>
                         <secondary>SQL SECURITY</secondary>
@@ -10403,10 +10431,10 @@ END
                         пакета выполняется с привилегиями определяющего пользователя (владельца
                         пакета). Эти привилегии будут дополнены привилегиями выданные самому пакету
                         с помощью оператора GRANT. По умолчанию процедуры и функции пакета
-                        выполняются с привилегиями вызывающего пользователя. Переопределять контекст
-                        безопасности для процедур и функций пакета запрещено.</para>
+                        выполняются с привилегиями вызывающего пользователя. Переопределять
+                        привилегии выполнения для процедур и функций пакета запрещено.</para>
                     <tip>
-                        <para>Контекст безопасности по умолчанию для вновь создаваемых объектов
+                        <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов
                             метаданных можно изменить с помощью оператора
                             <programlisting>
 ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
@@ -11031,10 +11059,14 @@ END
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -11132,15 +11164,27 @@ END
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry><replaceable>declare_subfunc</replaceable></entry>
+                                    <entry><replaceable>subfunc_decl</replaceable></entry>
                                     <entry>
                                         <para>Объявление подпрограммы–функции.</para>
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry><replaceable>declare_subproc</replaceable></entry>
+                                    <entry><replaceable>subproc_decl</replaceable></entry>
                                     <entry>
                                         <para>Объявление подпрограммы–процедуры.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>subfunc_impl</replaceable></entry>
+                                    <entry>
+                                        <para>Реализация подпрограммы–функции.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>subproc_impl</replaceable></entry>
+                                    <entry>
+                                        <para>Реализация подпрограммы–процедуры.</para>
                                     </entry>
                                 </row>
                                 <row>
@@ -13245,8 +13289,8 @@ ALTER SEQUENCE EMP_NO_GEN RESTART WITH 145;
         </info>
         <para>Пользовательское исключение (exception) — объект базы данных, описывающий сообщение об
             ошибке. Исключение можно вызывать и обрабатывать в PSQL коде (см. <link
-                linkend="psql-operators-exception">EXCEPTION</link>, <link
-                linkend="psql-operators-when">WHEN … DO</link>).</para>
+                linkend="psql-statements-exception">EXCEPTION</link>, <link
+                linkend="psql-statements-when">WHEN … DO</link>).</para>
         <para>В данном разделе описываются операторы создания, модификации и удаления исключений. </para>
         <section xml:id="ddl-exception-create">
             <info>
@@ -13387,7 +13431,7 @@ CREATE EXCEPTION E_INVALID_VALUE
                             linkend="ddl-exception-createoralter">CREATE OR ALTER EXCEPTION</link>,
                             <link linkend="ddl-exception-drop">DROP EXCEPTION</link>, <link
                             linkend="ddl-exception-recreate">RECREATE EXCEPTION</link>, <link
-                            linkend="psql-operators-exception">EXCEPTION</link>. </para>
+                            linkend="psql-statements-exception">EXCEPTION</link>. </para>
                 </formalpara>
             </section>
         </section>

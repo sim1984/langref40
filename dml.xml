@@ -4355,8 +4355,8 @@ FOR UPDATE WITH LOCK
             <para>Простой оператор SELECT может быть использован в PSQL, только если он возвращает
                 единственную строку, то есть, если это запрос типа синглтон (singleton). Для
                 запросов, возвращающих несколько строк, PSQL предлагает использовать оператор <link
-                    linkend="psql-operators-forselect">FOR SELECT</link>.  </para>
-            <para>Также, PSQL поддерживает оператор <link linkend="psql-operators-declare-cursor"
+                    linkend="psql-statements-forselect">FOR SELECT</link>.  </para>
+            <para>Также, PSQL поддерживает оператор <link linkend="psql-statements-declare-cursor"
                     >DECLARE CURSOR</link>, который связывает именованный курсор с определенной
                 командой SELECT — и этот курсор впоследствии может быть использован для навигации по
                 возвращаемому набору данных.</para>
@@ -6641,10 +6641,14 @@ END    
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable>                  
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>                 
                        </programlisting></para>
         </formalpara>
         <para>
@@ -6687,15 +6691,27 @@ END    
                             </entry>
                         </row>
                         <row>
-                            <entry><replaceable>declare_subfunc</replaceable></entry>
+                            <entry><replaceable>subfunc_decl</replaceable></entry>
                             <entry>
                                 <para>Объявление подпрограммы – функции.</para>
                             </entry>
                         </row>
                         <row>
-                            <entry><replaceable>declare_subproc</replaceable></entry>
+                            <entry><replaceable>subproc_decl</replaceable></entry>
                             <entry>
                                 <para>Объявление подпрограммы – процедуры. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><replaceable>subfunc_impl</replaceable></entry>
+                            <entry>
+                                <para>Реализация подпрограммы – функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><replaceable>subproc_impl</replaceable></entry>
+                            <entry>
+                                <para>Реализация подпрограммы – процедуры. </para>
                             </entry>
                         </row>
                         <row>
@@ -6864,7 +6880,7 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="psql-operators">Операторы языка PSQL</link>. </para>
+                <link linkend="psql-statements">Операторы языка PSQL</link>. </para>
         </formalpara>
         <section xml:id="dml-execblock-inoutparams">
             <title>Входные и выходные параметры</title>
@@ -6889,7 +6905,7 @@ END
                 одна строка. </para>
             <para>Для получения дополнительной информации о параметрах и объявлениях переменных,
                 [TYPE OF] <replaceable>domain</replaceable>, TYPE OF COLUMN и т.д. обратитесь к
-                главе <link linkend="psql-operators-declare">DECLARE</link>.</para>
+                главе <link linkend="psql-statements-declare-var">DECLARE VARIABLE</link>.</para>
         </section>
         <section xml:id="dml-execblock-term">
             <title>Терминатор оператора</title>

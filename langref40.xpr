@@ -341,6 +341,7 @@
         <file name="charset-coll.xml"/>
         <file name="common.xml"/>
         <file name="ddl.xml"/>
+        <file name="dml.xml"/>
         <file name="error-handlers.xml"/>
         <file name="internal-func.xml"/>
         <file name="intro.xml"/>

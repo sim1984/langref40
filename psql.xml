@@ -70,7 +70,7 @@
             </section>
 
             <section xml:id="psql_elements-sql_security">
-                <title>Контекст безопасности</title>
+                <title>Привилегии выполнения PSQL кода</title>
                 <indexterm>
                     <primary>SQL SECURITY</primary>
                 </indexterm>
@@ -80,19 +80,37 @@
                     модуль выполняется с привилегиями определяющего пользователя (владельца). Эти
                     привилегии будут дополнены привилегиями выданные самому PSQL модулю с помощью
                     оператора GRANT. По умолчанию процедуры, функции выполняются с привилегиями
-                    вызывающего пользователя, а триггеры наследуют контекст безопасности указанный
+                    вызывающего пользователя, а триггеры наследуют привилегии безопасности указанные
                     для таблицы.</para>
                 <para>Анонимные PSQL блоки (EXECUTE BLOCK) всегда выполняются с правами вызывающего
                     пользователя.</para>
             </section>
 
+            <section xml:id="psql-elements-declare">
+                <title>Секция деклараций</title>
+
+                <para>Тело PSQL модуля начинается после ключевого слова AS. Тело модуля состоит из
+                    секции деклараций и составного оператора.</para>
+
+                <para>Секция деклараций может содержать объявления локальной переменной, курсора или
+                    подпрограммы (подпроцедуры или подфункции). Каждый тип объявления будет
+                    рассмотрен отдельно.</para>
+
+                <formalpara>
+                    <title>См. также:</title>
+                    <para>
+                        <link linkend="psql-statements-declare-var">DECLARE VARIABLE</link>, <link
+                            linkend="psql-statements-declare-cursor">DECLARE CURSOR</link>, <link
+                            linkend="psql-statements-declare-procedure">DECLARE PROCEDURE</link>,
+                            <link linkend="psql-statements-declare-function">DECLARE FUNCTION</link>
+                    </para>
+                </formalpara>
+            </section>
+
             <section xml:id="psql-elements-body">
                 <title>Тело модуля</title>
 
-                <para>Тело PSQL модуля начинается после ключевого слова AS. Далее следует
-                    необязательный блок деклараций локальных переменных, курсоров и подпрограмм (см.
-                        <link linkend="psql-operators-declare">Секция деклараций</link>). После
-                    необязательной секции деклараций обязательно следует составной оператор,
+                <para>После необязательной секции деклараций обязательно следует составной оператор,
                     содержащий описание выполняемых программой действий. Операторные скобки BEGIN
                     ... END определяют составной оператор или блок операторов, который выполняется
                     как одна единица кода. В самих программах возможно присутствие произвольного
@@ -268,7 +286,7 @@ SET TERM ;^
                     SELECT запросов. Обычно такие процедуры выполняют циклический процесс извлечения
                     данных, возможно преобразуя их, прежде чем заполнить выходные переменные
                     (параметры) новыми данными на каждой итерации цикла. Оператор <link
-                        linkend="psql-operators-suspend">SUSPEND</link>, обычно расположенный в
+                        linkend="psql-statements-suspend">SUSPEND</link>, обычно расположенный в
                     конце каждой итерации, заполняет буфер и ожидает пока вызывающая сторона не
                     выберет (fetch) строку.</para>
                 <para>Селективные процедуры могут иметь входные параметры и выходное множество,
@@ -318,10 +336,14 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -391,10 +413,14 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -469,10 +495,14 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -539,10 +569,14 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -784,10 +818,14 @@ END
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -1052,10 +1090,14 @@ END
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -1203,7 +1245,7 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
                         NEW.<replaceable>columname</replaceable> и
                         OLD.<replaceable>columnname</replaceable>.
                         <replaceable>columnname</replaceable> может быть любым столбцом определённым
-                    в таблице(представлении). а не только тем что был изменён.</para>
+                    в таблице(представлении), а не только тем что был изменён.</para>
                 <para>Контекстные переменные NEW и OLD подчиняются следующим правилам: <itemizedlist
                         spacing="compact">
                         <listitem>
@@ -1418,10 +1460,14 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
@@ -1520,11 +1566,14 @@ ALTER TRIGGER <replaceable>trigname</replaceable>
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
 <replaceable>&lt;declare_item&gt;</replaceable> ::=      
-  <replaceable>&lt;declare_var&gt;</replaceable>; |      
-  <replaceable>&lt;declare_cursor&gt;</replaceable>; |     
-  <replaceable>&lt;declare_subfunc&gt;</replaceable> |     
-  <replaceable>&lt;declare_subproc&gt;</replaceable> 
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
 
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
   EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
 
@@ -1553,7 +1602,7 @@ DROP TRIGGER <replaceable>trigname</replaceable>;
         </section>
     </section>
 
-    <section xml:id="psql-operators">
+    <section xml:id="psql-statements">
         <info>
             <title>Написание кода тела модуля</title>
         </info>
@@ -1569,7 +1618,7 @@ DROP TRIGGER <replaceable>trigname</replaceable>;
                 переменных.</para>
         </sidebar>
 
-        <section xml:id="psql-operators-assign">
+        <section xml:id="psql-statements-assign">
             <title>Оператор присваивания</title>
 
             <formalpara>
@@ -1669,22 +1718,26 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-declare-var">DECLARE VARIABLE</link>. </para>
+                    <link linkend="psql-statements-declare-var">DECLARE VARIABLE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-declare">
+
+        <section xml:id="psql-statements-declare-var">
             <info>
-                <title>DECLARE</title>
+                <title>DECLARE VARIABLE</title>
                 <keywordset>
-                    <keyword>DECLARE</keyword>
+                    <keyword>DECLARE VARIABLE</keyword>
                 </keywordset>
             </info>
 
-            <indexterm><primary>DECLARE</primary></indexterm>
+            <indexterm>
+                <primary>DECLARE</primary>
+                <secondary>VARIABLE</secondary>
+            </indexterm>
             <formalpara>
                 <title>Назначение:</title>
 
-                <para>Объявление локальной переменной, курсора или подпрограммы.</para>
+                <para>Объявление локальной переменной.</para>
             </formalpara>
 
             <formalpara>
@@ -1696,41 +1749,6 @@ END
                 <title>Синтаксис:</title>
 
                 <para><programlisting>
-DECLARE {<replaceable>&lt;local_var&gt;</replaceable> | <replaceable>&lt;cursor&gt;</replaceable> | <replaceable>&lt;subfunc&gt;</replaceable> | <replaceable>&lt;subproc&gt;</replaceable>}
-                </programlisting></para>
-            </formalpara>
-
-            <para>Оператор DECLARE предназначен для объявления локальной переменной, курсора или
-                подпрограммы (подпроцедуры или подфункции). Каждый тип объявления будет рассмотрен
-                отдельно.</para>
-
-            <section xml:id="psql-operators-declare-var">
-                <info>
-                    <title>DECLARE VARIABLE</title>
-                    <keywordset>
-                        <keyword>DECLARE VARIABLE</keyword>
-                    </keywordset>
-                </info>
-
-                <indexterm>
-                    <primary>DECLARE</primary>
-                    <secondary>VARIABLE</secondary>
-                </indexterm>
-                <formalpara>
-                    <title>Назначение:</title>
-
-                    <para>Объявление локальной переменной.</para>
-                </formalpara>
-
-                <formalpara>
-                    <title>Доступно в:</title>
-
-                    <para>PSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-
-                    <para><programlisting>
 DECLARE [VARIABLE] <replaceable>varname</replaceable> <replaceable>&lt;type&gt;</replaceable> [NOT NULL] [COLLATE <replaceable>collation</replaceable>] 
   [{= | DEFAULT} <replaceable>&lt;value&gt;</replaceable>] } 
 
@@ -1755,168 +1773,166 @@ DECLARE [VARIABLE] <replaceable>varname</replaceable> <replaceable>&lt;type&gt;<
     [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
   | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])]
                 </programlisting></para>
-                </formalpara>
+            </formalpara>
 
-                <para>
-                    <table frame="all">
-                        <?dbfo keep-together='auto'?>
-                        <title>Параметры оператора DECLARE VARIABLE</title>
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                            <thead>
-                                <row>
-                                    <entry align="center">Параметр</entry>
-                                    <entry align="center">Описание</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry><replaceable>varname</replaceable></entry>
-                                    <entry>
-                                        <para>Имя локальной переменной.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>literal</replaceable></entry>
-                                    <entry>
-                                        <para>Литерал.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>context_var</replaceable></entry>
-                                    <entry>
-                                        <para>Любая контекстная переменная, тип которой совместим с
-                                            типом локальной переменной.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>datatype</replaceable></entry>
-                                    <entry>
-                                        <para>Тип данных SQL.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>collation</replaceable></entry>
-                                    <entry>
-                                        <para>Порядок сортировки.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>domain</replaceable></entry>
-                                    <entry>
-                                        <para>Домен.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>rel</replaceable></entry>
-                                    <entry>
-                                        <para>Имя таблицы или представления.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>col</replaceable></entry>
-                                    <entry>
-                                        <para>Имя столбца таблицы или представления.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>precision</replaceable></entry>
-                                    <entry>
-                                        <para>Точность. От 1 до 18.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>scale</replaceable></entry>
-                                    <entry>
-                                        <para>Масштаб. От 0 до 18, должно быть меньше или равно
-                                                <replaceable>precision</replaceable>.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>size</replaceable></entry>
-                                    <entry>
-                                        <para>Максимальный размер строки в символах.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>charset</replaceable></entry>
-                                    <entry>
-                                        <para>Набор символов.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>subtype_num</replaceable></entry>
-                                    <entry>
-                                        <para>Номер подтипа BLOB.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>subtype_name</replaceable></entry>
-                                    <entry>
-                                        <para>Мнемоника подтипа BLOB.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>seqlen</replaceable></entry>
-                                    <entry>
-                                        <para>Размер сегмента, не может превышать 65535.</para>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </para>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора DECLARE VARIABLE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>varname</replaceable></entry>
+                                <entry>
+                                    <para>Имя локальной переменной.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>literal</replaceable></entry>
+                                <entry>
+                                    <para>Литерал.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>context_var</replaceable></entry>
+                                <entry>
+                                    <para>Любая контекстная переменная, тип которой совместим с
+                                        типом локальной переменной.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>datatype</replaceable></entry>
+                                <entry>
+                                    <para>Тип данных SQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>collation</replaceable></entry>
+                                <entry>
+                                    <para>Порядок сортировки.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>domain</replaceable></entry>
+                                <entry>
+                                    <para>Домен.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>rel</replaceable></entry>
+                                <entry>
+                                    <para>Имя таблицы или представления.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>col</replaceable></entry>
+                                <entry>
+                                    <para>Имя столбца таблицы или представления.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>precision</replaceable></entry>
+                                <entry>
+                                    <para>Точность. От 1 до 18.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>scale</replaceable></entry>
+                                <entry>
+                                    <para>Масштаб. От 0 до 18, должно быть меньше или равно
+                                            <replaceable>precision</replaceable>.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>size</replaceable></entry>
+                                <entry>
+                                    <para>Максимальный размер строки в символах.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>charset</replaceable></entry>
+                                <entry>
+                                    <para>Набор символов.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>subtype_num</replaceable></entry>
+                                <entry>
+                                    <para>Номер подтипа BLOB.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>subtype_name</replaceable></entry>
+                                <entry>
+                                    <para>Мнемоника подтипа BLOB.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>seqlen</replaceable></entry>
+                                <entry>
+                                    <para>Размер сегмента, не может превышать 65535.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
 
-                <para>Оператор DECLARE [VARIBALE] объявляет локальную переменную. Ключевое слово
-                    VARIABLE можно опустить. В одном операторе разрешено объявлять только одну
-                    переменную. В процедурах и триггерах можно объявить произвольное число локальных
-                    переменных, используя при этом каждый раз, новый оператор DECLARE
-                    VARAIBLE.</para>
-                <para>Имя локальной переменной должно быть уникально среди имён локальных
-                    переменных, входных и выходных параметров процедуры внутри программного
-                    объекта.</para>
+            <para>Оператор DECLARE [VARIBALE] объявляет локальную переменную. Ключевое слово
+                VARIABLE можно опустить. В одном операторе разрешено объявлять только одну
+                переменную. В процедурах и триггерах можно объявить произвольное число локальных
+                переменных, используя при этом каждый раз, новый оператор DECLARE VARAIBLE.</para>
+            <para>Имя локальной переменной должно быть уникально среди имён локальных переменных,
+                входных и выходных параметров процедуры внутри программного объекта.</para>
 
-                <section xml:id="psql-variables-type">
-                    <title>Типы данных для переменных</title>
+            <section xml:id="psql-variables-type">
+                <title>Типы данных для переменных</title>
 
-                    <para>В качестве типа данных локальной переменной может быть любой SQL тип, за
-                        исключением массивов.</para>
-                    <para>В качестве типа переменной можно указать имя домена. В этом случае,
-                        переменная будет наследовать все характеристики домена. Если перед названием
-                        домена дополнительно используется предложение &quot;TYPE OF&quot;, то
-                        используется только тип данных домена – не проверяется (не используется) его
-                        ограничение (если оно есть в домене) на NOT NULL, CHECK ограничения и/или
-                        значения по умолчанию. Если домен текстового типа, то всегда используется
-                        его набор символов и порядок сортировки.</para>
-                    <para>Локальные переменные можно объявлять, используя тип данных столбцов
-                        существующих таблиц и представлений. Для этого используется предложение TYPE
-                        OF COLUMN, после которого указывается имя таблиц или представления и через
-                        точку имя столбца. При использовании TYPE OF COLUMN наследуется только тип
-                        данных, а в случае строковых типов ещё набор символов и порядок сортировки.
-                        Ограничения и значения по умолчанию столбца никогда не используются.</para>
-                    <para>Для локальных переменных можно указать ограничение NOT NULL, тем самым
-                        запретив передавать в него значение NULL. Для переменной строкового типа
-                        существует возможность задать порядок сортировки с помощью предложения
-                        COLLATE.</para>
-                    <para>Локальной переменной можно устанавливать инициализирующее (начальное)
-                        значение. Это значение устанавливается с помощью предложения DEFAULT или
-                        оператора &quot;=&quot;. В качестве значения по умолчанию может быть
-                        использовано значение NULL, литерал и любая контекстная переменная
-                        совместимая по типу данных.</para>
-                    <important>
-                        <para>Обязательно используйте инициализацию начальным значением для любых
-                            переменных объявленных с ограничением NOT NULL, если они не получают
-                            значение по умолчанию иным способом.</para>
-                    </important>
+                <para>В качестве типа данных локальной переменной может быть любой SQL тип, за
+                    исключением массивов.</para>
+                <para>В качестве типа переменной можно указать имя домена. В этом случае, переменная
+                    будет наследовать все характеристики домена. Если перед названием домена
+                    дополнительно используется предложение &quot;TYPE OF&quot;, то используется
+                    только тип данных домена – не проверяется (не используется) его ограничение
+                    (если оно есть в домене) на NOT NULL, CHECK ограничения и/или значения по
+                    умолчанию. Если домен текстового типа, то всегда используется его набор символов
+                    и порядок сортировки.</para>
+                <para>Локальные переменные можно объявлять, используя тип данных столбцов
+                    существующих таблиц и представлений. Для этого используется предложение TYPE OF
+                    COLUMN, после которого указывается имя таблиц или представления и через точку
+                    имя столбца. При использовании TYPE OF COLUMN наследуется только тип данных, а в
+                    случае строковых типов ещё набор символов и порядок сортировки. Ограничения и
+                    значения по умолчанию столбца никогда не используются.</para>
+                <para>Для локальных переменных можно указать ограничение NOT NULL, тем самым
+                    запретив передавать в него значение NULL. Для переменной строкового типа
+                    существует возможность задать порядок сортировки с помощью предложения
+                    COLLATE.</para>
+                <para>Локальной переменной можно устанавливать инициализирующее (начальное)
+                    значение. Это значение устанавливается с помощью предложения DEFAULT или
+                    оператора &quot;=&quot;. В качестве значения по умолчанию может быть
+                    использовано значение NULL, литерал и любая контекстная переменная совместимая
+                    по типу данных.</para>
+                <important>
+                    <para>Обязательно используйте инициализацию начальным значением для любых
+                        переменных объявленных с ограничением NOT NULL, если они не получают
+                        значение по умолчанию иным способом.</para>
+                </important>
 
-                    <formalpara>
-                        <title>Примеры:</title>
+                <formalpara>
+                    <title>Примеры:</title>
 
-                        <para>
-                            <example>
-                                <title>Различные способы объявления локальных переменных</title>
-                                <para><programlisting language="sql">
+                    <para>
+                        <example>
+                            <title>Различные способы объявления локальных переменных</title>
+                            <para><programlisting language="sql">
 CREATE OR ALTER PROCEDURE SOME_PROC
 AS
   -- Объявление переменной типа INT
@@ -1937,171 +1953,165 @@ BEGIN
   /* Операторы PSQL */
 END
                 </programlisting></para>
-                            </example>
-                        </para>
-                    </formalpara>
-                    <formalpara>
-                        <title>См. также:</title>
-                        <para><link linkend="types">Типы и подтипы данных</link>, <link
-                                linkend="types-domain">Пользовательские типы данных — домены</link>,
-                                <link linkend="ddl-domain-create"><database>CREATE
-                                DOMAIN</database></link>
-                        </para>
-                    </formalpara>
-                </section>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+                    <para><link linkend="types">Типы и подтипы данных</link>, <link
+                            linkend="types-domain">Пользовательские типы данных — домены</link>,
+                            <link linkend="ddl-domain-create"><database>CREATE
+                            DOMAIN</database></link>
+                    </para>
+                </formalpara>
             </section>
-            <section xml:id="psql-operators-declare-cursor">
-                <info>
-                    <title>DECLARE CURSOR</title>
-                    <keywordset>
-                        <keyword>DECLARE CURSOR</keyword>
-                    </keywordset>
-                </info>
-                <indexterm>
-                    <primary>DECLARE</primary>
-                    <secondary>CURSOR</secondary>
-                </indexterm>
-                <formalpara>
-                    <title>Назначение:</title>
+        </section>
+        <section xml:id="psql-statements-declare-cursor">
+            <info>
+                <title>DECLARE CURSOR</title>
+                <keywordset>
+                    <keyword>DECLARE CURSOR</keyword>
+                </keywordset>
+            </info>
+            <indexterm>
+                <primary>DECLARE</primary>
+                <secondary>CURSOR</secondary>
+            </indexterm>
+            <formalpara>
+                <title>Назначение:</title>
 
-                    <para>Объявление курсора.</para>
-                </formalpara>
+                <para>Объявление курсора.</para>
+            </formalpara>
 
-                <formalpara>
-                    <title>Доступно в:</title>
+            <formalpara>
+                <title>Доступно в:</title>
 
-                    <para>PSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
+                <para>PSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
 
-                    <para><programlisting>
+                <para><programlisting>
 DECLARE [VARIABLE] <replaceable>cursor_name</replaceable> [SCROLL | NO SCROLL]
 CURSOR FOR (<replaceable>&lt;select_statement&gt;</replaceable>);
                 </programlisting></para>
-                </formalpara>
+            </formalpara>
 
-                <para>
-                    <table frame="all">
-                        <?dbfo keep-together='auto'?>
-                        <title>Параметры оператора DECLARE CURSOR</title>
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                            <thead>
-                                <row>
-                                    <entry align="center">Параметр</entry>
-                                    <entry align="center">Описание</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry><replaceable>cursor_name</replaceable></entry>
-                                    <entry>
-                                        <para>Имя курсора.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>select_statement</replaceable></entry>
-                                    <entry>
-                                        <para>Оператор SELECT.</para>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора DECLARE CURSOR</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>cursor_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя курсора.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>select_statement</replaceable></entry>
+                                <entry>
+                                    <para>Оператор SELECT.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор DECLARE ... CURSOR FOR объявляет именованный курсор, связывая его с
+                набором данных, полученным в операторе SELECT, указанном в предложении CURSOR FOR. В
+                дальнейшем курсор может быть открыт, использоваться для обхода результирующего
+                набора данных, и снова быть закрытым. Также поддерживаются позиционированные
+                обновления и удаления при использовании WHERE CURRENT OF в операторах UPDATE и
+                DELETE.</para>
+            <para>Имя курсора можно использовать в качестве ссылки на курсор, как на переменные типа
+                запись. Текущая запись доступна через имя курсора, что делает необязательным
+                предложение INTO в операторе FETCH.</para>
+
+            <section xml:id="psql-cursor-forward_and_scrolable">
+                <title>Однонаправленные и прокручиваемые курсоры</title>
+
+                <para>Курсор может быть однонаправленными прокручиваемым. Необязательное предложение
+                    SCROLL делает курсор двунаправленным (прокручиваемым), предложение NO SCROLL —
+                    однонаправленным. По умолчанию курсоры являются однонаправленными.</para>
+                <para>Однонаправленные курсоры позволяют двигаться по набору данных только вперёд.
+                    Двунаправленные курсоры позволяют двигаться по набору данных не только вперёд,
+                    но и назад, а также на N позиций относительно текущего положения.</para>
+                <warning>
+                    <para>Прокручиваемые курсоры материализуются внутри как временный набор данных,
+                        таким образом, они потребляют дополнительные ресурсы памяти/диска, поэтому
+                        пользуйтесь ими только тогда, когда это действительно необходимо.</para>
+                </warning>
+            </section>
+
+            <section xml:id="psql-idio-cursor">
+                <title>Особенности использования курсора</title>
+
+                <para><itemizedlist spacing="compact">
+                        <listitem>
+                            <para>Предложение &quot;FOR UPDATE&quot; разрешено использовать в
+                                операторе SELECT, но оно не требуется для успешного выполнения
+                                позиционированного обновления или удаления;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Удостоверьтесь, что объявленные имена курсоров не совпадают, ни с
+                                какими именами, определёнными позже в предложениях AS CURSOR;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если курсор требуется только для прохода по результирующему набору
+                                данных, то практически всегда проще (и менее подвержено ошибкам)
+                                использовать оператор FOR SELECT с предложением AS CURSOR.
+                                Объявленные курсоры должны быть явно открыты, использованы для
+                                выборки данных и закрыты. Кроме того, вы должны проверить
+                                контекстную переменную ROW_COUNT после каждой выборки и выйти из
+                                цикла, если её значение ноль. Предложение FOR SELECT делает эту
+                                проверку автоматически. Однако объявленные курсоры дают большие
+                                возможности для контроля над последовательными событиями и позволяют
+                                управлять несколькими курсорами параллельно;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Оператор SELECT может содержать параметры, например: &quot;SELECT
+                                NAME || :SFX FROM NAMES WHERE NUMBER = :NUM&quot;. Каждый параметр
+                                должен быть заранее объявлен как переменная PSQL (это касается также
+                                входных и выходных параметров). При открытии курсора параметру
+                                присваивается текущее значение переменной;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если опция прокрутки опущена, то по умолчанию принимается NO
+                                SCROLL (т.е курсор открыт для движения только вперёд). Это означает,
+                                что могут быть использованы только команды FETCH [NEXT FROM]. Другие
+                                команды будут возвращать ошибки.</para>
+                        </listitem>
+                    </itemizedlist>
                 </para>
+                <warning>
+                    <para>Если значение переменной PSQL, используемой в операторе SELECT, изменяется
+                        во время выполнения цикла, то её новое значение может (но не всегда)
+                        использоваться при выборке следующих строк. Лучше избегать таких ситуаций.
+                        Если вам действительно требуется такое поведение, то необходимо тщательно
+                        протестировать код и убедиться, что вы точно знаете, как изменения
+                        переменной влияют на результаты выборки. Особо отмечу, что поведение может
+                        зависеть от плана запроса, в частности, от используемых индексов. В
+                        настоящее время нет строгих правил для таких ситуаций, но в новых версиях
+                        Firebird это может измениться.</para>
+                </warning>
+            </section>
+            <section xml:id="psql-cursor-examples">
+                <title>Примеры использования именованного курсора</title>
 
-                <para>Оператор DECLARE ... CURSOR FOR объявляет именованный курсор, связывая его с
-                    набором данных, полученным в операторе SELECT, указанном в предложении CURSOR
-                    FOR. В дальнейшем курсор может быть открыт, использоваться для обхода
-                    результирующего набора данных, и снова быть закрытым. Также поддерживаются
-                    позиционированные обновления и удаления при использовании WHERE CURRENT OF в
-                    операторах UPDATE и DELETE.</para>
-                <para>Имя курсора можно использовать в качестве ссылки на курсор, как на переменные
-                    типа запись. Текущая запись доступна через имя курсора, что делает
-                    необязательным предложение INTO в операторе FETCH.</para>
-
-                <section xml:id="psql-cursor-forward_and_scrolable">
-                    <title>Однонаправленные и прокручиваемые курсоры</title>
-
-                    <para>Курсор может быть однонаправленными прокручиваемым. Необязательное
-                        предложение SCROLL делает курсор двунаправленным (прокручиваемым),
-                        предложение NO SCROLL — однонаправленным. По умолчанию курсоры являются
-                        однонаправленными.</para>
-                    <para>Однонаправленные курсоры позволяют двигаться по набору данных только
-                        вперёд. Двунаправленные курсоры позволяют двигаться по набору данных не
-                        только вперёд, но и назад, а также на N позиций относительно текущего
-                        положения.</para>
-                    <warning>
-                        <para>Прокручиваемые курсоры материализуются внутри как временный набор
-                            данных, таким образом, они потребляют дополнительные ресурсы
-                            памяти/диска, поэтому пользуйтесь ими только тогда, когда это
-                            действительно необходимо.</para>
-                    </warning>
-                </section>
-
-                <section xml:id="psql-idio-cursor">
-                    <title>Особенности использования курсора</title>
-
-                    <para><itemizedlist spacing="compact">
-                            <listitem>
-                                <para>Предложение &quot;FOR UPDATE&quot; разрешено использовать в
-                                    операторе SELECT, но оно не требуется для успешного выполнения
-                                    позиционированного обновления или удаления;</para>
-                            </listitem>
-                            <listitem>
-                                <para>Удостоверьтесь, что объявленные имена курсоров не совпадают,
-                                    ни с какими именами, определёнными позже в предложениях AS
-                                    CURSOR;</para>
-                            </listitem>
-                            <listitem>
-                                <para>Если курсор требуется только для прохода по результирующему
-                                    набору данных, то практически всегда проще (и менее подвержено
-                                    ошибкам) использовать оператор FOR SELECT с предложением AS
-                                    CURSOR. Объявленные курсоры должны быть явно открыты,
-                                    использованы для выборки данных и закрыты. Кроме того, вы должны
-                                    проверить контекстную переменную ROW_COUNT после каждой выборки
-                                    и выйти из цикла, если её значение ноль. Предложение FOR SELECT
-                                    делает эту проверку автоматически. Однако объявленные курсоры
-                                    дают большие возможности для контроля над последовательными
-                                    событиями и позволяют управлять несколькими курсорами
-                                    параллельно;</para>
-                            </listitem>
-                            <listitem>
-                                <para>Оператор SELECT может содержать параметры, например:
-                                    &quot;SELECT NAME || :SFX FROM NAMES WHERE NUMBER = :NUM&quot;.
-                                    Каждый параметр должен быть заранее объявлен как переменная PSQL
-                                    (это касается также входных и выходных параметров). При открытии
-                                    курсора параметру присваивается текущее значение
-                                    переменной;</para>
-                            </listitem>
-                            <listitem>
-                                <para>Если опция прокрутки опущена, то по умолчанию принимается NO
-                                    SCROLL (т.е курсор открыт для движения только вперёд). Это
-                                    означает, что могут быть использованы только команды FETCH [NEXT
-                                    FROM]. Другие команды будут возвращать ошибки.</para>
-                            </listitem>
-                        </itemizedlist>
-                    </para>
-                    <warning>
-                        <para>Если значение переменной PSQL, используемой в операторе SELECT,
-                            изменяется во время выполнения цикла, то её новое значение может (но не
-                            всегда) использоваться при выборке следующих строк. Лучше избегать таких
-                            ситуаций. Если вам действительно требуется такое поведение, то
-                            необходимо тщательно протестировать код и убедиться, что вы точно
-                            знаете, как изменения переменной влияют на результаты выборки. Особо
-                            отмечу, что поведение может зависеть от плана запроса, в частности, от
-                            используемых индексов. В настоящее время нет строгих правил для таких
-                            ситуаций, но в новых версиях Firebird это может измениться.</para>
-                    </warning>
-                </section>
-                <section xml:id="psql-cursor-examples">
-                    <title>Примеры использования именованного курсора</title>
-
-                    <example>
-                        <title>Объявление именованного курсора</title>
-                        <para><programlisting language="sql">
+                <example>
+                    <title>Объявление именованного курсора</title>
+                    <para><programlisting language="sql">
 CREATE OR ALTER TRIGGER TBU_STOCK
 BEFORE UPDATE ON STOCK
 AS
@@ -2116,10 +2126,10 @@ BEGIN
   /* Операторы PSQL */
 END
                 </programlisting></para>
-                    </example>
-                    <example>
-                        <title>Объявление прокручиваемого курсора</title>
-                        <para><programlisting language="sql">
+                </example>
+                <example>
+                    <title>Объявление прокручиваемого курсора</title>
+                    <para><programlisting language="sql">
 EXECUTE BLOCK
 RETURNS (
   N INT,
@@ -2136,127 +2146,141 @@ BEGIN
   /* Операторы PSQL */
 END
                 </programlisting></para>
-                    </example>
-                    <formalpara>
-                        <title>См. также:</title>
-
-                        <para>
-                            <link linkend="psql-operators-open">OPEN</link>, <link
-                                linkend="psql-operators-fetch">FETCH</link>, <link
-                                linkend="psql-operators-close">CLOSE</link>, <link
-                                linkend="psql-operators-forselect">FOR SELECT</link>. </para>
-                    </formalpara>
-                </section>
-            </section>
-            <section xml:id="psql-operators-declare-procedure">
-                <info>
-                    <title>DECLARE PROCEDURE</title>
-                    <keywordset>
-                        <keyword>DECLARE PROCEDURE</keyword>
-                    </keywordset>
-                </info>
-
-                <indexterm>
-                    <primary>DECLARE</primary>
-                    <secondary>PROCEDURE</secondary>
-                </indexterm>
+                </example>
                 <formalpara>
-                    <title>Назначение:</title>
-
-                    <para>Объявление подпроцедуры.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Доступно в:</title>
-
-                    <para>PSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-
-                    <para><programlisting>
-DECLARE PROCEDURE <replaceable>subprocname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]
-[RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])]
-AS
-  [<replaceable>&lt;declarations&gt;</replaceable>]
-BEGIN
-  [<replaceable>&lt;PSQL_statements&gt;</replaceable>]
-END                        
-                </programlisting></para>
-                </formalpara>
-
-                <para>
-                    <table frame="all">
-                        <?dbfo keep-together='auto'?>
-                        <title>Параметры оператора DECLARE PROCEDURE</title>
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                            <thead>
-                                <row>
-                                    <entry align="center">Параметр</entry>
-                                    <entry align="center">Описание</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry><replaceable>subprocname</replaceable></entry>
-                                    <entry>
-                                        <para>Имя подпроцедуры.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>inparam</replaceable></entry>
-                                    <entry>
-                                        <para>Описание входного параметра.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>outparam</replaceable></entry>
-                                    <entry>
-                                        <para>Описание выходного параметра.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>declarations</replaceable></entry>
-                                    <entry>
-                                        <para>Секция объявления локальных переменных, именованных
-                                            курсоров.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>PSQL_statements</replaceable></entry>
-                                    <entry>
-                                        <para>PSQL операторы.</para>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </para>
-
-                <para>Оператор DECLARE PROCEDURE объявляет подпроцедуру. На подпроцедуру
-                    накладываются следующие ограничения: <itemizedlist spacing="compact">
-                        <listitem>
-                            <para>Подпрограмма не может быть вложена в другую подпрограмму. Они
-                                поддерживаются только в основном модуле (хранимой процедуре,
-                                хранимой функции, триггере и анонимном PSQL блоке);</para>
-                        </listitem>
-                        <listitem>
-                            <para>В настоящее время подпрограмма не имеет прямого доступа для
-                                использования переменных, курсоров и других подпрограмм из основного
-                                модуля. Кроме того, подпрограмма не может вызывать себя рекурсивно.
-                                Это может быть разрешено в будущем.</para>
-                        </listitem>
-                    </itemizedlist>
-                </para>
-
-                <formalpara>
-                    <title>Примеры:</title>
+                    <title>См. также:</title>
 
                     <para>
-                        <example>
-                            <title>Использование подпроцедуры</title>
-                            <para><programlisting language="sql">
+                        <link linkend="psql-statements-open">OPEN</link>, <link
+                            linkend="psql-statements-fetch">FETCH</link>, <link
+                            linkend="psql-statements-close">CLOSE</link>, <link
+                            linkend="psql-statements-forselect">FOR SELECT</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="psql-statements-declare-procedure">
+            <info>
+                <title>DECLARE PROCEDURE</title>
+                <keywordset>
+                    <keyword>DECLARE PROCEDURE</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm>
+                <primary>DECLARE</primary>
+                <secondary>PROCEDURE</secondary>
+            </indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Объявление и реализация подпроцедуры.</para>
+            </formalpara>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>PSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para><programlisting><replaceable>&lt;subproc declaration&gt;</replaceable> ::=
+  DECLARE PROCEDURE <replaceable>subprocname</replaceable> [(<replaceable>&lt;input parameters&gt;</replaceable>)]
+  [RETURNS (<replaceable>&lt;output parameters&gt;</replaceable>)];
+
+<replaceable>&lt;subproc implimentation&gt;</replaceable> ::=
+  DECLARE PROCEDURE <replaceable>subprocname</replaceable> [(<replaceable>&lt;input parameters&gt;</replaceable>)]
+  [RETURNS (<replaceable>&lt;output parameters&gt;</replaceable>)]
+  AS
+    [<replaceable>&lt;declarations&gt;</replaceable>]
+  BEGIN
+    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]
+  END   
+
+<replaceable>&lt;input parameters&gt;</replaceable> ::= <replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...]   
+
+<replaceable>&lt;output parameters&gt;</replaceable> ::= <replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...]                 
+                </programlisting></para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора DECLARE PROCEDURE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>subprocname</replaceable></entry>
+                                <entry>
+                                    <para>Имя подпроцедуры.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>inparam</replaceable></entry>
+                                <entry>
+                                    <para>Описание входного параметра.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>outparam</replaceable></entry>
+                                <entry>
+                                    <para>Описание выходного параметра.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>declarations</replaceable></entry>
+                                <entry>
+                                    <para>Секция объявления локальных переменных, именованных
+                                        курсоров.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>PSQL_statements</replaceable></entry>
+                                <entry>
+                                    <para>PSQL операторы.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор DECLARE PROCEDURE объявляет или реализует подпроцедуру. На подпроцедуру
+                накладываются следующие ограничения: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>Подпрограмма не может быть вложена в другую подпрограмму. Они
+                            поддерживаются только в основном модуле (хранимой процедуре, хранимой
+                            функции, триггере и анонимном PSQL блоке);</para>
+                    </listitem>
+                    <listitem>
+                        <para>В настоящее время подпрограмма не имеет прямого доступа для
+                            использования переменных, курсоров из основного модуля. Это может быть
+                            разрешено в будущем.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Одна подпрограмма может вызывать и другую подпрограмму, в том числе рекурсивно. В
+                ряде случаев может потребоваться предварительное объявление подпрограммы. Общее
+                правило: одна подпрограмма может вызвать другую подпрограмму, если последняя
+                объявлена выше точки вызова. Все объявленные подпрограммы должны быть реализованы с
+                той же сигнатурой. Значения по умолчанию для параметров подпрограмм не могут быть
+                переопределены. Это означает, что они могут быть определены в реализации только тех
+                подпрограмм, которые не были объявлены ранее.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Использование подпроцедуры</title>
+                        <para><programlisting language="sql">
 SET TERM ^;
 --
 -- Подпроцедуры в EXECUTE BLOCK
@@ -2312,46 +2336,77 @@ BEGIN
   DO SUSPEND;
 END^
                 </programlisting></para>
-                        </example>
-                    </para>
-                </formalpara>
-                <formalpara>
-                    <title>См. также:</title>
+                    </example>
+                    <example>
+                        <title>Использование подпроцедур с предварительным объявлением</title>
+                        <para><programlisting language="sql">
+<![CDATA[
+EXECUTE BLOCK RETURNS (o INTEGER)
+AS
+  -- Предварительное объявление P1.
+  DECLARE PROCEDURE p1(i INTEGER = 1) RETURNS (o INTEGER);
 
-                    <para>
-                        <link linkend="psql-operators-declare-function">DECLARE FUNCTION</link>,
-                            <link linkend="ddl-procedure-create">CREATE PROCEDURE</link>.</para>
-                </formalpara>
-            </section>
-            <section xml:id="psql-operators-declare-function">
-                <info>
-                    <title>DECLARE FUNCTION</title>
-                    <keywordset>
-                        <keyword>DECLARE PROCEDURE</keyword>
-                    </keywordset>
-                </info>
+  -- Предварительное объявление P2.
+  DECLARE PROCEDURE p2(i INTEGER) RETURNS (o INTEGER);
 
-                <indexterm>
-                    <primary>DECLARE</primary>
-                    <secondary>FUNCTION</secondary>
-                </indexterm>
+  -- Реализация P1. Вы не должны переопределять значение параметра по умолчанию
+  DECLARE PROCEDURE p1(i INTEGER) RETURNS (o INTEGER)
+  AS
+  BEGIN
+    EXECUTE PROCEDURE p2(i) RETURNING_VALUES o;
+  END
 
-                <formalpara>
-                    <title>Назначение:</title>
+  DECLARE PROCEDURE p2(i INTEGER) RETURNS (o INTEGER)
+  AS
+  BEGIN
+    o = i;
+  END
+BEGIN
+  EXECUTE PROCEDURE p1 RETURNING_VALUES o;
+  SUSPEND;
+END!
+]]>
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
 
-                    <para>Объявление подфункции.</para>
-                </formalpara>
+                <para>
+                    <link linkend="psql-statements-declare-function">DECLARE FUNCTION</link>, <link
+                        linkend="ddl-procedure-create">CREATE PROCEDURE</link>.</para>
+            </formalpara>
+        </section>
+        <section xml:id="psql-statements-declare-function">
+            <info>
+                <title>DECLARE FUNCTION</title>
+                <keywordset>
+                    <keyword>DECLARE PROCEDURE</keyword>
+                </keywordset>
+            </info>
 
-                <formalpara>
-                    <title>Доступно в:</title>
+            <indexterm>
+                <primary>DECLARE</primary>
+                <secondary>FUNCTION</secondary>
+            </indexterm>
 
-                    <para>PSQL.</para>
-                </formalpara>
+            <formalpara>
+                <title>Назначение:</title>
 
-                <formalpara>
-                    <title>Синтаксис:</title>
+                <para>Объявление и реализация подфункции.</para>
+            </formalpara>
 
-                    <para><programlisting>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>PSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para><programlisting>
 DECLARE FUNCTION <replaceable>subfuncname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]
 RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>] [DETERMINISTIC]
 AS
@@ -2360,87 +2415,93 @@ BEGIN
   [<replaceable>&lt;PSQL_statements&gt;</replaceable>]
 END                        
                 </programlisting></para>
-                </formalpara>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора DECLARE FUNCTION</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>subfuncname</replaceable></entry>
+                                <entry>
+                                    <para>Имя подфункции.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>inparam</replaceable></entry>
+                                <entry>
+                                    <para>Описание входного параметра.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>type</replaceable></entry>
+                                <entry>
+                                    <para>Тип выходного результата.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>collation</replaceable></entry>
+                                <entry>
+                                    <para>Порядок сортировки.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>declarations</replaceable></entry>
+                                <entry>
+                                    <para>Секция объявления локальных переменных, именованных
+                                        курсоров.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>PSQL_statements</replaceable></entry>
+                                <entry>
+                                    <para>PSQL операторы.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор DECLARE FUNCTION объявляет подфункцию. На подфункцию накладываются
+                следующие ограничения: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>Подпрограмма не может быть вложена в другую подпрограмму. Они
+                            поддерживаются только в основном модуле (хранимой процедуре, хранимой
+                            функции, триггере и анонимном PSQL блоке);</para>
+                    </listitem>
+                    <listitem>
+                        <para>В настоящее время подпрограмма не имеет прямого доступа для
+                            использования переменных, курсоров из основного модуля. Это может быть
+                            разрешено в будущем.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Одна подпрограмма может вызывать и другую подпрограмму, в том числе рекурсивно. В
+                ряде случаев может потребоваться предварительное объявление подпрограммы. Общее
+                правило: одна подпрограмма может вызвать другую подпрограмму, если последняя
+                объявлена выше точки вызова. Все объявленные подпрограммы должны быть реализованы с
+                той же сигнатурой. Значения по умолчанию для параметров подпрограмм не могут быть
+                переопределены. Это означает, что они могут быть определены в реализации только тех
+                подпрограмм, которые не были объявлены ранее.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
 
                 <para>
-                    <table frame="all">
-                        <?dbfo keep-together='auto'?>
-                        <title>Параметры оператора DECLARE FUNCTION</title>
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                            <thead>
-                                <row>
-                                    <entry align="center">Параметр</entry>
-                                    <entry align="center">Описание</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry><replaceable>subfuncname</replaceable></entry>
-                                    <entry>
-                                        <para>Имя подфункции.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>inparam</replaceable></entry>
-                                    <entry>
-                                        <para>Описание входного параметра.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>type</replaceable></entry>
-                                    <entry>
-                                        <para>Тип выходного результата.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>collation</replaceable></entry>
-                                    <entry>
-                                        <para>Порядок сортировки.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>declarations</replaceable></entry>
-                                    <entry>
-                                        <para>Секция объявления локальных переменных, именованных
-                                            курсоров.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>PSQL_statements</replaceable></entry>
-                                    <entry>
-                                        <para>PSQL операторы.</para>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </para>
-
-                <para>Оператор DECLARE FUNCTION объявляет подфункцию. На подфункцию накладываются
-                    следующие ограничения: <itemizedlist spacing="compact">
-                        <listitem>
-                            <para>Подпрограмма не может быть вложена в другую подпрограмму. Они
-                                поддерживаются только в основном модуле (хранимой процедуре,
-                                хранимой функции, триггере и анонимном PSQL блоке);</para>
-                        </listitem>
-                        <listitem>
-                            <para>В настоящее время подпрограмма не имеет прямого доступа для
-                                использования переменных, курсоров и других подпрограмм из основного
-                                модуля. Кроме того, подпрограмма не может вызывать себя рекурсивно.
-                                Это может быть разрешено в будущем.</para>
-                        </listitem>
-                    </itemizedlist>
-                </para>
-
-                <formalpara>
-                    <title>Примеры:</title>
-
-                    <para>
-                        <example>
-                            <title>Использование подфункции</title>
-                            <para><programlisting language="sql">
+                    <example>
+                        <title>Использование подфункции</title>
+                        <para><programlisting language="sql">
 --
 -- Подфункция внутри хранимой функции
 --
@@ -2459,19 +2520,48 @@ BEGIN
   RETURN SUBFUNC(n1, n2);
 END ^
                 </programlisting></para>
-                        </example>
-                    </para>
-                </formalpara>
-                <formalpara>
-                    <title>См. также:</title>
+                    </example>
+                    <example>
+                        <title>Использование рекурсивной подфункции</title>
+                        <para><programlisting language="sql">
+<![CDATA[
+EXECUTE BLOCK RETURNS (i INTEGER, o INTEGER)
+AS
+  -- Рекусривная подпрограмма-функция без предварительного объявления.
+  DECLARE FUNCTION fibonacci(n INTEGER) RETURNS INTEGER
+  AS
+  BEGIN
+    IF (n = 0 OR n = 1) THEN
+      RETURN n;
+    ELSE
+      RETURN fibonacci(n - 1) + fibonacci(n - 2);
+  END
+BEGIN
+  i = 0;
 
-                    <para>
-                        <link linkend="psql-operators-declare-procedure">DECLARE PROCEDURE</link>,
-                            <link linkend="ddl-function-create">CREATE FUNCTION</link>.</para>
-                </formalpara>
-            </section>
+  WHILE (i < 10)
+  DO
+  BEGIN
+    o = fibonacci(i);
+    SUSPEND;
+    i = i + 1;
+  END
+END!
+]]>
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="psql-statements-declare-procedure">DECLARE PROCEDURE</link>,
+                        <link linkend="ddl-function-create">CREATE FUNCTION</link>.</para>
+            </formalpara>
         </section>
-        <section xml:id="psql-operators-beginend">
+
+        <section xml:id="psql-statements-beginend">
             <info>
                 <title>BEGIN ... END</title>
                 <keywordset>
@@ -2596,13 +2686,13 @@ SET TERM ;^
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-exit">EXIT</link>, <link
-                        linkend="psql-operators-leave">LEAVE</link>, <link linkend="psql-setterm"
+                    <link linkend="psql-statements-exit">EXIT</link>, <link
+                        linkend="psql-statements-leave">LEAVE</link>, <link linkend="psql-setterm"
                         >SET TERM</link>.</para>
             </formalpara>
         </section>
 
-        <section xml:id="psql-operators-if">
+        <section xml:id="psql-statements-if">
             <info>
                 <title>IF ... THEN ... ELSE</title>
                 <keywordset>
@@ -2728,11 +2818,11 @@ ELSE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-while">WHILE ... DO</link>, <link
+                    <link linkend="psql-statements-while">WHILE ... DO</link>, <link
                         linkend="common-expr-cond-case">CASE</link>.</para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-while">
+        <section xml:id="psql-statements-while">
             <info>
                 <title>WHILE ... DO</title>
                 <keywordset>
@@ -2837,13 +2927,13 @@ S
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-forselect">FOR SELECT</link>, <link
-                        linkend="psql-operators-forexec">FOR EXECUTE STATEMENT</link>, <link
-                        linkend="psql-operators-leave">LEAVE</link>, <link
-                        linkend="psql-operators-continue">CONTINUE</link>.</para>
+                    <link linkend="psql-statements-forselect">FOR SELECT</link>, <link
+                        linkend="psql-statements-forexec">FOR EXECUTE STATEMENT</link>, <link
+                        linkend="psql-statements-leave">LEAVE</link>, <link
+                        linkend="psql-statements-continue">CONTINUE</link>.</para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-leave">
+        <section xml:id="psql-statements-leave">
             <info>
                 <title>LEAVE</title>
                 <keywordset>
@@ -2983,11 +3073,11 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-exit">EXIT</link>, <link
-                        linkend="psql-operators-continue">CONTINUE</link>.</para>
+                    <link linkend="psql-statements-exit">EXIT</link>, <link
+                        linkend="psql-statements-continue">CONTINUE</link>.</para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-continue">
+        <section xml:id="psql-statements-continue">
             <info>
                 <title>CONTINUE</title>
                 <keywordset>
@@ -3089,10 +3179,10 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-leave">LEAVE</link>.</para>
+                    <link linkend="psql-statements-leave">LEAVE</link>.</para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-exit">
+        <section xml:id="psql-statements-exit">
             <info>
                 <title>EXIT</title>
                 <keywordset>
@@ -3157,11 +3247,11 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-leave">LEAVE</link>, <link
-                        linkend="psql-operators-suspend">SUSPEND</link>.</para>
+                    <link linkend="psql-statements-leave">LEAVE</link>, <link
+                        linkend="psql-statements-suspend">SUSPEND</link>.</para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-suspend">
+        <section xml:id="psql-statements-suspend">
             <info>
                 <title>SUSPEND</title>
                 <keywordset>
@@ -3247,11 +3337,11 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-exit">EXIT</link>.</para>
+                    <link linkend="psql-statements-exit">EXIT</link>.</para>
             </formalpara>
         </section>
 
-        <section xml:id="psql-operators-execstmt">
+        <section xml:id="psql-statements-execstmt">
             <info>
                 <title>EXECUTE STATEMENT</title>
                 <keywordset>
@@ -3436,13 +3526,13 @@ END
             <para>Оператор EXECUTE STATEMENT принимает строковый параметр и выполняет его, как будто
                 это оператор DSQL. Если оператор возвращает данные, то с помощью предложения INTO их
                 можно передать в локальные переменные.</para>
-            <section xml:id="psql-operators-execstmt-wparams">
+            <section xml:id="psql-statements-execstmt-wparams">
                 <title>Параметризованные операторы</title>
 
                 <para>В DSQL операторе можно использовать параметры. Параметры могут быть
                     именованными и позиционными (безымянные). Значение должно быть присвоено каждому
                     параметру.</para>
-                <section xml:id="psql-operators-execstmt-wparams01">
+                <section xml:id="psql-statements-execstmt-wparams01">
                     <title>Особенности использования параметризованных операторов</title>
                     <para><orderedlist spacing="compact">
                             <listitem>
@@ -3565,7 +3655,7 @@ BEGIN
                     </formalpara>
                 </section>
             </section>
-            <section xml:id="psql-operators-execstmt-wautonomous">
+            <section xml:id="psql-statements-execstmt-wautonomous">
                 <info>
                     <title>WITH {AUTONOMOUS | COMMON} TRANSACTION</title>
                     <keywordset>
@@ -3596,7 +3686,7 @@ BEGIN
                     Любые новые транзакции, запущенные в режиме &quot;COMMON&quot;, подтверждаются
                     или откатываются вместе с текущей транзакцией.</para>
             </section>
-            <section xml:id="psql-operators-execstmt-wcaller">
+            <section xml:id="psql-statements-execstmt-wcaller">
                 <info>
                     <title>WITH CALLER PRIVILEGES</title>
                     <keywordset>
@@ -3615,7 +3705,7 @@ BEGIN
                     непосредственно подпрограммой. WITH CALLER PRIVILEGES не имеет никакого эффекта,
                     если также присутствует предложение ON EXTERNAL.</para>
             </section>
-            <section xml:id="psql-operators-execstmt-onexternal">
+            <section xml:id="psql-statements-execstmt-onexternal">
                 <info>
                     <title>ON EXTERNAL [DATA SOURCE]</title>
                     <keywordset>
@@ -3637,7 +3727,7 @@ BEGIN
                         сервере</link>.</para>
                 <para>При выполнении оператора в отдельном соединении используется пул соединений и
                     пул транзакций.</para>
-                <section xml:id="psql-operators-execstmt-onext-connpool">
+                <section xml:id="psql-statements-execstmt-onext-connpool">
                     <title>Особенности пула подключений (Connection pooling)</title>
                     <para><orderedlist spacing="compact">
                             <listitem>
@@ -3663,7 +3753,7 @@ BEGIN
                         </orderedlist>
                     </para>
                 </section>
-                <section xml:id="psql-operators-execstmt-onext-tranpool">
+                <section xml:id="psql-statements-execstmt-onext-tranpool">
                     <title>Особенности пула транзакций (Transaction pooling)</title>
                     <para><orderedlist spacing="compact">
                             <listitem>
@@ -3680,7 +3770,7 @@ BEGIN
                         </orderedlist>
                     </para>
                 </section>
-                <section xml:id="psql-operators-execstmt-onext-errhandling">
+                <section xml:id="psql-statements-execstmt-onext-errhandling">
                     <title>Особенности обработки исключений</title>
                     <para>При использовании предложения ON EXTERNAL дополнительное соединение всегда
                         делается через так называемого внешнего провайдера, даже если это соединение
@@ -3695,7 +3785,7 @@ BEGIN
                             соединение с текущей базой данных.</para>
                     </note>
                 </section>
-                <section xml:id="psql-operators-execstmt-onext-morenotes">
+                <section xml:id="psql-statements-execstmt-onext-morenotes">
                     <title>Другие замечания</title>
                     <para>
                         <itemizedlist spacing="compact">
@@ -3710,7 +3800,7 @@ BEGIN
                     </para>
                 </section>
             </section>
-            <section xml:id="psql-operators-execstmt-asuser">
+            <section xml:id="psql-statements-execstmt-asuser">
                 <info>
                     <title>AS USER, PASSWORD и ROLE</title>
                     <keywordset>
@@ -3818,11 +3908,12 @@ BEGIN
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="psql-operators-forexec">FOR EXECUTE STATEMENT</link>. </para>
+                        <link linkend="psql-statements-forexec">FOR EXECUTE STATEMENT</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="psql-operators-forselect">
+        <section xml:id="psql-statements-forselect">
             <info>
                 <title>FOR SELECT</title>
                 <keywordset>
@@ -3918,7 +4009,7 @@ DO <replaceable>&lt;compound_statement&gt;</replaceable>
                 происходит выход из цикла. Цикл также может быть завершён до прочтения всех строк
                 при использовании оператора LEAVE.</para>
 
-            <section xml:id="psql-operators-forselect-cursor">
+            <section xml:id="psql-statements-forselect-cursor">
                 <title>Необъявленный курсор</title>
                 <para>Необязательное предложение AS CURSOR создаёт именованный курсор, на который
                     можно ссылаться (с использованием предложения WHERE CURRENT OF) внутри
@@ -4135,14 +4226,14 @@ END
 
                     <para>
                         <link linkend="dml-select">SELECT</link>, <link
-                            linkend="psql-operators-declare-cursor">DECLARE ... CURSOR</link>, <link
-                            linkend="psql-operators-open">OPEN</link>, <link
-                            linkend="psql-operators-close">CLOSE</link>, <link
-                            linkend="psql-operators-fetch">FETCH</link>.</para>
+                            linkend="psql-statements-declare-cursor">DECLARE ... CURSOR</link>,
+                            <link linkend="psql-statements-open">OPEN</link>, <link
+                            linkend="psql-statements-close">CLOSE</link>, <link
+                            linkend="psql-statements-fetch">FETCH</link>.</para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="psql-operators-forexec">
+        <section xml:id="psql-statements-forexec">
             <info>
                 <title>FOR EXECUTE STATEMENT</title>
                 <keywordset>
@@ -4242,10 +4333,10 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-execstmt">EXECUTE STATEMENT</link>. </para>
+                    <link linkend="psql-statements-execstmt">EXECUTE STATEMENT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-open">
+        <section xml:id="psql-statements-open">
             <info>
                 <title>OPEN</title>
                 <keywordset>
@@ -4305,7 +4396,7 @@ OPEN <replaceable>cursor_name</replaceable>;
             <para>Оператор OPEN открывает ранее объявленный курсор, выполняет объявленный в нем
                 оператор SELECT и получает записи из результирующего набора данных. Оператор OPEN
                 применим только к курсорам, объявленным в операторе <link
-                    linkend="psql-operators-declare-cursor">DECLARE ... CURSOR</link>.</para>
+                    linkend="psql-statements-declare-cursor">DECLARE ... CURSOR</link>.</para>
 
             <note>
                 <para>Если в операторе SELECT курсора имеются параметры, то они должны быть
@@ -4316,7 +4407,7 @@ OPEN <replaceable>cursor_name</replaceable>;
 
             <formalpara>
                 <title>Примеры:</title>
-                <para>См. примеры в операторе <link linkend="psql-operators-fetch"
+                <para>См. примеры в операторе <link linkend="psql-statements-fetch"
                     >FETCH</link>.</para>
             </formalpara>
 
@@ -4324,13 +4415,13 @@ OPEN <replaceable>cursor_name</replaceable>;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-fetch">FETCH</link>, <link
-                        linkend="psql-operators-close">CLOSE</link>, <link
-                        linkend="psql-operators-declare-cursor">DECLARE ... CURSOR</link>. </para>
+                    <link linkend="psql-statements-fetch">FETCH</link>, <link
+                        linkend="psql-statements-close">CLOSE</link>, <link
+                        linkend="psql-statements-declare-cursor">DECLARE ... CURSOR</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="psql-operators-fetch">
+        <section xml:id="psql-statements-fetch">
             <info>
                 <title>FETCH</title>
                 <keywordset>
@@ -4652,12 +4743,12 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-open">OPEN</link>, <link
-                        linkend="psql-operators-close">CLOSE</link>, <link
-                        linkend="psql-operators-declare-cursor">DECLARE ... CURSOR</link>. </para>
+                    <link linkend="psql-statements-open">OPEN</link>, <link
+                        linkend="psql-statements-close">CLOSE</link>, <link
+                        linkend="psql-statements-declare-cursor">DECLARE ... CURSOR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="psql-operators-close">
+        <section xml:id="psql-statements-close">
             <info>
                 <title>CLOSE</title>
                 <keywordset>
@@ -4718,11 +4809,11 @@ CLOSE <replaceable>cursor_name</replaceable>;
                 автоматически закрыты после выполнения кода триггера, хранимой процедуры, функции
                 или анонимного PSQL блока, в пределах кода которого он был открыт. Оператор CLOSE
                 применим только к курсорам, объявленным в операторе <link
-                    linkend="psql-operators-declare-cursor">DECLARE ... CURSOR</link>.</para>
+                    linkend="psql-statements-declare-cursor">DECLARE ... CURSOR</link>.</para>
 
             <formalpara>
                 <title>Примеры:</title>
-                <para>См. примеры в операторе <link linkend="psql-operators-fetch"
+                <para>См. примеры в операторе <link linkend="psql-statements-fetch"
                     >FETCH</link>.</para>
             </formalpara>
 
@@ -4730,13 +4821,13 @@ CLOSE <replaceable>cursor_name</replaceable>;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-operators-fetch">FETCH</link>, <link
-                        linkend="psql-operators-open">OPEN</link>, <link
-                        linkend="psql-operators-declare-cursor">DECLARE ... CURSOR</link>. </para>
+                    <link linkend="psql-statements-fetch">FETCH</link>, <link
+                        linkend="psql-statements-open">OPEN</link>, <link
+                        linkend="psql-statements-declare-cursor">DECLARE ... CURSOR</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="psql-operators-antonomous">
+        <section xml:id="psql-statements-antonomous">
             <info>
                 <title>IN AUTONOMOUS TRANSACTION</title>
                 <keywordset>
@@ -4850,7 +4941,7 @@ END
             </formalpara>
         </section>
 
-        <section xml:id="psql-operators-post">
+        <section xml:id="psql-statements-post">
             <info>
                 <title>POST_EVENT</title>
                 <keywordset>
@@ -4932,7 +5023,7 @@ SET TERM ;^
             </formalpara>
         </section>
 
-        <section xml:id="psql-operators-handleexceptions">
+        <section xml:id="psql-statements-handleexceptions">
             <info>
                 <title>Обработка ошибок</title>
             </info>
@@ -4983,7 +5074,7 @@ SET TERM ;^
                     ошибку. </para>
             </section>
 
-            <section xml:id="psql-operators-exception">
+            <section xml:id="psql-statements-exception">
                 <info>
                     <title>EXCEPTION</title>
                     <keywordset>
@@ -5132,7 +5223,7 @@ exception 1
                 </warning>
 
                 <para>Исключение может быть обработано в операторе <link
-                        linkend="psql-operators-when">WHEN ... DO</link>. Если пользовательское
+                        linkend="psql-statements-when">WHEN ... DO</link>. Если пользовательское
                     исключение не было обработано в триггере или в хранимой процедуре, то действия,
                     выполненные внутри этой хранимой процедуры (триггера) отменяются, а вызвавшая
                     программа получает текст, заданный при создании исключения или альтернативный
@@ -5232,11 +5323,11 @@ END^
 
                     <para>
                         <link linkend="ddl-exception-create">CREATE EXCEPTION</link>, <link
-                            linkend="psql-operators-when">WHEN ... DO</link>.</para>
+                            linkend="psql-statements-when">WHEN ... DO</link>.</para>
                 </formalpara>
             </section>
 
-            <section xml:id="psql-operators-when">
+            <section xml:id="psql-statements-when">
                 <info>
                     <title>WHEN ... DO</title>
                     <keywordset>
@@ -5372,7 +5463,7 @@ DO <replaceable>&lt;compound_statement&gt;</replaceable>
                             >CORE-4483</link>.</para>
                 </important>
 
-                <section xml:id="psql-operators-whendo-scope">
+                <section xml:id="psql-statements-whendo-scope">
                     <title>Область действия оператора WHEN ... DO</title>
 
                     <para>Оператор перехватывает ошибки и исключения в текущем блоке операторов. Он

@@ -1000,6 +1000,19 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                     используется инструмент, подобный универсальному GUI-клиенту, выбор привязки к
                     CHAR подходит в большинстве случаев.</para>
             </section>
+            <section xml:id="types-float-decfloat-literals">
+                <info>
+                    <title>Литералы констант DECFLOAT</title>
+                </info>
+                <para>Длина литералов типа DECFLOAT ограничена 1024 символами. Для более длинных
+                    значений вам придётся использовать научную нотацию. Например значение
+                            <code>0.0<replaceable>&lt;1020 zeroes&gt;</replaceable>11</code> не
+                    может быть записано как литерал, вместо него вы можете использовать аналогичную
+                    научную нотацию: <literal>1.1E-1022</literal>. Аналогично
+                            <code>10<replaceable>&lt;1022 zeroes&gt;</replaceable>0</code> может
+                    быть записано как <literal>1.0E1024</literal>.</para>
+
+            </section>
         </section>
     </section>
     <section xml:id="types-fixed">
@@ -1040,7 +1053,7 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
         <para>
             <table xml:id="table-store-fixed">
                 <?dbfo keep-together='auto'?>
-                <title>Способ физического хранения вещественных чисел</title>
+                <title>Способ физического хранения чисел с фиксированной точкой</title>
 
                 <tgroup cols="4">
                     <colspec colname="colScale" colwidth="2*" align="left"/>
