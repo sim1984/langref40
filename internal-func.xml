@@ -4307,7 +4307,9 @@ CHARACTER_LENGTH (<replaceable>str</replaceable>)
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-HASH (<replaceable>str</replaceable>)                         
+HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</replaceable>])        
+                            
+<replaceable>&lt;algorithm&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
                         </programlisting>
                     </para>
                 </formalpara>
@@ -4339,11 +4341,34 @@ HASH (<replaceable>str</replaceable>)
 
                 <formalpara>
                     <title>Тип возвращаемого результата:</title>
-                    <para>BIGINT.</para>
+                    <para>BIGINT или VARCHAR с кодировкой OCTETS.</para>
                 </formalpara>
 
                 <para>Функция HASH возвращает хэш-значение входной строки. Эта функция полностью
                     поддерживает текстовые BLOB любой длины и с любым набором символов. </para>
+
+                <para>Если предложение USING не указано, то функция возвращает BIGINT и вычисляет
+                    хэш по плохому алгоритму с большим количеством коллизий. Этот синтаксис
+                    поддерживается для обратной совместимости.</para>
+
+                <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. В этом
+                    случае функция возвращает результат с типом VARCHAR с кодировкой OCTETS.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции HASH</title>
+                            <para><programlisting language="sql">
+SELECT HASH(x) FROM MyTable;
+-- результат типа BIGINT
+
+SELECT HASH(x USING SHA256) FROM MyTable;
+-- результат типа VARCHAR с кодировкой OCTETS
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
             </section>
             <section xml:id="internalfunc-func-string-left">
                 <info>
