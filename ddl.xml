@@ -2985,8 +2985,8 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                     </informalexample>
                     <note>
                         <para>Это поведение может быть изменено в операторе INSERT если указана
-                            директива <database>OVERRIDING USER VALUE</database>. Подробнее см.
-                        </para>
+                            директива <code>OVERRIDING USER VALUE</code>. Подробнее см. <link
+                                linkend="dml-insert-overriding">Директива OVERRIDING</link>. </para>
                     </note>
                 </para>
                 <para>Если столбец идентификации задан как GENERATED ALWAYS, то его значение будет
@@ -3007,8 +3007,8 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                 </para>
                 <note>
                     <para>Это поведение может быть изменено в операторе INSERT если указана
-                        директива <database>OVERRIDING SYSTEM VALUE</database>. Подробнее см.
-                    </para>
+                        директива <code>OVERRIDING SYSTEM VALUE</code>. Подробнее см. <link
+                            linkend="dml-insert-overriding">Директива OVERRIDING</link>. </para>
                 </note>
                 <para>Необязательное предложение <database>START WITH</database> позволяет указать
                     начальное значение отличное от нуля. Предложение INCREMENT [BY] устанавливает
@@ -3085,35 +3085,6 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                         вставки/модификации записей, но повысит производительность выборки
                         данных.</para>
                 </tip>
-                <section xml:id="ddl-table-create-column-computed-sql_security">
-                    <title>Привилегии выполнения</title>
-                    <indexterm>
-                        <primary>CREATE TABLE</primary>
-                        <secondary>COMPUTED BY</secondary>
-                        <tertiary>SQL SECURITY</tertiary>
-                    </indexterm>
-                    <indexterm>
-                        <primary>CREATE TABLE</primary>
-                        <secondary>GENERATED ALWAYS AS</secondary>
-                        <tertiary>SQL SECURITY</tertiary>
-                    </indexterm>
-                    <para>Необязательное предложение SQL SECURITY в спецификации таблицы позволяет
-                        задать с какими привилегиями вычисляются вычисляемые столбцы. Если выбрана
-                        опция INVOKER, то вычисляемые столбцы вычисляются с привилегиями вызывающего
-                        пользователя. Если выбрана опция DEFINER, то вычисляемые столбцы вычисляются
-                        с привилегиями определяющего пользователя (владельца). По умолчанию
-                        вычисляемые столбцы вычисляются с привилегиями вызывающего пользователя.
-                        Кроме триггеры наследуют привилегии выполнения таблицы, если они не
-                        переопределены у самих триггеров.</para>
-                    <tip>
-                        <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов
-                            метаданных можно изменить с помощью оператора
-                            <programlisting>
-ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
-                </programlisting>
-                        </para>
-                    </tip>
-                </section>
             </section>
             <section xml:id="ddl-table-create-column-array">
                 <title>Столбцы типа массив</title>
@@ -3514,6 +3485,35 @@ CREATE TABLE PLACES (
                 <!-- check constraint -->
             </section>
             <!-- constraints -->
+            <section xml:id="ddl-table-create-sql_security">
+                <title>Привилегии выполнения</title>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>COMPUTED BY</secondary>
+                    <tertiary>SQL SECURITY</tertiary>
+                </indexterm>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>GENERATED ALWAYS AS</secondary>
+                    <tertiary>SQL SECURITY</tertiary>
+                </indexterm>
+                <para>Необязательное предложение SQL SECURITY в спецификации таблицы позволяет
+                    задать с какими привилегиями вычисляются вычисляемые столбцы. Если выбрана опция
+                    INVOKER, то вычисляемые столбцы вычисляются с привилегиями вызывающего
+                    пользователя. Если выбрана опция DEFINER, то вычисляемые столбцы вычисляются с
+                    привилегиями определяющего пользователя (владельца). По умолчанию вычисляемые
+                    столбцы вычисляются с привилегиями вызывающего пользователя. Кроме триггеры
+                    наследуют привилегии выполнения таблицы, если они не переопределены у самих
+                    триггеров.</para>
+                <tip>
+                    <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов
+                        метаданных можно изменить с помощью оператора
+                        <programlisting>
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+                </programlisting>
+                    </para>
+                </tip>
+            </section>
             <section xml:id="ddl-table-create-who">
                 <title>Кто может создать таблицу?</title>
 
@@ -3805,7 +3805,7 @@ WHERE t.rdb$field_name = 'RDB$RELATION_TYPE'
 CREATE GLOBAL TEMPORARY TABLE MYCONNGTT (
     ID INTEGER NOT NULL PRIMARY KEY,
     TXT VARCHAR(32),
-    TS TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+    TS TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
 ON COMMIT PRESERVE ROWS;                   
                 </programlisting></para>
                     </example>
@@ -4460,14 +4460,58 @@ ALTER TABLE <replaceable>tablename</replaceable>
                         </itemizedlist>
                     </para>
                 </formalpara>
-                <note>
-                    <para>При добавлении нового столбца, не допускающего значения NULL, в таблицу с
-                        данными необходимо также установить значение по умолчанию с помощью
-                        предложения <database>DEFAULT</database>. Дело в том, что в этом случае
-                        также происходит проверка данных на допустимость. А поскольку при добавлении
-                        нового столбца, он для всех строк таблицы содержит значение NULL, будет
-                        сгенерировано исключение. </para>
-                </note>
+                <example>
+                    <title>Добавление столбца в таблицу</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE COUNTRY
+ADD CAPITAL VARCHAR(25);
+                </programlisting>
+                    </para>
+                </example>
+
+                <example>
+                    <title>Добавление столбца с ограничением NOT NULL</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE OBJECTS
+ADD QUANTITY INT DEFAULT 1 NOT NULL;
+                </programlisting>
+                    </para>
+                </example>
+                <important>
+                    <para>Обратите внимание на предложение DEFAULT, которое обязательно при
+                        добавлении ограничения NOT NULL, если в таблице есть данные. Дело в том, что
+                        в этом случае также происходит проверка данных на допустимость. А поскольку
+                        при добавлении нового столбца, он для всех строк таблицы содержит значение
+                        NULL, будет сгенерировано исключение. </para>
+                </important>
+                <example>
+                    <title>Добавление столбца с ограничением уникальности и удаление другого
+                        столбца</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE COUNTRY
+  ADD CAPITAL VARCHAR(25) UNIQUE,
+  DROP CURRENCY;
+                </programlisting>
+                    </para>
+                </example>
+                <para>Для добавления ограничений уровня таблицы необходимо использовать предложение
+                    ADD [CONSTRAINT].</para>
+                <example>
+                    <title>Добавление проверочного ограничения и внешнего ключа</title>
+                    <para>
+                        <programlisting language="sql">
+<![CDATA[                    
+ALTER TABLE JOB
+ADD CONSTRAINT CHK_SALARY CHECK (MIN_SALARY < MAX_SALARY),
+ADD FOREIGN KEY (JOB_COUNTRY) 
+REFERENCES COUNTRY (COUNTRY);
+]]>   
+                </programlisting>
+                    </para>
+                </example>
                 <warning>
                     <para>Будьте осторожны, при добавлении нового ограничения
                             <database>CHECK</database> не осуществляется проверка соответствия ему
@@ -4586,6 +4630,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                         столбца или проверочное ограничение таблицы CHECK. Имя столбца также нельзя
                         изменить, если этот столбец таблицы используется в каком-либо триггере, в
                         хранимой процедуре или представлении. </para>
+                    <example>
+                        <title>Переименование столбца таблицы</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN MODELNAME TO NAME;
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-type">
                     <title>Изменение типа столбца</title>
@@ -4602,6 +4655,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                         размерность нельзя.</para>
                     <para>Нельзя изменить тип данных у столбца, который принимает участие в связке
                         внешний ключ / первичный (уникальный) ключ.</para>
+                    <example>
+                        <title>Изменение типа столбца таблицы</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN ITEMID TYPE BIGINT;
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-position">
                     <title>Изменение позиции столбца</title>
@@ -4625,6 +4687,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                             </listitem>
                         </itemizedlist>
                     </para>
+                    <example>
+                        <title>Изменение позиции столбца таблицы</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN ITEMID POSITION 5;
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-default">
                     <title>Установка и удаление значения по умолчанию</title>
@@ -4649,6 +4720,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                             </listitem>
                         </itemizedlist>
                     </para>
+                    <example>
+                        <title>Удаление значения по умолчанию для столбца</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN MODEL DROP DEFAULT;
+                </programlisting>
+                        </para>
+                    </example>
                     <indexterm>
                         <primary>ALTER TABLE</primary>
                         <secondary>ALTER [COLUMN]</secondary>
@@ -4658,6 +4738,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                         умолчанию для столбца таблицы. Если столбец уже имел значение по умолчанию,
                         то оно будет заменено новым. Значение по умолчанию для столбца всегда
                         перекрывает доменное значение по умолчанию.</para>
+                    <example>
+                        <title>Установка значения по умолчанию для столбца</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN MODEL SET DEFAULT 1;
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-nullable">
                     <title>Установка и удаление ограничения NOT NULL</title>
@@ -4677,6 +4766,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                             допустимости значения NULL, не распространяется на столбец таблицы.
                         </para>
                     </note>
+                    <example>
+                        <title>Добавление ограничения NOT NULL</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN PROPID SET NOT NULL;
+                </programlisting>
+                        </para>
+                    </example>
                     <indexterm>
                         <primary>ALTER TABLE</primary>
                         <secondary>ALTER [COLUMN]</secondary>
@@ -4685,11 +4783,21 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     <para>Предложение <database>DROP NOT NULL</database> удаляет ограничение NOT
                         NULL для столбца таблицы. Если столбец основан на домене с ограничением NOT
                         NULL, то ограничение домена перекроет это удаление.</para>
+                    <example>
+                        <title>Удаление ограничения NOT NULL</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN ITEMID DROP NOT NULL;
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-identity">
                     <title>Изменение столбцов идентификации</title>
                     <para>Для столбцов идентификации позволено изменять способ генерации, начальное
                         значение и значение приращения. </para>
+
                     <indexterm>
                         <primary>ALTER TABLE</primary>
                         <secondary>ALTER [COLUMN]</secondary>
@@ -4711,6 +4819,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                         SYSTEM VALUE</link>.</para>
                             </listitem>
                         </itemizedlist></para>
+                    <example>
+                        <title>Изменение способа генерации столбца идентификации</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID SET GENERATED ALWAYS;
+                </programlisting>
+                        </para>
+                    </example>
 
                     <indexterm>
                         <primary>ALTER TABLE</primary>
@@ -4721,6 +4838,16 @@ ALTER TABLE <replaceable>tablename</replaceable>
                         происходит сброс значения генератора в ноль. Необязательное предложение WITH
                         позволяет указать для нового значения внутреннего генератора отличное от
                         нуля значение. </para>
+                    <example>
+                        <title>Изменение текущего значения генератора для столбца
+                            идентификации</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID RESTART WITH 100;
+                </programlisting>
+                        </para>
+                    </example>
 
                     <indexterm>
                         <primary>ALTER TABLE</primary>
@@ -4729,6 +4856,23 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     </indexterm>
                     <para>Предложение SET INCREMENT [BY] позволяет изменить значение приращения
                         столбца идентификации. Значение приращения должно быть отлично от 0.</para>
+                    <example>
+                        <title>Изменение приращения столбца идентификации</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID SET INCREMENT BY 2;
+                </programlisting>
+                        </para>
+                    </example>
+                    <para>В одном операторе можно изменить сразу несколько свойств столбца
+                        идентификации, например:
+                        <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID SET GENERATED ALWAYS RESTART SET INCREMENT BY 2;
+                </programlisting>
+                    </para>
+
 
                     <indexterm>
                         <primary>ALTER TABLE</primary>
@@ -4737,6 +4881,15 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     </indexterm>
                     <para>Предложение DROP IDENTITY удаляет связанный со столбцом идентификации
                         системную последовательность и преобразует его в обычный столбец.</para>
+                    <example>
+                        <title>Превращение столбца идентификации в обычный столбец</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID DROP INDENTITY;
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-computed">
                     <title>Изменение вычисляемых столбцов</title>
@@ -4744,6 +4897,18 @@ ALTER TABLE <replaceable>tablename</replaceable>
                             <database>COMPUTED BY</database>) позволяется изменить тип и выражение
                         вычисляемого столбца. Невозможно изменить обычный столбец на вычисляемый и
                         наоборот. </para>
+                    <example>
+                        <title>Изменение вычисляемых столбцов</title>
+                        <para>
+                            <programlisting language="sql">
+ALTER TABLE SALARY_HISTORY
+ALTER NEW_SALARY GENERATED ALWAYS 
+AS (OLD_SALARY + OLD_SALARY * PERCENT_CHANGE / 100),
+ALTER SALARY_CHANGE COMPUTED 
+BY (OLD_SALARY * PERCENT_CHANGE / 100);
+                </programlisting>
+                        </para>
+                    </example>
                 </section>
                 <section xml:id="ddl-table-alter-alter-column-cannot">
                     <title>Не изменяемые атрибуты</title>
@@ -4765,6 +4930,14 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     столбцы вычисляются с привилегиями вызывающего пользователя. Кроме того триггеры
                     наследуют привилегии выполнения у таблицы, если они не переопределены у самих
                     триггеров.</para>
+                <informalexample>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE COUNTRY
+ALTER SQL SECURITY DEFINER;
+                </programlisting>
+                    </para>
+                </informalexample>
             </section>
             <section xml:id="ddl-table-alter-who">
                 <title>Кто может изменить таблицу?</title>
@@ -4785,135 +4958,6 @@ ALTER TABLE <replaceable>tablename</replaceable>
                     </itemizedlist>
                 </para>
 
-            </section>
-            <section xml:id="ddl-table-alter-examples">
-                <title>Примеры</title>
-                <example>
-                    <title>Добавление столбца в таблицу</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE COUNTRY
-ADD CAPITAL VARCHAR(25);
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Добавление столбца с ограничением уникальности и удаление другого
-                        столбца</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE COUNTRY
-  ADD CAPITAL VARCHAR(25) UNIQUE,
-  DROP CURRENCY;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Изменение привилегий с которыми будут вычисляться вычисляемые столбцы и
-                        выполняться триггеры, если в них не переопределены привилегии выполнения </title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE COUNTRY
-ALTER SQL SECURITY DEFINER;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Добавление столбца с ограничением NOT NULL</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE OBJECTS
-ADD QUANTITY INT DEFAULT 1 NOT NULL;
-                </programlisting>
-                    </para>
-                </example>
-                <note>
-                    <para>Обратите внимание на предложение DEFAULT, которое обязательно при
-                        добавлении ограничения NOT NULL, если в таблице есть данные.</para>
-                </note>
-                <example>
-                    <title>Добавление проверочного ограничения и внешнего ключа</title>
-                    <para>
-                        <programlisting language="sql">
-<![CDATA[                    
-ALTER TABLE JOB
-ADD CONSTRAINT CHK_SALARY CHECK (MIN_SALARY < MAX_SALARY),
-ADD FOREIGN KEY (JOB_COUNTRY) 
-REFERENCES COUNTRY (COUNTRY);
-]]>   
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Модификация сразу нескольких столбцов таблицы</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE STOCK
-ALTER COLUMN MODEL SET DEFAULT 1,
-ALTER COLUMN ITEMID TYPE BIGINT,
-ALTER COLUMN ITEMID DROP NOT NULL,
-ALTER COLUMN PROPID SET NOT NULL,
-ALTER COLUMN MODELNAME TO NAME;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Изменение способа генрации столбца идентификации</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE objects
-ALTER ID SET GENERATED ALWAYS;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Изменение текущего значения столбца идентификации</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE objects
-ALTER ID RESTART WITH 100;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Изменение приращения столбца идентификации</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE objects
-ALTER ID SET INCREMENT BY 2;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Изменение нескольких свойств столбца идентификации</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE objects
-ALTER ID SET GENERATED ALWAYS RESTART SET INCREMENT BY 2;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Превращение столбца идентификации в обычный столбец</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE objects
-ALTER ID DROP INDENTITY;
-                </programlisting>
-                    </para>
-                </example>
-                <example>
-                    <title>Изменение вычисляемых столбцов</title>
-                    <para>
-                        <programlisting language="sql">
-ALTER TABLE SALARY_HISTORY
-ALTER NEW_SALARY GENERATED ALWAYS 
-AS (OLD_SALARY + OLD_SALARY * PERCENT_CHANGE / 100),
-ALTER SALARY_CHANGE COMPUTED 
-BY (OLD_SALARY * PERCENT_CHANGE / 100);
-                </programlisting>
-                    </para>
-                </example>
                 <formalpara>
                     <title>См. также:</title>
 
@@ -4982,6 +5026,13 @@ DROP TABLE <replaceable>tablename</replaceable>;
                 будут также удалены все триггеры на её события и индексы, построенные для её
                 полей.</para>
 
+            <example>
+                <title>Удаление таблицы</title>
+                <para><programlisting language="sql">
+DROP TABLE COUNTRY;
+                </programlisting></para>
+            </example>
+
             <section xml:id="ddl-table-drop-who">
                 <title>Кто может удалить таблицу?</title>
 
@@ -5001,16 +5052,6 @@ DROP TABLE <replaceable>tablename</replaceable>;
                     </itemizedlist>
                 </para>
 
-            </section>
-
-            <section xml:id="ddl-table-drop-examples">
-                <title>Примеры</title>
-                <example>
-                    <title>Удаление таблицы</title>
-                    <para><programlisting language="sql">
-DROP TABLE COUNTRY;
-                </programlisting></para>
-                </example>
                 <formalpara>
                     <title>См. также:</title>
 

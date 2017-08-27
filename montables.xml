@@ -273,6 +273,16 @@
                                 тайм-аута, установленное на уровне соединения, в миллисекундах. Если
                                 тайм-аут не установлен — 0.</entry>
                         </row>
+                        <row>
+                            <entry>MON$CONNECTION_COMPRESSED</entry>
+                            <entry>BOOLEAN</entry>
+                            <entry>Использует ли соединение сжатие трафика.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$CONNECTION_ENCRYPTED</entry>
+                            <entry>BOOLEAN</entry>
+                            <entry>Использует ли соединение шифрование трафика.</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>

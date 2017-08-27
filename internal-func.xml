@@ -4347,9 +4347,14 @@ HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</repl
                 <para>Функция HASH возвращает хэш-значение входной строки. Эта функция полностью
                     поддерживает текстовые BLOB любой длины и с любым набором символов. </para>
 
-                <para>Если предложение USING не указано, то функция возвращает BIGINT и вычисляет
-                    хэш по плохому алгоритму с большим количеством коллизий. Этот синтаксис
-                    поддерживается для обратной совместимости.</para>
+                <para>Если предложение USING не указано, то функция возвращает BIGINT. В этом случае
+                    используется 64-битный вариант некриптографической хэш-функции PJW (также
+                    известной как ELF64) <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                        xlink:href="https://en.wikipedia.org/wiki/PJW_hash_function"
+                        >https://en.wikipedia.org/wiki/PJW_hash_function</link>. Эта функция очень
+                    быстра и может использоваться для общих целей (хеш-таблицы и т. д.), но имеет
+                    большое количество коллизий. Для более надёжного хэширования рекомендуется
+                    использовать другие алгоритмы указывая их с помощью предложения USING.</para>
 
                 <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. В этом
                     случае функция возвращает результат с типом VARCHAR с кодировкой OCTETS.</para>
@@ -10804,44 +10809,55 @@ ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
                 <secondary>RANGE</secondary>
             </indexterm>
             <para>Набор строк внутри секции которым оперирует оконная функция называется <emphasis
-                    role="italic">рамкой окна</emphasis> (кадры окна). Если предложение ORDER BY
-                отсутствует, то для агрегатных функций рамка окна состоит из всех строк в разбиении.
-                Если задано предложение ORDER BY, то по умолчанию рамка окна состоит из всех строк,
-                от начала разбиения до текущей строки, плюс любые следующие строки, которые равны
-                текущей строке в соответствии с предложением ORDER BY, т.е. RANGE BETWEEN UNBOUNDED
-                PRECEDING AND CURRENT ROW.</para>
-            <para>Рамку окна можно изменить используя предложение ROWS или RANGE, которые
-                ограничивают набор строк в пределах секции, указывая начальную и конечную точки.
-                Предложение ROWS ограничивает строки внутри секции путем указания фиксированного
+                    role="italic">рамкой окна</emphasis> (кадры окна). Рамка окна состоит из трёх
+                частей: единица (unit), начальная граница и конечная граница. В качестве единицы
+                может быть использовано ключевые слова RANGE или ROWS, которые указывают каким
+                образом определены границы окна. Границы окна определяются следующими
+                    выражениями:<itemizedlist spacing="compact">
+                    <listitem>
+                        <para><code><replaceable>&lt;expr&gt;</replaceable> PRECEDING</code></para>
+                    </listitem>
+                    <listitem>
+                        <para><code><replaceable>&lt;expr&gt;</replaceable> FOLLOWING</code></para>
+                    </listitem>
+                    <listitem>
+                        <para><code>CURRENT ROW</code></para>
+                    </listitem>
+                </itemizedlist></para>
+            <para>Предложения ROWS и RANGE требуют, чтобы было указано предложение ORDER BY. Если
+                предложение ORDER BY отсутствует, то для агрегатных функций рамка окна состоит из
+                всех строк в разбиении. Если задано предложение ORDER BY, то по умолчанию рамка окна
+                состоит из всех строк, от начала разбиения до текущей строки, плюс любые следующие
+                строки, которые равны текущей строке в соответствии с предложением ORDER BY, т.е.
+                    <code>RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code>. </para>
+            <para>Предложение ROWS ограничивает строки внутри секции путем указания фиксированного
                 числа строк, предшествующих или следующих после текущей строки. В качестве
                 альтернативы предложение RANGE логически ограничивает строки внутри секции путем
                 указания диапазона значений в отношении к значению текущей строки. Предшествующие и
                 последующие строки определяются на основании порядка, заданного в предложении ORDER
                 BY. </para>
-            <note>
-                <para>Предложения ROWS и RANGE требуют, чтобы было указано предложение ORDER BY.
-                </para>
-            </note>
             <para>Если рамка окна задаётся с помощью предложения RANGE, то предложение ORDER BY
                 может содержать только одно выражение и выражение должно быть числового типа, DATE,
-                TIME или TIMESTAMP. Для границ <replaceable>&lt;expr&gt;</replaceable> PRECEDING и
-                    <replaceable>&lt;expr&gt;</replaceable> FOLLOWING выражения
-                    <replaceable>&lt;expr&gt;</replaceable> добавляются и вычитаются к выражению
-                указанному в ORDER BY, таким образом получаются границы значений для рамки. Затем
-                все строки (внутри секции) между границам считаются частью результирующей рамки
-                окна.</para>
+                TIME или TIMESTAMP. Для границ <code><replaceable>&lt;expr&gt;</replaceable>
+                    PRECEDING</code> и <code><replaceable>&lt;expr&gt;</replaceable>
+                    FOLLOWING</code> выражения <code><replaceable>&lt;expr&gt;</replaceable></code>
+                добавляются и вычитаются к выражению указанному в ORDER BY, таким образом получаются
+                границы значений для рамки. Затем все строки (внутри секции) между границам
+                считаются частью результирующей рамки окна.</para>
             <para>Если рамка окна задаётся с помощью предложения ROWS, то на предложение ORDER BY не
                 накладывается ограничений на количество и типы выражений. В этом случае фраза
                     <replaceable>&lt;expr&gt;</replaceable> PRECEDING указывает количество строк
                 предшествующее текущей строке, соответственно фраза
                     <replaceable>&lt;expr&gt;</replaceable> FOLLOWING указывает количество строк
                 после текущей строки.</para>
-            <para>Фраза UNBOUNDED PRECEDING указывает, что окно начинается с первой строки секции.
-                UNBOUNDED PRECEDING может быть указано только как начальная точка окна. </para>
-            <para>Фраза UNBOUNDED FOLLOWING указывает, что окно заканчивается последней строкой
-                секции. UNBOUNDED FOLLOWING может быть указано только как конечная точка окна. </para>
-            <para>UNBOUNDED PRECEDING и UNBOUNDED FOLLOWING работают одинаково для предложений ROWS
-                и RANGE.</para>
+            <para>Фраза <code>UNBOUNDED PRECEDING</code> указывает, что окно начинается с первой
+                строки секции. <code>UNBOUNDED PRECEDING</code> может быть указано только как
+                начальная точка окна. </para>
+            <para>Фраза <code>UNBOUNDED FOLLOWING</code> указывает, что окно заканчивается последней
+                строкой секции. <code>UNBOUNDED FOLLOWING</code> может быть указано только как
+                конечная точка окна. </para>
+            <para><code>UNBOUNDED PRECEDING</code> и <code>UNBOUNDED FOLLOWING</code> работают
+                одинаково для предложений ROWS и RANGE.</para>
             <para>Фраза CURRENT ROW указывает, что окно начинается или заканчивается на текущей
                 строке при использовании совместно с предложением ROWS или что окно заканчивается на
                 текущем значении при использовании с предложением RANGE. CURRENT ROW может быть
@@ -10851,13 +10867,14 @@ ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
                 граница не может быть меньше нижней границы.</para>
             <note>
                 <para>Если указана только начальная точка окна, то конечной точкой окна считается
-                    CURRENT ROW. Например, если указано ROWS 1 PRECEDING, то это аналогично указанию
-                    ROWS BETWEEN 1 PRECEDING AND CURRENT ROW. </para>
+                    CURRENT ROW. Например, если указано <code>ROWS 1 PRECEDING</code>, то это
+                    аналогично указанию <code>ROWS BETWEEN 1 PRECEDING AND CURRENT ROW</code>.
+                </para>
             </note>
             <para>Некоторые оконные функции игнорируют выражение рамки. Функции ROW_NUMBER, LAG и
-                LEAD всегда работают как ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW. В то
-                время как DENSE_RANK, RANK, PERCENT_RANK и CUME_DIST работают как RANGE BETWEEN
-                UNBOUNDED PRECEDING AND CURRENT ROW.</para>
+                LEAD всегда работают как <code>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT
+                    ROW</code>. В то время как DENSE_RANK, RANK, PERCENT_RANK и CUME_DIST работают
+                как <code>RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code>.</para>
             <para>Функции FIRST_VALUE, LAST_VALUE и NTH_VALUE работают на рамке, но RANGE работает
                 идентично ROWS.</para>
             <para>Таким образом, предложения ROWS и RANGE позволяют довольно гибко настроить размер
