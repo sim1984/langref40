@@ -6344,6 +6344,203 @@ FROM RDB$DATABASE
                             временем</link>. </para>
                 </formalpara>
             </section>
+            <section xml:id="internalfunc-func-datetime-firstday">
+                <info>
+                    <title>FIRST_DAY</title>
+                    <keywordset>
+                        <keyword>FIRST_DAY</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>FIRST_DAY</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL, ESQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+FIRST_DAY( OF <replaceable>&lt;part&gt;</replaceable> FROM <replaceable>&lt;date_or_timestamp&gt;</replaceable> )   
+                            
+<replaceable>&lt;part&gt;</replaceable> ::= { YEAR | MONTH | WEEK }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции FIRST_DAY</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>part</replaceable></entry>
+                                    <entry>
+                                        <para>Составляющая даты/времени.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>date_or_timestamp</replaceable></entry>
+                                    <entry>
+                                        <para>Выражение типа DATE или TIMESTAMP.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>DATE или TIMESTAMP.</para>
+                </formalpara>
+
+                <para>Возвращает первый день года, месяца или недели для заданной даты.</para>
+
+                <note>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>Первым днём недели считается воскресенье, как это возвращает
+                                    функция EXTRACT с частью WEEKDAY.</para>
+                            </listitem>
+                            <listitem>
+                                <para>Когда в качестве аргумента функции передаётся выражение типа
+                                    TIMESTAMP, то возвращаемое значение сохраняет временную
+                                    часть.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </note>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции FIRST_DAY</title>
+                            <para><programlisting language="sql">
+SELECT FIRST_DAY(OF MONTH FROM current_date) FROM rdb$database;
+SELECT FIRST_DAY(OF YEAR FROM current_timestamp) FROM rdb$database;
+SELECT FIRST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-datetime-lastday">LAST_DAY</link>. </para>
+                </formalpara>
+            </section>
+            <section xml:id="internalfunc-func-datetime-lastday">
+                <info>
+                    <title>LAST_DAY</title>
+                    <keywordset>
+                        <keyword>LAST_DAY</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>LAST_DAY</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL, ESQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+LAST_DAY( OF <replaceable>&lt;part&gt;</replaceable> FROM <replaceable>&lt;date_or_timestamp&gt;</replaceable> )   
+                            
+<replaceable>&lt;part&gt;</replaceable> ::= { YEAR | MONTH | WEEK }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции LAST_DAY</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>part</replaceable></entry>
+                                    <entry>
+                                        <para>Составляющая даты/времени.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>date_or_timestamp</replaceable></entry>
+                                    <entry>
+                                        <para>Выражение типа DATE или TIMESTAMP.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>DATE или TIMESTAMP.</para>
+                </formalpara>
+
+                <para>Возвращает последний день года, месяца или недели для заданной даты.</para>
+
+                <note>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>Последним днём недели считается суббота, как это возвращает
+                                    функция EXTRACT с частью WEEKDAY.</para>
+                            </listitem>
+                            <listitem>
+                                <para>Когда в качестве аргумента функции передаётся выражение типа
+                                    TIMESTAMP, то возвращаемое значение сохраняет временную
+                                    часть.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </note>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции LAST_DAY</title>
+                            <para><programlisting language="sql">
+SELECT LAST_DAY(OF MONTH FROM current_date) FROM rdb$database;
+SELECT LAST_DAY(OF YEAR FROM current_timestamp) FROM rdb$database;
+SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-datetime-firstday">FIRST_DAY</link>.
+                    </para>
+                </formalpara>
+            </section>
         </section>
 
         <section xml:id="internalfunc-func-decfloat">
@@ -6732,13 +6929,13 @@ CAST(<replaceable>value</replaceable> | NULL AS <replaceable>&lt;type&gt;</repla
                                 <row>
                                     <entry><replaceable>precision</replaceable></entry>
                                     <entry>
-                                        <para>Точность. От 1 до 18. </para>
+                                        <para>Точность. От 1 до 34. </para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry><replaceable>scale</replaceable></entry>
                                     <entry>
-                                        <para>Масштаб. От 0 до 18, должно быть меньше или равно
+                                        <para>Масштаб. От 0 до 34, должно быть меньше или равно
                                                 <replaceable>precision</replaceable>. </para>
                                     </entry>
                                 </row>

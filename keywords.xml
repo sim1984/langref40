@@ -396,6 +396,7 @@
                 <member>FILE</member>
                 <member>FILTER</member>
                 <member>FIRST</member>
+                <member>FIRST_DAY</member>
                 <member>FIRST_VALUE</member>
                 <member>FIRSTNAME</member>
                 <member>FLOAT</member>
@@ -443,6 +444,7 @@
                 <member>KEY</member>
                 <member>LAG</member>
                 <member>LAST</member>
+                <member>LAST_DAY</member>
                 <member>LAST_VALUE</member>
                 <member>LASTNAME</member>
                 <member>LEAD</member>

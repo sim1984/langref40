@@ -1637,13 +1637,13 @@ CREATE DOMAIN <replaceable>name</replaceable> [AS] <replaceable>&lt;datatype&gt;
                             <row>
                                 <entry><replaceable>precision</replaceable></entry>
                                 <entry>
-                                    <para>Точность. От 1 до 18. </para>
+                                    <para>Точность. От 1 до 34. </para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>scale</replaceable></entry>
                                 <entry>
-                                    <para>Масштаб. От 0 до 18, должно быть меньше или равно
+                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
                                             <replaceable>precision</replaceable>.</para>
                                 </entry>
                             </row>
@@ -2056,13 +2056,13 @@ ALTER DOMAIN <replaceable>name</replaceable>
                             <row>
                                 <entry><replaceable>precision</replaceable></entry>
                                 <entry>
-                                    <para>Точность. От 1 до 18. </para>
+                                    <para>Точность. От 1 до 34. </para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>scale</replaceable></entry>
                                 <entry>
-                                    <para>Масштаб. От 0 до 18, должно быть меньше или равно
+                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
                                             <replaceable>precision</replaceable>.</para>
                                 </entry>
                             </row>
@@ -2751,7 +2751,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                                     <replaceable>precision</replaceable>
                                 </entry>
                                 <entry>
-                                    <para>Точность. От 1 до 18. </para>
+                                    <para>Точность. От 1 до 34. </para>
                                 </entry>
                             </row>
                             <row>
@@ -2759,7 +2759,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                                     <replaceable>scale</replaceable>
                                 </entry>
                                 <entry>
-                                    <para>Масштаб. От 0 до 18, должно быть меньше или равно
+                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
                                             <replaceable>precision</replaceable>.</para>
                                 </entry>
                             </row>
@@ -4328,13 +4328,13 @@ ALTER TABLE <replaceable>tablename</replaceable>
                             <row>
                                 <entry><replaceable>precision</replaceable></entry>
                                 <entry>
-                                    <para>Точность. От 1 до 18. </para>
+                                    <para>Точность. От 1 до 34. </para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>scale</replaceable></entry>
                                 <entry>
-                                    <para>Масштаб. От 0 до 18, должно быть меньше или равно
+                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
                                             <replaceable>precision</replaceable>.</para>
                                 </entry>
                             </row>
@@ -8550,13 +8550,13 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                 <entry><replaceable>precision</replaceable></entry>
                                 <entry>
                                     <para>Общее количество значащих цифр, которое способен сохранить
-                                        параметр (от 1 до 18).</para>
+                                        параметр (от 1 до 34).</para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>scale</replaceable></entry>
                                 <entry>
-                                    <para>Количество цифр после десятичной точки. От 0 до 18, должно
+                                    <para>Количество цифр после десятичной точки. От 0 до 34, должно
                                         быть меньше или равно
                                         <replaceable>precision</replaceable>.</para>
                                 </entry>
@@ -9443,13 +9443,13 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                 <entry><replaceable>precision</replaceable></entry>
                                 <entry>
                                     <para>Общее количество значащих цифр, которое способен сохранить
-                                        параметр (от 1 до 18).</para>
+                                        параметр (от 1 до 34).</para>
                                 </entry>
                             </row>
                             <row>
                                 <entry><replaceable>scale</replaceable></entry>
                                 <entry>
-                                    <para>Количество цифр после десятичной точки. От 0 до 18, должно
+                                    <para>Количество цифр после десятичной точки. От 0 до 34, должно
                                         быть меньше или равно
                                         <replaceable>precision</replaceable>.</para>
                                 </entry>
@@ -10389,13 +10389,13 @@ END
                                     <entry><replaceable>precision</replaceable></entry>
                                     <entry>
                                         <para>Общее количество значащих цифр, которое способен
-                                            сохранить параметр (от 1 до 18).</para>
+                                            сохранить параметр (от 1 до 34).</para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry><replaceable>scale</replaceable></entry>
                                     <entry>
-                                        <para>Количество цифр после десятичной точки. От 0 до 18,
+                                        <para>Количество цифр после десятичной точки. От 0 до 34,
                                             должно быть меньше или равно
                                                 <replaceable>precision</replaceable>. </para>
                                     </entry>
@@ -11313,13 +11313,13 @@ END
                                     <entry><replaceable>precision</replaceable></entry>
                                     <entry>
                                         <para>Общее количество значащих цифр, которое способен
-                                            сохранить параметр (от 1 до 18).</para>
+                                            сохранить параметр (от 1 до 34).</para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry><replaceable>scale</replaceable></entry>
                                     <entry>
-                                        <para>Количество цифр после десятичной точки. От 0 до 18,
+                                        <para>Количество цифр после десятичной точки. От 0 до 34,
                                             должно быть меньше или равно
                                                 <replaceable>precision</replaceable>. </para>
                                     </entry>

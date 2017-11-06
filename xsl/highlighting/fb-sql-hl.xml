@@ -183,6 +183,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>FILE</keyword>
       <keyword>FILTER</keyword>
       <keyword>FIRST</keyword>
+      <keyword>FIRST_DAY</keyword>
       <keyword>FIRST_VALUE</keyword>
       <keyword>FIRSTNAME</keyword>
       <keyword>FLOAT</keyword>
@@ -230,6 +231,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>KEY</keyword>
       <keyword>LAG</keyword>
       <keyword>LAST</keyword>
+      <keyword>LAST_DAY</keyword>
       <keyword>LAST_VALUE</keyword>
       <keyword>LASTNAME</keyword>
       <keyword>LEAD</keyword>

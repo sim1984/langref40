@@ -100,11 +100,11 @@
                     <row>
                         <entry>DECIMAL (<replaceable>precision</replaceable>,
                                 <replaceable>scale</replaceable>)</entry>
-                        <entry>Переменный (16, 32 или 64 бита)</entry>
+                        <entry>Переменный (16, 32, 64 или 128 бита)</entry>
                         <entry>
-                            <para><replaceable>precision</replaceable> = от 1 до 18, указывает, по
+                            <para><replaceable>precision</replaceable> = от 1 до 34, указывает, по
                                 меньшей мере, количество цифр для хранения;</para>
-                            <para><replaceable>scale</replaceable> = от 0 до 18. Задаёт количество
+                            <para><replaceable>scale</replaceable> = от 0 до 34. Задаёт количество
                                 знаков после разделителя </para>
                         </entry>
                         <entry><replaceable>scale</replaceable> должно быть меньше или равно
@@ -149,11 +149,11 @@
                     <row>
                         <entry>NUMERIC (<replaceable>precision</replaceable>,
                                 <replaceable>scale</replaceable>)</entry>
-                        <entry>Переменный (16, 32 или 64 бита)</entry>
+                        <entry>Переменный (16, 32, 64 или 128 бита)</entry>
                         <entry>
-                            <para><replaceable>precision</replaceable> = от 1 до 18, указывает, по
+                            <para><replaceable>precision</replaceable> = от 1 до 34, указывает, по
                                 меньшей мере, количество цифр для хранения;</para>
-                            <para><replaceable>scale</replaceable> = от 0 до 18. Задаёт количество
+                            <para><replaceable>scale</replaceable> = от 0 до 34. Задаёт количество
                                 знаков после разделителя.</para>
                         </entry>
                         <entry><replaceable>scale</replaceable> должно быть меньше или равно
@@ -1093,6 +1093,12 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                             <entry>DOUBLE PRECISION</entry>
                             <entry>BIGINT</entry>
                         </row>
+                        <row>
+                            <entry>19 - 34</entry>
+                            <entry>NUMERIC и DECIMAL</entry>
+                            <entry>DECFLOAT(34)</entry>
+                            <entry>DECFLOAT(34)</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
@@ -1116,13 +1122,14 @@ NUMERIC(4)      SMALLINT
 NUMERIC(4,2)    SMALLINT (data * 10<superscript>2</superscript>)
 NUMERIC(10,4)   DOUBLE PRECISION в 1-ом диалекте
                 BIGINT в 3-ем диалекте (data * 10<superscript>4</superscript>)
+NUMERIC(20, 2)  DECFLOAT(34)
                 </programlisting>
             </para>
             <caution>
                 <para>Всегда надо помнить, что формат хранения данных зависит от точности. Например,
                     вы задали тип столбца NUMERIC(2, 2), предполагая, что диапазон значений в нем
                     будет — 0.99...0.99. Однако в действительности диапазон значений в столбце будет
-                    -327.68..327.68, что объясняется хранением типа данных NUMERIC(2, 2) в формате
+                    327.68..327.68, что объясняется хранением типа данных NUMERIC(2, 2) в формате
                     SMALLINT. Фактически типы данных NUMERIC(4, 2), NUMERIC(3, 2) и NUMERIC(2, 2)
                     являются одинаковыми. Т.е. Для реального хранения данных в столбце с типом
                     данных NUMERIC(2, 2) в диапазоне -0.99...0.99 для него надо создавать
@@ -1148,6 +1155,7 @@ DECIMAL(4)      INTEGER
 DECIMAL(4,2)    INTEGER (data * 10<superscript>2</superscript>)
 DECIMAL(10,4)   DOUBLE PRECISION в 1-ом диалекте 
                 BIGINT в 3-ем диалекте (data * 10<superscript>4</superscript>)
+DECIMAL(20, 2)  DECFLOAT(34)
                 </programlisting>
             </para>
         </section>
