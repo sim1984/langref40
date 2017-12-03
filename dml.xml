@@ -3989,7 +3989,7 @@ OFFSET 10 ROWS
 SELECT * 
 FROM T1
 ORDER BY COL1
-OFFSET 10 ROWS                
+FETCH FIRST 10 ROWS ONLY                
             </programlisting>
             </para>
             <para>Использование предложений OFFSET и FETCH в производной таблице, результат которой
