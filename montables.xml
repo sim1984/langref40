@@ -1228,6 +1228,11 @@ WHERE ATT.MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
                         <listitem>
                             <para>Последующие запросы в данном соединении не запрещёны.</para>
                         </listitem>
+                        <listitem>
+                            <para>Отмена запроса не происходит синхронно, оператор лишь помечает
+                                запрос на отмену, а сама отмена производится ядром
+                                асинхронно.</para>
+                        </listitem>
                     </itemizedlist>
                 </para>
             </note>
