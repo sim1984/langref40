@@ -5467,8 +5467,10 @@ PLAN (C NATURAL)
         </section>
         <section xml:id="dml-update-orderby">
             <title>ORDER BY и ROWS</title>
-            <para>Предложения ORDER BY и ROWS имеют смысл только вместе. Однако их можно
-                использовать по отдельности.</para>
+            <para>Предложение ORDER BY позволяет задать порядок обновления записей. Это может иметь
+                значение в некоторых случаях.</para>
+            <para>Предложение ROWS имеет смысл только вместе с предложением ORDER BY. Однако его
+                можно использовать отдельно.</para>
             <para>При одном аргументе <replaceable>m</replaceable>, ROWS ограничивает update первыми
                     <replaceable>m</replaceable> строками. Особенности: <itemizedlist
                     spacing="compact">
@@ -5981,9 +5983,10 @@ PLAN (Submissions INDEX ix_subm_date)
                 <primary>DELETE</primary>
                 <secondary>ROWS</secondary>
             </indexterm>
-            <para>Предложение ORDER BY упорядочивает набор перед его удалением. Имеет смысл только в
-                комбинации с предложением ROWS, но допустимо и без ROWS. </para>
-            <para>Предложение ROWS позволяет ограничить количество удаляемых строк.</para>
+            <para>Предложение ORDER BY упорядочивает набор перед его удалением. Что может быть важно
+                в некоторых случаях. </para>
+            <para>Предложение ROWS позволяет ограничить количество удаляемых строк. Имеет смысл
+                только в комбинации с предложением ORDER BY, но допустимо и без него.</para>
             <formalpara>
                 <title>Синтаксис:</title>
 
