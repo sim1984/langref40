@@ -3941,8 +3941,8 @@ BEGIN
                 <para><programlisting>
 FOR 
   <replaceable>&lt;select_stmt&gt;</replaceable> 
-  [AS CURSOR <replaceable>cursorname</replaceable>]
   [INTO <replaceable>&lt;variables&gt;</replaceable>]
+  [AS CURSOR <replaceable>cursorname</replaceable>]
 DO <replaceable>&lt;compound_statement&gt;</replaceable>
  
 <replaceable>&lt;variables&gt;</replaceable> ::= [:]<replaceable>varname</replaceable> [, [:]<replaceable>varname</replaceable> ...]     
@@ -4144,7 +4144,8 @@ AS
 BEGIN
   FOR SELECT TOWN, POP
       FROM TOWNS
-      INTO :TOWN, :POP AS CURSOR TCUR 
+      INTO :TOWN, :POP 
+      AS CURSOR TCUR 
   DO
   BEGIN
     IF (:TOWN = :TOWNTODELETE) THEN
