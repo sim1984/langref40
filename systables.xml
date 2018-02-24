@@ -2215,7 +2215,14 @@
                         <row>
                             <entry>RDB$INDEX_TYPE</entry>
                             <entry>SMALLINT</entry>
-                            <entry>В настоящий момент не используется.</entry>
+                            <entry><para>Направление индекса: <itemizedlist spacing="compact">
+                                        <listitem>
+                                            <para>0 — ascending;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>1 — descending.</para>
+                                        </listitem>
+                                    </itemizedlist></para></entry>
                         </row>
                         <row>
                             <entry>RDB$FOREIGN_KEY</entry>
