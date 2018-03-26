@@ -1514,7 +1514,7 @@ CREATE DOMAIN <replaceable>name</replaceable> [AS] <replaceable>&lt;datatype&gt;
     {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>]
   | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>]
   | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>]
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>]
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
@@ -1927,7 +1927,7 @@ ALTER DOMAIN <replaceable>name</replaceable>
     {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>]
   | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>]
   | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>]
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>]
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
@@ -2497,7 +2497,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
     {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)] 
@@ -4091,7 +4091,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
     {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>] 
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)] 
@@ -8367,7 +8367,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
     {SMALLINT | INT[EGER] | BIGINT} 
   | BOOLEAN 
   | {FLOAT | DOUBLE PRECISION} 
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP}
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
@@ -9264,7 +9264,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
     {SMALLINT | INT[EGER] | BIGINT} 
   | BOOLEAN 
   | {FLOAT | DOUBLE PRECISION} 
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP}
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
@@ -10281,7 +10281,7 @@ END
     {SMALLINT | INT[EGER] | BIGINT} 
   | BOOLEAN 
   | {FLOAT | DOUBLE PRECISION} 
-  | DECFLOAT({16 | 34})
+  | DECFLOAT[({16 | 34})]
   | {DATE | TIME | TIMESTAMP}
   | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
   | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
