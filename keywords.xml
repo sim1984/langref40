@@ -164,6 +164,7 @@
                 <member>REGR_SXY</member>
                 <member>REGR_SYY</member>
                 <member>RELEASE</member>
+                <member>RESET</member>
                 <member>RETURN</member>
                 <member>RETURNING_VALUES</member>
                 <member>RETURNS</member>
