@@ -361,7 +361,7 @@ SET SESSION IDLE TIMEOUT 8 HOUR
 
         </section>
     </section>
-    
+
     <section xml:id="special-resetsession">
         <info>
             <title>ALTER SESSION RESET</title>
@@ -370,53 +370,71 @@ SET SESSION IDLE TIMEOUT 8 HOUR
             </keywordset>
         </info>
         <indexterm><primary>ALTER SESSION RESET</primary></indexterm>
-        
+
         <formalpara>
             <title>Назначение:</title>
-            
+
             <para>Сброс сессионого окружения.</para>
         </formalpara>
-        
+
         <formalpara>
             <title>Доступно в:</title>
-            
+
             <para>DSQL.</para>
         </formalpara>
-        
+
         <formalpara>
             <title>Синтаксис:</title>
-            
+
             <para><programlisting>                                       
 ALTER SESSION RESET      
             </programlisting></para>
         </formalpara>
-        
+
         <para>Сбрасывает сеансовое окружение (подключения) к исходному состоянию. Эта
-            функциональность полезна если сеанс используется повторно, вместо того чтобы
-            производить отключение/подключение.</para>
-        
+            функциональность полезна если сеанс используется повторно, вместо того чтобы производить
+            отключение/подключение.</para>
+
         <para>Данный оператор делает следующее: <itemizedlist>
-            <listitem>
-                <para>сбрасывает установленные параметры DECFLOAT (BIND, TRAP и ROUND) в
-                    значения по умолчанию;</para>
-            </listitem>
-            <listitem>
-                <para>сбрасывает тайм-ауты сессии и оператора в 0;</para>
-            </listitem>
-            <listitem>
-                <para>удаляет все контекстные переменные из пространства имён
-                    USER_SESSION;</para>
-            </listitem>
-            <listitem>
-                <para>очищает содержимое всех используемых глобальных таблиц уровня
-                    соединения (COMMIT PRESERVE ROWS);</para>
-            </listitem>
-            <listitem>
-                <para>сбрасывает роль в значение переданное в DPB (указанное при
-                    подключении) и очищает кеш привелегий (если роль была изменена с помощью
-                    оператора SET ROLE).</para>
-            </listitem>
-        </itemizedlist></para>
-        
+                <listitem>
+                    <para>сбрасывает установленные параметры DECFLOAT (BIND, TRAP и ROUND) в
+                        значения по умолчанию;</para>
+                </listitem>
+                <listitem>
+                    <para>сбрасывает тайм-ауты сессии и оператора в 0;</para>
+                </listitem>
+                <listitem>
+                    <para>удаляет все контекстные переменные из пространства имён
+                        USER_SESSION;</para>
+                </listitem>
+                <listitem>
+                    <para>очищает содержимое всех используемых глобальных таблиц уровня соединения
+                        (COMMIT PRESERVE ROWS);</para>
+                </listitem>
+                <listitem>
+                    <para>сбрасывает роль в значение переданное в DPB (указанное при подключении) и
+                        очищает кеш привелегий (если роль была изменена с помощью оператора SET
+                        ROLE);</para>
+                </listitem>
+                <listitem>
+                    <para>текущая активная транзакция откатывается и стартуется новая с теми же
+                        параметрами, после рестарта.</para>
+                </listitem>
+            </itemizedlist></para>
+        <warning>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>Если в текущей активной транзакции были произведены изменения, то
+                            будет выдано предупреждение.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Если в текущей сессии активны другие транзакции, то будет выдана
+                            ошибка. При проверке транзакций перед сбросом сессии подготовленные 2PC
+                            транзакции игнорируются.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </warning>
     </section>
 </chapter>

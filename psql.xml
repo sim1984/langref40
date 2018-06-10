@@ -346,7 +346,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'
                        </programlisting></para>
@@ -372,7 +372,9 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                 через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и
                 определённая пользователем информация. В предложении ENGINE указывается имя движка
                 для обработки подключения внешних модулей. В Firebird для работы с внешними модулями
-                используется движок UDR.</para>
+                используется движок UDR. После ключевого слова AS может быть указан строковый
+                литерал — "тело" внешней процедуры, оно может быть использовано внешнем модулем для
+                различных целей.</para>
 
             <para>Более подробная информация приведена в главе Операторы DDL (<link
                     linkend="ddl-procedure-create">CREATE PROCEDURE</link>).</para>
@@ -423,7 +425,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'   
                        </programlisting></para>
@@ -505,7 +507,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'   
  
@@ -528,7 +530,9 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                 через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и
                 определённая пользователем информация. В предложении ENGINE указывается имя движка
                 для обработки подключения внешних модулей. В Firebird для работы с внешними модулями
-                используется движок UDR.</para>
+                используется движок UDR. После ключевого слова AS может быть указан
+                строковый литерал — "тело" внешней функции, оно может быть использовано
+                внешнем модулем для различных целей.</para>
             <para>Более подробная информация приведена в главе Операторы DDL (<link
                     linkend="ddl-function-create">CREATE FUNCTION</link>).</para>
         </section>
@@ -579,7 +583,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'
     
@@ -828,7 +832,7 @@ END
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'  
                       
@@ -1100,7 +1104,7 @@ END
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
                             
@@ -1470,7 +1474,7 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
                     
@@ -1575,7 +1579,7 @@ ALTER TRIGGER <replaceable>trigname</replaceable>
 
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'    
  

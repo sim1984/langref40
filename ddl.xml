@@ -6825,7 +6825,7 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
                        </programlisting>
@@ -6936,6 +6936,24 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                                 <entry>
                                     <para>Операторы языка PSQL.</para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>extbody</replaceable></entry>
+                                <entry>Тело внешнего триггера. Строковый литерал который может
+                                    использоваться UDR для различных целей.</entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>module name</replaceable></entry>
+                                <entry>Имя внешнего модуля.</entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>routine name</replaceable></entry>
+                                <entry>Имя точки входа внутри модуля.</entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>misc info</replaceable></entry>
+                                <entry>Различная информация используемая внешним триггером по своему
+                                    усмотрению.</entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -7084,7 +7102,9 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                         имя процедуры внутри модуля и определённая пользователем информация. В
                         предложении <database>ENGINE</database> указывается имя движка для обработки
                         подключения внешних модулей. В Firebird для работы с внешними модулями
-                        используется движок UDR. </para>
+                        используется движок UDR. После ключевого слова AS может быть указан
+                        строковый литерал — "тело" внешнего триггера, оно может быть использовано
+                        внешнем модулем для различных целей.</para>
                 </section>
                 <section xml:id="ddl-trigger-table-create-who">
                     <title>Кто может создать DML триггер?</title>
@@ -8409,7 +8429,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
                        </programlisting></para>
@@ -8507,6 +8527,11 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                         уникальным среди входных и  выходных параметров процедуры, а
                                         также её локальных переменных. </para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>extbody</replaceable></entry>
+                                <entry><para>Тело внешней процедуры. Строковый литерал который может использоваться UDR для различных
+                                        целей.</para></entry>
                             </row>
                             <row>
                                 <entry><replaceable>module name</replaceable></entry>
@@ -8761,7 +8786,9 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                     в которой через разделитель указано имя внешнего модуля, имя процедуры внутри
                     модуля и определённая пользователем информация. В предложении ENGINE указывается
                     имя движка для обработки подключения внешних модулей. В Firebird для работы с
-                    внешними модулями используется движок UDR. </para>
+                    внешними модулями используется движок UDR. После ключевого слова AS может быть
+                    указан строковый литерал — "тело" внешней процедуры, оно может быть использовано
+                    внешнем модулем для различных целей.</para>
             </section>
             <section xml:id="ddl-procedure-create-who">
                 <title>Кто может создать хранимую процедуру?</title>
@@ -9306,7 +9333,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]  
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
                     
@@ -9419,6 +9446,11 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                     <para>Определяемая пользователем информация для передачи в
                                         функцию внешнего модуля. </para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>extbody</replaceable></entry>
+                                <entry>Тело внешней функции. Строковый литерал который может
+                                    использоваться UDR для различных целей.</entry>
                             </row>
                             <row>
                                 <entry><replaceable>engine</replaceable></entry>
@@ -9708,14 +9740,16 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                     в которой через разделитель указано имя внешнего модуля, имя функции внутри
                     модуля и определённая пользователем информация. В предложении ENGINE указывается
                     имя движка для обработки подключения внешних модулей. В Firebird для работы с
-                    внешними модулями используется движок UDR. </para>
+                    внешними модулями используется движок UDR. После ключевого слова AS может быть
+                    указан строковый литерал — "тело" внешней функции, оно может быть использовано
+                    внешнем модулем для различных целей. </para>
                 <warning>
                     <para>Не следует путать внешние функции, объявленные как DECLARE EXTERNAL
                         FUNCTION, так же известные как UDF, с функциями расположенными во внешних
                         модулях объявленных как CREATE FUNCTION ... EXTERNAL NAME, называемых UDR
                         (User Defined Routine). Первые являются унаследованными (Legacy) из
                         предыдущих версий Firebird. Их возможности существенно уступают возможностям
-                        нового типа внешних функций. </para>
+                        нового типа внешних функций. В Firebird 4.0 UDF объявлены устаревшими. </para>
                 </warning>
             </section>
             <section xml:id="ddl-function-create-who">
@@ -11128,7 +11162,7 @@ END
 <replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
 
 <replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> 
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
 
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'                             
                         
@@ -11266,6 +11300,11 @@ END
                                         <para>Определяемая пользователем информация для передачи в
                                             функцию внешнего модуля.</para>
                                     </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>extbody</replaceable></entry>
+                                    <entry>Тело внешней процедуры или функции. Строковый литерал который может
+                                        использоваться UDR для различных целей.</entry>
                                 </row>
                                 <row>
                                     <entry><replaceable>engine</replaceable></entry>
@@ -11869,10 +11908,11 @@ END
             обращении к любой из функций, включённой в библиотеку.</para>
         <note>
             <para>Внешние функции, объявленные как DECLARE EXTERNAL FUNCTION, являются
-                унаследованными (Legacy) из предыдущих версий Firebird. Их возможности существенно
-                уступают возможностям нового типа внешних функций UDR (User Defined Routine). Такие
-                функции объявляются как CREATE FUNCTION ... EXTERNAL NAME. Подробнее см. <link
-                    linkend="ddl-function-create">CREATE FUNCTION</link>.</para>
+                унаследованными (Legacy) из предыдущих версий Firebird. В Firebird 4.0 UDF объявлены
+                устаревшими. Их возможности существенно уступают возможностям нового типа внешних
+                функций UDR (User Defined Routine). Такие функции объявляются как CREATE FUNCTION
+                ... EXTERNAL NAME. Подробнее см. <link linkend="ddl-function-create">CREATE
+                    FUNCTION</link>.</para>
         </note>
         <section xml:id="ddl-extrnalfunction-declare">
             <info>
