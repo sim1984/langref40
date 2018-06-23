@@ -1512,7 +1512,7 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                     <table frame="all">
                         <title>Переменные пространства имён SYSTEM</title>
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*" align="left"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.3*" align="left"/>
                             <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
                             <thead>
                                 <row>
@@ -1598,6 +1598,25 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                         в миллисекундах, который был установлен на уровне
                                         подключения, или ноль, если тайм-аут не был
                                         установлен.</entry>
+                                </row>
+                                <row>
+                                    <entry>EXT_CONN_POOL_SIZE</entry>
+                                    <entry>Размер пула внешних соединений.</entry>
+                                </row>
+                                <row>
+                                    <entry>EXT_CONN_POOL_LIFETIME</entry>
+                                    <entry>Время жизни неактивных соединений в пуле внешних
+                                        соединений.</entry>
+                                </row>
+                                <row>
+                                    <entry>EXT_CONN_POOL_IDLE_COUNT</entry>
+                                    <entry>Текущее количество неактивных соединений в пуле внешних
+                                        соединений.</entry>
+                                </row>
+                                <row>
+                                    <entry>EXT_CONN_POOL_ACTIVE_COUNT</entry>
+                                    <entry>Текущее количество активных соединений в пуле внешних
+                                        соединений.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

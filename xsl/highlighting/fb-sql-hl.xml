@@ -99,6 +99,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>CHARACTER</keyword>
       <keyword>CHARACTER_LENGTH</keyword>
       <keyword>CHECK</keyword>
+      <keyword>CLEAR</keyword>
       <keyword>CLOSE</keyword>
       <keyword>COALESCE</keyword>
       <keyword>COLLATE</keyword>
@@ -112,6 +113,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>COMPUTED</keyword>
       <keyword>CONDITIONAL</keyword>
       <keyword>CONNECT</keyword>
+      <keyword>CONNECTIONS</keyword>
       <keyword>CONSTRAINT</keyword>
       <keyword>CONTAINING</keyword>
       <keyword>CONTINUE</keyword>
@@ -240,6 +242,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>LEFT</keyword>
       <keyword>LENGTH</keyword>
       <keyword>LEVEL</keyword>
+      <keyword>LIFETIME</keyword>
       <keyword>LIKE</keyword>
       <keyword>LIMBO</keyword>
       <keyword>LINGER</keyword>
@@ -287,6 +290,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>OCTET_LENGTH</keyword>
       <keyword>OF</keyword>
       <keyword>OFFSET</keyword>
+      <keyword>OLDEST</keyword>
       <keyword>ON</keyword>
       <keyword>ONLY</keyword>
       <keyword>OPEN</keyword>
@@ -314,6 +318,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>PLACING</keyword>
       <keyword>PLAN</keyword>
       <keyword>PLUGIN</keyword>
+      <keyword>POOL</keyword>
       <keyword>POSITION</keyword>
       <keyword>POST_EVENT</keyword>
       <keyword>POWER</keyword>

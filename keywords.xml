@@ -313,6 +313,7 @@
                 <member>CHARACTER</member>
                 <member>CHARACTER_LENGTH</member>
                 <member>CHECK</member>
+                <member>CLEAR</member>
                 <member>CLOSE</member>
                 <member>COALESCE</member>
                 <member>COLLATE</member>
@@ -326,6 +327,7 @@
                 <member>COMPUTED</member>
                 <member>CONDITIONAL</member>
                 <member>CONNECT</member>
+                <member>CONNECTIONS</member>
                 <member>CONSTRAINT</member>
                 <member>CONTAINING</member>
                 <member>CONTINUE</member>
@@ -454,6 +456,7 @@
                 <member>LEFT</member>
                 <member>LENGTH</member>
                 <member>LEVEL</member>
+                <member>LIFETIME</member>
                 <member>LIKE</member>
                 <member>LIMBO</member>
                 <member>LINGER</member>
@@ -501,6 +504,7 @@
                 <member>OCTET_LENGTH</member>
                 <member>OF</member>
                 <member>OFFSET</member>
+                <member>OLDEST</member>
                 <member>ON</member>
                 <member>ONLY</member>
                 <member>OPEN</member>
@@ -530,6 +534,7 @@
                 <member>PLACING</member>
                 <member>PLAN</member>
                 <member>PLUGIN</member>
+                <member>POOL</member>
                 <member>POSITION</member>
                 <member>POST_EVENT</member>
                 <member>POWER</member>

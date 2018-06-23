@@ -437,4 +437,215 @@ ALTER SESSION RESET  
             </para>
         </warning>
     </section>
+
+    <section xml:id="special-extconnpool">
+        <info>
+            <title>Пул внешних соединений</title>
+            <keywordset>
+                <keyword>ALTER EXTERNAL CONNECTIONS POOL</keyword>
+            </keywordset>
+        </info>
+
+        <indexterm><primary>ALTER EXTERNAL CONNECTIONS POOL</primary></indexterm>
+
+        <para>Каждое внешнее соединение (созданное оператором EXECUTE STATEMENT ... ON EXTERNAL) при
+            создании связывается с пулом соединений (подробнее см. <link
+                linkend="psql-statements-execstmt-ext-connpool">Пул внешних подключений</link>).
+            Данная группа операторов позволяет управлять пулом внешних соединений. При его
+            подготовке они описываются как DDL операторы, но имеют немедленный эффект: то есть они
+            выполняются немедленно и полностью, не дожидаясь фиксации транзакции. Изменения
+            применяются к экземляру пула в памяти в текущем процессе Firebird. Поэтому изменение в
+            одном классическом процессе не влияет на другие классические процессы. Изменения не
+            являются постоянными и после перезапуска Firebird будет использовать настройки пула из
+                <filename>firebird.conf</filename>.</para>
+
+        <para>Для выполенения операторов данной группы требуется системная привилегия
+            MODIFY_EXT_CONN_POOL. Подробнее о системных привелегиях см. <link
+                linkend="security-roles-create">CREATE ROLE</link>.</para>
+
+        <section xml:id="special-extconnpool-setsize">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>SET SIZE</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Устанавливает максимальное количество бездействующих соединений.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>
+ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>                        
+                        </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>size</replaceable></entry>
+                                <entry>
+                                    <para>Размер пула внешних соединений. Допустимые значения от 0
+                                        до 1000.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</code> устанавливает
+                максимальное количество бездействующих соединений в пуле внешних соединений.
+                Допустимые значения от 0 до 1000. Нулевое значение обозначает что пул выключен.
+                Значение по умолчанию оперделяется в <filename>firebird.conf</filename> (параметр
+                ExtConnPoolSize).</para>
+
+        </section>
+
+        <section xml:id="special-extconnpool-setlifetime">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>SET LIFETIME</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Устанавливает время жизни бездействующих соединений.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>
+ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replaceable> <replaceable>&lt;time_part&gt;</replaceable>
+                        
+<replaceable>&lt;time_part&gt;</replaceable> ::= SECOND | MINUTE | HOUR                       
+                        </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>value</replaceable></entry>
+                                <entry>
+                                    <para>Время жизни бездействующих соединений.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</code> устанавливает
+                время жизни бездействующих соединений в пуле внешних соединений. Допустимые значения
+                от 1 секуды до 24 часов. Значение по умолчанию оперделяется в
+                    <filename>firebird.conf</filename> (параметр ExtConnPoolLifeTime в
+                секундах).</para>
+
+        </section>
+
+        <section xml:id="special-extconnpool-clearall">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>CLEAR ALL</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Закрывает все бездействующие соединения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>
+ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL                     
+                        </programlisting>
+                </para>
+            </formalpara>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</code> закрывает все
+                бездействующие соединения в пуле внешних соединений. Все активные соединения будут
+                отсоединены от пула (такие соединения будут немедленно закрыты, когда они не будут
+                использоваться).</para>
+
+        </section>
+
+        <section xml:id="special-extconnpool-clearoldest">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>CLEAR OLDEST</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Закрывает бездействующие соединения у которых истекло время жизни.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting>
+ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST                    
+                        </programlisting>
+                </para>
+            </formalpara>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</code> закрывает
+                бездействующие соединения в пуле у которых истекло время жизни.</para>
+
+        </section>
+    </section>
 </chapter>

@@ -2087,6 +2087,10 @@ CREATE ROLE <replaceable>rolename</replaceable> [SET SYSTEM PRIVILEGES TO <repla
                                     <entry>GET_DBCRYPT_KEY_NAME</entry>
                                     <entry><para>Получение имени ключа шифрования.</para></entry>
                                 </row>
+                                <row>
+                                    <entry>MODIFY_EXT_CONN_POOL</entry>
+                                    <entry><para>Управление пулом внешних соединений.</para></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
