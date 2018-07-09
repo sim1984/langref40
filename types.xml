@@ -550,40 +550,56 @@ DECLARE VARIABLE v DECFLOAT(34);
                 <info>
                     <title>Режимы округления</title>
                 </info>
-                <indexterm><primary>SET DECFLOAT ROUND</primary></indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>CEILING</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>UP</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>HALF_UP</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>HALF_EVEN</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>HALF_DOWN</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>DOWN</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>FLOOR</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>SET DECFLOAT ROUND</primary>
+                    <secondary>REROUND</secondary>
+                </indexterm>
                 <para>Округление происходит, когда точность результата выражения больше точности,
                     поддерживаемой типом данных. DECFLOAT поддерживает все режимы округления,
                     которые требуются в большинстве приложений. Поддерживаются следующие режимы
                     округления совместимые со стандартом IEEE: <itemizedlist>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>CEILING</secondary>
-                                </indexterm>
-                                <emphasis role="bold">CEILING</emphasis>. Округление сверху. Если
+                            <para><emphasis role="bold">CEILING</emphasis>. Округление сверху. Если
                                 все отбрасываемые цифры равны нулю или знак числа отрицателен,
                                 последняя неотбрасываемая цифра не меняется. В противном случае
                                 последняя неотбрасываемая цифра инкрементируется на единицу
                                 (округляется в большую сторону).</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>UP</secondary>
-                                </indexterm>
-                                <emphasis role="bold">UP</emphasis>. Округление по направлению от
+                            <para><emphasis role="bold">UP</emphasis>. Округление по направлению от
                                 нуля (усечение с приращением). Отбрасываемые значения
                                 игнорируются.</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>HALF_UP</secondary>
-                                </indexterm>
-                                <emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
+                            <para><emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
                                 значению. Если результат равноудаленный, выполняется округление в
                                 большую сторону. Если отбрасываемые значения больше чем или равны
                                 половине (0,5) единицы в следующей левой позиции, последняя
@@ -592,68 +608,43 @@ DECLARE VARIABLE v DECFLOAT(34);
                                 игнорируются.</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>HALF_EVEN</secondary>
-                                </indexterm>
-                                <emphasis role="bold">HALF_EVEN</emphasis>. Округление к ближайшему
-                                значению. Если результат равноудаленный, выполняется округление так,
-                                чтобы последняя цифра была четной. Если отбрасываемые значения
-                                больше половины (0,5) единицы в следующей левой позиции, последняя
-                                неотбрасываемая цифра инкрементируется на единицу (округляется в
-                                большую сторону). Если они меньше половины, результат не
-                                корректируется (то есть отбрасываемые знаки игнорируются). В
-                                противном случае, когда отбрасываемые значения точно равны половине,
-                                последняя неотбрасываемая цифра не меняется, если она является
-                                четной и инкрементируется на единицу (округляется в большую сторону)
-                                в противном случае (чтобы получить четную цифру). Этот режим
-                                округления называется также банковским округлением и дает ощущение
-                                справедливого округления. Он является режимом по умолчанию в DB2,
-                                согласно спецификации IEEE.</para>
+                            <para><emphasis role="bold">HALF_EVEN</emphasis>. Округление к
+                                ближайшему значению. Если результат равноудаленный, выполняется
+                                округление так, чтобы последняя цифра была четной. Если
+                                отбрасываемые значения больше половины (0,5) единицы в следующей
+                                левой позиции, последняя неотбрасываемая цифра инкрементируется на
+                                единицу (округляется в большую сторону). Если они меньше половины,
+                                результат не корректируется (то есть отбрасываемые знаки
+                                игнорируются). В противном случае, когда отбрасываемые значения
+                                точно равны половине, последняя неотбрасываемая цифра не меняется,
+                                если она является четной и инкрементируется на единицу (округляется
+                                в большую сторону) в противном случае (чтобы получить четную цифру).
+                                Этот режим округления называется также банковским округлением и дает
+                                ощущение справедливого округления. Он является режимом по умолчанию
+                                в DB2, согласно спецификации IEEE.</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>HALF_DOWN</secondary>
-                                </indexterm>
-                                <emphasis role="bold">HALF_DOWN</emphasis>. Округление к ближайшему
-                                значению. Если результат равноудаленный, выполняется округление в
-                                меньшую сторону. Если отбрасываемые значения больше чем или равны
-                                половине (0,5) единицы в следующей левой позиции, последняя
-                                неотбрасываемая цифра декрементируется на единицу (округляется в
-                                меньшую сторону). В противном случае отбрасываемые значения
-                                игнорируются.</para>
+                            <para><emphasis role="bold">HALF_DOWN</emphasis>. Округление к
+                                ближайшему значению. Если результат равноудаленный, выполняется
+                                округление в меньшую сторону. Если отбрасываемые значения больше чем
+                                или равны половине (0,5) единицы в следующей левой позиции,
+                                последняя неотбрасываемая цифра декрементируется на единицу
+                                (округляется в меньшую сторону). В противном случае отбрасываемые
+                                значения игнорируются.</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>DOWN</secondary>
-                                </indexterm>
-                                <emphasis role="bold">DOWN</emphasis>. Округление по направлению к
+                            <para><emphasis role="bold">DOWN</emphasis>. Округление по направлению к
                                 нулю (усечение). Отбрасываемые значения игнорируются.</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>FLOOR</secondary>
-                                </indexterm>
-                                <emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
+                            <para><emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
                                 отбрасываемые цифры равны нулю или знак положителен, последняя
                                 неотбрасываемая цифра не меняется. В противном случае (знак
                                 отрицателен) последняя неотбрасываемая цифра инкрементируется на
                                 единицу.</para>
                         </listitem>
                         <listitem>
-                            <para>
-                                <indexterm>
-                                    <primary>SET DECFLOAT ROUND</primary>
-                                    <secondary>REROUND</secondary>
-                                </indexterm>
-                                <emphasis role="bold">REROUND</emphasis>. Округление к большему
+                            <para><emphasis role="bold">REROUND</emphasis>. Округление к большему
                                 значению, если округляется 0 или 5, в противном случае округление
                                 происходит к меньшему значению.</para>
                         </listitem>
@@ -784,20 +775,19 @@ SET DECFLOAT ROUND HALF_DOWN;
                 <para>Замыкающие нули в значениях десятичных чисел с плавающей запятой сохраняются.
                     Например, 1.0 и 1.00 — это два различных представления. Это порождает различные
                     семантики сравнения для типа данных DECFLOAT, как показано ниже.</para>
-                <para>
-                    <itemizedlist>
-                        <listitem>
-                            <para><emphasis role="bold">Сравнение числовых значений</emphasis>.
-                                Замыкающие нули игнорируются в сравнениях. Например, 1.0 равно 1.00.
-                                По умолчанию такой тип сравнения используется для индексирования,
-                                сортировки, разбивки таблицы, оценки предикатов и других функций —
-                                короче говоря, везде, где сравнение выполняется неявно или в
-                                предикатах.</para>
-                            <para>
-                                <example>
-                                    <title>Сравнение числовых значений</title>
+                
+                <section>
+                    <title>Сравнение числовых значений</title>
 
-                                    <para><programlisting language="sql"> 
+                    <para>Замыкающие нули игнорируются в сравнениях. Например, 1.0 равно 1.00. По
+                        умолчанию такой тип сравнения используется для индексирования, сортировки,
+                        разбивки таблицы, оценки предикатов и других функций — короче говоря, везде,
+                        где сравнение выполняется неявно или в предикатах.</para>
+                    <para>
+                        <example>
+                            <title>Сравнение числовых значений</title>
+
+                            <para><programlisting language="sql"> 
 create table stockPrice (stock DECFLOAT(16));
 
 insert into stockPrice 
@@ -824,39 +814,40 @@ select * from stockPrice order by stock;
 -- Возвращает все значения, 4.2, 4.2000, 4.20, 4.6125. 
 -- Первые три значения возвращаются в неопределенном порядке.
                 </programlisting>
-                                    </para>
-                                </example>
                             </para>
-                        </listitem>
-                        <listitem>
-                            <para><emphasis role="bold">Сравнение TotalOrder</emphasis>. Замыкающие
-                                нули учитываются при сравнении. Например, 1.0 > 1.00. Каждое
-                                значение DECFLOAT имеет порядок в семантике сравнения
-                                TotalOrder.</para>
-                            <para>Согласно семантике TotalOrder, порядок различных значений
-                                определяется так, как показано в следующем примере:
-                                <screen>
+                        </example>
+                    </para>
+                </section>
+
+                <section>
+                    <title>Сравнение TotalOrder</title>
+
+                    <para>Замыкающие нули учитываются при сравнении. Например, 1.0 > 1.00. Каждое
+                        значение DECFLOAT имеет порядок в семантике сравнения TotalOrder.</para>
+                    <para>Согласно семантике TotalOrder, порядок различных значений определяется
+                        так, как показано в следующем примере:
+                        <screen>
 -nan &lt; -snan &lt; -inf &lt; -0.1 &lt; -0.10 &lt; -0 &lt; 0 &lt; 0.10 &lt; 0.1 &lt; inf &lt; snan &lt; nan
                             </screen>
-                            </para>
-                            <important>
-                                <para>Обратите внимание на то, что отрицательный нуль меньше
-                                    положительного нуля при сравнении TotalOrder</para>
-                            </important>
-                            <para>Запросить сравнение TotalOrder в предикатах можно при помощи
-                                встроенной функции <link
-                                    linkend="internalfunc-func-decfloat-totalorder"
-                                    >TOTALORDER()</link>.</para>
-                            <para>
-                                <example>
-                                    <title>Сравнение TotalOrder</title>
+                    </para>
+                    
+                    <important>
+                        <para>Обратите внимание на то, что отрицательный нуль меньше положительного
+                            нуля при сравнении TotalOrder</para>
+                    </important>
+                    
+                    <para>Запросить сравнение TotalOrder в предикатах можно при помощи встроенной
+                        функции <link linkend="internalfunc-func-decfloat-totalorder"
+                            >TOTALORDER()</link>.</para>
+                    <para>
+                        <example>
+                            <title>Сравнение TotalOrder</title>
 
-                                    <para>Для курсов акций может быть важным знать точность данных.
-                                        Например, если курсы обычно указываются с точностью в пять
-                                        знаков после запятой, а курс равен $4.2, тогда неясно, равна
-                                        цена $4.2000, $4.2999 или чему-то, лежащему между этими
-                                        двумя значениями.
-                                        <programlisting language="sql"> 
+                            <para>Для курсов акций может быть важным знать точность данных.
+                                Например, если курсы обычно указываются с точностью в пять знаков
+                                после запятой, а курс равен $4.2, тогда неясно, равна цена $4.2000,
+                                $4.2999 или чему-то, лежащему между этими двумя значениями.
+                                <programlisting language="sql"> 
 create table stockPrice (stock DECFLOAT(16));
 
 insert into stockPrice 
@@ -879,18 +870,17 @@ select * from stockPrice where TOTALORDER(stock, 4.2000) = 0;
 select * from stockPrice where TOTALORDER(stock, 4.20) = 1;
 -- Возвращает два значения 4.2 и 4.6125, которое больше 4.20
                 </programlisting>
-                                    </para>
-                                </example>
                             </para>
-                            <para>Порядок, в котором возвращаются арифметически одинаковые значения,
-                                имеющие различное количество замыкающих нулей, не определен.
-                                Следовательно, ORDER BY по столбцу DECFLOAT со значениями 1.0 и 1.00
-                                возвращает два значения в произвольном порядке. Аналогично, DISTINCT
-                                возвращает либо 1.0, либо 1.00.</para>
-                        </listitem>
-                    </itemizedlist>
-                </para>
+                        </example>
+                    </para>
+                    <para>Порядок, в котором возвращаются арифметически одинаковые значения, имеющие
+                        различное количество замыкающих нулей, не определен. Следовательно, ORDER BY
+                        по столбцу DECFLOAT со значениями 1.0 и 1.00 возвращает два значения в
+                        произвольном порядке. Аналогично, DISTINCT возвращает либо 1.0, либо
+                        1.00.</para>
+                </section>
             </section>
+            
             <section xml:id="types-float-decfloat-trap">
                 <info>
                     <title>Обработка ошибок</title>
