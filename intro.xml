@@ -75,10 +75,10 @@
         <para>
             <itemizedlist spacing="compact">
                 <listitem>
-                    <para><personname><surname>Денис</surname><firstname>Симонов</firstname></personname>;</para>
+                    <para><personname><firstname>Денис</firstname><surname>Симонов</surname></personname>;</para>
                 </listitem>
                 <listitem>
-                    <para><personname><surname>Пол</surname><firstname>Винкенуг</firstname></personname>;</para>
+                    <para><personname><firstname>Пол</firstname><surname>Винкенуг</surname></personname>;</para>
                 </listitem>
                 <listitem>
                     <para><personname><firstname>Дмитрий</firstname><surname>Филиппов</surname></personname>;</para>
@@ -100,7 +100,7 @@
                 </listitem>
             </itemizedlist>
         </para>
-        <para>Редакторы –
+        <para>Редакторы —
                 <personname><firstname>Александр</firstname><surname>Карпейкин</surname></personname>,
                     <personname><firstname>Дмитрий</firstname><surname>Кузьменко</surname></personname>,
                     <personname><firstname>Алексей</firstname><surname>Ковязин</surname></personname>,
@@ -138,11 +138,28 @@
         <title>Обновления</title>
 
         <para>Так как СУБД Firebird постоянно развивается, то изменяется и улучшается его
-            документация. Вы можете получить обновлённые версии этого документа и других частей
-            документации по Firebird на русском языке на сайте проекта документации: <link
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="https://www.assembla.com/spaces/firebird-russian-documentation/wiki"
-                >https://www.assembla.com/spaces/firebird-russian-documentation/wiki</link>
+            документация. Вы можете получить самые свежие версии этого документа по адресам:
+                <itemizedlist spacing="compact">
+                <listitem>
+                    <para>PDF — <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xlink:href="https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf"
+                            >https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf</link></para>
+                </listitem>
+                <listitem>
+                    <para>одностраничный HTML — <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xlink:href="https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip"
+                            >https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip</link></para>
+                </listitem>
+                <listitem>
+                    <para>многостраничный HTML — <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xlink:href="https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip"
+                            >https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip</link></para>
+                </listitem>
+            </itemizedlist>
         </para>
+        <para>Исходный код проекта находится по адресу <link
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="https://github.com/sim1984/langref40"
+                >https://github.com/sim1984/langref40</link>. </para>
     </simplesect>
 </preface>

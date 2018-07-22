@@ -231,7 +231,7 @@
             <indexterm><primary>SMALLINT</primary></indexterm>
             <para>Тип данных SMALLINT представляет собой 16-битное целое. Он применяется в случае,
                 когда не требуется широкий диапазон возможных значений для хранения данных. </para>
-            <para>Числа типа SMALLINT находятся в диапазоне 2<superscript>-15</superscript> ..
+            <para>Числа типа SMALLINT находятся в диапазоне -2<superscript>15</superscript> ..
                     2<superscript>15</superscript> - 1, или -32 768 .. 32 767. </para>
             <formalpara>
                 <title>Примеры:</title>
@@ -253,7 +253,7 @@ CREATE DOMAIN RGB_VALUE AS SMALLINT;
             <indexterm><primary>INTEGER</primary></indexterm>
             <para>Тип данных INTEGER представляет собой 32-битное целое. Сокращённый вариант записи
                 типа данных INT.</para>
-            <para>Числа типа INTEGER находятся в диапазоне 2<superscript>-31</superscript> ..
+            <para>Числа типа INTEGER находятся в диапазоне -2<superscript>31</superscript> ..
                     2<superscript>31</superscript> - 1, или -2 147 483 648 .. 2 147 483 647.</para>
             <formalpara>
                 <title>Примеры:</title>
@@ -281,7 +281,7 @@ CREATE TABLE CUSTOMER (
                 только в 3-м диалекте. При использовании клиентом диалекта 1, передаваемое сервером
                 значение генератора усекается до 32-х битного целого (INTEGER). При подключении в
                 3-м диалекте значение генератора имеет тип BIGINT. </para>
-            <para>Числа типа BIGINT находятся в диапазоне 2<superscript>-63</superscript> ..
+            <para>Числа типа BIGINT находятся в диапазоне -2<superscript>63</superscript> ..
                     2<superscript>63</superscript> - 1, или -9 223 372 036 854 775 808 .. 9 223 372
                 036 854 775 807. </para>
             <para>Числа типа BIGINT могут быть заданы в шестнадцатеричном виде с 9 — 16
