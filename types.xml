@@ -48,34 +48,36 @@
                 </thead>
                 <tbody>
                     <row>
-                        <entry>BIGINT</entry>
-                        <entry>64 бита</entry>
-                        <entry>-2<superscript>63</superscript> .. 2<superscript>63</superscript> -
-                            1</entry>
-                        <entry>Тип данных доступен только в 3 диалекте.</entry>
+                        <entry><para>BIGINT</para></entry>
+                        <entry><para>64 бита</para></entry>
+                        <entry><para>-2<superscript>63</superscript> ..
+                                    2<superscript>63</superscript> - 1</para></entry>
+                        <entry><para>Тип данных доступен только в 3 диалекте.</para></entry>
                     </row>
                     <row>
-                        <entry>BOOLEAN</entry>
-                        <entry>8 бит</entry>
-                        <entry>false, true, unknown</entry>
-                        <entry>Логический тип данных.</entry>
+                        <entry><para>BOOLEAN</para></entry>
+                        <entry><para>8 бит</para></entry>
+                        <entry><para>false, true, unknown</para></entry>
+                        <entry><para>Логический тип данных.</para></entry>
                     </row>
                     <row>
-                        <entry>BINARY(<replaceable>n</replaceable>)</entry>
-                        <entry><replaceable>n</replaceable> байт</entry>
-                        <entry>от 1 до 32 767 байт</entry>
-                        <entry>Бинарный тип данных фиксированной длины. Является псевдонимом типа
-                                CHAR(<replaceable>n</replaceable>) CHARACTER SET OCTETS.</entry>
+                        <entry><para>BINARY(<replaceable>n</replaceable>)</para></entry>
+                        <entry><para><replaceable>n</replaceable> байт</para></entry>
+                        <entry><para>от 1 до 32 767 байт</para></entry>
+                        <entry><para>Бинарный тип данных фиксированной длины. Является псевдонимом
+                                типа CHAR(<replaceable>n</replaceable>) CHARACTER SET
+                            OCTETS.</para></entry>
                     </row>
                     <row>
-                        <entry>BLOB</entry>
-                        <entry>Переменный</entry>
-                        <entry>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный размер
-                            поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер BLOB поля
-                            несколько ниже 2 Гб.</entry>
-                        <entry>Тип данных с динамически изменяемым размером для хранения больших
-                            данных, таких как графика, тексты, оцифрованные звуки. Базовая
-                            структурная единица — сегмент. Подтип Blob описывает содержимое.
+                        <entry><para>BLOB</para></entry>
+                        <entry><para>Переменный</para></entry>
+                        <entry><para>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный
+                                размер поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер
+                                BLOB поля несколько ниже 2 Гб.</para></entry>
+                        <entry><para>Тип данных с динамически изменяемым размером для хранения
+                                больших данных, таких как графика, тексты, оцифрованные звуки.
+                                Базовая структурная единица — сегмент. Подтип Blob описывает
+                                содержимое.</para>
                         </entry>
                     </row>
                     <row>
@@ -83,111 +85,114 @@
                             <para>CHAR(<replaceable>n</replaceable>)</para>
                             <para>CHARACTER(<replaceable>n</replaceable>)</para>
                         </entry>
-                        <entry><replaceable>n</replaceable> символов (размер в байтах зависит от
-                            кодировки, кол-во байт на символ)</entry>
-                        <entry>от 1 до 32 767 байт</entry>
-                        <entry>Символьный тип данных фиксированной длины. При извлечении данных,
-                            строка дополняется пробелами справа до указанной длины. Если количество
-                            символов <replaceable>n</replaceable> не указано, то по умолчанию
-                            принимается 1.</entry>
+                        <entry><para><replaceable>n</replaceable> символов (размер в байтах зависит
+                                от кодировки, кол-во байт на символ)</para></entry>
+                        <entry><para>от 1 до 32 767 байт</para></entry>
+                        <entry><para>Символьный тип данных фиксированной длины. При извлечении
+                                данных, строка дополняется пробелами справа до указанной длины. Если
+                                количество символов <replaceable>n</replaceable> не указано, то по
+                                умолчанию принимается 1.</para></entry>
                     </row>
                     <row>
-                        <entry>DATE</entry>
-                        <entry>32 бита</entry>
-                        <entry>от 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
-                        <entry>ISC_DATE</entry>
+                        <entry><para>DATE</para></entry>
+                        <entry><para>32 бита</para></entry>
+                        <entry><para>от 01.01.0001 н.э. до 31.12.9999 н.э.</para></entry>
+                        <entry><para>ISC_DATE</para></entry>
                     </row>
                     <row>
-                        <entry>DECIMAL (<replaceable>precision</replaceable>,
-                                <replaceable>scale</replaceable>)</entry>
-                        <entry>Переменный (16, 32, 64 или 128 бита)</entry>
+                        <entry><para>DECIMAL (<replaceable>precision</replaceable>,
+                                    <replaceable>scale</replaceable>)</para></entry>
+                        <entry><para>Переменный (16, 32, 64 или 128 бита)</para></entry>
                         <entry>
                             <para><replaceable>precision</replaceable> = от 1 до 34, указывает, по
                                 меньшей мере, количество цифр для хранения;</para>
                             <para><replaceable>scale</replaceable> = от 0 до 34. Задаёт количество
                                 знаков после разделителя </para>
                         </entry>
-                        <entry><replaceable>scale</replaceable> должно быть меньше или равно
-                                <replaceable>precision</replaceable>. Число с десятичной точкой,
-                            имеющей после точки <replaceable>scale</replaceable> разрядов. Пример:
-                            DECIMAL(10,3) содержит число точно в следующем формате: ppppppp.sss.
+                        <entry><para><replaceable>scale</replaceable> должно быть меньше или равно
+                                    <replaceable>precision</replaceable>. Число с десятичной точкой,
+                                имеющей после точки <replaceable>scale</replaceable> разрядов.
+                                Пример: DECIMAL(10,3) содержит число точно в следующем формате:
+                                ppppppp.sss.</para>
                         </entry>
                     </row>
                     <row>
-                        <entry>DECFLOAT (<replaceable>precision</replaceable>)</entry>
-                        <entry>8 или 16 байт</entry>
-                        <entry><replaceable>precision</replaceable> = 16 | 34, количество значащих
-                            цифр (точность)</entry>
-                        <entry>DB2-совместимый тип данных десятичных чисел с плавающей запятой,
-                            основанный на стандарте IEEE754r.</entry>
+                        <entry><para>DECFLOAT (<replaceable>precision</replaceable>)</para></entry>
+                        <entry><para>8 или 16 байт</para></entry>
+                        <entry><para><replaceable>precision</replaceable> = 16 | 34, количество
+                                значащих цифр (точность)</para></entry>
+                        <entry><para>DB2-совместимый тип данных десятичных чисел с плавающей
+                                запятой, основанный на стандарте IEEE754r.</para></entry>
                     </row>
                     <row>
-                        <entry>DOUBLE PRECISION</entry>
-                        <entry>64 бита</entry>
-                        <entry>2,225 x 10<superscript>-308</superscript> .. 1,797 x
-                                10<superscript>308</superscript>
+                        <entry><para>DOUBLE PRECISION</para></entry>
+                        <entry><para>64 бита</para></entry>
+                        <entry><para>2,225 x 10<superscript>-308</superscript> .. 1,797 x
+                                    10<superscript>308</superscript></para>
                         </entry>
-                        <entry>IEEE двойной точности, 15 цифр, размер зависит от платформы </entry>
+                        <entry><para>IEEE двойной точности, 15 цифр, размер зависит от
+                                платформы</para></entry>
                     </row>
                     <row>
-                        <entry>FLOAT</entry>
-                        <entry>32 бита</entry>
-                        <entry>1,175 x 10<superscript>-38</superscript> .. 3,402 x
-                                10<superscript>38</superscript>
+                        <entry><para>FLOAT</para></entry>
+                        <entry><para>32 бита</para></entry>
+                        <entry><para>1,175 x 10<superscript>-38</superscript> .. 3,402 x
+                                    10<superscript>38</superscript></para>
                         </entry>
-                        <entry>IEEE одинарной точности, 7 цифр </entry>
+                        <entry><para>IEEE одинарной точности, 7 цифр</para></entry>
                     </row>
                     <row>
                         <entry>
                             <para>INTEGER</para>
                             <para>INT</para>
                         </entry>
-                        <entry>32 бита</entry>
-                        <entry>–2 147 483 648 .. 2 147 483 647</entry>
-                        <entry>signed long</entry>
+                        <entry><para>32 бита</para></entry>
+                        <entry><para>–2 147 483 648 .. 2 147 483 647</para></entry>
+                        <entry><para>signed long</para></entry>
                     </row>
                     <row>
-                        <entry>NUMERIC (<replaceable>precision</replaceable>,
-                                <replaceable>scale</replaceable>)</entry>
-                        <entry>Переменный (16, 32, 64 или 128 бита)</entry>
+                        <entry><para>NUMERIC (<replaceable>precision</replaceable>,
+                                    <replaceable>scale</replaceable>)</para></entry>
+                        <entry><para>Переменный (16, 32, 64 или 128 бита)</para></entry>
                         <entry>
                             <para><replaceable>precision</replaceable> = от 1 до 34, указывает, по
                                 меньшей мере, количество цифр для хранения;</para>
                             <para><replaceable>scale</replaceable> = от 0 до 34. Задаёт количество
                                 знаков после разделителя.</para>
                         </entry>
-                        <entry><replaceable>scale</replaceable> должно быть меньше или равно
-                            precision. Число с десятичной точкой, имеющей после точки scale
-                            разрядов. Пример: NUMERIC(10,3) содержит число точно в следующем
-                            формате: ppppppp.sss.</entry>
+                        <entry><para><replaceable>scale</replaceable> должно быть меньше или равно
+                                precision. Число с десятичной точкой, имеющей после точки scale
+                                разрядов. Пример: NUMERIC(10,3) содержит число точно в следующем
+                                формате: ppppppp.sss.</para></entry>
                     </row>
                     <row>
-                        <entry>SMALLINT</entry>
-                        <entry>16 бит</entry>
-                        <entry>–32 768 .. 32 767</entry>
-                        <entry>signed short (word)</entry>
+                        <entry><para>SMALLINT</para></entry>
+                        <entry><para>16 бит</para></entry>
+                        <entry><para>–32 768 .. 32 767</para></entry>
+                        <entry><para>signed short (word)</para></entry>
                     </row>
                     <row>
-                        <entry>TIME</entry>
-                        <entry>32 бита</entry>
-                        <entry>От 0:00 до 23:59:59.9999</entry>
-                        <entry>ISC_TIME </entry>
+                        <entry><para>TIME</para></entry>
+                        <entry><para>32 бита</para></entry>
+                        <entry><para>От 0:00 до 23:59:59.9999</para></entry>
+                        <entry><para>ISC_TIME</para></entry>
                     </row>
                     <row>
-                        <entry>TIMESTAMP</entry>
-                        <entry>64 бита</entry>
-                        <entry>от 01.01.0001 н.э. до 31.12.9999 н.э.</entry>
-                        <entry>Включает информацию и о времени</entry>
+                        <entry><para>TIMESTAMP</para></entry>
+                        <entry><para>64 бита</para></entry>
+                        <entry><para>от 01.01.0001 н.э. до 31.12.9999 н.э.</para></entry>
+                        <entry><para>Включает информацию и о времени</para></entry>
                     </row>
                     <row>
                         <entry>
                             <para>VARBINARY(<replaceable>n</replaceable>)</para>
                             <para>BINARY VARYING(<replaceable>n</replaceable>)</para>
                         </entry>
-                        <entry><replaceable>n</replaceable> байт</entry>
-                        <entry>от 1 до 32 765 байтов</entry>
-                        <entry>Бинарный тип данных переменной длины. Является псевдонимом типа
-                                VARCHAR(<replaceable>n</replaceable>) CHARACTER SET OCTETS.</entry>
+                        <entry><para><replaceable>n</replaceable> байт</para></entry>
+                        <entry><para>от 1 до 32 765 байтов</para></entry>
+                        <entry><para>Бинарный тип данных переменной длины. Является псевдонимом типа
+                                    VARCHAR(<replaceable>n</replaceable>) CHARACTER SET
+                                OCTETS.</para></entry>
                     </row>
                     <row>
                         <entry>
@@ -195,13 +200,13 @@
                             <para>CHAR VARYING(<replaceable>n</replaceable>)</para>
                             <para>CHARACTER VARYING(<replaceable>n</replaceable>)</para>
                         </entry>
-                        <entry><replaceable>n</replaceable> символов (размер в байтах зависит от
-                            кодировки, кол-ва байт на символ) </entry>
-                        <entry>от 1 до 32 765 байтов</entry>
-                        <entry>Размер символов в байтах с учётом их кодировки не может быть больше
-                            32765. Для этого типа данных, в отличие от CHAR (где по умолчанию
-                            предполагается количество символов 1), количество символов n обязательно
-                            должно быть указано.</entry>
+                        <entry><para><replaceable>n</replaceable> символов (размер в байтах зависит
+                                от кодировки, кол-ва байт на символ)</para></entry>
+                        <entry><para>от 1 до 32 765 байтов</para></entry>
+                        <entry><para>Размер символов в байтах с учётом их кодировки не может быть
+                                больше 32765. Для этого типа данных, в отличие от CHAR (где по
+                                умолчанию предполагается количество символов 1), количество символов
+                                n обязательно должно быть указано.</para></entry>
                     </row>
                 </tbody>
             </tgroup>
@@ -380,9 +385,9 @@ INSERT INTO MYBIGINTS VALUES (
                     <title>Диапазон значений FLOAT</title>
                     <?dbfo keep-together='auto'?>
                     <tgroup cols="3">
-                        <colspec colname="c1" colnum="1" colwidth="0.5*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="0.5*" align="left"/>
-                        <colspec colname="c3" colnum="3" colwidth="1.4*" align="left"/>
+                        <colspec colname="c1" colnum="1" colwidth="1*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="1*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="2*" align="left"/>
                         <thead>
                             <row>
                                 <entry align="center">Точность (знаков)</entry>
@@ -396,8 +401,8 @@ INSERT INTO MYBIGINTS VALUES (
                                 <entry>
                                     <para>32 бита</para>
                                 </entry>
-                                <entry>1,175 x 10<superscript>-38</superscript> .. 3,402 x
-                                        10<superscript>38</superscript></entry>
+                                <entry><para>1,175 x 10<superscript>-38</superscript> .. 3,402 x
+                                            10<superscript>38</superscript></para></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -415,9 +420,9 @@ INSERT INTO MYBIGINTS VALUES (
                     <title>Диапазон значений DOUBLE PRECISION</title>
                     <?dbfo keep-together='auto'?>
                     <tgroup cols="3">
-                        <colspec colname="c1" colnum="1" colwidth="0.5*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="0.5*" align="left"/>
-                        <colspec colname="c3" colnum="3" colwidth="1.4*" align="left"/>
+                        <colspec colname="c1" colnum="1" colwidth="1*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="1*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="2*" align="left"/>
                         <thead>
                             <row>
                                 <entry align="center">Точность (знаков)</entry>
@@ -431,8 +436,8 @@ INSERT INTO MYBIGINTS VALUES (
                                 <entry>
                                     <para>64 бита</para>
                                 </entry>
-                                <entry>2,225 x 10<superscript>-308</superscript> .. 1,797 x
-                                        10<superscript>308</superscript></entry>
+                                <entry><para>2,225 x 10<superscript>-308</superscript> .. 1,797 x
+                                            10<superscript>308</superscript></para></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -455,11 +460,11 @@ INSERT INTO MYBIGINTS VALUES (
             <formalpara>
                 <title>Синтаксис:</title>
                 <para>
-                    <programlisting>
+                    <literallayout class="monospaced">
 DECFLOAT[(<replaceable>&lt;precision&gt;</replaceable>)]
 
 <replaceable>&lt;precision&gt;</replaceable> ::= 16 | 34                        
-</programlisting>
+</literallayout>
                 </para>
             </formalpara>
             <para>Тип DECFLOAT следует использовать если вам необходима вычисление и хранение чисел
@@ -469,9 +474,9 @@ DECFLOAT[(<replaceable>&lt;precision&gt;</replaceable>)]
                     <title>Диапазон значений DECFLOAT</title>
                     <?dbfo keep-together='auto'?>
                     <tgroup cols="3">
-                        <colspec colname="c1" colnum="1" colwidth="0.5*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="0.5*" align="left"/>
-                        <colspec colname="c3" colnum="3" colwidth="1.4*" align="left"/>
+                        <colspec colname="c1" colnum="1" colwidth="1*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="1*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="2*" align="left"/>
                         <thead>
                             <row>
                                 <entry align="center">Точность (знаков)</entry>
@@ -485,22 +490,22 @@ DECFLOAT[(<replaceable>&lt;precision&gt;</replaceable>)]
                                 <entry>
                                     <para>8</para>
                                 </entry>
-                                <entry>-9.999999999999999 x 10<superscript>384</superscript> .. -1.0
-                                    x 10<superscript>-383</superscript> : 1.0 x
-                                        10<superscript>-383</superscript> .. 9.999999999999999 x
-                                        10<superscript>384</superscript></entry>
+                                <entry><para>-9.999999999999999 x 10<superscript>384</superscript>
+                                        .. -1.0 x 10<superscript>-383</superscript> : 1.0 x
+                                            10<superscript>-383</superscript> .. 9.999999999999999 x
+                                            10<superscript>384</superscript></para></entry>
                             </row>
                             <row>
                                 <entry><para>34</para></entry>
                                 <entry>
                                     <para>16</para>
                                 </entry>
-                                <entry>-9.999999999999999999999999999999999 x
-                                        10<superscript>6144</superscript> .. -1.0 x
-                                        10<superscript>-6143</superscript> : 1.0 x
-                                        10<superscript>-6143</superscript> ..
-                                    9.999999999999999999999999999999999 x
-                                        10<superscript>6144</superscript></entry>
+                                <entry><para>-9.999999999999999999999999999999999 x
+                                            10<superscript>6144</superscript> .. -1.0 x
+                                            10<superscript>-6143</superscript> : 1.0 x
+                                            10<superscript>-6143</superscript> ..
+                                        9.999999999999999999999999999999999 x
+                                            10<superscript>6144</superscript></para></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -747,9 +752,9 @@ DECLARE VARIABLE v DECFLOAT(34);
                 <formalpara>
                     <title>Синтаксис:</title>
                     <para>
-                        <programlisting>
+                        <literallayout class="monospaced">
 SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>                      
-                        </programlisting>
+                        </literallayout>
                     </para>
                 </formalpara>
                 <formalpara>
@@ -775,7 +780,7 @@ SET DECFLOAT ROUND HALF_DOWN;
                 <para>Замыкающие нули в значениях десятичных чисел с плавающей запятой сохраняются.
                     Например, 1.0 и 1.00 — это два различных представления. Это порождает различные
                     семантики сравнения для типа данных DECFLOAT, как показано ниже.</para>
-                
+
                 <section>
                     <title>Сравнение числовых значений</title>
 
@@ -830,12 +835,12 @@ select * from stockPrice order by stock;
 -nan &lt; -snan &lt; -inf &lt; -0.1 &lt; -0.10 &lt; -0 &lt; 0 &lt; 0.10 &lt; 0.1 &lt; inf &lt; snan &lt; nan
                             </screen>
                     </para>
-                    
+
                     <important>
                         <para>Обратите внимание на то, что отрицательный нуль меньше положительного
                             нуля при сравнении TotalOrder</para>
                     </important>
-                    
+
                     <para>Запросить сравнение TotalOrder в предикатах можно при помощи встроенной
                         функции <link linkend="internalfunc-func-decfloat-totalorder"
                             >TOTALORDER()</link>.</para>
@@ -880,7 +885,7 @@ select * from stockPrice where TOTALORDER(stock, 4.20) = 1;
                         1.00.</para>
                 </section>
             </section>
-            
+
             <section xml:id="types-float-decfloat-trap">
                 <info>
                     <title>Обработка ошибок</title>
@@ -891,7 +896,7 @@ select * from stockPrice where TOTALORDER(stock, 4.20) = 1;
                 <formalpara>
                     <title>Синтаксис:</title>
                     <para>
-                        <programlisting>
+                        <literallayout class="monospaced">
 SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>      
                             
 <replaceable>&lt;traps list&gt;</replaceable> ::= <replaceable>&lt;trap&gt;</replaceable>[, <replaceable>&lt;trap&gt;</replaceable>[, ... <replaceable>&lt;trap&gt;</replaceable>]]        
@@ -902,7 +907,7 @@ SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>
   | Invalid_operation
   | Overflow 
   | Underflow                           
-                        </programlisting>
+                        </literallayout>
                     </para>
                 </formalpara>
                 <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
@@ -929,7 +934,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
                 <formalpara>
                     <title>Синтаксис:</title>
                     <para>
-                        <programlisting>
+                        <literallayout class="monospaced">
 SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>      
                             
 <replaceable>&lt;bind-type&gt;</replaceable> ::= 
@@ -937,7 +942,7 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
   | CHAR[ACTER]
   | DOUBLE PRECISION
   | BIGINT[, <replaceable>scale</replaceable>]                          
-                        </programlisting>
+                        </literallayout>
                     </para>
                 </formalpara>
                 <para>
@@ -955,7 +960,7 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry><replaceable>scale</replaceable></entry>
+                                    <entry><para><replaceable>scale</replaceable></para></entry>
                                     <entry>
                                         <para>Точность (количество знаков после запятой).</para>
                                     </entry>
@@ -1100,21 +1105,42 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
             </info>
             <indexterm><primary>NUMERIC</primary></indexterm>
             <para>Формат объявления данных:
-                <programlisting> 
+                <literallayout class="monospaced"> 
 NUMERIC(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
-                </programlisting>
+                </literallayout>
             </para>
             <para>В зависимости от точности <replaceable>p</replaceable> и масштаба
                     <replaceable>s</replaceable> СУБД хранит данные по-разному. </para>
             <para>Приведём примеры того, как СУБД хранит данные в зависимости от формы их
-                объявления:
-                <programlisting> 
-NUMERIC(4)      SMALLINT 
-NUMERIC(4,2)    SMALLINT (data * 10<superscript>2</superscript>)
-NUMERIC(10,4)   DOUBLE PRECISION в 1-ом диалекте
-                BIGINT в 3-ем диалекте (data * 10<superscript>4</superscript>)
-NUMERIC(20, 2)  DECFLOAT(34)
-                </programlisting>
+                объявления: <informaltable frame="all">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                        <tbody>
+                            <row>
+                                <entry><para><code>NUMERIC(4)</code></para></entry>
+                                <entry><para>SMALLINT</para></entry>
+                            </row>
+                            <row>
+                                <entry><para><code>NUMERIC(4, 2)</code></para></entry>
+                                <entry><para>SMALLINT (data *
+                                    10<superscript>2</superscript>)</para></entry>
+                            </row>
+                            <row>
+                                <entry><para><code>NUMERIC(10, 4)</code></para></entry>
+                                <entry>
+                                    <para>DOUBLE PRECISION в 1-ом диалекте</para>
+                                    <para>BIGINT в 3-ем диалекте (data *
+                                            10<superscript>4</superscript>)</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><para><code>NUMERIC(20, 2)</code></para></entry>
+                                <entry><para>DECFLOAT(34)</para></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
             </para>
             <caution>
                 <para>Всегда надо помнить, что формат хранения данных зависит от точности. Например,
@@ -1133,21 +1159,42 @@ NUMERIC(20, 2)  DECFLOAT(34)
             </info>
             <indexterm><primary>DECIMAL</primary></indexterm>
             <para>Формат объявления данных:
-                <programlisting> 
+                <literallayout class="monospaced"> 
 DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
-                </programlisting>
+                </literallayout>
             </para>
             <para>Формат хранения данных в базе во многом аналогичен NUMERIC, хотя существуют
                 некоторые особенности, которые проще всего пояснить на примере. </para>
             <para>Приведём примеры того, как СУБД хранит данные в зависимости от формы их
-                объявления:
-                <programlisting> 
-DECIMAL(4)      INTEGER
-DECIMAL(4,2)    INTEGER (data * 10<superscript>2</superscript>)
-DECIMAL(10,4)   DOUBLE PRECISION в 1-ом диалекте 
-                BIGINT в 3-ем диалекте (data * 10<superscript>4</superscript>)
-DECIMAL(20, 2)  DECFLOAT(34)
-                </programlisting>
+                объявления: <informaltable frame="all">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                        <tbody>
+                            <row>
+                                <entry><para><code>DECIMAL(4)</code></para></entry>
+                                <entry><para>SMALLINT</para></entry>
+                            </row>
+                            <row>
+                                <entry><para><code>DECIMAL(4, 2)</code></para></entry>
+                                <entry><para>SMALLINT (data *
+                                    10<superscript>2</superscript>)</para></entry>
+                            </row>
+                            <row>
+                                <entry><para><code>DECIMAL(10, 4)</code></para></entry>
+                                <entry>
+                                    <para>DOUBLE PRECISION в 1-ом диалекте</para>
+                                    <para>BIGINT в 3-ем диалекте (data *
+                                            10<superscript>4</superscript>)</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><para><code>DECIMAL(20, 2)</code></para></entry>
+                                <entry><para>DECFLOAT(34)</para></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
             </para>
         </section>
         <section>
@@ -1222,12 +1269,12 @@ DECIMAL(20, 2)  DECFLOAT(34)
                     <listitem>
                         <para>CURRENT_TIME — по умолчанию имеет точность до секунды, точность до
                             миллисекунд может быть указана следующим образом
-                            <programlisting>CURRENT_TIME (0 | 1 | 2 | 3)</programlisting></para>
+                            <literallayout class="monospaced">CURRENT_TIME (0 | 1 | 2 | 3)</literallayout></para>
                     </listitem>
                     <listitem>
                         <para>CURRENT_TIMESTAMP — по умолчанию имеет точность до миллисекунды,
                             точность от секунд до миллисекунд может быть указана следующим образом
-                            <programlisting>CURRENT_TIMESTAMP (0 | 1 | 2 | 3)</programlisting></para>
+                            <literallayout class="monospaced">CURRENT_TIMESTAMP (0 | 1 | 2 | 3)</literallayout></para>
                     </listitem>
                     <listitem>
                         <para>Литерал 'NOW' имеет точность до миллисекунд;</para>
@@ -1318,94 +1365,99 @@ EXTRACT (SECOND FROM DATE_FIELD)
                         </thead>
                         <tbody>
                             <row valign="middle">
-                                <entry>DATE</entry>
+                                <entry><para>DATE</para></entry>
                                 <entry>+</entry>
-                                <entry>TIME</entry>
-                                <entry>TIMESTAMP</entry>
+                                <entry><para>TIME</para></entry>
+                                <entry><para>TIMESTAMP</para></entry>
                             </row>
                             <row valign="middle">
-                                <entry>DATE</entry>
-                                <entry>+</entry>
-                                <entry>
-                                    <replaceable>n</replaceable>
-                                </entry>
-                                <entry>DATE, увеличенная на <replaceable>n</replaceable> целых дней
-                                    (дробная часть игнорируется).</entry>
-                            </row>
-                            <row valign="middle">
-                                <entry>TIME</entry>
-                                <entry>+</entry>
-                                <entry>DATE</entry>
-                                <entry>TIMESTAMP</entry>
-                            </row>
-                            <row valign="middle">
-                                <entry>TIME</entry>
+                                <entry><para>DATE</para></entry>
                                 <entry>+</entry>
                                 <entry>
-                                    <replaceable>n</replaceable>
+                                    <para><replaceable>n</replaceable></para>
                                 </entry>
-                                <entry>TIME, увеличенное на <replaceable>n</replaceable> секунд
-                                    (дробная часть учитывается)</entry>
+                                <entry><para>DATE, увеличенная на <replaceable>n</replaceable> целых
+                                        дней (дробная часть игнорируется).</para></entry>
                             </row>
                             <row valign="middle">
-                                <entry>TIMESTAMP</entry>
+                                <entry><para>TIME</para></entry>
+                                <entry>+</entry>
+                                <entry><para>DATE</para></entry>
+                                <entry><para>TIMESTAMP</para></entry>
+                            </row>
+                            <row valign="middle">
+                                <entry><para>TIME</para></entry>
                                 <entry>+</entry>
                                 <entry>
-                                    <replaceable>n</replaceable>
+                                    <para><replaceable>n</replaceable></para>
                                 </entry>
-                                <entry>TIMESTAMP, где дни увеличены на целую часть числа
-                                        <replaceable>n</replaceable>, плюс дробная часть числа
-                                        <replaceable>n</replaceable> (если указана) как количество
-                                    секунд в дне (с точностью до десятитысячных долей секунды).
+                                <entry><para>TIME, увеличенное на <replaceable>n</replaceable>
+                                        секунд (дробная часть учитывается)</para></entry>
+                            </row>
+                            <row valign="middle">
+                                <entry><para>TIMESTAMP</para></entry>
+                                <entry>+</entry>
+                                <entry>
+                                    <para><replaceable>n</replaceable></para>
+                                </entry>
+                                <entry><para>TIMESTAMP, где дни увеличены на целую часть числа
+                                            <replaceable>n</replaceable>, плюс дробная часть числа
+                                            <replaceable>n</replaceable> (если указана) как
+                                        количество секунд в дне (с точностью до десятитысячных долей
+                                        секунды).</para>
                                 </entry>
                             </row>
                             <row valign="middle">
-                                <entry>DATE</entry>
+                                <entry><para>DATE</para></entry>
                                 <entry>-</entry>
-                                <entry>DATE</entry>
-                                <entry>Количество дней в интервале DECIMAL (9, 0)</entry>
+                                <entry><para>DATE</para></entry>
+                                <entry><para>Количество дней в интервале DECIMAL (9,
+                                    0)</para></entry>
                             </row>
                             <row valign="middle">
-                                <entry>DATE</entry>
+                                <entry><para>DATE</para></entry>
                                 <entry>-</entry>
                                 <entry>
-                                    <replaceable>n</replaceable>
+                                    <para><replaceable>n</replaceable></para>
                                 </entry>
-                                <entry>DATE, уменьшенная на <replaceable>n</replaceable> целых дней
-                                    (дробная часть игнорируется)</entry>
+                                <entry><para>DATE, уменьшенная на <replaceable>n</replaceable> целых
+                                        дней (дробная часть игнорируется)</para></entry>
                             </row>
                             <row valign="middle">
-                                <entry>TIME</entry>
+                                <entry><para>TIME</para></entry>
                                 <entry>-</entry>
-                                <entry>TIME</entry>
-                                <entry>Количество секунд в интервале DECIMAL (9, 4)</entry>
+                                <entry><para>TIME</para></entry>
+                                <entry><para>Количество секунд в интервале DECIMAL (9,
+                                    4)</para></entry>
                             </row>
                             <row valign="middle">
-                                <entry>TIME</entry>
-                                <entry>-</entry>
-                                <entry>
-                                    <replaceable>n</replaceable>
-                                </entry>
-                                <entry>TIME, уменьшенное на <replaceable>n</replaceable> секунд
-                                    (дробная часть учитывается)</entry>
-                            </row>
-                            <row valign="middle">
-                                <entry>TIMESTAMP</entry>
-                                <entry>-</entry>
-                                <entry>TIMESTAMP</entry>
-                                <entry>Количество дней и части дня в интервале DECIMAL (18, 9)
-                                </entry>
-                            </row>
-                            <row valign="middle">
-                                <entry>TIMESTAMP</entry>
+                                <entry><para>TIME</para></entry>
                                 <entry>-</entry>
                                 <entry>
-                                    <replaceable>n</replaceable>
+                                    <para><replaceable>n</replaceable></para>
                                 </entry>
-                                <entry>TIMESTAMP, где дни уменьшены на целую часть числа
-                                        <replaceable>n</replaceable>, плюс дробная часть числа
-                                        <replaceable>n</replaceable> (если указана) как количество
-                                    секунд в дне (с точностью до десятитысячных долей секунды).
+                                <entry><para>TIME, уменьшенное на <replaceable>n</replaceable>
+                                        секунд (дробная часть учитывается)</para></entry>
+                            </row>
+                            <row valign="middle">
+                                <entry><para>TIMESTAMP</para></entry>
+                                <entry>-</entry>
+                                <entry><para>TIMESTAMP</para></entry>
+                                <entry><para>Количество дней и части дня в интервале DECIMAL (18,
+                                        9)</para>
+                                </entry>
+                            </row>
+                            <row valign="middle">
+                                <entry><para>TIMESTAMP</para></entry>
+                                <entry>-</entry>
+                                <entry>
+                                    <para><replaceable>n</replaceable></para>
+                                </entry>
+                                <entry><para>TIMESTAMP, где дни уменьшены на целую часть числа
+                                            <replaceable>n</replaceable>, плюс дробная часть числа
+                                            <replaceable>n</replaceable> (если указана) как
+                                        количество секунд в дне (с точностью до десятитысячных долей
+                                        секунды).</para>
                                 </entry>
                             </row>
                         </tbody>
@@ -1602,10 +1654,11 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 байтов меньше, чем максимальная длина ключа. В таблице приведены данные для
                 максимальной длины индексируемой строки (в символах) в зависимости от размера
                 страницы и набора символов, её можно вычислить по следующей формуле:
-                <programlisting>  
+                <literallayout class="monospaced">  
 <replaceable>max_char_length</replaceable> = FLOOR((<replaceable>page_size</replaceable> / 4 – 9) / <replaceable>N</replaceable>),                
-            </programlisting>
-                где <replaceable>N</replaceable> — число байтов на представление символа. </para>
+            </literallayout>
+			</para>
+            <para>где <replaceable>N</replaceable> — число байтов на представление символа. </para>
             <para>
                 <table xml:id="types-tbl-charindxsz" frame="all">
                     <?dbfo keep-together='auto'?>
@@ -1694,9 +1747,9 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 CHAR [(<replaceable>length</replaceable>)] [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
-                     </programlisting>
+                     </literallayout>
                 </para>
             </formalpara>
             <para>В случае если не указана длина, то считается, что она равна единице. </para>
@@ -1720,9 +1773,9 @@ CHAR [(<replaceable>length</replaceable>)] [CHARACTER SET <replaceable>&lt;chars
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 VARCHAR (<replaceable>length</replaceable>) [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
-                     </programlisting>
+                     </literallayout>
                 </para>
             </formalpara>
         </section>
@@ -1737,9 +1790,9 @@ VARCHAR (<replaceable>length</replaceable>) [CHARACTER SET <replaceable>&lt;char
                 <title>Синтаксис</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 NCHAR [(<replaceable>length</replaceable>)]                 
-                     </programlisting>
+                     </literallayout>
                 </para>
             </formalpara>
             <para>Синонимом является написание NATIONAL CHAR. </para>
@@ -1780,12 +1833,12 @@ NCHAR [(<replaceable>length</replaceable>)]
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>
+                    <para><literallayout class="monospaced">
 <replaceable>&lt;alternate string literal&gt;</replaceable> ::=
   { q | Q } <replaceable>&lt;quote&gt;</replaceable> <replaceable>&lt;alternate start char&gt;</replaceable> 
   [ { <replaceable>&lt;char&gt;</replaceable> }... ] 
   <replaceable>&lt;alternate end char&gt;</replaceable> <replaceable>&lt;quote&gt;</replaceable>
-            </programlisting></para>
+            </literallayout></para>
                 </formalpara>
                 <para><emphasis>Описание:</emphasis></para>
                 <para>Когда <replaceable>&lt;alternate start char&gt;</replaceable> является одним
@@ -1960,15 +2013,15 @@ SELECT * FROM TBOOL WHERE BVAL &lt;&gt; UNKNOWN
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 BINARY [(<replaceable>&lt;length&gt;</replaceable>)]            
-                </programlisting>
+                </literallayout>
                 </para>
             </formalpara>
             <note>
-                <para>Этот тип является псевдонимом типа CHAR
-                        [(<replaceable>&lt;length&gt;</replaceable>)] CHARACTER SET OCTETS и обратно
-                    совместим с ним.</para>
+                <para>Этот тип является псевдонимом типа <code>CHAR
+                            [(<replaceable>&lt;length&gt;</replaceable>)] CHARACTER SET
+                        OCTETS</code> и обратно совместим с ним.</para>
             </note>
             <tip>
                 <para>Данный тип хорошо подходит для хранения уникального идентификатора полученного
@@ -1997,16 +2050,16 @@ BINARY [(<replaceable>&lt;length&gt;</replaceable>)]
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
     VARBINARY (<replaceable>&lt;length&gt;</replaceable>)             
   | BINARY VARYING (<replaceable>&lt;length&gt;</replaceable>)            
-                </programlisting>
+                </literallayout>
                 </para>
             </formalpara>
             <note>
-                <para>Этот тип является псевдонимом типа VARCHAR
-                        (<replaceable>&lt;length&gt;</replaceable>) CHARACTER SET OCTETS и обратно
-                    совместим с ним.</para>
+                <para>Этот тип является псевдонимом типа <code>VARCHAR
+                            (<replaceable>&lt;length&gt;</replaceable>) CHARACTER SET OCTETS</code>
+                    и обратно совместим с ним.</para>
             </note>
             <formalpara>
                 <title>Примеры:</title>
@@ -2047,22 +2100,22 @@ CREATE TABLE INFO (
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 BLOB [SUB_TYPE <replaceable>&lt;subtype&gt;</replaceable>]
 [SEGMENT SIZE <replaceable>&lt;seg_length&gt;</replaceable>]
 [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>]                 
-                </programlisting>
+                </literallayout>
                 </para>
             </formalpara>
             <formalpara>
                 <title>Сокращённый синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 BLOB (<replaceable>&lt;seg_length&gt;</replaceable>)
 BLOB (<replaceable>&lt;seg_length&gt;</replaceable>, <replaceable>&lt;subtype&gt;</replaceable>)
 BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)                 
-                </programlisting>
+                </literallayout>
                 </para>
             </formalpara>
             <formalpara>
@@ -2114,15 +2167,24 @@ BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)
                     несколько ниже 2 Гб. </para>
                 <para>Текстовые BLOB любой длины и с любым набором символов (включая multi-byte)
                     могут быть использованы практически c любыми встроенными функциями и
-                    операторами: <itemizedlist spacing="compact">
+                    операторами: <itemizedlist>
                         <listitem>
-                            <para>Полная поддержка для операторов: <simplelist type="vert">
-                                    <member>= (присвоение);</member>
-                                    <member>=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;= (сравнение); </member>
-                                    <member>|| (конкатенация);</member>
-                                    <member>BETWEEN, IS [NOT] DISTINCT FROM, IN, ANY|SOME и ALL;
-                                    </member>
-                                </simplelist>
+                            <para>Полная поддержка для операторов: <itemizedlist spacing="compact">
+                                    <listitem>
+                                        <para>= (присвоение);</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;=
+                                            (сравнение);</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>|| (конкатенация);</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>BETWEEN, IS [NOT] DISTINCT FROM, IN, ANY|SOME и
+                                            ALL;</para>
+                                    </listitem>
+                                </itemizedlist>
                             </para>
                         </listitem>
                         <listitem>
@@ -2200,9 +2262,9 @@ CREATE TABLE SAMPLE_ARR (
             <para>Так будет создана таблица с полем типа массива из четырёх целых. Индексы данного
                 массива от 1 до 4. Для определения верхней и нижней границы значений индекса следует
                 воспользоваться следующим синтаксисом:
-                <programlisting>  
+                <literallayout class="monospaced">  
 [<replaceable>&lt;нижняя&gt;</replaceable>:<replaceable>&lt;верхняя&gt;</replaceable>]                
-            </programlisting>
+            </literallayout>
             </para>
             <para>Добавление новой размерности в синтаксисе идёт через запятую. Пример создания
                 таблицы с массивом размерности два, в котором нижняя граница значений начинается с
@@ -2361,14 +2423,14 @@ WHERE (SH.SIZE = ? OR ? IS NULL)
                 </info>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 CAST (<replaceable>&lt;value&gt;</replaceable> | NULL AS <replaceable>&lt;data_type&gt;</replaceable>)
 
 <replaceable>&lt;data_type&gt;</replaceable> ::= 
      <replaceable>sql_datatype</replaceable>
   | [TYPE OF] <replaceable>domain</replaceable>
   | TYPE OF COLUMN <replaceable>relname.colname</replaceable>                
-                   </programlisting>
+                   </literallayout>
                 </para>
             </formalpara>
             <section xml:id="types-cast-to-domain">
@@ -2423,78 +2485,58 @@ FROM RDB$DATABASE;
                             <tbody>
                                 <row>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>Числовые типы</member>
-                                        </simplelist>
+                                        <para>Числовые типы</para>
                                     </entry>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>Числовые типы</member>
-                                            <member>[VAR]CHAR</member>
-                                            <member>BLOB</member>
-                                        </simplelist>
+                                        <para>Числовые типы</para>
+                                        <para>[VAR]CHAR</para>
+                                        <para>BLOB</para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>[VAR]CHAR</member>
-                                            <member>BLOB</member>
-                                        </simplelist>
+                                        <para>[VAR]CHAR</para>
+                                        <para>BLOB</para>
                                     </entry>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>[VAR]CHAR</member>
-                                            <member>BLOB</member>
-                                            <member>BOOLEAN</member>
-                                            <member>Числовые типы</member>
-                                            <member>DATE</member>
-                                            <member>TIME</member>
-                                            <member>TIMESTAMP</member>
-                                        </simplelist>
+                                        <para>[VAR]CHAR</para>
+                                        <para>BLOB</para>
+                                        <para>BOOLEAN</para>
+                                        <para>Числовые типы</para>
+                                        <para>DATE</para>
+                                        <para>TIME</para>
+                                        <para>TIMESTAMP</para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>DATE</member>
-                                            <member>TIME</member>
-                                        </simplelist>
+                                        <para>DATE</para>
+                                        <para>TIME</para>
                                     </entry>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>[VAR]CHAR</member>
-                                            <member>BLOB</member>
-                                            <member>TIMESTAMP</member>
-                                        </simplelist>
+                                        <para>[VAR]CHAR</para>
+                                        <para>BLOB</para>
+                                        <para>TIMESTAMP</para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>TIMESTAMP</member>
-                                        </simplelist>
+                                        <para>TIMESTAMP</para>
                                     </entry>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>[VAR]CHAR</member>
-                                            <member>BLOB</member>
-                                            <member>TIME</member>
-                                            <member>DATE</member>
-                                        </simplelist>
+                                        <para>[VAR]CHAR</para>
+                                        <para>BLOB</para>
+                                        <para>TIME</para>
+                                        <para>DATE</para>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>BOOLEAN</member>
-                                        </simplelist>
+                                        <para>BOOLEAN</para>
                                     </entry>
                                     <entry>
-                                        <simplelist type="vert" columns="1">
-                                            <member>[VAR]CHAR</member>
-                                            <member>BLOB</member>
-                                        </simplelist>
+                                        <para>[VAR]CHAR</para>
+                                        <para>BLOB</para>
                                     </entry>
                                 </row>
                             </tbody>
@@ -2515,34 +2557,34 @@ FROM RDB$DATABASE;
                     необходимо чтобы строковый аргумент был либо одним из предопределённых литералов
                     даты и времени, либо строковое представление даты в одном из разрешённых
                     форматов. </para>
-                <para><programlisting>
-<replaceable>&lt;datetime_literal&gt;</replaceable> ::= {     
-  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]] |     
-  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
-  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |     
-  NOW |     
-  TODAY |     
-  TOMORROW |     
-  YERSTERDAY   
-}       
+                <para><literallayout class="monospaced">
+<replaceable>&lt;datetime_literal&gt;</replaceable> ::= {
+  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]] |
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
+  NOW |
+  TODAY |
+  TOMORROW |
+  YERSTERDAY
+}
 
-<replaceable>&lt;date_literal&gt;</replaceable> ::= {     
-  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable> |     
-  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |     
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |     
-  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |     
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |     
-  TODAY |     
-  TOMORROW |     
-  YERSTERDAY   
-}       
+<replaceable>&lt;date_literal&gt;</replaceable> ::= {
+  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable> |
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |
+  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |
+  TODAY |
+  TOMORROW |
+  YERSTERDAY
+}
 
-<replaceable>&lt;time_literal&gt;</replaceable> := <replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]       
+<replaceable>&lt;time_literal&gt;</replaceable> := <replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]
 
-<replaceable>&lt;p&gt;</replaceable> ::= <replaceable>whitespace</replaceable> | . | : | , | - | /                    
-            </programlisting></para>
+<replaceable>&lt;p&gt;</replaceable> ::= <replaceable>whitespace</replaceable> | . | : | , | - | /
+            </literallayout></para>
                 <para>
                     <table xml:id="types-tbl-keydesc" frame="all">
                         <?dbfo keep-together='auto'?>
@@ -2558,61 +2600,66 @@ FROM RDB$DATABASE;
                             </thead>
                             <tbody>
                                 <row valign="middle">
-                                    <entry>datetime_literal</entry>
-                                    <entry>Литерал даты-времени.</entry>
+                                    <entry><replaceable>datetime_literal</replaceable></entry>
+                                    <entry><para>Литерал даты-времени.</para></entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>date_literal</entry>
-                                    <entry>Литерал даты.</entry>
+                                    <entry><replaceable>date_literal</replaceable></entry>
+                                    <entry><para>Литерал даты.</para></entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>time_literal</entry>
-                                    <entry>Литерал времени.</entry>
+                                    <entry><replaceable>time_literal</replaceable></entry>
+                                    <entry><para>Литерал времени.</para></entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>YYYY</entry>
-                                    <entry>Год из четырёх цифр.</entry>
+                                    <entry><replaceable>YYYY</replaceable></entry>
+                                    <entry><para>Год из четырёх цифр.</para></entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>YY</entry>
-                                    <entry>Последние две цифры года (00-99).</entry>
+                                    <entry><replaceable>YY</replaceable></entry>
+                                    <entry><para>Последние две цифры года (00-99).</para></entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>MM</entry>
-                                    <entry>Месяц. Может содержать 1 или 2 цифры (1-12 или 01-12). В
-                                        качестве месяца допустимо также указывать трёхбуквенное
-                                        сокращение или полное наименование месяца на английском
-                                        языке, регистр не имеет значение. </entry>
-                                </row>
-                                <row valign="middle">
-                                    <entry>DD</entry>
-                                    <entry>День. Может содержать 1 или 2 цифры (1-31 или 01-31).
+                                    <entry><replaceable>MM</replaceable></entry>
+                                    <entry><para>Месяц. Может содержать 1 или 2 цифры (1-12 или
+                                            01-12). В качестве месяца допустимо также указывать
+                                            трёхбуквенное сокращение или полное наименование месяца
+                                            на английском языке, регистр не имеет значение.</para>
                                     </entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>HH</entry>
-                                    <entry>Час. Может содержать 1 или 2 цифры (0-23 или 00-23).
+                                    <entry><replaceable>DD</replaceable></entry>
+                                    <entry><para>День. Может содержать 1 или 2 цифры (1-31 или
+                                            01-31).</para>
                                     </entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>mm</entry>
-                                    <entry>Минуты. Может содержать 1 или 2 цифры (0-59 или 00-59).
+                                    <entry><replaceable>HH</replaceable></entry>
+                                    <entry><para>Час. Может содержать 1 или 2 цифры (0-23 или
+                                            00-23).</para>
                                     </entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>SS</entry>
-                                    <entry>Секунды. Может содержать 1 или 2 цифры (0-59 или
-                                        00-59).</entry>
+                                    <entry><replaceable>mm</replaceable></entry>
+                                    <entry><para>Минуты. Может содержать 1 или 2 цифры (0-59 или
+                                            00-59).</para>
+                                    </entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>NNNN</entry>
-                                    <entry>Десятитысячные доли секунды. Может содержать от 1 до 4
-                                        цифр (0-9999). </entry>
+                                    <entry><replaceable>SS</replaceable></entry>
+                                    <entry><para>Секунды. Может содержать 1 или 2 цифры (0-59 или
+                                            00-59).</para></entry>
                                 </row>
                                 <row valign="middle">
-                                    <entry>p</entry>
-                                    <entry>Разделитель, любой из разрешённых символов, лидирующие и
-                                        завершающие пробелы игнорируются </entry>
+                                    <entry><replaceable>NNNN</replaceable></entry>
+                                    <entry><para>Десятитысячные доли секунды. Может содержать от 1
+                                            до 4 цифр (0-9999).</para></entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry><replaceable>p</replaceable></entry>
+                                    <entry><para>Разделитель, любой из разрешённых символов,
+                                            лидирующие и завершающие пробелы
+                                        игнорируются</para></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2759,9 +2806,9 @@ FROM rdb$database
                     <title>Синтаксис:</title>
 
                     <para>
-                        <programlisting>  
+                        <literallayout class="monospaced">  
 <replaceable>datatype</replaceable> '<replaceable>date/time string</replaceable>'             
-                   </programlisting>
+                   </literallayout>
                     </para>
                 </formalpara>
                 <formalpara>
@@ -2980,12 +3027,12 @@ CREATE DOMAIN BOOL3 AS SMALLINT
                 <title>Краткий синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 CREATE DOMAIN <replaceable>&lt;name&gt;</replaceable> [AS] <replaceable>&lt;type&gt;</replaceable>
 [DEFAULT {<replaceable>&lt;const&gt;</replaceable> | <replaceable>&lt;literal&gt;</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}]
 [NOT NULL] [CHECK (<replaceable>&lt;condition&gt;</replaceable>)]
 [COLLATE collation];        
-                   </programlisting>
+                   </literallayout>
                 </para>
             </formalpara>
             <formalpara>
@@ -3033,7 +3080,7 @@ CREATE DOMAIN <replaceable>&lt;name&gt;</replaceable> [AS] <replaceable>&lt;type
                 <title>Краткий синтаксис:</title>
 
                 <para>
-                    <programlisting>
+                    <literallayout class="monospaced">
 
 ALTER DOMAIN <replaceable>name</replaceable>
   [{TO <replaceable>new_name</replaceable>}]
@@ -3043,7 +3090,7 @@ ALTER DOMAIN <replaceable>name</replaceable>
   [{ADD [CONSTRAINT] CHECK (<replaceable>&lt;dom_condition&gt;</replaceable>) | 
     DROP CONSTRAINT}]
   [{TYPE <replaceable>&lt;datatype&gt;</replaceable>}];  
-                          </programlisting>
+                          </literallayout>
                 </para>
             </formalpara>
             <formalpara>
@@ -3081,9 +3128,9 @@ ALTER DOMAIN STORE_GRP SET DEFAULT -1;
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>  
+                    <literallayout class="monospaced">  
 DROP DOMAIN <replaceable>name</replaceable>;      
-                   </programlisting>
+                   </literallayout>
                 </para>
             </formalpara>
             <formalpara>
