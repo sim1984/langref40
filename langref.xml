@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://www.oasis-open.org/docbook/xml/5.0/rng/docbookxi.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<book xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude"
-    xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="langref" xml:lang="ru">
+<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:m="http://www.w3.org/1998/Math/MathML"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xml:id="langref" 
+    xml:lang="ru">
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
-        <edition>22 июля 2018 — v.0000-1 для Firebird 4.0 Alpha 1</edition>
+        <edition>25 июля 2018 — v.0000-1 для Firebird 4.0 Alpha 1</edition>
+        <copyright>
+            <year>2018</year>
+            <holder>firebirdsql.org</holder>
+        </copyright>
         <authorgroup>
             <author>
                 <personname><firstname>Денис</firstname><surname>Симонов</surname></personname>

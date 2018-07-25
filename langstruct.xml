@@ -191,7 +191,7 @@ FullName
             <title>Синтаксис:</title>
 
             <para>
-                <programlisting>
+                <literallayout class="monospaced">
 <replaceable>&lt;name&gt;</replaceable> ::=
   <replaceable>&lt;letter&gt;</replaceable> |
   <replaceable>&lt;name&gt;</replaceable><replaceable>&lt;letter&gt;</replaceable> |
@@ -208,7 +208,7 @@ FullName
     | n | o | p | q | r | s | t | u | v | w | x | y | z
 
 <replaceable>&lt;digit&gt;</replaceable> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9  
-                </programlisting>
+                </literallayout>
             </para>
         </formalpara>
         <para>Имя с разделителями заключается в двойные кавычки. Оно может содержать любые символы,
@@ -218,9 +218,9 @@ FullName
                 linkend="langstruct-background-dialects">Диалекты SQL</link>
         </para>
         <para>
-            <programlisting>  
+            <literallayout class="monospaced">  
 <replaceable>&lt;delimited name&gt;</replaceable> ::= "<replaceable>&lt;ASCII char&gt;</replaceable>[<replaceable>&lt;ASCII char&gt;</replaceable> …]"                
-            </programlisting>
+            </literallayout>
         </para>
         <para>Следует иметь в виду, что конечные пробелы в именах с разделителями, как и в любых
             строковых константах, отбрасываются. </para>
@@ -270,11 +270,11 @@ FullName
 
         <para>Существует набор специальных символов, используемых в качестве разделителей. </para>
         <para>
-            <programlisting> 
+            <literallayout class="monospaced"> 
 <replaceable>&lt;special char&gt;</replaceable> ::= <replaceable>&lt;space&gt;</replaceable> | " | % | &amp; | ' | ( | ) 
     | * | + | , | - | . | / | : | ; | &lt; | = | &gt; | ? | [ | ] 
     | ^ | { | } | <emphasis role="bold">|</emphasis>               
-            </programlisting>
+            </literallayout>
         </para>
         <para>Часть этих символов, а так же их комбинации могут быть использованы как операторы
             (арифметические, строковые, логические), как разделители команд SQL, для квотирования
@@ -283,7 +283,7 @@ FullName
             <title>Синтаксис:</title>
 
             <para>
-                <programlisting>  
+                <literallayout class="monospaced">  
 <replaceable>&lt;operator&gt;</replaceable> ::=
     <replaceable>&lt;string operator&gt;</replaceable> |
     <replaceable>&lt;arithmetic operator&gt;</replaceable> |
@@ -300,7 +300,7 @@ FullName
     {!&lt;} | {~&lt;} | {^&lt;}
     
 <replaceable>&lt;logical operator&gt;</replaceable> ::= NOT | AND | OR                    
-                </programlisting>
+                </literallayout>
             </para>
         </formalpara>
         <para>Подробнее об операторах см. <link linkend="common-expr"
@@ -319,7 +319,7 @@ FullName
             <title>Синтаксис:</title>
 
             <para>
-                <programlisting>   
+                <literallayout class="monospaced">   
 <replaceable>&lt;comment&gt;</replaceable> ::= <replaceable>&lt;block comment&gt;</replaceable> | <replaceable>&lt;single-line comment&gt;</replaceable>
     
 <replaceable>&lt;block comment&gt;</replaceable> ::=
@@ -327,7 +327,7 @@ FullName
     
 <replaceable>&lt;single-line comment&gt;</replaceable> ::=
     --<replaceable>&lt;ASCII char&gt;</replaceable>[<replaceable>&lt;ASCII char&gt;</replaceable> …]<replaceable>&lt;end line&gt;</replaceable>                    
-                </programlisting>
+                </literallayout>
             </para>
         </formalpara>
         <para>Блочные комментарии начинаются с символов /* и заканчиваются символами */. Блочные

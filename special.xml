@@ -138,9 +138,9 @@
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>                                       
+                    <para><literallayout class="monospaced">                                       
 SET STATEMENT TIMEOUT <replaceable>value</replaceable> [HOUR | MINUTE | SECOND | MILLISECOND]       
-            </programlisting></para>
+            </literallayout></para>
                 </formalpara>
 
                 <para>
@@ -194,10 +194,11 @@ SET STATEMENT TIMEOUT 2 MINUTE
                 <note>
                     <para>Интерактивный инструмент <application>isql</application> дополнительно
                         поддерживает команду:
-                        <programlisting>
+                        <literallayout class="monospaced">
 SET LOCAL_TIMEOUT <replaceable>int</replaceable>
-            </programlisting>
-                        Эта команда позволяет установить тайм-аут выполнения оператора (в
+            </literallayout>
+                    </para>
+                    <para>Эта команда позволяет установить тайм-аут выполнения оператора (в
                         миллисекундах) для следующего оператора. После выполнения SQL оператора он
                         автоматически сбрасывается в ноль. </para>
                 </note>
@@ -305,9 +306,9 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>                                       
+                    <para><literallayout class="monospaced">                                       
 SET SESSION IDLE TIMEOUT <replaceable>value</replaceable> [HOUR | MINUTE | SECOND]       
-            </programlisting></para>
+            </literallayout></para>
                 </formalpara>
 
                 <para>
@@ -386,9 +387,9 @@ SET SESSION IDLE TIMEOUT 8 HOUR
         <formalpara>
             <title>Синтаксис:</title>
 
-            <para><programlisting>                                       
+            <para><literallayout class="monospaced">                                       
 ALTER SESSION RESET      
-            </programlisting></para>
+            </literallayout></para>
         </formalpara>
 
         <para>Сбрасывает сеансовое окружение (подключения) к исходному состоянию. Эта
@@ -483,9 +484,9 @@ ALTER SESSION RESET  
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>
+                    <literallayout class="monospaced">
 ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>                        
-                        </programlisting>
+                        </literallayout>
                 </para>
             </formalpara>
 
@@ -543,11 +544,11 @@ ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>
+                    <literallayout class="monospaced">
 ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replaceable> <replaceable>&lt;time_part&gt;</replaceable>
                         
 <replaceable>&lt;time_part&gt;</replaceable> ::= SECOND | MINUTE | HOUR                       
-                        </programlisting>
+                        </literallayout>
                 </para>
             </formalpara>
 
@@ -604,9 +605,9 @@ ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replace
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>
+                    <literallayout class="monospaced">
 ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL                     
-                        </programlisting>
+                        </literallayout>
                 </para>
             </formalpara>
 
@@ -637,9 +638,9 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL
                 <title>Синтаксис:</title>
 
                 <para>
-                    <programlisting>
+                    <literallayout class="monospaced">
 ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST                    
-                        </programlisting>
+                        </literallayout>
                 </para>
             </formalpara>
 
