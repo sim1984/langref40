@@ -328,6 +328,7 @@
                 <member>CONDITIONAL</member>
                 <member>CONNECT</member>
                 <member>CONNECTIONS</member>
+                <member>CONSISTENCY</member>
                 <member>CONSTRAINT</member>
                 <member>CONTAINING</member>
                 <member>CONTINUE</member>

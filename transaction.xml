@@ -60,15 +60,17 @@
 SET TRANSACTION
   [NAME <replaceable>tr_name</replaceable>]
   [READ WRITE | READ ONLY]
-  [[ISOLATION LEVEL] {  
-       SNAPSHOT [TABLE STABILITY]
-     | READ COMMITTED [[NO] RECORD_VERSION] }]
+  [[ISOLATION LEVEL] <replaceable>&lt;isolation level&gt;</replaceable>]
   [NO WAIT | WAIT [LOCK TIMEOUT <replaceable>seconds</replaceable>]]
   [NO AUTO UNDO]
   [IGNORE LIMBO]
   [RESTART REQUESTS]
   [AUTO COMMIT]
   [RESERVING <replaceable>&lt;tables&gt;</replaceable> | USING <replaceable>&lt;dbhandles&gt;</replaceable>]
+
+<replaceable>&lt;isolation level&gt;</replaceable> ::=
+    SNAPSHOT [TABLE STABILITY]
+  | READ COMMITTED [{[NO] RECORD_VERSION | READ CONSISTENCY}]
  
 <replaceable>&lt;tables&gt;</replaceable> ::= <replaceable>&lt;table_spec&gt;</replaceable> [, <replaceable>&lt;table_spec&gt;</replaceable> ...]
 
@@ -302,8 +304,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                 <para>SNAPSHOT TABLE STABILITY</para>
                             </listitem>
                             <listitem>
-                                <para>READ COMMITTED с двумя уточнениями (NO RECORD_VERSION и
-                                    RECORD_VERSION)</para>
+                                <para>READ COMMITTED с уточнениями (NO RECORD_VERSION или
+                                    RECORD_VERSION или READ CONSISTENCY)</para>
                             </listitem>
                         </itemizedlist>
                     </para>
@@ -363,7 +365,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                         <para>Уровень изолированности READ COMMITTED позволяет в транзакции без её
                             перезапуска видеть все подтверждённые изменения данных базы данных,
                             выполненные в других параллельных транзакциях. Неподтверждённые
-                            изменения не видны в транзакции и этого уровня изоляции.</para>
+                            изменения не видны в транзакциях этого уровня изолированности.</para>
                         <para>Для получения обновлённого списка строк интересующей таблицы
                             необходимо лишь повторное выполнение оператора SELECT в рамках активной
                             транзакции READ COMMITTED без её перезапуска.</para>
@@ -376,11 +378,11 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
                             <para><itemizedlist>
                                     <listitem>
-                                        <para>NO RECORD_VERSION (значение по умолчанию) является в
-                                            некотором роде механизмом двухфазной блокировки. В этом
-                                            случае транзакция не может прочитать любую запись,
-                                            которая была изменена параллельной активной
-                                            (неподтвержденной) транзакцией.</para>
+                                        <para>NO RECORD_VERSION является в некотором роде механизмом
+                                            двухфазной блокировки. В этом случае транзакция не может
+                                            прочитать любую запись, которая была изменена
+                                            параллельной активной (неподтвержденной)
+                                            транзакцией.</para>
                                         <para>Если указана стратегия разрешения блокировок NO WAIT,
                                             то будет немедленно выдано соответствующее
                                             исключение.</para>
@@ -404,7 +406,69 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                             на поведение транзакции при её старте.</para>
                                     </listitem>
                                 </itemizedlist></para>
-                            <para/>
+                            <warning>
+                                <para>Начиная с Firebird 4.0 эти опции являются устаревшими. По
+                                    умолчанию они игнорируются и запускается транзакция READ
+                                    COMMITTED READ CONSISTENCY. Это можно изменить установив
+                                    параметр ReadConsistency (см.
+                                    <filename>firebird.conf</filename>) в 0. В этом случае опции не
+                                    игнорируются и работают точно так же как в предыдущих версиях. В
+                                    будующих версиях этот параметр в
+                                        <filename>firebird.conf</filename> может быть удалён.</para>
+                            </warning>
+                        </section>
+                        <section xml:id="transaction-isolation_level-read_commited-read_consistency">
+                            <title>READ CONSISTENCY</title>
+
+                            <para>Если указана эта опция, то транзакция с режимом изолированности
+                                READ COMMITED делает стабильный снимок базы данных на время
+                                выполнения оператора. Каждый новый оператор верхнего уровня создает
+                                собственный моментальный снимок базы данных, чтобы видеть последние
+                                потверждённые данные. Вложенные операторы (триггеры, вложенные
+                                хранимые процедуры и функции, динамические операторы и т. д.)
+                                используют тот же самый моментальный снимок базы данных, созданный
+                                оператором верхнего уровня. Таким образом обеспечивается
+                                согласованное чтение на момент начала выполнения оператора верхнего
+                                уровня. В Firebird 4.0 этот режим используется по умолчанию для
+                                транзакций с режимом изолированности READ COMMITED.</para>
+
+                            <section>
+                                <title>Обработка конфликта обновлений</title>
+
+                                <para>Когда оператор выполняется в транзакции с режимом
+                                    изолированности READ COMMITTED READ CONSISTENCY вид базы данных
+                                    неизменен (подобно транзакции SNAPSHOT). Поэтому бесполезно
+                                    ждать фиксации параллельной транзакции в надежде перечитать
+                                    новую версию зафиксированной записи. При чтении поведение похоже
+                                    на транзакцию READ COMMITTED RECORD_VERSION — оператор не ждёт
+                                    завершения активной транзакции и обходит цепочку бекверсий, в
+                                    которой ищет версию записи видимую для текущего моментального
+                                    снимка. </para>
+
+                                <para>При возникновении конфликта обновлений поведения ядра Firebird
+                                    меняется. Если конкурирующая транзакция активна, то ядро
+                                    Firebird ждёт (в соответвии с параметром таймаута блокировки), и
+                                    если конкурирующая транзакция всё ещё не зафиксирована, то
+                                    вовращается ошибка кофликта обновлений. Если конкурирующая
+                                    транзакция зафиксирована, то ядро Firebird создаст новый
+                                    моментальный снимок и перезапускает выполнение оператора
+                                    верхнего уровня. В обоих случаях все работы выполненные для
+                                    оператора верхнего уровня будут отменены.</para>
+
+                                <para>Этв та же самая логика, которая используется в клиентских
+                                    приложениях для обработки конфликтов обновления, но немного
+                                    более эффективная, поскольку исключается сетевй обмен с
+                                    клиентом. Логика перезапуска не применяется к хранимым
+                                    процедурам выбора, если конфликт обновлений происходит
+                                    происходит после возврата любой записи в клиентское приложение.
+                                    В этом случае возвращается ошибка isc_update_conflict.</para>
+
+                                <note>
+                                    <para>По историческим причинам isc_update_conflict сообщается
+                                        как вторичный код ошибки с основным кодом ошибки
+                                        isc_deadlock.</para>
+                                </note>
+                            </section>
                         </section>
                     </section>
                 </section>

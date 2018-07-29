@@ -187,16 +187,16 @@
                                     <Boolean>true</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <File>${cfd}/out/html/langref40.html</File>
+                                    <File>${cfd}/out/html/${cfn}.html</File>
                                 </field>
                                 <field name="outputResource">
-                                    <String>${cfd}\out\html\langref40.html</String>
+                                    <String>${cfd}\out\html\${cfn}.html</String>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>
                                 </field>
                                 <field name="locationToOpenInBrowserURL">
-                                    <String>${cfd}/out/html-chunks/index.html</String>
+                                    <null/>
                                 </field>
                                 <field name="openInEditor">
                                     <Boolean>false</Boolean>

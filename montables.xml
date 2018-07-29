@@ -1445,7 +1445,10 @@ WHERE
                                             <para>2 — read committed record version;</para>
                                         </listitem>
                                         <listitem>
-                                            <para>3 — read committed no record version.</para>
+                                            <para>3 — read committed no record version;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>4 — read committed read consistency.</para>
                                         </listitem>
                                     </itemizedlist>
                                 </para>
