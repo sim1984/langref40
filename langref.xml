@@ -10,11 +10,9 @@
     xml:lang="ru">
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
-        <edition>29 июля 2018 — v.0000-1 для Firebird 4.0 Alpha 1</edition>
-        <copyright>
-            <year>2018</year>
-            <holder>firebirdsql.org</holder>
-        </copyright>
+        <subtitle>Firebird 4.0 Alpha 1</subtitle>               
+        <edition>8 августа 2018 — v.0000-1</edition>
+        
         <authorgroup>
             <author>
                 <personname><firstname>Денис</firstname><surname>Симонов</surname></personname>
@@ -38,6 +36,19 @@
                 <personname><firstname>Алексей</firstname><surname>Ковязин</surname></personname>
             </author>
         </authorgroup>
+        
+        <publisher>
+            <publishername>Firebird Project</publishername>
+        </publisher>
+        <copyright>
+            <year>2018</year>
+            <holder>Firebird Project и все авторы, в соответствии с лицензией <link
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation
+                License Version 1.0</link>. Смотри <link linkend="license">Лицензионное
+                    соглашение в Приложении</link>. </holder>
+        </copyright>        
+        
         <editor>
             <personname>Симонов Денис</personname>
         </editor>

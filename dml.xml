@@ -5539,7 +5539,7 @@ ROWS 20;
             </formalpara>
         </section>
 
-        <section>
+        <section xml:id="dml-update-returning">
             <title>RETURNING</title>
             <para>Оператор UPDATE, обновляющий максимум одну строку, может включать RETURNING для
                 возврата значений из обновляемой строки. В RETURNING могут включаться любые строки,
@@ -5554,7 +5554,8 @@ ROWS 20;
                     не были обновлены оператором, то возвращаемые значения содержат NULL. Это
                     поведение может быть изменено в последующих версиях Firebird.</para>
             </note>
-            <section>
+            
+            <section xml:id="dml-update-returning-into">
                 <title>INTO</title>
                 <para>Предложение INTO предназначено для передачи значений в локальные переменные.
                     Оно доступно только в PSQL. Если записи не было обновлены, ничего не

@@ -14,15 +14,11 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>DocBook HTML - Chunk FBDoc</String>
-                                        <String>DocBook HTML FBDoc</String>
                                         <String>DocBook PDF FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
-                                        <String>XSL</String>
-                                        <String>XSL</String>
                                         <String>XSL</String>
                                     </list>
                                 </field>
@@ -187,10 +183,10 @@
                                     <Boolean>true</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <File>${cfd}/out/html/${cfn}.html</File>
+                                    <File>${cfd}/out/html/index.html</File>
                                 </field>
                                 <field name="outputResource">
-                                    <String>${cfd}\out\html\${cfn}.html</String>
+                                    <String>${cfd}\out\html\index.html</String>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>

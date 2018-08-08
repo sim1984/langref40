@@ -1239,7 +1239,7 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
                     для определения события, которое вызвало срабатывание триггера.</para>
             </section>
 
-            <section>
+            <section xml:id="psql-triggers-dml-newold">
                 <title>Контекстные переменные NEW и OLD</title>
 
                 <para>В DML триггерах Firebird обеспечивает доступ к множеству контекстных
@@ -1332,7 +1332,8 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
             <para>DDL триггеры срабатывают на указанные события изменения метаданных в одной из фаз
                 события. BEFORE триггеры запускаются до изменений в системных таблицах. AFTER
                 триггеры запускаются после изменений в системных таблицах.</para>
-            <section>
+            
+            <section xml:id="psql-triggers-ddl-contextvar">
                 <title>Переменные доступные в пространстве имён DDL_TRIGGER</title>
 
                 <para>Во время работы DDL триггера доступно пространство имён DDL_TRIGGER для
@@ -4043,7 +4044,7 @@ BEGIN
                         регистре.</para>
                 </important>
             </section>
-            <section>
+            <section xml:id="psql-statements-execstmt-warn">
                 <title>Предостережения</title>
 
                 <para>

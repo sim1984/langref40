@@ -1197,7 +1197,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 </informaltable>
             </para>
         </section>
-        <section>
+        <section xml:id="types-arithmetic-precision">
             <title>Точность арифметических операций</title>
 
             <para>Функции MIN, MAX, SUM, AVG работают со всеми точными числовыми типами. SUM и AVG
