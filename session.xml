@@ -1,10 +1,35 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="special" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="session" xml:lang="ru">
     <info>
-        <title>Специальные возможности</title>
+        <title>Сессионное окружение</title>
     </info>
 
-    <section xml:id="special-timeout">
+    <para>В этой главе описываются операторы управления сессионным окружением. Данные SQL операторы
+        работают вне механизма управления транзакциями, изменения выполенные ими вступаю в силу
+        немедленно вступают в силу немедленно.</para>
+
+    <para>Операторы управления сессионным окруженияем доступны в том числе и в PSQL коде. Это
+        особенно полезно в ON CONNECT триггерах.</para>
+
+    <para>Операторы управления сессионным окружением разбиты на следующие группы: <itemizedlist>
+            <listitem>
+                <para>управления тайм-аутами;</para>
+            </listitem>
+            <listitem>
+                <para>управление пулом внешних соединений;</para>
+            </listitem>
+            <listitem>
+                <para>изменение текущей роли;</para>
+            </listitem>
+            <listitem>
+                <para>управление обработкой типа DECFLOAT;</para>
+            </listitem>
+            <listitem>
+                <para>сброс сессионного окружения.</para>
+            </listitem>
+        </itemizedlist></para>
+
+    <section xml:id="session-timeout">
         <info>
             <title>Тайм-ауты</title>
         </info>
@@ -18,7 +43,7 @@
                 </listitem>
             </itemizedlist></para>
 
-        <section xml:id="special-timeout-statemen">
+        <section xml:id="session-timeout-statemen">
             <title>Тайм-аут выполнения SQL оператора</title>
 
             <para>Данная функциональность позволяет автоматически прекратить выполнение SQL
@@ -73,7 +98,7 @@
                     <listitem>
                         <para>На уровне соединения. Может быть установлен с использованием API (в
                             миллисекундах) или с помощью SQL оператора <link
-                                linkend="special-timeout-set_statement_timeout">SET STATEMENT
+                                linkend="session-timeout-set_statement_timeout">SET STATEMENT
                                 TIMEOUT</link>. Область действия текущее подключение.</para>
                     </listitem>
                     <listitem>
@@ -114,7 +139,7 @@
                 используется движком Firebird. Кроме того, тайм-аут игнорируется для DDL
                 операторов.</para>
 
-            <section xml:id="special-timeout-set_statement_timeout">
+            <section xml:id="session-timeout-set_statement_timeout">
                 <info>
                     <title>SET STATEMENT TIMEOUT</title>
                     <keywordset>
@@ -206,7 +231,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
 
         </section>
 
-        <section xml:id="special-timeout-idle_session">
+        <section xml:id="session-timeout-idle_session">
             <title>Тайм-аут простоя соединения</title>
 
             <para>Данная функциональность позволяет автоматически закрывать пользовательские
@@ -254,7 +279,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                     <listitem>
                         <para>На уровне подключения. Может быть установлен с использованием API (в
                             секундах) или с помощью SQL оператора <link
-                                linkend="special-timeout-set_session_idle_timeout">SET SESSION IDLE
+                                linkend="session-timeout-set_session_idle_timeout">SET SESSION IDLE
                                 TIMEOUT</link>. Область действия все операторы в текущем
                             подключении.</para>
                     </listitem>
@@ -282,7 +307,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                 Единственная гарантия которую может дать Firebird это то, что тайм-аут не сработает
                 раньше указанного момента.</para>
 
-            <section xml:id="special-timeout-set_session_idle_timeout">
+            <section xml:id="session-timeout-set_session_idle_timeout">
                 <info>
                     <title>SET SESSION IDLE TIMEOUT</title>
                     <keywordset>
@@ -363,7 +388,613 @@ SET SESSION IDLE TIMEOUT 8 HOUR
         </section>
     </section>
 
-    <section xml:id="special-resetsession">
+
+    <section xml:id="session-extconnpool">
+        <info>
+            <title>Пул внешних соединений</title>
+            <keywordset>
+                <keyword>ALTER EXTERNAL CONNECTIONS POOL</keyword>
+            </keywordset>
+        </info>
+
+        <indexterm><primary>ALTER EXTERNAL CONNECTIONS POOL</primary></indexterm>
+
+        <para>Каждое внешнее соединение (созданное оператором EXECUTE STATEMENT ... ON EXTERNAL) при
+            создании связывается с пулом соединений (подробнее см. <link
+                linkend="psql-statements-execstmt-ext-connpool">Пул внешних подключений</link>).
+            Данная группа операторов позволяет управлять пулом внешних соединений. При его
+            подготовке они описываются как DDL операторы, но имеют немедленный эффект: то есть они
+            выполняются немедленно и полностью, не дожидаясь фиксации транзакции. Изменения
+            применяются к экземляру пула в памяти в текущем процессе Firebird. Поэтому изменение в
+            одном классическом процессе не влияет на другие классические процессы. Изменения не
+            являются постоянными и после перезапуска Firebird будет использовать настройки пула из
+                <filename>firebird.conf</filename>.</para>
+
+        <para>Для выполенения операторов данной группы требуется системная привилегия
+            MODIFY_EXT_CONN_POOL. Подробнее о системных привелегиях см. <link
+                linkend="security-roles-create">CREATE ROLE</link>.</para>
+
+        <section xml:id="session-extconnpool-setsize">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>SET SIZE</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Устанавливает максимальное количество бездействующих соединений.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>                        
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>size</replaceable></entry>
+                                <entry>
+                                    <para>Размер пула внешних соединений. Допустимые значения от 0
+                                        до 1000.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</code> устанавливает
+                максимальное количество бездействующих соединений в пуле внешних соединений.
+                Допустимые значения от 0 до 1000. Нулевое значение обозначает что пул выключен.
+                Значение по умолчанию оперделяется в <filename>firebird.conf</filename> (параметр
+                ExtConnPoolSize).</para>
+
+        </section>
+
+        <section xml:id="session-extconnpool-setlifetime">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>SET LIFETIME</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Устанавливает время жизни бездействующих соединений.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replaceable> <replaceable>&lt;time_part&gt;</replaceable>
+                        
+<replaceable>&lt;time_part&gt;</replaceable> ::= SECOND | MINUTE | HOUR                       
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>value</replaceable></entry>
+                                <entry>
+                                    <para>Время жизни бездействующих соединений.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</code> устанавливает
+                время жизни бездействующих соединений в пуле внешних соединений. Допустимые значения
+                от 1 секуды до 24 часов. Значение по умолчанию оперделяется в
+                    <filename>firebird.conf</filename> (параметр ExtConnPoolLifeTime в
+                секундах).</para>
+
+        </section>
+
+        <section xml:id="session-extconnpool-clearall">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>CLEAR ALL</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Закрывает все бездействующие соединения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL                     
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</code> закрывает все
+                бездействующие соединения в пуле внешних соединений. Все активные соединения будут
+                отсоединены от пула (такие соединения будут немедленно закрыты, когда они не будут
+                использоваться).</para>
+
+        </section>
+
+        <section xml:id="session-extconnpool-clearoldest">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>CLEAR OLDEST</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Закрывает бездействующие соединения у которых истекло время жизни.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST                    
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</code> закрывает
+                бездействующие соединения в пуле у которых истекло время жизни.</para>
+
+        </section>
+    </section>
+
+
+    <section xml:id="session-role">
+        <info>
+            <title>Изменение текущей роли</title>
+        </info>
+        <section xml:id="session-role-setrole">
+            <info>
+                <title>SET ROLE</title>
+                <keywordset>
+                    <keyword>SET ROLE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SET ROLE</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение текущей роли.</para>
+            </formalpara>
+
+            <formalpara>
+                <info>
+                    <title>Доступно в:</title>
+                </info>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+
+                <para><programlisting>
+SET ROLE <replaceable>rolename</replaceable>  
+                       </programlisting></para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <title>Параметры оператора SET ROLE</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>rolename</replaceable></entry>
+                                <entry>
+                                    <para>Имя устанавливаемой роли.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Согласно стандарту SQL-2008 оператор SET ROLE позволяет установить контекстной
+                переменной CURRENT_ROLE одну из назначенных ролей для пользователя CURRENT_USER или
+                роль, полученную в результате доверительной аутентификации (в этом случае оператор
+                принимает вид SET TRUSTED ROLE).</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение текущей роли</title>
+                        <para><programlisting language="sql">
+SET ROLE manager;
+select current_role from rdb$database;
+              
+                </programlisting>
+                            <screen>
+ROLE
+=======================
+MANAGER                    
+                </screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="session-role-settrustedrole">
+            <info>
+                <title>SET TRUSTED ROLE</title>
+                <keywordset>
+                    <keyword>SET TRUSTED ROLE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SET TRUSTED ROLE</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Установка доверенной роли.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para><programlisting>
+SET TRUSTED ROLE 
+                       </programlisting></para>
+            </formalpara>
+
+            <para>Оператор SET TRUSTED ROLE включает доступ доверенной роли, при условии, что
+                CURRENT_USER получен с помощью доверительной аутентификации и роль доступна.</para>
+            <para>Идея отдельной команды SET TRUSTED ROLE состоит в том, чтобы при подключении
+                доверенного пользователя не указывать никакой дополнительной информации о роли, SET
+                TRUSTED ROLE делает доверенную роль (если таковая существует) текущей ролью без
+                дополнительной деятельности, связанной с установкой параметров DBP.</para>
+            <para>Доверенная роль это не специальный тип роли, ей может быть любая роль, созданная с
+                помощью оператора CREATE ROLE или предопределённая системная роль RDB$ADMIN. Она
+                становится доверенной ролью для подключения, когда подсистема отображения объектов
+                безопасности (security objects mapping subsystem) находит соответствие между
+                результатом аутентификации, полученным от плагина и локальным или глобальным
+                отображением (mapping) для текущей базы данных. Роль даже может быть той, которая не
+                предоставлена явно этому доверенному пользователю. </para>
+            <note>
+                <para>Доверенная роль не назначается при подключении по умолчанию. Можно изменить
+                    это поведение, используя соответствующий плагин аутентификации и команды
+                    CREATE/ALTER MAPPING.</para>
+            </note>
+            <para>Примером использования доверенной роли является назначение системной роли
+                RDB$ADMIN для администраторов Windows, когда используется доверительная
+                аутентификация Windows.</para>
+        </section>
+    </section>
+
+
+    <section xml:id="session-decfloat">
+        <info>
+            <title>Управление обработкой DECFLOAT</title>
+        </info>
+
+        <para/>
+
+        <section xml:id="session-decfloat-round">
+            <info>
+                <title>SET DECFLOAT ROUND</title>
+            </info>
+            <indexterm>
+                <primary>SET DECFLOAT ROUND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение режима округления для типа DECFLOAT.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>                      
+                        </literallayout>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET DECFLOAT ROUND</title>
+                    <tgroup cols="2">
+                        <colspec colname="colArgument" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="colDesc" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row valign="middle">
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>mode</replaceable></entry>
+                                <entry>
+                                    <para>Режим округления.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Оператор SET DECFLOAT ROUND изменяет режим округления для текущей сессии.
+                Поддерживаются следующие режимы округления совместимые со стандартом IEEE: <itemizedlist>
+                    <listitem>
+                        <para><emphasis role="bold">CEILING</emphasis>. Округление сверху. Если все
+                            отбрасываемые цифры равны нулю или знак числа отрицателен, последняя
+                            неотбрасываемая цифра не меняется. В противном случае последняя
+                            неотбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            сторону).</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">UP</emphasis>. Округление по направлению от нуля
+                            (усечение с приращением). Отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
+                            значению. Если результат равноудаленный, выполняется округление в
+                            большую сторону. Если отбрасываемые значения больше чем или равны
+                            половине (0,5) единицы в следующей левой позиции, последняя
+                            неотбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            сторону). В противном случае отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">HALF_EVEN</emphasis>. Округление к ближайшему
+                            значению. Если результат равноудаленный, выполняется округление так,
+                            чтобы последняя цифра была четной. Если отбрасываемые значения больше
+                            половины (0,5) единицы в следующей левой позиции, последняя
+                            неотбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            сторону). Если они меньше половины, результат не корректируется (то есть
+                            отбрасываемые знаки игнорируются). В противном случае, когда
+                            отбрасываемые значения точно равны половине, последняя неотбрасываемая
+                            цифра не меняется, если она является четной и инкрементируется на
+                            единицу (округляется в большую сторону) в противном случае (чтобы
+                            получить четную цифру). Этот режим округления называется также
+                            банковским округлением и дает ощущение справедливого округления. Он
+                            является режимом по умолчанию в DB2, согласно спецификации IEEE.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">HALF_DOWN</emphasis>. Округление к ближайшему
+                            значению. Если результат равноудаленный, выполняется округление в
+                            меньшую сторону. Если отбрасываемые значения больше чем или равны
+                            половине (0,5) единицы в следующей левой позиции, последняя
+                            неотбрасываемая цифра декрементируется на единицу (округляется в меньшую
+                            сторону). В противном случае отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">DOWN</emphasis>. Округление по направлению к
+                            нулю (усечение). Отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
+                            отбрасываемые цифры равны нулю или знак положителен, последняя
+                            неотбрасываемая цифра не меняется. В противном случае (знак отрицателен)
+                            последняя неотбрасываемая цифра инкрементируется на единицу.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">REROUND</emphasis>. Округление к большему
+                            значению, если округляется 0 или 5, в противном случае округление
+                            происходит к меньшему значению.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение режима округления</title>
+
+                        <para><programlisting language="sql"> 
+SET DECFLOAT ROUND HALF_DOWN;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <para>Подробнее о режимах округления лдя типа DECFLOAT см. <link
+                    linkend="types-float-decfloat-round-mode">Режимы округления</link>.</para>
+        </section>
+
+        <section xml:id="session-decfloat-traps">
+            <info>
+                <title>SET DECFLOAT TRAPS TO</title>
+            </info>
+            <indexterm>
+                <primary>SET DECFLOAT TRAPS TO</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение обработки ошибок для типа DECFLOAT.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>      
+                            
+<replaceable>&lt;traps list&gt;</replaceable> ::= <replaceable>&lt;trap&gt;</replaceable>[, <replaceable>&lt;trap&gt;</replaceable>[, ... <replaceable>&lt;trap&gt;</replaceable>]]        
+                            
+<replaceable>&lt;trap&gt;</replaceable> ::= 
+    Division_by_zero 
+  | Inexact
+  | Invalid_operation
+  | Overflow 
+  | Underflow                           
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
+                Invalid_operation, Overflow, Underflow.</para>
+            <example>
+                <title>Установка ситуаций для которых будет генерироваться исключение</title>
+
+                <para>
+                    <programlisting language="sql"> 
+SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Underflow;
+                </programlisting>
+                </para>
+            </example>
+        </section>
+
+        <section xml:id="session-decfloat-bind">
+            <info>
+                <title>SET DECFLOAT BIND</title>
+            </info>
+            <indexterm>
+                <primary>SET DECFLOAT BIND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Измененение отображения значений DECFLOAT на другие доступные типы
+                    данных.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>      
+                            
+<replaceable>&lt;bind-type&gt;</replaceable> ::= 
+    NATIVE 
+  | CHAR[ACTER]
+  | DOUBLE PRECISION
+  | BIGINT[, <replaceable>scale</replaceable>]                          
+                        </literallayout>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET DECFLOAT BIND</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><para><replaceable>scale</replaceable></para></entry>
+                                <entry>
+                                    <para>Точность (количество знаков после запятой).</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Оператор SET DECFLOAT BIND управляет каким образом значения типа DEСFLOAT будут
+                представлены во внешнем мире. Допустимые типы для привязки: <itemizedlist>
+                    <listitem>
+                        <para>NATIVE — используется IEEE754 двоичное представление;</para>
+                    </listitem>
+                    <listitem>
+                        <para>CHAR[ACTER] — ASCII строка;</para>
+                    </listitem>
+                    <listitem>
+                        <para>DOUBLE PRECISION — используется 8 байтное представление с плавающей
+                            точкой, тоже самое что и для полей типа DOUBLE PRECISION;</para>
+                    </listitem>
+                    <listitem>
+                        <para>BIGINT — используется целое с указанным масштабом, тоже самое что поле
+                            NUMERIC(18, <replaceable>scale</replaceable>).</para>
+                    </listitem>
+                </itemizedlist></para>
+            <para>Различные привязки полезны, если вы планируете использовать значения DECFLOAT со
+                старым клиентом, не поддерживающим собственный формат. Можно выбирать между строками
+                (идеальная точность, но плохая поддержка для дальнейшей обработки), значения с
+                плавающей запятой (идеальная поддержка для дальнейшей обработки, но с плохой
+                точностью) или масштабированные целые числа (хорошая поддержка дальнейшей обработки
+                и требуемая точность, но диапазон значений очень ограничен). Когда используется
+                инструмент, подобный универсальному GUI-клиенту, выбор привязки к CHAR подходит в
+                большинстве случаев.</para>
+        </section>
+
+    </section>
+
+    <section xml:id="session-resetsession">
         <info>
             <title>ALTER SESSION RESET</title>
             <keywordset>
@@ -439,214 +1070,4 @@ ALTER SESSION RESET  
         </warning>
     </section>
 
-    <section xml:id="special-extconnpool">
-        <info>
-            <title>Пул внешних соединений</title>
-            <keywordset>
-                <keyword>ALTER EXTERNAL CONNECTIONS POOL</keyword>
-            </keywordset>
-        </info>
-
-        <indexterm><primary>ALTER EXTERNAL CONNECTIONS POOL</primary></indexterm>
-
-        <para>Каждое внешнее соединение (созданное оператором EXECUTE STATEMENT ... ON EXTERNAL) при
-            создании связывается с пулом соединений (подробнее см. <link
-                linkend="psql-statements-execstmt-ext-connpool">Пул внешних подключений</link>).
-            Данная группа операторов позволяет управлять пулом внешних соединений. При его
-            подготовке они описываются как DDL операторы, но имеют немедленный эффект: то есть они
-            выполняются немедленно и полностью, не дожидаясь фиксации транзакции. Изменения
-            применяются к экземляру пула в памяти в текущем процессе Firebird. Поэтому изменение в
-            одном классическом процессе не влияет на другие классические процессы. Изменения не
-            являются постоянными и после перезапуска Firebird будет использовать настройки пула из
-                <filename>firebird.conf</filename>.</para>
-
-        <para>Для выполенения операторов данной группы требуется системная привилегия
-            MODIFY_EXT_CONN_POOL. Подробнее о системных привелегиях см. <link
-                linkend="security-roles-create">CREATE ROLE</link>.</para>
-
-        <section xml:id="special-extconnpool-setsize">
-            <info>
-                <title>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
-            </info>
-
-            <indexterm>
-                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
-                <secondary>SET SIZE</secondary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Устанавливает максимальное количество бездействующих соединений.</para>
-            </formalpara>
-
-            <formalpara>
-                <title>Синтаксис:</title>
-
-                <para>
-                    <literallayout class="monospaced">
-ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>                        
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>
-                <table frame="all">
-                    <?dbfo keep-together='auto'?>
-                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                        <thead>
-                            <row>
-                                <entry align="center">Параметр</entry>
-                                <entry align="center">Описание</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Размер пула внешних соединений. Допустимые значения от 0
-                                        до 1000.</para>
-                                </entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
-            </para>
-
-            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</code> устанавливает
-                максимальное количество бездействующих соединений в пуле внешних соединений.
-                Допустимые значения от 0 до 1000. Нулевое значение обозначает что пул выключен.
-                Значение по умолчанию оперделяется в <filename>firebird.conf</filename> (параметр
-                ExtConnPoolSize).</para>
-
-        </section>
-
-        <section xml:id="special-extconnpool-setlifetime">
-            <info>
-                <title>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
-            </info>
-
-            <indexterm>
-                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
-                <secondary>SET LIFETIME</secondary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Устанавливает время жизни бездействующих соединений.</para>
-            </formalpara>
-
-            <formalpara>
-                <title>Синтаксис:</title>
-
-                <para>
-                    <literallayout class="monospaced">
-ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replaceable> <replaceable>&lt;time_part&gt;</replaceable>
-                        
-<replaceable>&lt;time_part&gt;</replaceable> ::= SECOND | MINUTE | HOUR                       
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>
-                <table frame="all">
-                    <?dbfo keep-together='auto'?>
-                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                        <thead>
-                            <row>
-                                <entry align="center">Параметр</entry>
-                                <entry align="center">Описание</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry><replaceable>value</replaceable></entry>
-                                <entry>
-                                    <para>Время жизни бездействующих соединений.</para>
-                                </entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
-            </para>
-
-            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</code> устанавливает
-                время жизни бездействующих соединений в пуле внешних соединений. Допустимые значения
-                от 1 секуды до 24 часов. Значение по умолчанию оперделяется в
-                    <filename>firebird.conf</filename> (параметр ExtConnPoolLifeTime в
-                секундах).</para>
-
-        </section>
-
-        <section xml:id="special-extconnpool-clearall">
-            <info>
-                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</title>
-            </info>
-
-            <indexterm>
-                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
-                <secondary>CLEAR ALL</secondary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Закрывает все бездействующие соединения.</para>
-            </formalpara>
-
-            <formalpara>
-                <title>Синтаксис:</title>
-
-                <para>
-                    <literallayout class="monospaced">
-ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL                     
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</code> закрывает все
-                бездействующие соединения в пуле внешних соединений. Все активные соединения будут
-                отсоединены от пула (такие соединения будут немедленно закрыты, когда они не будут
-                использоваться).</para>
-
-        </section>
-
-        <section xml:id="special-extconnpool-clearoldest">
-            <info>
-                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</title>
-            </info>
-
-            <indexterm>
-                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
-                <secondary>CLEAR OLDEST</secondary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Закрывает бездействующие соединения у которых истекло время жизни.</para>
-            </formalpara>
-
-            <formalpara>
-                <title>Синтаксис:</title>
-
-                <para>
-                    <literallayout class="monospaced">
-ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST                    
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</code> закрывает
-                бездействующие соединения в пуле у которых истекло время жизни.</para>
-
-        </section>
-    </section>
 </chapter>

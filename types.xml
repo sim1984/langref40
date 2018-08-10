@@ -474,9 +474,9 @@ DECFLOAT[(<replaceable>&lt;precision&gt;</replaceable>)]
                     <title>Диапазон значений DECFLOAT</title>
                     <?dbfo keep-together='auto'?>
                     <tgroup cols="3">
-                        <colspec colname="c1" colnum="1" colwidth="1*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="1*" align="left"/>
-                        <colspec colname="c3" colnum="3" colwidth="2*" align="left"/>
+                        <colspec colname="c1" colnum="1" colwidth="1.0*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="0.9*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="2.2*" align="left"/>
                         <thead>
                             <row>
                                 <entry align="center">Точность (знаков)</entry>
@@ -659,6 +659,13 @@ DECLARE VARIABLE v DECFLOAT(34);
                         <title>Режимы округления</title>
                         <?dbfo keep-together='auto'?>
                         <tgroup cols="7">
+                            <colspec colname="c1" colnum="1" colwidth="2.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="0.5*" align="right"/>
+                            <colspec colname="c3" colnum="3" colwidth="0.5*" align="right"/>
+                            <colspec colname="c4" colnum="4" colwidth="0.5*" align="right"/>
+                            <colspec colname="c5" colnum="5" colwidth="0.5*" align="right"/>
+                            <colspec colname="c6" colnum="6" colwidth="0.5*" align="right"/>
+                            <colspec colname="c7" colnum="7" colwidth="0.5*" align="right"/>
                             <thead>
                                 <row>
                                     <entry align="center">Режим округления</entry>

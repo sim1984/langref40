@@ -6,26 +6,6 @@
             <serialized version="16.1" xml:space="preserve">
                 <serializableOrderedMap>
                     <entry>
-                        <String>scenario.associations</String>
-                        <scenarioAssociation-array>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>langref.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>DocBook PDF FBDoc</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XSL</String>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                        </scenarioAssociation-array>
-                    </entry>
-                    <entry>
                         <String>scenarios</String>
                         <scenario-array>
                             <scenario>
@@ -362,7 +342,7 @@
         <file name="psql.xml"/>
         <file name="sectables.xml"/>
         <file name="security.xml"/>
-        <file name="special.xml"/>
+        <file name="session.xml"/>
         <file name="supplement.xml"/>
         <file name="systables.xml"/>
         <file name="transaction.xml"/>

@@ -11,7 +11,7 @@
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0 Alpha 1</subtitle>               
-        <edition>8 августа 2018 — v.0000-1</edition>
+        <edition>10 августа 2018 — v.0000-1</edition>
         
         <authorgroup>
             <author>
@@ -52,7 +52,7 @@
         <editor>
             <personname>Симонов Денис</personname>
         </editor>
-    </info>
+    </info>   
     <xi:include href="intro.xml" xpointer="element(/1)"/>
     <xi:include href="langstruct.xml" xpointer="element(/1)"/>
     <xi:include href="types.xml" xpointer="element(/1)"/>
@@ -63,7 +63,7 @@
     <xi:include href="internal-func.xml" xpointer="element(/1)"/>
     <xi:include href="transaction.xml" xpointer="element(/1)"/>
     <xi:include href="security.xml" xpointer="element(/1)"/>
-    <xi:include href="special.xml" xpointer="element(/1)"/>
+    <xi:include href="session.xml" xpointer="element(/1)"/>
     <xi:include href="supplement.xml" xpointer="element(/1)"/>
     <xi:include href="error-handlers.xml" xpointer="element(/1)"/>
     <xi:include href="keywords.xml" xpointer="element(/1)"/>

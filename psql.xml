@@ -3847,7 +3847,7 @@ BEGIN
 
                     <para>Пулом внешних соединений, а также его параметрами можно управлять с
                         помощью специальных операторов. Подробнее см. <link
-                            linkend="special-extconnpool">ALTER EXTERNAL CONNECTIONS
+                            linkend="session-extconnpool">ALTER EXTERNAL CONNECTIONS
                         POOL</link>.</para>
 
                     <para>Состояние пула внешних подключений можно запросить с использованием

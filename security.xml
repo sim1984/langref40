@@ -1820,7 +1820,7 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
             затронуты при его входе в систему с указанной ролью. Вход в систему с несколькими ролями
             не поддерживается, однако вы можете права нескольких ролей назначенных по умолчанию. Вы
             можете изменить текущую роль с помощью оператора <link
-                linkend="security-changerole-setrole">SET ROLE</link>.</para>
+                linkend="session-role">SET ROLE</link>.</para>
         <para>Роли могут быть грантованы другие роли. При входе с этой ролью пользователь
             автоматически получит права всех ролей выданных с использованием ключевого слова
             DEFAULT.</para>
@@ -2143,7 +2143,7 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
                         <link linkend="security-roles-drop">DROP ROLE</link>, <link
                             linkend="security-priv-grant">GRANT</link>, <link
                             linkend="security-priv-revoke">REVOKE</link>, <link
-                            linkend="security-changerole-setrole">SET ROLE</link>, <link
+                                linkend="session-role-setrole">SET ROLE</link>, <link
                             linkend="internalfunc-func-security-sysprivelege"
                             >RDB$SYSTEM_PRIVILEGE</link>. </para>
 
@@ -2699,142 +2699,6 @@ gsec -mapping drop
                             вступает в силу.</para>
                     </section>
                 </section>
-            </section>
-        </section>
-
-        <section xml:id="security-changerole">
-            <info>
-                <title>Изменение текущей роли</title>
-            </info>
-            <section xml:id="security-changerole-setrole">
-                <info>
-                    <title>SET ROLE</title>
-                    <keywordset>
-                        <keyword>SET ROLE</keyword>
-                    </keywordset>
-                </info>
-                <indexterm><primary>SET ROLE</primary></indexterm>
-                <formalpara>
-                    <title>Назначение:</title>
-
-                    <para>Изменение текущей роли.</para>
-                </formalpara>
-
-                <formalpara>
-                    <info>
-                        <title>Доступно в:</title>
-                    </info>
-
-                    <para>DSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-
-
-                    <para><programlisting>
-SET ROLE <replaceable>rolename</replaceable>  
-                       </programlisting></para>
-                </formalpara>
-                <para>
-                    <table frame="all">
-                        <title>Параметры оператора SET ROLE</title>
-                        <?dbfo keep-together='auto'?>
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
-                            <thead>
-                                <row>
-                                    <entry align="center">Параметр</entry>
-                                    <entry align="center">Описание</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry><replaceable>rolename</replaceable></entry>
-                                    <entry>
-                                        <para>Имя устанавливаемой роли.</para>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </para>
-
-                <para>Согласно стандарту SQL-2008 оператор SET ROLE позволяет установить контекстной
-                    переменной CURRENT_ROLE одну из назначенных ролей для пользователя CURRENT_USER
-                    или роль, полученную в результате доверительной аутентификации (в этом случае
-                    оператор принимает вид SET TRUSTED ROLE).</para>
-
-                <formalpara>
-                    <title>Примеры:</title>
-
-                    <para>
-                        <example>
-                            <title>Изменение текущей роли</title>
-                            <para><programlisting language="sql">
-SET ROLE manager;
-select current_role from rdb$database;
-              
-                </programlisting>
-                                <screen>
-ROLE
-=======================
-MANAGER                    
-                </screen>
-                            </para>
-                        </example>
-                    </para>
-                </formalpara>
-            </section>
-            <section xml:id="security-changerole-settrustedrole">
-                <info>
-                    <title>SET TRUSTED ROLE</title>
-                    <keywordset>
-                        <keyword>SET TRUSTED ROLE</keyword>
-                    </keywordset>
-                </info>
-                <indexterm><primary>SET TRUSTED ROLE</primary></indexterm>
-                <formalpara>
-                    <title>Назначение:</title>
-
-                    <para>Установка доверенной роли.</para>
-                </formalpara>
-
-                <formalpara>
-                    <title>Доступно в:</title>
-
-                    <para>DSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-
-                    <para><programlisting>
-SET TRUSTED ROLE 
-                       </programlisting></para>
-                </formalpara>
-
-                <para>Оператор SET TRUSTED ROLE включает доступ доверенной роли, при условии, что
-                    CURRENT_USER получен с помощью доверительной аутентификации и роль
-                    доступна.</para>
-                <para>Идея отдельной команды SET TRUSTED ROLE состоит в том, чтобы при подключении
-                    доверенного пользователя не указывать никакой дополнительной информации о роли,
-                    SET TRUSTED ROLE делает доверенную роль (если таковая существует) текущей ролью
-                    без дополнительной деятельности, связанной с установкой параметров DBP.</para>
-                <para>Доверенная роль это не специальный тип роли, ей может быть любая роль,
-                    созданная с помощью оператора CREATE ROLE или предопределённая системная роль
-                    RDB$ADMIN. Она становится доверенной ролью для подключения, когда подсистема
-                    отображения объектов безопасности (security objects mapping subsystem) находит
-                    соответствие между результатом аутентификации, полученным от плагина и локальным
-                    или глобальным отображением (mapping) для текущей базы данных. Роль даже может
-                    быть той, которая не предоставлена явно этому доверенному пользователю. </para>
-                <note>
-                    <para>Доверенная роль не назначается при подключении по умолчанию. Можно
-                        изменить это поведение, используя соответствующий плагин аутентификации и
-                        команды CREATE/ALTER MAPPING.</para>
-                </note>
-                <para>Примером использования доверенной роли является назначение системной роли
-                    RDB$ADMIN для администраторов Windows, когда используется доверительная
-                    аутентификация Windows.</para>
             </section>
         </section>
     </section>

@@ -548,7 +548,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                     <para>
                         <table frame="all">
                             <title>Совместимости различных блокировок</title>
-                            <tgroup cols="5">
+                            <?dbfo keep-together='auto'?>
+                            <tgroup cols="5">                     
                                 <thead>
                                     <row>
                                         <entry align="center"> </entry>
@@ -733,9 +734,9 @@ COMMIT [WORK] [TRANSACTION <replaceable>tr_name</replaceable>]
             </formalpara>
 
             <para>
-                <table frame="all">
+                <table frame="all">                 
+                    <title>Параметры оператора COMMIT</title>    
                     <?dbfo keep-together='auto'?>
-                    <title>Параметры оператора COMMIT</title>
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
                         <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
@@ -837,8 +838,8 @@ ROLLBACK [WORK] [TRANSACTION <replaceable>tr_name</replaceable>]
 
             <para>
                 <table frame="all">
-                    <?dbfo keep-together='auto'?>
                     <title>Параметры оператора ROLLBACK</title>
+                    <?dbfo keep-together='auto'?>
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
                         <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
