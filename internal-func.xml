@@ -8003,8 +8003,9 @@ COALESCE(<replaceable>expr1</replaceable>, <replaceable>expr2</replaceable> [, <
 
                 <formalpara>
                     <title>Тип возвращаемого результата:</title>
-                    <para>тот же что и первый аргумент функции
-                        <replaceable>expr1</replaceable>.</para>
+                    <para>тот же что и первый аргумент функции <replaceable>expr1</replaceable>,
+                        если все выражения имеют одинаковый тип, в противном случае происходит
+                        преобразование в тип с наибольшей вместимостью.</para>
                 </formalpara>
 
                 <para>Функция COALESCE принимает два или более аргумента возвращает значение первого
@@ -8140,7 +8141,10 @@ END
 
                 <formalpara>
                     <title>Тип возвращаемого результата:</title>
-                    <para>тот же что и первый результат <replaceable>result1</replaceable>.</para>
+                    <para>тот же что и первый результат <replaceable>result1</replaceable>, если все
+                        выражения <replaceable>result</replaceable> имеют одинаковый тип, в
+                        противном случае происходит преобразование в тип с наибольшей
+                        вместимостью.</para>
                 </formalpara>
 
                 <para>Данная функция эквивалентна конструкции <link
@@ -8247,7 +8251,10 @@ IIF(<replaceable>&lt;condition&gt;</replaceable>, <replaceable>resultT</replacea
 
                 <formalpara>
                     <title>Тип возвращаемого результата:</title>
-                    <para>тот же что и аргумент функции <replaceable>resultT</replaceable>.</para>
+                    <para>тот же что и аргумент функции <replaceable>resultT</replaceable>, если
+                        выражения <replaceable>resultT</replaceable> и
+                            <replaceable>resultF</replaceable> имеют одинаковый тип, в противном
+                        случае происходит преобразование в тип с наибольшей вместимостью.</para>
                 </formalpara>
 
                 <para>Функция IIF имеет три аргумента. Если первый аргумент является истиной, то
