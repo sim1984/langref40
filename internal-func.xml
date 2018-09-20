@@ -1587,6 +1587,20 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     <entry>Глобальная переменная CURRENT_TRANSACTION.</entry>
                                 </row>
                                 <row>
+                                    <entry>WIRE_COMPRESSED</entry>
+                                    <entry>Используется ли сжатие сетевого трафика. Если
+                                        используется сжатие сетевого трафика возвращает "TRUE", если
+                                        не используется — "FALSE". Для встроенных соединений —
+                                        возвращает NULL.</entry>
+                                </row>
+                                <row>
+                                    <entry>WIRE_ENCRYPTED</entry>
+                                    <entry>Используется ли шифрование сетевого трафика. Если
+                                        используется шифрование сетевого трафика возвращает "TRUE",
+                                        если не используется — "FALSE". Для встроенных соединений —
+                                        возвращает NULL.</entry>
+                                </row>
+                                <row>
                                     <entry>SESSION_IDLE_TIMEOUT</entry>
                                     <entry>Содержит текущее значение тайм-аут простоя соединения в
                                         секундах, который был установлен на уровне соединения, или

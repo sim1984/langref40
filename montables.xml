@@ -274,14 +274,19 @@
                                 тайм-аут не установлен — 0.</entry>
                         </row>
                         <row>
-                            <entry>MON$CONNECTION_COMPRESSED</entry>
+                            <entry>MON$WIRE_COMPRESSED</entry>
                             <entry>BOOLEAN</entry>
-                            <entry>Использует ли соединение сжатие трафика.</entry>
+                            <entry>Используется ли сжатие сетевого трафика. Если используется сжатие
+                                сетевого трафика значение равно TRUE, если не используется — FALSE.
+                                Для встроенных соединений — возвращает NULL.</entry>
                         </row>
                         <row>
-                            <entry>MON$CONNECTION_ENCRYPTED</entry>
+                            <entry>MON$WIRE_ENCRYPTED</entry>
                             <entry>BOOLEAN</entry>
-                            <entry>Использует ли соединение шифрование трафика.</entry>
+                            <entry>Используется ли шифрование сетевого трафика. Если используется
+                                шифрование сетевого трафика значение равно TRUE, если не
+                                используется — FALSE. Для встроенных соединений — возвращает
+                                NULL.</entry>
                         </row>
                     </tbody>
                 </tgroup>

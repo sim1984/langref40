@@ -9958,6 +9958,13 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                     некорректными. Информация о том, как это обнаружить, находится в приложении
                         <link linkend="valid">Поле RDB$VALID_BLR</link>. </para>
             </note>
+            <warning>
+                <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
+                    FUNCTION</code>), то оператор <code>ALTER FUNCTION</code> изменит её на
+                    обычную функцию без всяких предупреждений. Это было сделано умышлено для
+                    облегчения миграции на новый стиль написания внешних функций известных как
+                    UDR.</para>
+            </warning>
             <section xml:id="ddl-function-alter-who">
                 <title>Кто может изменить функцию?</title>
 
@@ -10044,6 +10051,14 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                 функцию. Если хранимая функция не существует, то она будет создана с использованием
                 предложения CREATE FUNCTION. Если она уже существует, то она будет изменена и
                 перекомпилирована, при этом существующие привилегии и зависимости сохраняются. </para>
+
+            <warning>
+                <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
+                    FUNCTION</code>), то оператор <code>CREATE OR ALTER FUNCTION</code> изменит её на
+                    обычную функцию без всяких предупреждений. Это было сделано умышлено для
+                    облегчения миграции на новый стиль написания внешних функций известных как
+                    UDR.</para>
+            </warning>
 
             <section xml:id="ddl-function-createoralter-examples">
                 <title>Примеры</title>
