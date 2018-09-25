@@ -179,7 +179,7 @@ FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-changerole-setrole">SET ROLE</link>, <link
+                    <link linkend="session-role-setrole">SET ROLE</link>, <link
                         linkend="internalfunc-func-context-getcontext">RDB$GET_CONTEXT</link>, <link
                         linkend="internalfunc-func-security-roleinuse">RDB$ROLE_IN_USE</link>.
                 </para>
@@ -1587,6 +1587,19 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     <entry>Глобальная переменная CURRENT_TRANSACTION.</entry>
                                 </row>
                                 <row>
+                                    <entry>GLOBAL_CN</entry>
+                                    <entry>Последнее значение текущего глобального счётчика Commit
+                                        Number</entry>
+                                </row>
+                                <row>
+                                    <entry>SNAPSHOT_CN</entry>
+                                    <entry>Значение Commit Number моментального снимка базы данных:
+                                        уровеня транзакции (для транзакции SNAPSHOT или CONSISTENCY)
+                                        или уровеня запроса (для транзакции READ COMMITTED READ
+                                        CONSISTENCY). NULL, если моментальный снимок не
+                                        существует.</entry>
+                                </row>
+                                <row>
                                     <entry>WIRE_COMPRESSED</entry>
                                     <entry>Используется ли сжатие сетевого трафика. Если
                                         используется сжатие сетевого трафика возвращает "TRUE", если
@@ -1966,7 +1979,7 @@ SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
 
                     <para>
                         <link linkend="security-priv-grant-role">GRANT ROLE</link>, <link
-                            linkend="security-changerole-setrole">SET ROLE</link>, <link
+                            linkend="session-role-setrole">SET ROLE</link>, <link
                             linkend="internalfunc-contextvar-current_role">CURRENT_ROLE</link>.
                     </para>
                 </formalpara>
@@ -2117,6 +2130,119 @@ END
                             linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
                             linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
                             linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="internalfunc-func-transaction">
+            <info>
+                <title>Функции работы с транзакциями</title>
+            </info>
+            <para/>
+            <section xml:id="internalfunc-func-transaction-cn">
+                <info>
+                    <title>RDB$GET_TRANSACTION_CN</title>
+                    <keywordset>
+                        <keyword>RDB$GET_TRANSACTION_CN</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RDB$GET_TRANSACTION_CN</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RDB$GET_TRANSACTION_CN (<replaceable>transaction number</replaceable>)                         
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RDB$GET_TRANSACTION_CN</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>transaction number</replaceable></entry>
+                                    <entry>
+                                        <para>Номер (идентификатор) транзакции</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BIGINT.</para>
+                </formalpara>
+
+                <para>Возвращает номер подтверждения (Commit Number) для заданной транзакции.</para>
+
+                <note>
+                    <para>Внутренние механизмы Firebird используют беззнаковое 8-байтное целое для
+                        Commit Number и беззнаковое 6-байтное целое для номера транзакции. Поэтому,
+                        не смотря на то, что язык SQL не имеет беззнаковых целых, а
+                            <code>RDB$GET_TRANSACTION_CN</code> возвращает знаковый BIGINT, не
+                        возможно увидеть отрицательный номер подтверждения, за исключением
+                        нескольких специальных значений, используемых для неподтверждённых
+                        транзакций.</para>
+                </note>
+
+                <para>Таким образом, числа возвращаемые <code>RDB$GET_TRANSACTION_CN</code> могут
+                    иметь следующие значения: <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>-2 — мёртвые транзакции (отмененные);</para>
+                        </listitem>
+                        <listitem>
+                            <para>-1 — зависшие транзакции (в состоянии limbo 2PC
+                                транзакций);</para>
+                        </listitem>
+                        <listitem>
+                            <para>0 — активные транзакции;</para>
+                        </listitem>
+                        <listitem>
+                            <para>1 — для транзакций подверждённых до старта базы данных или с номером
+                                меньше чем OIT (Oldest Interesting Transaction);</para>
+                        </listitem>
+                        <listitem>
+                            <para>&gt;1 — транзакции подтверждённые после старта базы данных;</para>
+                        </listitem>
+                        <listitem>
+                            <para>NULL — если номер транзакции равен NULL или больше чем Next
+                                Transaction.</para>
+                        </listitem>
+                    </itemizedlist></para>
+
+                <example>
+                    <title>Использование RDB$GET_TRANSACTION_CN</title>
+
+                    <para>
+                        <programlisting language="sql">
+select rdb$get_transaction_cn(current_transaction) from rdb$database;
+
+select rdb$get_transaction_cn(123) from rdb$database;                        
+                        </programlisting>
+                    </para>
+                </example>
+
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>README.read_consistency.md</para>
                 </formalpara>
             </section>
         </section>

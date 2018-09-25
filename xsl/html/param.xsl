@@ -10,7 +10,11 @@
     <xsl:param name="monospace.font.family" select="'Courier New'"/>
     <xsl:param name="title.font.family" select="'Arial'"/>
     
+    <xsl:param name="default.encoding" select="'UTF-8'"/>
     <xsl:param name="chunker.output.encoding" select="'UTF-8'"/>
+    <xsl:param name="htmlhelp.encoding" select="'UTF-8'"/>
+    <xsl:param name="saxon.character.representation" select="'native;decimal'"/>
+    
 
     <!-- Index / ToC -->
     <xsl:param name="generate.index">1</xsl:param>

@@ -42,8 +42,10 @@
        SPECIFIC TO EITHER CHUNKED OR MONOLITH HTML -->
 
   <xsl:output method="html"
-              encoding="ISO-8859-1"
-              indent="yes"/>
+              encoding="UTF-8"             
+              indent="yes"
+              saxon:character-representation="native;decimal"/>
+  
 
   <xsl:include href="common/param.xsl"/>
   <!--
