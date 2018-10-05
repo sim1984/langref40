@@ -2215,8 +2215,8 @@ RDB$GET_TRANSACTION_CN (<replaceable>transaction number</replaceable>)
                             <para>0 — активные транзакции;</para>
                         </listitem>
                         <listitem>
-                            <para>1 — для транзакций подверждённых до старта базы данных или с номером
-                                меньше чем OIT (Oldest Interesting Transaction);</para>
+                            <para>1 — для транзакций подверждённых до старта базы данных или с
+                                номером меньше чем OIT (Oldest Interesting Transaction);</para>
                         </listitem>
                         <listitem>
                             <para>&gt;1 — транзакции подтверждённые после старта базы данных;</para>
@@ -8686,10 +8686,84 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
                 <listitem>
                     <para>Предложение HAVING.</para>
                 </listitem>
-            </itemizedlist>
+            </itemizedlist> Обобщённый синтаксис агрегатных функций выглядит следующим образом:
+            <programlisting>
+<replaceable>&lt;agg_function&gt;</replaceable>([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
         </para>
-        <para>Любая агрегатная функция может быть использована в качестве оконной. Подробнее см.
-                <link linkend="internalfunc-window-agg">OVER</link>. </para>
+        <section xml:id="internalfunc-agg-filter">
+            <info>
+                <title>FILTER</title>
+                <keywordset>
+                    <keyword>AVG</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>FILTER</primary></indexterm>
+
+            <para>Предложение FILTER расширяет агрегатные функции дополнительным предложением WHERE.
+                Если используется предложение FILTER, то результат агрегата строится только из
+                строк, которые также удовлетворяют условию в дополнительном предложении
+                WHERE.</para>
+
+            <para>Как правило, предложение фильтра может быть реализовано с использованием выражения
+                CASE внутри агрегатной функции: условие фильтра должно быть помещено в предложение
+                WHEN, значение, которое должно быть агрегировано в предложение THEN. Поскольку
+                агрегатные функции обычно пропускают значения NULL, неявное предложение ELSE NULL
+                достаточно, чтобы игнорировать не одходящие под условия фультрации строки. Следующие
+                два выражения эквивалентны:
+                <programlisting>
+SUM(<replaceable>&lt;expression&gt;</replaceable>) FILTER(WHERE <replaceable>&lt;condition&gt;</replaceable>)               
+                </programlisting>
+                и
+                <programlisting>
+SUM(CASE WHEN <replaceable>&lt;condition&gt;</replaceable> THEN <replaceable>&lt;expression&gt;</replaceable> END)               
+                </programlisting>
+            </para>
+
+            <para>Для COUNT(*) этот пример выглядит иначе, потому что выражение <quote>*</quote> не
+                может быть использовано в предложении THEN. Вместо этого обычно используется любое
+                константное значение не равное NULL.
+                <programlisting>
+COUNT(*) FILTER(WHERE <replaceable>&lt;condition&gt;</replaceable>)               
+                </programlisting>
+                и
+                <programlisting>
+SUM(CASE WHEN <replaceable>&lt;condition&gt;</replaceable> THEN 1 END)               
+                </programlisting>
+            </para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование предложения FILTER</title>
+                        <para><programlisting language="sql">
+SELECT 
+  invoice_year,
+  SUM(revenue) FILTER (WHERE invoice_month = 1) AS jan_revenue,
+  SUM(revenue) FILTER (WHERE invoice_month= 2) AS feb_revenue,
+  ...
+  SUM(revenue) FILTER (WHERE invoice_month = 12) AS dec_revenue 
+FROM (
+  SELECT
+    EXTRACT(YEAR FROM invoices.invoice_date) AS invoice_year,
+    EXTRACT(MONTH FROM invoices.invoice_date) AS invoice_month,
+    invoices.revenue AS revenue
+  FROM invoices
+)
+GROUP BY invoice_year
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-agg-window">
+            <title>Использование агрегатных функций в качестве оконных</title>
+            <para>Любая агрегатная функция может быть использована в качестве оконной. Подробнее см.
+                    <link linkend="internalfunc-window-agg">OVER</link>. </para>
+        </section>
         <section xml:id="internalfunc-agg-avg">
             <info>
                 <title>AVG</title>
@@ -8709,7 +8783,7 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-AVG([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) 
+AVG([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                 </para>
@@ -8799,7 +8873,7 @@ GROUP BY dept_no
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-COUNT({[ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable> | *}) 
+COUNT({[ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable> | *}) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                 </para>
@@ -8894,7 +8968,7 @@ GROUP BY dept_no
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-LIST([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable> [, <replaceable>separator</replaceable>]) 
+LIST([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable> [, <replaceable>separator</replaceable>]) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)] 
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>])]                  
                 </programlisting>
                 </para>
@@ -9002,7 +9076,7 @@ FROM (SELECT display_name
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-MAX([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) 
+MAX([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)] 
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                 </para>
@@ -9095,7 +9169,7 @@ GROUP BY dept_no
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-MIN([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) 
+MIN([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                  
                 </programlisting>
                 </para>
@@ -9184,7 +9258,7 @@ GROUP BY dept_no
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-SUM([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) 
+SUM([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                  
                 </programlisting>
                 </para>
@@ -9280,7 +9354,7 @@ GROUP BY dept_no
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) 
+CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9331,7 +9405,7 @@ CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</repla
                 <para>Функция CORR возвращает коэффициент корреляции для пары выражений,
                     возвращающих числовые значения.</para>
                 <para>Функция
-                    <programlisting>CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>)</programlisting>
+                    <programlisting>CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) </programlisting>
                     эквивалентна
                     <programlisting>COVAR_POP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) / (STDDEV_POP(<replaceable>&lt;expr2&gt;</replaceable>) * STDDEV_POP(<replaceable>&lt;expr1&gt;</replaceable>))</programlisting>
                 </para>
@@ -9385,7 +9459,7 @@ FROM measure
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-COVAR_POP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) 
+COVAR_POP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9488,7 +9562,7 @@ FROM measure
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-COVAR_SAMP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) 
+COVAR_SAMP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9591,7 +9665,7 @@ FROM measure
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-STDDEV_POP(<replaceable>&lt;expr&gt;</replaceable>) 
+STDDEV_POP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9683,7 +9757,7 @@ GROUP BY dept_no
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-STDDEV_SAMP(<replaceable>&lt;expr&gt;</replaceable>) 
+STDDEV_SAMP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9775,7 +9849,7 @@ GROUP BY dept_no
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-VAR_POP(<replaceable>&lt;expr&gt;</replaceable>) 
+VAR_POP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9871,7 +9945,7 @@ GROUP BY dept_no
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-VAR_SAMP(<replaceable>&lt;expr&gt;</replaceable>) 
+VAR_SAMP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -9983,7 +10057,7 @@ GROUP BY dept_no
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_AVGX(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_AVGX(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10069,7 +10143,7 @@ SUM(<replaceable>&lt;X></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_AVGY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_AVGY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10155,7 +10229,7 @@ SUM(<replaceable>&lt;Y></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10233,7 +10307,7 @@ SUM(CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</repla
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_INTERCEPT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_INTERCEPT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10363,7 +10437,7 @@ BYYEAR     TOTAL_VALUE
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_R2(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_R2(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10447,7 +10521,7 @@ POWER(CORR(<replaceable>y</replaceable>, <replaceable>x</replaceable>), 2)
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_SLOPE(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_SLOPE(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10532,7 +10606,7 @@ COVAR_POP(<replaceable>y</replaceable>, <replaceable>x</replaceable>) / VAR_POP(
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_SXX(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_SXX(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10616,7 +10690,7 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_SXY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_SXY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
@@ -10698,7 +10772,7 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * COVAR_P
                     <title>Синтаксис:</title>
                     <para>
                         <programlisting>
-REGR_SYY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) 
+REGR_SYY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
                     </para>
