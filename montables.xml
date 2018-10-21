@@ -18,9 +18,9 @@
     <para>Снимок создаётся при первой выборке из любой таблицы мониторинга и сохраняется до конца
         текущей транзакции, чтобы запросы к множеству таблиц (например, главная-подчинённая) всегда
         возвращал непротиворечивые данные.</para>
-    <para>Другими словами таблицы мониторинга ведут себя подобно snapshot table stability
-        (&quot;consistency&quot;) транзакции, даже если родительская транзакция была запущена с
-        меньшим уровнем изоляции.</para>
+    <para>Другими словами таблицы мониторинга ведут себя подобно <code>SNAPSHOT TABLE
+            STABILITY</code> (<code>isc_tpb_consistency</code>) транзакции, даже если запросы к ним
+        выполняются в транзакции с меньшим уровнем изолированности.</para>
     <para>Для обновления снимка, текущая транзакция должна быть завершена и таблицы мониторинга
         должны быть запрошены в новом контексте транзакции.</para>
     <para>
@@ -311,8 +311,8 @@ WHERE MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
             <title>Использование MON$ATTACHMENTS для закрытия подключений</title>
 
             <para>Таблицы мониторинга доступны только для чтения. Однако в сервер встроен механизм
-                для удаления (и только удаления) записей в таблице MON$ATTACHMENTS, что позволяет,
-                закрыть соединение с базой данных.</para>
+                для удаления (и только удаления) записей в таблице <code>MON$ATTACHMENTS</code>, что
+                позволяет, закрыть соединение с базой данных.</para>
             <note>
                 <para>
                     <itemizedlist spacing="compact">
@@ -322,16 +322,16 @@ WHERE MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
                         </listitem>
                         <listitem>
                             <para>Закрытое соединение вернёт приложению ошибку с кодом
-                                isc_att_shutdown;</para>
+                                    <code>isc_att_shutdown</code>;</para>
                         </listitem>
                         <listitem>
                             <para>Последующие попытки использовать это соединение (т.е. использовать
                                 его handle в API-вызовах) вернут ошибки;</para>
                         </listitem>
                         <listitem>
-                            <para>Завершение системных соединений (MON$SYSTEM_FLAG = 1) невозможно.
-                                Сервер пропустит системные подключения затронутые оператором DELETE
-                                FROM MON$ATTACHMENTS.</para>
+                            <para>Завершение системных соединений (<code>MON$SYSTEM_FLAG = 1</code>)
+                                невозможно. Сервер пропустит системные подключения затронутые
+                                оператором <code>DELETE FROM MON$ATTACHMENTS</code>.</para>
                         </listitem>
                     </itemizedlist>
                 </para>
@@ -450,8 +450,8 @@ WHERE MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
             </table>
         </para>
         <note>
-            <para>В стек вызовов не попадёт информация о вызовах при выполнении оператора EXECUTE
-                STATEMENT. </para>
+            <para>В стек вызовов не попадёт информация о вызовах при выполнении оператора
+                    <code>EXECUTE STATEMENT</code>. </para>
         </note>
 
         <formalpara>
@@ -931,10 +931,10 @@ WHERE VAR.MON$ATTACHMENT_ID = CURRENT_CONNECTION
             </table>
         </para>
         <note>
-            <para> Счётчики, связанные с записями уровня базы данных MON$DATABASE (MON$STAT_GROUP =
-                0), отображают выделение памяти для всех соединений. В архитектурах Classic и
-                SuperClassic нулевые значения счётчиков обозначают, что в этих архитектурах нет
-                общего кэша. </para>
+            <para> Счётчики, связанные с записями уровня базы данных <code>MON$DATABASE</code>
+                    (<code>MON$STAT_GROUP = 0</code>), отображают выделение памяти для всех
+                соединений. В архитектурах Classic и SuperClassic нулевые значения счётчиков
+                обозначают, что в этих архитектурах нет общего кэша. </para>
         </note>
 
         <formalpara>
@@ -1217,8 +1217,8 @@ WHERE ATT.MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
             <title>Использование MON$STATEMENTS для отмены запросов</title>
 
             <para>Таблицы мониторинга доступны только для чтения. Однако в сервер встроен механизм
-                для удаления (и только удаления) записей в таблице MON$STATEMENTS, что позволяет
-                завершить активный запрос.</para>
+                для удаления (и только удаления) записей в таблице <code>MON$STATEMENTS</code>, что
+                позволяет завершить активный запрос.</para>
             <note>
                 <para>
                     <itemizedlist spacing="compact">
@@ -1228,7 +1228,7 @@ WHERE ATT.MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
                         </listitem>
                         <listitem>
                             <para>После отмены запроса вызов API-функций execute/fetch вернёт ошибку
-                                с кодом isc_cancelled.</para>
+                                с кодом <code>isc_cancelled</code>.</para>
                         </listitem>
                         <listitem>
                             <para>Последующие запросы в данном соединении не запрещёны.</para>
