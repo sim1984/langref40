@@ -238,12 +238,12 @@ CURRENT_TIME [(<replaceable>&lt;precision&gt;</replaceable>)]
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>TIME</para>
+                <para>TIME WITH TIME ZONE</para>
             </formalpara>
 
-            <para>Переменная CURRENT_TIME возвращает текущее время сервера. Точность определяет,
-                сколько учитывать знаков после запятой в долях секунды. По умолчанию точность равна
-                0.</para>
+            <para>Переменная CURRENT_TIME возвращает текущее время сервера включая информацию о
+                часовом поясе. Точность определяет, сколько учитывать знаков после запятой в долях
+                секунды. По умолчанию точность равна 0.</para>
 
             <note>
                 <para>В блоке кода PSQL (процедура, триггер, исполняемый блок) значение CURRENT_TIME
@@ -260,7 +260,7 @@ CURRENT_TIME [(<replaceable>&lt;precision&gt;</replaceable>)]
                         <title>Использование переменной CURRENT_TIME</title>
                         <para><programlisting language="sql">
 SELECT CURRENT_TIME(2) FROM RDB$DATABASE;
--- результат будет (например) 23:35:33.1200            
+-- результат будет (например) 23:35:33.1200 Europe/Moscow            
                 </programlisting></para>
                     </example>
                 </para>
@@ -329,12 +329,12 @@ CURRENT_TIMESTAMP [(<replaceable>&lt;precision&gt;</replaceable>)]
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>TIMESTAMP</para>
+                <para>TIMESTAMP WITH TIME ZONE</para>
             </formalpara>
 
-            <para>Переменная CURRENT_TIMESTAMP возвращает текущую дату и время сервера. Точность
-                определяет, сколько учитывать знаков после запятой в долях секунды. Точность по
-                умолчанию равна 3.</para>
+            <para>Переменная CURRENT_TIMESTAMP возвращает текущую дату и время сервера включая
+                информацию о часовом поясе. Точность определяет, сколько учитывать знаков после
+                запятой в долях секунды. Точность по умолчанию равна 3.</para>
             <note>
                 <para>В блоке кода PSQL (процедура, триггер, исполняемый блок) значение
                     CURRENT_TIMESTAMP не меняется по мере выполнения. При вызове вложенного кода,
@@ -350,7 +350,7 @@ CURRENT_TIMESTAMP [(<replaceable>&lt;precision&gt;</replaceable>)]
                         <title>Использование переменной CURRENT_TIMESTAMP</title>
                         <para><programlisting language="sql">
 SELECT CURRENT_TIMESTAMP(2) FROM RDB$DATABASE;
--- результат будет (например) 02.03.2014 23:35:33.1200            
+-- результат будет (например) 02.03.2014 23:35:33.1200 Europe/Moscow           
                 </programlisting></para>
                     </example>
                 </para>
@@ -672,6 +672,194 @@ END
                         linkend="internalfunc-contextvar-deleting">DELETING</link>. </para>
             </formalpara>
         </section>
+
+        <section xml:id="internalfunc-contextvar-localtime">
+            <info>
+                <title>LOCALTIME</title>
+                <keywordset>
+                    <keyword>LOCALTIME</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>LOCALTIME</primary></indexterm>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, PSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+LOCALTIME [(<replaceable>&lt;precision&gt;</replaceable>)]
+
+<replaceable>&lt;precision&gt;</replaceable> ::= 0 | 1 | 2 | 3                        
+                        </programlisting>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры контекстной переменной LOCALTIME</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>precision</replaceable></entry>
+                                <entry>
+                                    <para>Точность. Значение по умолчанию 0. Не поддерживается в
+                                        ESQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>TIME WITHOUT TIME ZONE</para>
+            </formalpara>
+
+            <para>Переменная LOCALTIME возвращает текущее время сервера без информации о часовом
+                поясе. Точность определяет, сколько учитывать знаков после запятой в долях секунды.
+                Точность по умолчанию равна 0.</para>
+
+            <note>
+                <para>В блоке кода PSQL (процедура, триггер, исполняемый блок) значение LOCALTIME не
+                    меняется по мере выполнения. При вызове вложенного кода, значение также не
+                    изменится и будет равно значению в коде самого верхнего уровня. Для определения
+                    реального времени используйте другие переменные, например 'NOW' (с полным
+                    приведением типа данных). </para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование переменной LOCALTIME</title>
+                        <para><programlisting language="sql">
+SELECT LOCALTIME(2) FROM RDB$DATABASE;
+-- результат будет (например) 23:35:33.1200            
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
+                        linkend="internalfunc-contextvar-now">'NOW'</link>, <link
+                        linkend="internalfunc-contextvar-current_timestamp"
+                    >CURRENT_TIMESTAMP</link>, <link linkend="internalfunc-contextvar-current_date"
+                        >CURRENT_DATE</link>. </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="internalfunc-contextvar-localtimestamp">
+            <info>
+                <title>LOCALTIMESTAMP</title>
+                <keywordset>
+                    <keyword>LOCALTIMESTAMP</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>LOCALTIMESTAMP</primary></indexterm>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, PSQL, ESQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+LOCALTIMESTAMP [(<replaceable>&lt;precision&gt;</replaceable>)]
+
+<replaceable>&lt;precision&gt;</replaceable> ::= 0 | 1 | 2 | 3                        
+                        </programlisting>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры контекстной переменной LOCALTIMESTAMP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>precision</replaceable></entry>
+                                <entry>
+                                    <para>Точность. Значение по умолчанию 3. Не поддерживается в
+                                        ESQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>TIMESTAMP WITHOUT TIME ZONE</para>
+            </formalpara>
+
+            <para>Переменная LOCALTIMESTAMP возвращает текущую дату и время сервера без информации о
+                часовом поясе. Точность определяет, сколько учитывать знаков после запятой в долях
+                секунды. Точность по умолчанию равна 3.</para>
+            <note>
+                <para>В блоке кода PSQL (процедура, триггер, исполняемый блок) значение
+                    LOCALTIMESTAMP не меняется по мере выполнения. При вызове вложенного кода,
+                    значение также не изменится и будет равно значению в коде самого верхнего
+                    уровня. Для определения реального времени используйте другие переменные,
+                    например 'NOW' (с полным приведением типа данных). </para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование переменной LOCALTIMESTAMP</title>
+                        <para><programlisting language="sql">
+SELECT LOCALTIMESTAMP(2) FROM RDB$DATABASE;
+-- результат будет (например) 02.03.2014 23:35:33.1200            
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="internalfunc-contextvar-current_timestamp"
+                        >CURRENT_TIMESTAMP</link>, <link linkend="internalfunc-contextvar-now"
+                        >'NOW'</link>, <link linkend="internalfunc-contextvar-current_time"
+                        >CURRENT_TIME</link>, <link linkend="internalfunc-contextvar-current_date"
+                        >CURRENT_DATE</link>. </para>
+            </formalpara>
+        </section>
+
         <section xml:id="internalfunc-contextvar-new">
             <info>
                 <title>NEW</title>
@@ -6048,6 +6236,60 @@ FROM RDB$DATABASE
                 <title>Функции для работы с датой и временем</title>
             </info>
 
+            <section xml:id="internalfunc-func-datetime-attimezone">
+                <info>
+                    <title>AT</title>
+                    <keywordset>
+                        <keyword>AT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>AT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>                                                           
+<replaceable>&lt;expr&gt;</replaceable> AT {TIME ZONE <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL}                       
+                        
+<replaceable>&lt;time zone string&gt;</replaceable> ::=
+    '<replaceable>&lt;time zone&gt;</replaceable>'                            
+                            
+<replaceable>&lt;time zone&gt;</replaceable> ::=
+    <replaceable>&lt;time zone region&gt;</replaceable> |
+    [+/-] <replaceable>&lt;hour displacement&gt;</replaceable> [: <replaceable>&lt;minute displacement&gt;</replaceable>]                         
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>Преобразует время или временную метку в указанный часовой пояс. Если
+                    используется ключевое слово LOCAL, то преобразование происходит в часовой пояс
+                    сессии.</para>
+                
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции AT</title>
+                            <para><programlisting language="sql">
+select time '12:00 GMT' at time zone '-03'
+  from rdb$database;
+
+select current_timestamp at time zone 'America/Sao_Paulo'
+  from rdb$database;
+
+select timestamp '2018-01-01 12:00 GMT' at local
+  from rdb$database;
+                </programlisting>
+                            </para>
+                        </example>
+                    </para>
+                </formalpara>
+            </section>
+
             <section xml:id="internalfunc-func-datetime-dateadd">
                 <info>
                     <title>DATEADD</title>
@@ -6072,7 +6314,7 @@ DATEADD (<replaceable>&lt;args&gt;</replaceable>)
                             
 <replaceable>&lt;unit&gt;</replaceable> ::= 
     YEAR | MONTH | WEEK | DAY | WEEKDAY | YEARDAY
-  | HOUR | MINUTE | SECOND | MILLISECOND                            
+  | HOUR | MINUTE | SECOND | MILLISECOND                           
                         </programlisting>
                     </para>
                 </formalpara>
@@ -6345,7 +6587,8 @@ EXTRACT (<replaceable>&lt;part&gt;</replaceable> FROM <replaceable>datetime</rep
                             
 <replaceable>&lt;part&gt;</replaceable> ::= 
     YEAR | MONTH | WEEK | DAY | WEEKDAY | YEARDAY
-  | HOUR | MINUTE | SECOND | MILLISECOND                            
+  | HOUR | MINUTE | SECOND | MILLISECOND
+  | TIMEZONE_HOUR | TIMEZONE_MINUTE                             
                         </programlisting>
                     </para>
                 </formalpara>
@@ -6406,64 +6649,76 @@ EXTRACT (<replaceable>&lt;part&gt;</replaceable> FROM <replaceable>datetime</rep
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry> YEAR </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 1–9999 </entry>
-                                    <entry> </entry>
+                                    <entry>YEAR </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>1–9999 </entry>
+                                    <entry>Год</entry>
                                 </row>
                                 <row>
-                                    <entry> MONTH </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 1–12 </entry>
-                                    <entry> </entry>
+                                    <entry>MONTH </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>1–12 </entry>
+                                    <entry>Месяц</entry>
                                 </row>
                                 <row>
-                                    <entry> WEEK </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 1–53 </entry>
-                                    <entry> </entry>
+                                    <entry>WEEK </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>1–53 </entry>
+                                    <entry>Номер недели в году</entry>
                                 </row>
                                 <row>
-                                    <entry> DAY </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 1–31 </entry>
-                                    <entry> </entry>
+                                    <entry>DAY </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>1–31 </entry>
+                                    <entry>День</entry>
                                 </row>
                                 <row>
-                                    <entry> WEEKDAY </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 0–6 </entry>
-                                    <entry> 0 = Воскресенье </entry>
+                                    <entry>WEEKDAY </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>0–6 </entry>
+                                    <entry>День недели. 0 — Воскресенье </entry>
                                 </row>
                                 <row>
-                                    <entry> YEARDAY </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 0–365 </entry>
-                                    <entry> 0 = 1 января </entry>
+                                    <entry>YEARDAY </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>0–365 </entry>
+                                    <entry>Номер дня в году. 0 = 1 января </entry>
                                 </row>
                                 <row>
-                                    <entry> HOUR </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 0–23 </entry>
-                                    <entry> </entry>
+                                    <entry>HOUR </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>0–23 </entry>
+                                    <entry>Часы</entry>
                                 </row>
                                 <row>
-                                    <entry> MINUTE </entry>
-                                    <entry> SMALLINT </entry>
-                                    <entry> 0–59 </entry>
-                                    <entry> </entry>
+                                    <entry>MINUTE </entry>
+                                    <entry>SMALLINT </entry>
+                                    <entry>0–59 </entry>
+                                    <entry>Минуты</entry>
                                 </row>
                                 <row>
-                                    <entry> SECOND </entry>
-                                    <entry> NUMERIC(9,4) </entry>
-                                    <entry> 0.0000–59.9999 </entry>
-                                    <entry> Включает в себя миллисекунды </entry>
+                                    <entry>SECOND </entry>
+                                    <entry>NUMERIC(9,4) </entry>
+                                    <entry>0.0000–59.9999 </entry>
+                                    <entry>Секунды. Включает в себя миллисекунды </entry>
                                 </row>
                                 <row>
-                                    <entry> MILLISECOND </entry>
-                                    <entry> NUMERIC(9,1) </entry>
-                                    <entry> 0.0–999.9 </entry>
-                                    <entry> </entry>
+                                    <entry>MILLISECOND </entry>
+                                    <entry>NUMERIC(9,1) </entry>
+                                    <entry>0.0–999.9 </entry>
+                                    <entry>Миллисекунды</entry>
+                                </row>
+                                <row>
+                                    <entry>TIMEZONE_HOUR</entry>
+                                    <entry>SMALLINT</entry>
+                                    <entry>от -14 до +14</entry>
+                                    <entry>Смещение часов часового пояса</entry>
+                                </row>
+                                <row>
+                                    <entry>TIMEZONE_MINUTE</entry>
+                                    <entry>SMALLINT</entry>
+                                    <entry>от -59 до +59</entry>
+                                    <entry>Смещение минут часового пояса</entry>
                                 </row>
                             </tbody>
                         </tgroup>

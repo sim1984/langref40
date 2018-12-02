@@ -25,6 +25,9 @@
                 <para>управление обработкой типа DECFLOAT;</para>
             </listitem>
             <listitem>
+                <para>управление часовым поясом;</para>
+            </listitem>
+            <listitem>
                 <para>сброс сессионного окружения.</para>
             </listitem>
         </itemizedlist></para>
@@ -736,13 +739,120 @@ SET TRUSTED ROLE
         </section>
     </section>
 
+    <section xml:id="session-timezone">
+        <info>
+            <title>Управление часовым поясом и обработкой часовых поясов</title>
+        </info>
+
+        <section xml:id="session-timezone-settimezone">
+            <info>
+                <title>SET TIME ZONE</title>
+            </info>
+            <indexterm>
+                <primary>SET TIME ZONE</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение часового пояса сеанса.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET TIME ZONE { <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL }
+                        
+<replaceable>&lt;time zone string&gt;</replaceable> ::=
+    '<replaceable>&lt;time zone&gt;</replaceable>'                            
+                            
+<replaceable>&lt;time zone&gt;</replaceable> ::=
+    <replaceable>&lt;time zone region&gt;</replaceable> |
+    [+/-] <replaceable>&lt;hour displacement&gt;</replaceable> [: <replaceable>&lt;minute displacement&gt;</replaceable>]                          
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Немедленно изменяет часовой пояс сеанса (текущего подключения).</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение часового пояса</title>
+
+                        <para><programlisting language="sql"> 
+set time zone '-02:00';
+
+set time zone 'America/Sao_Paulo';
+
+set time zone local;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="session-timezone-settimezonebind">
+            <info>
+                <title>SET TIME ZONE BIND</title>
+            </info>
+            <indexterm>
+                <primary>SET TIME ZONE BIND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение привязки типов с WITH TIME ZONE</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET TIME ZONE BIND { NATIVE | LEGACY }                      
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Оператор изменяет привязку часового пояса сеанса для совместимости со старыми
+                клиентами.</para>
+
+            <para>Значение по умолчанию - NATIVE, что означает, что выражения <code>TIME WITH TIME
+                    ZONE</code> и <code>TIMESTAMP WITH TIME ZONE</code> возвращаются с новыми типами
+                данных для клиента.</para>
+
+            <para>Старые клиенты могут не понимать новые типы данных, поэтому можно определить
+                привязку к LEGACY, и выражения будут возвращены как <code>TIME WITHOUT TIME ZONE</code> и
+                <code>TIMESTAMP WITHOUT TIME ZONE</code> с соответствующим преобразованием. </para>
+            
+            <para>Конфигурация привязки применима также к входным параметрам.</para>
+            
+            <formalpara>
+                <title>Примеры:</title>
+                
+                <para>
+                    <example>
+                        <title>Изменение привзяки для типов времени и даты-времени</title>
+                        
+                        <para><programlisting language="sql"> 
+set time zone bind native;
+
+set time zone bind legacy;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+    </section>
 
     <section xml:id="session-decfloat">
         <info>
             <title>Управление обработкой DECFLOAT</title>
         </info>
-
-        <para/>
 
         <section xml:id="session-decfloat-round">
             <info>

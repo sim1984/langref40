@@ -34,10 +34,10 @@
             <title>Типы данных Firebird</title>
 
             <tgroup cols="4">
-                <colspec colname="colName" colwidth="1*" align="left"/>
-                <colspec colname="colSize" colwidth="1*" align="left"/>
-                <colspec colname="colPrecision" colwidth="1*" align="left"/>
-                <colspec colname="colDesc" colwidth="2*" align="left"/>
+                <colspec colname="colName" colwidth="1.0*" align="left"/>
+                <colspec colname="colSize" colwidth="0.9*" align="left"/>
+                <colspec colname="colPrecision" colwidth="1.3*" align="left"/>
+                <colspec colname="colDesc" colwidth="1.9*" align="left"/>
                 <thead>
                     <row valign="middle">
                         <entry align="center">Название</entry>
@@ -48,76 +48,94 @@
                 </thead>
                 <tbody>
                     <row>
-                        <entry><para>BIGINT</para></entry>
+                        <entry><para><code>BIGINT</code></para></entry>
                         <entry><para>64 бита</para></entry>
-                        <entry><para>-2<superscript>63</superscript> ..
-                                    2<superscript>63</superscript> - 1</para></entry>
+                        <entry><para>
+                                <inlineequation>
+                                    <alt>-2^63 .. 2^63 - 1</alt>
+                                    <mathphrase>-2<superscript>63</superscript> ..
+                                            2<superscript>63</superscript> - 1</mathphrase>
+                                </inlineequation>
+                            </para>
+                        </entry>
                         <entry><para>Тип данных доступен только в 3 диалекте.</para></entry>
                     </row>
                     <row>
-                        <entry><para>BOOLEAN</para></entry>
+                        <entry><para><code>BOOLEAN</code></para></entry>
                         <entry><para>8 бит</para></entry>
                         <entry><para>false, true, unknown</para></entry>
                         <entry><para>Логический тип данных.</para></entry>
                     </row>
                     <row>
-                        <entry><para>BINARY(<replaceable>n</replaceable>)</para></entry>
+                        <entry><para><code>BINARY(<replaceable>n</replaceable>)</code></para></entry>
                         <entry><para><replaceable>n</replaceable> байт</para></entry>
-                        <entry><para>от 1 до 32 767 байт</para></entry>
+                        <entry><para>от 1 до <literal>32 767</literal> байт</para></entry>
                         <entry><para>Бинарный тип данных фиксированной длины. Является псевдонимом
-                                типа CHAR(<replaceable>n</replaceable>) CHARACTER SET
-                            OCTETS.</para></entry>
+                                типа <code>CHAR(<replaceable>n</replaceable>) CHARACTER SET
+                                    OCTETS</code>.</para></entry>
                     </row>
                     <row>
-                        <entry><para>BLOB</para></entry>
+                        <entry><para><code>BLOB</code></para></entry>
                         <entry><para>Переменный</para></entry>
                         <entry><para>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный
                                 размер поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер
                                 BLOB поля несколько ниже 2 Гб.</para></entry>
                         <entry><para>Тип данных с динамически изменяемым размером для хранения
                                 больших данных, таких как графика, тексты, оцифрованные звуки.
-                                Базовая структурная единица — сегмент. Подтип Blob описывает
+                                Базовая структурная единица — сегмент. Подтип BLOB описывает
                                 содержимое.</para>
                         </entry>
                     </row>
                     <row>
                         <entry>
-                            <para>CHAR(<replaceable>n</replaceable>)</para>
-                            <para>CHARACTER(<replaceable>n</replaceable>)</para>
+                            <para><code>CHAR(<replaceable>n</replaceable>)</code></para>
+                            <para><code>CHARACTER(<replaceable>n</replaceable>)</code></para>
                         </entry>
                         <entry><para><replaceable>n</replaceable> символов (размер в байтах зависит
                                 от кодировки, кол-во байт на символ)</para></entry>
-                        <entry><para>от 1 до 32 767 байт</para></entry>
+                        <entry><para>от 1 до <literal>32 767</literal> байт</para></entry>
                         <entry><para>Символьный тип данных фиксированной длины. При извлечении
                                 данных, строка дополняется пробелами справа до указанной длины. Если
                                 количество символов <replaceable>n</replaceable> не указано, то по
                                 умолчанию принимается 1.</para></entry>
                     </row>
                     <row>
-                        <entry><para>DATE</para></entry>
+                        <entry><para><code>DATE</code></para></entry>
                         <entry><para>32 бита</para></entry>
-                        <entry><para>от 01.01.0001 н.э. до 31.12.9999 н.э.</para></entry>
-                        <entry><para>ISC_DATE</para></entry>
+                        <entry><para>от <literal>01.01.0001</literal> до
+                                    <literal>31.12.9999</literal></para></entry>
+                        <entry><para>Дата</para></entry>
                     </row>
                     <row>
-                        <entry><para>DECIMAL (<replaceable>precision</replaceable>,
-                                    <replaceable>scale</replaceable>)</para></entry>
+                        <entry><para><code>DECIMAL (<replaceable>precision</replaceable>,
+                                        <replaceable>scale</replaceable>)</code></para></entry>
                         <entry><para>Переменный (16, 32, 64 или 128 бита)</para></entry>
                         <entry>
-                            <para><replaceable>precision</replaceable> = от 1 до 34, указывает, по
-                                меньшей мере, количество цифр для хранения;</para>
-                            <para><replaceable>scale</replaceable> = от 0 до 34. Задаёт количество
-                                знаков после разделителя </para>
+                            <para>
+                                <inlineequation>
+                                    <alt>1 &#8804; precision &#8804; 34</alt>
+                                    <mathphrase>1 &#8804; <replaceable>precision</replaceable>
+                                        &#8804; 34</mathphrase>
+                                </inlineequation>. Указывает, по меньшей мере, количество цифр для
+                                хранения;</para>
+                            <para>
+                                <inlineequation>
+                                    <alt>0 &#8804; scale &#8804; 34</alt>
+                                    <mathphrase>1 &#8804; <replaceable>scale</replaceable> &#8804;
+                                        34</mathphrase>
+                                </inlineequation>. Задаёт количество знаков после
+                                разделителя.</para>
                         </entry>
                         <entry><para><replaceable>scale</replaceable> должно быть меньше или равно
                                     <replaceable>precision</replaceable>. Число с десятичной точкой,
                                 имеющей после точки <replaceable>scale</replaceable> разрядов.
-                                Пример: DECIMAL(10,3) содержит число точно в следующем формате:
-                                ppppppp.sss.</para>
+                                Пример: <code>DECIMAL(10,3)</code> содержит число точно в следующем
+                                формате: ppppppp.sss.</para>
                         </entry>
                     </row>
                     <row>
-                        <entry><para>DECFLOAT (<replaceable>precision</replaceable>)</para></entry>
+                        <entry><para><code>DECFLOAT
+                                (<replaceable>precision</replaceable>)</code></para></entry>
                         <entry><para>8 или 16 байт</para></entry>
                         <entry><para><replaceable>precision</replaceable> = 16 | 34, количество
                                 значащих цифр (точность)</para></entry>
@@ -125,84 +143,119 @@
                                 запятой, основанный на стандарте IEEE754r.</para></entry>
                     </row>
                     <row>
-                        <entry><para>DOUBLE PRECISION</para></entry>
+                        <entry><para><code>DOUBLE PRECISION</code></para></entry>
                         <entry><para>64 бита</para></entry>
-                        <entry><para>2,225 x 10<superscript>-308</superscript> .. 1,797 x
-                                    10<superscript>308</superscript></para>
+                        <entry><para><inlineequation>
+                                    <alt>2.225 * 10^-308 .. 1.797 * 10^308</alt>
+                                    <mathphrase>2.225 x 10<superscript>-308</superscript> .. 1.797 x
+                                            10<superscript>308</superscript></mathphrase>
+                                </inlineequation>
+                            </para>
                         </entry>
                         <entry><para>IEEE двойной точности, 15 цифр, размер зависит от
                                 платформы</para></entry>
                     </row>
                     <row>
-                        <entry><para>FLOAT</para></entry>
+                        <entry><para><code>FLOAT</code></para></entry>
                         <entry><para>32 бита</para></entry>
-                        <entry><para>1,175 x 10<superscript>-38</superscript> .. 3,402 x
-                                    10<superscript>38</superscript></para>
+                        <entry><para><inlineequation>
+                                    <alt>1.175 * 10^38 .. 3.402 * 10^38</alt>
+                                    <mathphrase>1.175 x 10<superscript>-38</superscript> .. 3.402 x
+                                            10<superscript>38</superscript></mathphrase>
+                                </inlineequation></para>
                         </entry>
                         <entry><para>IEEE одинарной точности, 7 цифр</para></entry>
                     </row>
                     <row>
                         <entry>
-                            <para>INTEGER</para>
-                            <para>INT</para>
+                            <para><code>INTEGER</code></para>
+                            <para><code>INT</code></para>
                         </entry>
                         <entry><para>32 бита</para></entry>
-                        <entry><para>–2 147 483 648 .. 2 147 483 647</para></entry>
-                        <entry><para>signed long</para></entry>
+                        <entry><para><literal>–2147483648</literal> ..
+                                <literal>2147483647</literal></para></entry>
+                        <entry><para>Знаковое целое.</para></entry>
                     </row>
                     <row>
-                        <entry><para>NUMERIC (<replaceable>precision</replaceable>,
-                                    <replaceable>scale</replaceable>)</para></entry>
+                        <entry><para><code>NUMERIC (<replaceable>precision</replaceable>,
+                                        <replaceable>scale</replaceable>)</code></para></entry>
                         <entry><para>Переменный (16, 32, 64 или 128 бита)</para></entry>
                         <entry>
-                            <para><replaceable>precision</replaceable> = от 1 до 34, указывает, по
-                                меньшей мере, количество цифр для хранения;</para>
-                            <para><replaceable>scale</replaceable> = от 0 до 34. Задаёт количество
-                                знаков после разделителя.</para>
+                            <para>
+                                <inlineequation>
+                                    <alt>1 &#8804; precision &#8804; 34</alt>
+                                    <mathphrase>1 &#8804; <replaceable>precision</replaceable>
+                                        &#8804; 34</mathphrase>
+                                </inlineequation>. Указывает, по меньшей мере, количество цифр для
+                                хранения;</para>
+                            <para>
+                                <inlineequation>
+                                    <alt>0 &#8804; scale &#8804; 34</alt>
+                                    <mathphrase>1 &#8804; <replaceable>scale</replaceable> &#8804;
+                                        34</mathphrase>
+                                </inlineequation>. Задаёт количество знаков после
+                                разделителя.</para>
                         </entry>
                         <entry><para><replaceable>scale</replaceable> должно быть меньше или равно
                                 precision. Число с десятичной точкой, имеющей после точки scale
-                                разрядов. Пример: NUMERIC(10,3) содержит число точно в следующем
-                                формате: ppppppp.sss.</para></entry>
+                                разрядов. Пример: <code>NUMERIC(10, 3)</code> содержит число точно в
+                                следующем формате: ppppppp.sss.</para></entry>
                     </row>
                     <row>
-                        <entry><para>SMALLINT</para></entry>
+                        <entry><para><code>SMALLINT</code></para></entry>
                         <entry><para>16 бит</para></entry>
-                        <entry><para>–32 768 .. 32 767</para></entry>
-                        <entry><para>signed short (word)</para></entry>
+                        <entry><para>–32768 .. 32767</para></entry>
+                        <entry><para>Короткое знаковое целое.</para></entry>
                     </row>
                     <row>
-                        <entry><para>TIME</para></entry>
+                        <entry><para><code>TIME [WITHOUT TIME ZONE]</code></para></entry>
                         <entry><para>32 бита</para></entry>
-                        <entry><para>От 0:00 до 23:59:59.9999</para></entry>
-                        <entry><para>ISC_TIME</para></entry>
+                        <entry><para>от <literal>00:00:00</literal> до
+                                    <literal>23:59:59.9999</literal></para></entry>
+                        <entry><para>Время без учёта часового пояса.</para></entry>
                     </row>
                     <row>
-                        <entry><para>TIMESTAMP</para></entry>
+                        <entry><para><code>TIME WITH TIME ZONE</code></para></entry>
+                        <entry><para>6 байт</para></entry>
+                        <entry><para>от <literal>00:00:00</literal> до
+                                    <literal>23:59:59.9999</literal></para></entry>
+                        <entry><para>Время с учётом часового пояса.</para></entry>
+                    </row>
+                    <row>
+                        <entry><para><code>TIMESTAMP [WITHOUT TIME ZONE]</code></para></entry>
                         <entry><para>64 бита</para></entry>
-                        <entry><para>от 01.01.0001 н.э. до 31.12.9999 н.э.</para></entry>
-                        <entry><para>Включает информацию и о времени</para></entry>
+                        <entry><para>от <literal>01.01.0001 00:00:00</literal> до
+                                    <literal>31.12.9999 23:59:59.9999</literal></para></entry>
+                        <entry><para>Дата включающая время без учёта часового пояса.</para></entry>
+                    </row>
+                    <row>
+                        <entry><code>TIMESTAMP WITH TIME ZONE</code></entry>
+                        <entry>10 байт</entry>
+                        <entry><para>от <literal>01.01.0001 00:00:00</literal> до
+                                    <literal>31.12.9999 23:59:59.9999</literal></para></entry>
+                        <entry><para>Дата включающая время с учётом часового пояса.</para></entry>
                     </row>
                     <row>
                         <entry>
-                            <para>VARBINARY(<replaceable>n</replaceable>)</para>
-                            <para>BINARY VARYING(<replaceable>n</replaceable>)</para>
+                            <para><code>VARBINARY(<replaceable>n</replaceable>)</code></para>
+                            <para><code>BINARY VARYING(<replaceable>n</replaceable>)</code></para>
                         </entry>
                         <entry><para><replaceable>n</replaceable> байт</para></entry>
-                        <entry><para>от 1 до 32 765 байтов</para></entry>
+                        <entry><para>от 1 до 32765 байтов</para></entry>
                         <entry><para>Бинарный тип данных переменной длины. Является псевдонимом типа
-                                    VARCHAR(<replaceable>n</replaceable>) CHARACTER SET
-                                OCTETS.</para></entry>
+                                        <code>VARCHAR(<replaceable>n</replaceable>) CHARACTER SET
+                                    OCTETS</code>.</para></entry>
                     </row>
                     <row>
                         <entry>
-                            <para>VARCHAR(<replaceable>n</replaceable>)</para>
-                            <para>CHAR VARYING(<replaceable>n</replaceable>)</para>
-                            <para>CHARACTER VARYING(<replaceable>n</replaceable>)</para>
+                            <para><code>VARCHAR(<replaceable>n</replaceable>)</code></para>
+                            <para><code>CHAR VARYING(<replaceable>n</replaceable>)</code></para>
+                            <para><code>CHARACTER
+                                VARYING(<replaceable>n</replaceable>)</code></para>
                         </entry>
                         <entry><para><replaceable>n</replaceable> символов (размер в байтах зависит
                                 от кодировки, кол-ва байт на символ)</para></entry>
-                        <entry><para>от 1 до 32 765 байтов</para></entry>
+                        <entry><para>от 1 до 32765 байтов</para></entry>
                         <entry><para>Размер символов в байтах с учётом их кодировки не может быть
                                 больше 32765. Для этого типа данных, в отличие от CHAR (где по
                                 умолчанию предполагается количество символов 1), количество символов
@@ -212,6 +265,7 @@
             </tgroup>
         </table>
     </para>
+
     <note>
         <para>Следует иметь в виду, что временной ряд из дат прошлых веков рассматривается без учёта
             реальных исторических фактов и так, как будто бы во всем этом диапазоне ВСЕГДА
@@ -232,7 +286,7 @@
             <para>Тип данных SMALLINT представляет собой 16-битное целое. Он применяется в случае,
                 когда не требуется широкий диапазон возможных значений для хранения данных. </para>
             <para>Числа типа SMALLINT находятся в диапазоне -2<superscript>15</superscript> ..
-                    2<superscript>15</superscript> - 1, или -32 768 .. 32 767. </para>
+                    2<superscript>15</superscript> - 1, или -32768 .. 32767. </para>
             <formalpara>
                 <title>Примеры:</title>
 
@@ -1255,9 +1309,9 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
         </info>
 
         <para>В СУБД Firebird для работы с данными, содержащими дату и время, используются типы
-            данных DATE, TIME, TIMESTAMP. В 3-м диалекте присутствуют все три вышеназванных типа
+            данных DATE, TIME и TIMESTAMP. В 3-м диалекте присутствуют все три вышеназванных типа
             данных, а в 1-м для операций с датой и временем доступен только тип данных DATE, который
-            не тождественен типу данных DATE 3-го диалекта, а напоминает тип данных TIMESTAMP из
+            не тождественен типу данных DATE 3-го диалекта, а является типом данных TIMESTAMP из
             3-го диалекта. </para>
         <note>
             <para>В диалекте 1 тип DATE может быть объявлен как TIMESTAMP. Такое объявление является
@@ -1284,6 +1338,16 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                             <literallayout class="monospaced">CURRENT_TIMESTAMP (0 | 1 | 2 | 3)</literallayout></para>
                     </listitem>
                     <listitem>
+                        <para>LOCALTIME — по умолчанию имеет точность до секунды, точность до
+                            миллисекунд может быть указана следующим образом
+                            <literallayout class="monospaced">LOCALTIME (0 | 1 | 2 | 3)</literallayout></para>
+                    </listitem>
+                    <listitem>
+                        <para>LOCALTIMESTAMP — по умолчанию имеет точность до миллисекунды, точность
+                            от секунд до миллисекунд может быть указана следующим образом
+                            <literallayout class="monospaced">LOCALTIMESTAMP (0 | 1 | 2 | 3)</literallayout></para>
+                    </listitem>
+                    <listitem>
                         <para>Литерал 'NOW' имеет точность до миллисекунд;</para>
                     </listitem>
                     <listitem>
@@ -1296,6 +1360,9 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>Типы DATETIME и TIME могут содержать или не содержать часовой пояс в зависимости
+                от способа объявления. По умолчанию типы DATETIME и TIME не содержат часовой
+                пояс.</para>
         </note>
         <section xml:id="types-datetime-date">
             <info>
@@ -1311,14 +1378,76 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                     времени, при записи в таблицу добавляйте время к значению даты в виде литерала
                     '00:00:00.0000'. </para>
             </tip>
+            <example>
+                <info>
+                    <title>Пример использования DATE</title>
+                </info>
+
+                <para>
+                    <programlisting language="sql">
+CRETE TABLE DataLog(
+  id BIGINT NOT NULL,
+  bydate DATE
+);                    
+                    </programlisting>
+                </para>
+
+                <para>
+                    <programlisting language="sql">
+....                        
+AS
+  DECLARE BYDATE DATE; 
+BEGIN  
+....  
+                    </programlisting>
+                </para>
+            </example>
         </section>
         <section xml:id="types-datetime-time">
             <info>
                 <title>TIME</title>
             </info>
             <indexterm><primary>TIME</primary></indexterm>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced"> 
+TIME [{WITH | WITHOUT} TIME ZONE]
+                </literallayout>
+                </para>
+            </formalpara>
+
             <para>Этот тип данных доступен только в 3-м диалекте. Позволяет хранить время дня в
-                диапазоне от 00:00:00.0000 до 23:59:59.9999. </para>
+                диапазоне от 00:00:00.0000 до 23:59:59.9999. По умолчанию тип TIME не содержит
+                информацию о часовом поясе. Для того чтобы тип TIME включал информацию о часовом
+                поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
+            <example>
+                <info>
+                    <title>Пример использования TIME</title>
+                </info>
+
+                <para>
+                    <programlisting language="sql">
+CRETE TABLE DataLog(
+  id BIGINT NOT NULL,
+  bytime TIME WITH TIME ZONE
+);                    
+                    </programlisting>
+                </para>
+
+                <para>
+                    <programlisting language="sql">
+....                        
+AS
+  DECLARE BYTIME TIME; -- без часового пояса
+  DECLARE BYTIME2 TIME WITHOUT TIME ZONE; -- без часового пояса  
+  DECLARE BYTIME3 TIME WITH TIME ZONE; -- с информацией о часовом поясе   
+BEGIN  
+....  
+                    </programlisting>
+                </para>
+            </example>
             <para>При необходимости получения времени из типа DATE в 1-м диалекте можно использовать
                 функцию EXTRACT. </para>
             <example>
@@ -1343,7 +1472,47 @@ EXTRACT (SECOND FROM DATE_FIELD)
                 <title>TIMESTAMP</title>
             </info>
             <indexterm><primary>TIMESTAMP</primary></indexterm>
-            <para>Этот тип данных хранит дату вместе со временем.</para>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced"> 
+TIMESTAMP [{WITH | WITHOUT} TIME ZONE]
+                </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Этот тип данных хранит дату вместе со временем в диапазоне от 01.01.0001
+                00:00:00.0000 до 31.12.9999 23:59:59.9999. По умолчанию тип TIMESTAMP не содержит
+                информацию о часовом поясе. Для того чтобы тип TIMESTAMP включал информацию о
+                часовом поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
+
+            <example>
+                <info>
+                    <title>Пример использования TIME</title>
+                </info>
+
+                <para>
+                    <programlisting language="sql">
+CRETE TABLE DataLog(
+  id BIGINT NOT NULL,
+  bydate TIMESTAMP WITH TIME ZONE
+);                    
+                    </programlisting>
+                </para>
+
+                <para>
+                    <programlisting language="sql">
+....                        
+AS
+  DECLARE BYDATE TIMESTAMP; -- без часового пояса
+  DECLARE BYDATE2 TIMESTAMP WITHOUT TIME ZONE; -- без часового пояса  
+  DECLARE BYDATE3 TIMESTAMP WITH TIME ZONE; -- с информацией о часовом поясе   
+BEGIN  
+....  
+                    </programlisting>
+                </para>
+            </example>
         </section>
         <section xml:id="types-datetime-operation">
             <info>
@@ -1664,7 +1833,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 <literallayout class="monospaced">  
 <replaceable>max_char_length</replaceable> = FLOOR((<replaceable>page_size</replaceable> / 4 – 9) / <replaceable>N</replaceable>),                
             </literallayout>
-			</para>
+            </para>
             <para>где <replaceable>N</replaceable> — число байтов на представление символа. </para>
             <para>
                 <table xml:id="types-tbl-charindxsz" frame="all">
@@ -2565,30 +2734,21 @@ FROM RDB$DATABASE;
                     даты и времени, либо строковое представление даты в одном из разрешённых
                     форматов. </para>
                 <para><literallayout class="monospaced">
-<replaceable>&lt;datetime_literal&gt;</replaceable> ::= {
-  [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]] |
-  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
-  <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]]] |
-  NOW |
-  TODAY |
-  TOMORROW |
-  YERSTERDAY
-}
-
-<replaceable>&lt;date_literal&gt;</replaceable> ::= {
+<replaceable>&lt;date_literal&gt;</replaceable> ::= 
   [<replaceable>YYYY</replaceable><replaceable>&lt;p&gt;</replaceable>]<replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable> |
   <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |
   <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YYYY</replaceable>] |
   <replaceable>MM</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>DD</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |
-  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] |
-  TODAY |
-  TOMORROW |
-  YERSTERDAY
-}
+  <replaceable>DD</replaceable><replaceable>&lt;p&gt;</replaceable><replaceable>MM</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>YY</replaceable>] 
 
-<replaceable>&lt;time_literal&gt;</replaceable> := <replaceable>HH</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>mm</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>SS</replaceable>[<replaceable>&lt;p&gt;</replaceable><replaceable>NNNN</replaceable>]]]
+
+<replaceable>&lt;time_literal&gt;</replaceable> := <replaceable>HH</replaceable>[:<replaceable>mm</replaceable>[:<replaceable>SS</replaceable>[.<replaceable>NNNN</replaceable>]]]
+
+<replaceable>&lt;datetime_literal&gt;</replaceable> ::= <replaceable>&lt;date_literal&gt;</replaceable> <replaceable>&lt;time_literal&gt;</replaceable>
+                    
+<replaceable>&lt;time zone&gt;</replaceable> ::=
+    <replaceable>&lt;time zone region&gt;</replaceable> |
+    [+/-] <replaceable>&lt;hour displacement&gt;</replaceable> [: <replaceable>&lt;minute displacement&gt;</replaceable>]                    
 
 <replaceable>&lt;p&gt;</replaceable> ::= <replaceable>whitespace</replaceable> | . | : | , | - | /
             </literallayout></para>
@@ -2667,6 +2827,18 @@ FROM RDB$DATABASE;
                                     <entry><para>Разделитель, любой из разрешённых символов,
                                             лидирующие и завершающие пробелы
                                         игнорируются</para></entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry><replaceable>time zone region</replaceable></entry>
+                                    <entry>Один из часовых поясов связанных с регионом</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry><replaceable>hour displacement</replaceable></entry>
+                                    <entry>Смещение времени для часов относительно GMT</entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry><replaceable>minute displacement</replaceable></entry>
+                                    <entry>Смещение времени для минут относительно GMT</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2763,35 +2935,38 @@ FROM RDB$DATABASE;
                     <para><programlisting language="sql">
 SELECT
   CAST('04.12.2014' AS DATE) AS d1, -- DD.MM.YYYY
-  CAST('04 12 2014' AS DATE) AS d2, -- MM DD YYYY
-  CAST('4-12-2014' AS DATE) AS d3,  -- MM-DD-YYYY
-  CAST('04/12/2014' AS DATE) AS d4, -- MM/DD/YYYY
-  CAST('04,12,2014' AS DATE) AS d5, -- MM,DD,YYYY
-  CAST('04.12.14' AS DATE) AS d6,   -- DD.MM.YY
+  CAST('12-04-2014' AS DATE) AS d2, -- MM-DD-YYYY
+  CAST('12/04/2014' AS DATE) AS d3, -- MM/DD/YYYY
+  CAST('04.12.14' AS DATE) AS d4,   -- DD.MM.YY
   -- DD.MM в качестве года берётся текущий
-  CAST('04.12' AS DATE) AS d7,
+  CAST('04.12' AS DATE) AS d5,
   -- MM/DD в качестве года берётся текущий      
-  CAST('04/12' AS DATE) AS d8,      
-  CAST('2014/12/04' AS DATE) AS d9, -- YYYY/MM/DD
-  CAST('2014 12 04' AS DATE) AS d10, -- YYYY MM DD
-  CAST('2014.12.04' AS DATE) AS d11, -- YYYY.MM.DD
-  CAST('2014-12-04' AS DATE) AS d12, -- YYYY-MM-DD
-  CAST('4 Jan 2014' AS DATE) AS d13, -- DD MM YYYY
-  CAST('2014 Jan 4' AS DATE) AS dt14, -- YYYY MM DD
-  CAST('Jan 4, 2014' AS DATE) AS dt15, -- MM DD, YYYY
+  CAST('12/4' AS DATE) AS d6,
+  CAST('2014/12/04' AS DATE) AS d7, -- YYYY/MM/DD
+  CAST('2014.12.04' AS DATE) AS d8, -- YYYY.MM.DD
+  CAST('2014-12-04' AS DATE) AS d9, -- YYYY-MM-DD
   CAST('11:37' AS TIME) AS t1, -- HH:mm
   CAST('11:37:12' AS TIME) AS t2, -- HH:mm:ss
   CAST('11:31:12.1234' AS TIME) AS t3, -- HH:mm:ss.nnnn
-  CAST('11.37.12' AS TIME) AS t4, -- HH.mm.ss
+  -- HH:mm:ss.nnnn +hh
+  CAST('11:31:12.1234 +03' AS TIME WITH TIME ZONE) AS t4,
+  -- HH:mm:ss.nnnn +hh:mm
+  CAST('11:31:12.1234 +03:30' AS TIME WITH TIME ZONE) AS t5,
+  -- HH:mm:ss.nnnn tz
+  CAST('11:31:12.1234 Europe/Moscow' AS TIME WITH TIME ZONE) AS t5,
+  -- HH:mm tz
+  CAST('11:31 Europe/Moscow' AS TIME WITH TIME ZONE) AS t6,
   -- DD.MM.YYYY HH:mm
-  CAST('04.12.2014 11:37' AS TIMESTAMP) AS dt1, 
+  CAST('04.12.2014 11:37' AS TIMESTAMP) AS dt1,
   -- MM/DD/YYYY HH:mm:ss
-  CAST('04/12/2014 11:37:12' AS TIMESTAMP) AS dt2,
+  CAST('12/04/2014 11:37:12' AS TIMESTAMP) AS dt2,
   -- DD.MM.YYYY HH:mm:ss.nnnn 
-  CAST('04.12.2014 11:31:12.1234' AS TIMESTAMP) AS dt3, 
-  -- MM/DD/YYYY HH.mm.ss
-  CAST('04/12/2014 11.37.12' AS TIMESTAMP) AS dt4 
-FROM rdb$database                    
+  CAST('04.12.2014 11:31:12.1234' AS TIMESTAMP) AS dt3,
+  -- YYYY-MM-DD HH:mm:ss.nnnn +hh:mm
+  CAST('2014-12-04 11:31:12.1234 +03:00' AS TIMESTAMP WITH TIME ZONE) AS dt4,
+  -- DD.MM.YYYY HH:mm:ss.nnnn tz
+  CAST('04.12.2014 11:31:12.1234 Europe/Moscow' AS TIMESTAMP WITH TIME ZONE) AS dt5
+FROM rdb$database                      
             </programlisting>
                     </para>
                 </formalpara>

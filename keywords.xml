@@ -115,6 +115,9 @@
                 <member>LEADING</member>
                 <member>LEFT</member>
                 <member>LIKE</member>
+                <member>LOCAL</member>
+                <member>LOCALTIME</member>
+                <member>LOCALTIMESTAMP</member>
                 <member>LONG</member>
                 <member>LOWER</member>
                 <member>MAX</member>
@@ -193,6 +196,8 @@
                 <member>THEN</member>
                 <member>TIME</member>
                 <member>TIMESTAMP</member>
+                <member>TIMEZONE_HOUR</member>
+                <member>TIMEZONE_MINUTE</member>
                 <member>TO</member>
                 <member>TRAILING</member>
                 <member>TRIGGER</member>
@@ -221,6 +226,7 @@
                 <member>WHILE</member>
                 <member>WINDOW</member>
                 <member>WITH</member>
+                <member>WITHOUT</member>
                 <member>YEAR</member>
             </simplelist>
         </para>
@@ -453,8 +459,9 @@
                 <member>LASTNAME</member>
                 <member>LEAD</member>
                 <member>LEADING</member>
-                <member>LEAVE</member>
+                <member>LEAVE</member>               
                 <member>LEFT</member>
+                <member>LEGACY</member>
                 <member>LENGTH</member>
                 <member>LEVEL</member>
                 <member>LIFETIME</member>
@@ -463,6 +470,9 @@
                 <member>LINGER</member>
                 <member>LIST</member>
                 <member>LN</member>
+                <member>LOCAL</member>
+                <member>LOCALTIME</member>
+                <member>LOCALTIMESTAMP</member>
                 <member>LOCK</member>
                 <member>LOG</member>
                 <member>LOG10</member>
@@ -652,6 +662,8 @@
                 <member>TIME</member>
                 <member>TIMEOUT</member>
                 <member>TIMESTAMP</member>
+                <member>TIMEZONE_HOUR</member>
+                <member>TIMEZONE_MINUTE</member>
                 <member>TO</member>
                 <member>TOTALORDER</member>
                 <member>TRAILING</member>
@@ -694,10 +706,12 @@
                 <member>WHILE</member>
                 <member>WINDOW</member>
                 <member>WITH</member>
+                <member>WITHOUT</member>
                 <member>WORK</member>
                 <member>WRITE</member>
                 <member>YEAR</member>
                 <member>YEARDAY</member>
+                <member>ZONE</member>
             </simplelist>
         </para>
     </section>

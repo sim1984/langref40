@@ -1332,7 +1332,7 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
             <para>DDL триггеры срабатывают на указанные события изменения метаданных в одной из фаз
                 события. BEFORE триггеры запускаются до изменений в системных таблицах. AFTER
                 триггеры запускаются после изменений в системных таблицах.</para>
-            
+
             <section xml:id="psql-triggers-ddl-contextvar">
                 <title>Переменные доступные в пространстве имён DDL_TRIGGER</title>
 
@@ -2937,6 +2937,44 @@ S
                         linkend="psql-statements-leave">LEAVE</link>, <link
                         linkend="psql-statements-continue">CONTINUE</link>.</para>
             </formalpara>
+        </section>
+        <section xml:id="psql-statements-break">
+            <info>
+                <title>BREAK</title>
+                <keywordset>
+                    <keyword>BREAK</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>BREAK</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Выход из цикла.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para><programlisting>
+{FOR <replaceable>&lt;select_stmt&gt;</replaceable> | WHILE (<replaceable>&lt;condition&gt;</replaceable>)} DO
+BEGIN
+  ...
+  BREAK;
+  ...
+END
+                </programlisting></para>
+
+            </formalpara>
+
+            <para>Оператор BREAK моментально прекращает работу внутреннего цикла операторов WHILE
+                или FOR.</para>
+
+            <note>
+                <para>Этот оператор считается устаревшим. Начиная с Firebird 1.5 рекомендуется
+                    использовать SQL-99 совместимый оператор <link linkend="psql-statements-leave"
+                        >LEAVE</link>.</para>
+            </note>
         </section>
         <section xml:id="psql-statements-leave">
             <info>
