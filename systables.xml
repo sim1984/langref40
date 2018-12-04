@@ -162,6 +162,10 @@
                                 >RDB$SECURITY_CLASSES</link></entry>
                         <entry>Списки управления доступом.</entry>
                     </row>
+                    <row>
+                        <entry><link linkend="systables-timezones">RDB$TIME_ZONES</link></entry>
+                        <entry>Список часовых поясов поддерживаемых сервером.</entry>
+                    </row>
                     <row valign="middle">
                         <entry><link linkend="systables-transactions"
                             >RDB$TRANSACTIONS</link></entry>
@@ -1032,8 +1036,8 @@
                             <entry>RDB$FIELD_NAME</entry>
                             <entry>CHAR(63)</entry>
                             <entry>Уникальное имя домена, созданного пользователем, или домена,
-                                автоматически построенного ядром Firebird для столбца таблицы. Во втором
-                                случае имя будет начинаться с символов 'RDB$'.</entry>
+                                автоматически построенного ядром Firebird для столбца таблицы. Во
+                                втором случае имя будет начинаться с символов 'RDB$'.</entry>
                         </row>
                         <row>
                             <entry>RDB$QUERY_NAME</entry>
@@ -3301,6 +3305,50 @@
                             <entry>RDB$DESCRIPTION</entry>
                             <entry>BLOB TEXT</entry>
                             <entry>Произвольный текст примечания к классу безопасности.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+    </section>
+    <section xml:id="systables-timezones">
+        <info>
+            <title>RDB$TIME_ZONES</title>
+            <keywordset>
+                <keyword>RDB$TIME_ZONES</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RDB$TIME_ZONES</primary>
+        </indexterm>
+
+        <para>Виртуальная таблица со списком часовых поясов поддерживаемых сервером.</para>
+
+        <para>
+            <table xml:id="systables-tbl-timezones" frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Описание столбцов таблицы RDB$TIME_ZONES</title>
+                <tgroup cols="3">
+                    <colspec colname="colColumn" colnum="1" colwidth="4*" align="left"/>
+                    <colspec colname="colType" colnum="2" colwidth="3*" align="left"/>
+                    <colspec colname="colDesc" colnum="3" colwidth="5*" align="left"/>
+                    <thead>
+                        <row valign="middle">
+                            <entry align="center">Наименование столбца</entry>
+                            <entry align="center">Тип данных</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>RDB$TIME_ZONE_ID</entry>
+                            <entry>INTEGER</entry>
+                            <entry>Идентификатор часового пояса.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$TIME_ZONE_NAME</entry>
+                            <entry>CHAR(63)</entry>
+                            <entry>Наименование часовго пояса</entry>
                         </row>
                     </tbody>
                 </tgroup>

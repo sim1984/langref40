@@ -1360,10 +1360,42 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                     </listitem>
                 </itemizedlist>
             </para>
-            <para>Типы DATETIME и TIME могут содержать или не содержать часовой пояс в зависимости
-                от способа объявления. По умолчанию типы DATETIME и TIME не содержат часовой
-                пояс.</para>
+
         </note>
+
+        <section xml:id="types-datetime-timezone">
+            <title>Часовой пояс</title>
+
+            <para>Типы <code>TIMESTAMP</code> и <code>TIME</code> могут содержать или не содержать
+                сведения о часовом поясе в зависимости от способа объявления. По умолчанию типы
+                    <code>TIMESTAMP</code> и <code>TIME</code> не содержат часовой пояс.</para>
+
+            <para>При преобразовании из/в <code>TIME WITH TIME ZONE</code> или <code>TIMESTAMP WITH
+                    TIME ZONE</code> учитывайте что типы <code>TIME WITHOUT TIME ZONE</code>,
+                    <code>TIMESTAMP WITHOUT TIME ZONE</code> и <code>DATE</code> определены для
+                использовании в часовом поясе сеанса.</para>
+
+            <para>Часовой пояс сеанса как следует из названия может быть разным для каждого
+                соединения с базой данных. Он может быть установлен с помощью DPB
+                    <code>isc_dpb_session_time_zone</code>, а если нет, то по умолчанию он считается
+                тем же часовым поясом, который используется операционной системой в которой запущен
+                процесс Firebird.</para>
+
+            <para>Часовой пояс сеанса может быть изменён с помощью оператора <link
+                    linkend="session-timezone-settimezone">SET TIME ZONE</link> или сброшен в
+                исходное значение с помощью <code>SET TIME ZONE LOCAL</code>.</para>
+
+            <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
+                America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
+                -03:00).</para>
+
+            <para>TIME/TIMESTAMP WITH TIMEZONE считается равным другому TIME/TIMESTAMP WITH
+                TIMEZONE, если их преобразование в UTC равно, например <code>time '10:00 -02' = time
+                    '09:00 -03'</code>, поскольку оба времени эквивалентны <code>time '12:00
+                    GMT'</code>. Это также справедливо в контексте ограничения UNIQUE и для
+                сортировки.</para>
+
+        </section>
         <section xml:id="types-datetime-date">
             <info>
                 <title>DATE</title>
