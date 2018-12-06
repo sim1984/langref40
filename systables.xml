@@ -3348,7 +3348,7 @@
                         <row>
                             <entry>RDB$TIME_ZONE_NAME</entry>
                             <entry>CHAR(63)</entry>
-                            <entry>Наименование часовго пояса</entry>
+                            <entry>Наименование часового пояса</entry>
                         </row>
                     </tbody>
                 </tgroup>

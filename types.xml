@@ -1387,7 +1387,11 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
                 America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
-                -03:00).</para>
+                -03:00). Список региональных часовых поясов и их идентификаторов см. в приложени
+                    <link linkend="timezones">Список региональных часовых поясов</link>. Правила
+                преобразования региональных часовых поясов в смещение в минутах можно получить
+                с помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
+                    >RDB$TIME_ZONE_UTIL.TRANSITIONS</link>.</para>
 
             <para>TIME/TIMESTAMP WITH TIMEZONE считается равным другому TIME/TIMESTAMP WITH
                 TIMEZONE, если их преобразование в UTC равно, например <code>time '10:00 -02' = time
@@ -1395,7 +1399,16 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                     GMT'</code>. Это также справедливо в контексте ограничения UNIQUE и для
                 сортировки.</para>
 
+            <section xml:id="types-datetime-timezone-storage">
+                <title>Хранение</title>
+
+                <para>TIME/TIMESTAMP WITH TIME ZONE хранится так же как TIME/TIMESTAMP WITHOUT TIME
+                    ZONE плюс 2 байта для идентификации часового пояса или смещения. TIME/TIMESTAMP
+                    часть хранится в UTC (и переводится в сохранённый часовой пояс).</para>
+            </section>
+
         </section>
+
         <section xml:id="types-datetime-date">
             <info>
                 <title>DATE</title>
@@ -1434,6 +1447,9 @@ BEGIN
                     </programlisting>
                 </para>
             </example>
+            <para>См. также <link linkend="internalfunc-func-datetime-extract">EXTRACT</link>, <link
+                    linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>, <link
+                    linkend="types-cast-dateliteral">Литералы дат</link>. </para>
         </section>
         <section xml:id="types-datetime-time">
             <info>
@@ -1480,24 +1496,11 @@ BEGIN
                     </programlisting>
                 </para>
             </example>
-            <para>При необходимости получения времени из типа DATE в 1-м диалекте можно использовать
-                функцию EXTRACT. </para>
-            <example>
-                <info>
-                    <title>Пример использования EXTRACT</title>
-                </info>
-
-                <para>
-                    <programlisting language="sql">
-EXTRACT (HOUR FROM DATE_FIELD)
-EXTRACT (MINUTE FROM DATE_FIELD)
-EXTRACT (SECOND FROM DATE_FIELD)                    
-                    </programlisting>
-                </para>
-            </example>
-            <para>См. также описание функции <link linkend="internalfunc-func-datetime-extract"
-                    >EXTRACT</link> в главе под названием <citetitle>Встроенные функции и
-                    переменные</citetitle>. </para>
+            <para>См. также <link linkend="internalfunc-func-datetime-extract">EXTRACT</link>, <link
+                    linkend="internalfunc-func-datetime-attimezone">AT</link>, <link
+                    linkend="internalfunc-contextvar-localtime">LOCALTIME</link>, <link
+                    linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
+                    linkend="types-cast-dateliteral">Литералы времени</link>. </para>
         </section>
         <section xml:id="types-datetime-timestamp">
             <info>
@@ -1514,10 +1517,10 @@ TIMESTAMP [{WITH | WITHOUT} TIME ZONE]
                 </para>
             </formalpara>
 
-            <para>Этот тип данных хранит дату вместе со временем в диапазоне от 01.01.0001
-                00:00:00.0000 до 31.12.9999 23:59:59.9999. По умолчанию тип TIMESTAMP не содержит
-                информацию о часовом поясе. Для того чтобы тип TIMESTAMP включал информацию о
-                часовом поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
+            <para>Этот тип данных хранит временную метку (дату вместе со временем) в диапазоне от
+                01.01.0001 00:00:00.0000 до 31.12.9999 23:59:59.9999. По умолчанию тип TIMESTAMP не
+                содержит информацию о часовом поясе. Для того чтобы тип TIMESTAMP включал информацию
+                о часовом поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
 
             <example>
                 <info>
@@ -1545,6 +1548,11 @@ BEGIN
                     </programlisting>
                 </para>
             </example>
+            <para>См. также <link linkend="internalfunc-func-datetime-extract">EXTRACT</link>, <link
+                    linkend="internalfunc-func-datetime-attimezone">AT</link>, <link
+                    linkend="internalfunc-contextvar-localtimestamp">LOCALTIMESTAMP</link>, <link
+                    linkend="internalfunc-contextvar-current_timestamp">CURRENT_TIMESTAMP</link>,
+                    <link linkend="types-cast-dateliteral">Литералы временных меток</link>. </para>
         </section>
         <section xml:id="types-datetime-operation">
             <info>

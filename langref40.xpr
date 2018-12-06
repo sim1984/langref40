@@ -15,10 +15,14 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>DocBook PDF FBDoc</String>
+                                        <String>DocBook HTML FBDoc</String>
+                                        <String>DocBook HTML - Chunk FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
+                                        <String>XSL</String>
+                                        <String>XSL</String>
                                         <String>XSL</String>
                                     </list>
                                 </field>
@@ -364,7 +368,9 @@
         <file name="security.xml"/>
         <file name="session.xml"/>
         <file name="supplement.xml"/>
+        <file name="syspackage.xml"/>
         <file name="systables.xml"/>
+        <file name="timezones.xml"/>
         <file name="transaction.xml"/>
         <file name="types.xml"/>
     </projectTree>

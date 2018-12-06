@@ -1,0 +1,1905 @@
+<!DOCTYPE appendix>
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="timezones" xml:lang="ru">
+    <info>
+        <title>Список региональных часовых поясов</title>
+    </info>
+
+    <para>Ниже приведён список регинальных часовых поясов и их идентификаторов: <itemizedlist>
+            <listitem>
+                <para>GMT (65535)</para>
+            </listitem>
+            <listitem>
+                <para>ACT (65534)</para>
+            </listitem>
+            <listitem>
+                <para>AET (65533)</para>
+            </listitem>
+            <listitem>
+                <para>AGT (65532)</para>
+            </listitem>
+            <listitem>
+                <para>ART (65531)</para>
+            </listitem>
+            <listitem>
+                <para>AST (65530)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Abidjan (65529)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Accra (65528)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Addis_Ababa (65527)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Algiers (65526)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Asmara (65525)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Asmera (65524)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Bamako (65523)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Bangui (65522)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Banjul (65521)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Bissau (65520)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Blantyre (65519)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Brazzaville (65518)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Bujumbura (65517)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Cairo (65516)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Casablanca (65515)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Ceuta (65514)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Conakry (65513)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Dakar (65512)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Dar_es_Salaam (65511)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Djibouti (65510)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Douala (65509)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/El_Aaiun (65508)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Freetown (65507)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Gaborone (65506)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Harare (65505)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Johannesburg (65504)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Juba (65503)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Kampala (65502)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Khartoum (65501)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Kigali (65500)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Kinshasa (65499)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Lagos (65498)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Libreville (65497)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Lome (65496)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Luanda (65495)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Lubumbashi (65494)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Lusaka (65493)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Malabo (65492)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Maputo (65491)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Maseru (65490)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Mbabane (65489)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Mogadishu (65488)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Monrovia (65487)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Nairobi (65486)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Ndjamena (65485)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Niamey (65484)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Nouakchott (65483)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Ouagadougou (65482)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Porto-Novo (65481)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Sao_Tome (65480)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Timbuktu (65479)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Tripoli (65478)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Tunis (65477)</para>
+            </listitem>
+            <listitem>
+                <para>Africa/Windhoek (65476)</para>
+            </listitem>
+            <listitem>
+                <para>America/Adak (65475)</para>
+            </listitem>
+            <listitem>
+                <para>America/Anchorage (65474)</para>
+            </listitem>
+            <listitem>
+                <para>America/Anguilla (65473)</para>
+            </listitem>
+            <listitem>
+                <para>America/Antigua (65472)</para>
+            </listitem>
+            <listitem>
+                <para>America/Araguaina (65471)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Buenos_Aires (65470)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Catamarca (65469)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/ComodRivadavia (65468)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Cordoba (65467)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Jujuy (65466)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/La_Rioja (65465)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Mendoza (65464)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Rio_Gallegos (65463)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Salta (65462)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/San_Juan (65461)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/San_Luis (65460)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Tucuman (65459)</para>
+            </listitem>
+            <listitem>
+                <para>America/Argentina/Ushuaia (65458)</para>
+            </listitem>
+            <listitem>
+                <para>America/Aruba (65457)</para>
+            </listitem>
+            <listitem>
+                <para>America/Asuncion (65456)</para>
+            </listitem>
+            <listitem>
+                <para>America/Atikokan (65455)</para>
+            </listitem>
+            <listitem>
+                <para>America/Atka (65454)</para>
+            </listitem>
+            <listitem>
+                <para>America/Bahia (65453)</para>
+            </listitem>
+            <listitem>
+                <para>America/Bahia_Banderas (65452)</para>
+            </listitem>
+            <listitem>
+                <para>America/Barbados (65451)</para>
+            </listitem>
+            <listitem>
+                <para>America/Belem (65450)</para>
+            </listitem>
+            <listitem>
+                <para>America/Belize (65449)</para>
+            </listitem>
+            <listitem>
+                <para>America/Blanc-Sablon (65448)</para>
+            </listitem>
+            <listitem>
+                <para>America/Boa_Vista (65447)</para>
+            </listitem>
+            <listitem>
+                <para>America/Bogota (65446)</para>
+            </listitem>
+            <listitem>
+                <para>America/Boise (65445)</para>
+            </listitem>
+            <listitem>
+                <para>America/Buenos_Aires (65444)</para>
+            </listitem>
+            <listitem>
+                <para>America/Cambridge_Bay (65443)</para>
+            </listitem>
+            <listitem>
+                <para>America/Campo_Grande (65442)</para>
+            </listitem>
+            <listitem>
+                <para>America/Cancun (65441)</para>
+            </listitem>
+            <listitem>
+                <para>America/Caracas (65440)</para>
+            </listitem>
+            <listitem>
+                <para>America/Catamarca (65439)</para>
+            </listitem>
+            <listitem>
+                <para>America/Cayenne (65438)</para>
+            </listitem>
+            <listitem>
+                <para>America/Cayman (65437)</para>
+            </listitem>
+            <listitem>
+                <para>America/Chicago (65436)</para>
+            </listitem>
+            <listitem>
+                <para>America/Chihuahua (65435)</para>
+            </listitem>
+            <listitem>
+                <para>America/Coral_Harbour (65434)</para>
+            </listitem>
+            <listitem>
+                <para>America/Cordoba (65433)</para>
+            </listitem>
+            <listitem>
+                <para>America/Costa_Rica (65432)</para>
+            </listitem>
+            <listitem>
+                <para>America/Creston (65431)</para>
+            </listitem>
+            <listitem>
+                <para>America/Cuiaba (65430)</para>
+            </listitem>
+            <listitem>
+                <para>America/Curacao (65429)</para>
+            </listitem>
+            <listitem>
+                <para>America/Danmarkshavn (65428)</para>
+            </listitem>
+            <listitem>
+                <para>America/Dawson (65427)</para>
+            </listitem>
+            <listitem>
+                <para>America/Dawson_Creek (65426)</para>
+            </listitem>
+            <listitem>
+                <para>America/Denver (65425)</para>
+            </listitem>
+            <listitem>
+                <para>America/Detroit (65424)</para>
+            </listitem>
+            <listitem>
+                <para>America/Dominica (65423)</para>
+            </listitem>
+            <listitem>
+                <para>America/Edmonton (65422)</para>
+            </listitem>
+            <listitem>
+                <para>America/Eirunepe (65421)</para>
+            </listitem>
+            <listitem>
+                <para>America/El_Salvador (65420)</para>
+            </listitem>
+            <listitem>
+                <para>America/Ensenada (65419)</para>
+            </listitem>
+            <listitem>
+                <para>America/Fort_Nelson (65418)</para>
+            </listitem>
+            <listitem>
+                <para>America/Fort_Wayne (65417)</para>
+            </listitem>
+            <listitem>
+                <para>America/Fortaleza (65416)</para>
+            </listitem>
+            <listitem>
+                <para>America/Glace_Bay (65415)</para>
+            </listitem>
+            <listitem>
+                <para>America/Godthab (65414)</para>
+            </listitem>
+            <listitem>
+                <para>America/Goose_Bay (65413)</para>
+            </listitem>
+            <listitem>
+                <para>America/Grand_Turk (65412)</para>
+            </listitem>
+            <listitem>
+                <para>America/Grenada (65411)</para>
+            </listitem>
+            <listitem>
+                <para>America/Guadeloupe (65410)</para>
+            </listitem>
+            <listitem>
+                <para>America/Guatemala (65409)</para>
+            </listitem>
+            <listitem>
+                <para>America/Guayaquil (65408)</para>
+            </listitem>
+            <listitem>
+                <para>America/Guyana (65407)</para>
+            </listitem>
+            <listitem>
+                <para>America/Halifax (65406)</para>
+            </listitem>
+            <listitem>
+                <para>America/Havana (65405)</para>
+            </listitem>
+            <listitem>
+                <para>America/Hermosillo (65404)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Indianapolis (65403)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Knox (65402)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Marengo (65401)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Petersburg (65400)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Tell_City (65399)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Vevay (65398)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Vincennes (65397)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indiana/Winamac (65396)</para>
+            </listitem>
+            <listitem>
+                <para>America/Indianapolis (65395)</para>
+            </listitem>
+            <listitem>
+                <para>America/Inuvik (65394)</para>
+            </listitem>
+            <listitem>
+                <para>America/Iqaluit (65393)</para>
+            </listitem>
+            <listitem>
+                <para>America/Jamaica (65392)</para>
+            </listitem>
+            <listitem>
+                <para>America/Jujuy (65391)</para>
+            </listitem>
+            <listitem>
+                <para>America/Juneau (65390)</para>
+            </listitem>
+            <listitem>
+                <para>America/Kentucky/Louisville (65389)</para>
+            </listitem>
+            <listitem>
+                <para>America/Kentucky/Monticello (65388)</para>
+            </listitem>
+            <listitem>
+                <para>America/Knox_IN (65387)</para>
+            </listitem>
+            <listitem>
+                <para>America/Kralendijk (65386)</para>
+            </listitem>
+            <listitem>
+                <para>America/La_Paz (65385)</para>
+            </listitem>
+            <listitem>
+                <para>America/Lima (65384)</para>
+            </listitem>
+            <listitem>
+                <para>America/Los_Angeles (65383)</para>
+            </listitem>
+            <listitem>
+                <para>America/Louisville (65382)</para>
+            </listitem>
+            <listitem>
+                <para>America/Lower_Princes (65381)</para>
+            </listitem>
+            <listitem>
+                <para>America/Maceio (65380)</para>
+            </listitem>
+            <listitem>
+                <para>America/Managua (65379)</para>
+            </listitem>
+            <listitem>
+                <para>America/Manaus (65378)</para>
+            </listitem>
+            <listitem>
+                <para>America/Marigot (65377)</para>
+            </listitem>
+            <listitem>
+                <para>America/Martinique (65376)</para>
+            </listitem>
+            <listitem>
+                <para>America/Matamoros (65375)</para>
+            </listitem>
+            <listitem>
+                <para>America/Mazatlan (65374)</para>
+            </listitem>
+            <listitem>
+                <para>America/Mendoza (65373)</para>
+            </listitem>
+            <listitem>
+                <para>America/Menominee (65372)</para>
+            </listitem>
+            <listitem>
+                <para>America/Merida (65371)</para>
+            </listitem>
+            <listitem>
+                <para>America/Metlakatla (65370)</para>
+            </listitem>
+            <listitem>
+                <para>America/Mexico_City (65369)</para>
+            </listitem>
+            <listitem>
+                <para>America/Miquelon (65368)</para>
+            </listitem>
+            <listitem>
+                <para>America/Moncton (65367)</para>
+            </listitem>
+            <listitem>
+                <para>America/Monterrey (65366)</para>
+            </listitem>
+            <listitem>
+                <para>America/Montevideo (65365)</para>
+            </listitem>
+            <listitem>
+                <para>America/Montreal (65364)</para>
+            </listitem>
+            <listitem>
+                <para>America/Montserrat (65363)</para>
+            </listitem>
+            <listitem>
+                <para>America/Nassau (65362)</para>
+            </listitem>
+            <listitem>
+                <para>America/New_York (65361)</para>
+            </listitem>
+            <listitem>
+                <para>America/Nipigon (65360)</para>
+            </listitem>
+            <listitem>
+                <para>America/Nome (65359)</para>
+            </listitem>
+            <listitem>
+                <para>America/Noronha (65358)</para>
+            </listitem>
+            <listitem>
+                <para>America/North_Dakota/Beulah (65357)</para>
+            </listitem>
+            <listitem>
+                <para>America/North_Dakota/Center (65356)</para>
+            </listitem>
+            <listitem>
+                <para>America/North_Dakota/New_Salem (65355)</para>
+            </listitem>
+            <listitem>
+                <para>America/Ojinaga (65354)</para>
+            </listitem>
+            <listitem>
+                <para>America/Panama (65353)</para>
+            </listitem>
+            <listitem>
+                <para>America/Pangnirtung (65352)</para>
+            </listitem>
+            <listitem>
+                <para>America/Paramaribo (65351)</para>
+            </listitem>
+            <listitem>
+                <para>America/Phoenix (65350)</para>
+            </listitem>
+            <listitem>
+                <para>America/Port-au-Prince (65349)</para>
+            </listitem>
+            <listitem>
+                <para>America/Port_of_Spain (65348)</para>
+            </listitem>
+            <listitem>
+                <para>America/Porto_Acre (65347)</para>
+            </listitem>
+            <listitem>
+                <para>America/Porto_Velho (65346)</para>
+            </listitem>
+            <listitem>
+                <para>America/Puerto_Rico (65345)</para>
+            </listitem>
+            <listitem>
+                <para>America/Punta_Arenas (65344)</para>
+            </listitem>
+            <listitem>
+                <para>America/Rainy_River (65343)</para>
+            </listitem>
+            <listitem>
+                <para>America/Rankin_Inlet (65342)</para>
+            </listitem>
+            <listitem>
+                <para>America/Recife (65341)</para>
+            </listitem>
+            <listitem>
+                <para>America/Regina (65340)</para>
+            </listitem>
+            <listitem>
+                <para>America/Resolute (65339)</para>
+            </listitem>
+            <listitem>
+                <para>America/Rio_Branco (65338)</para>
+            </listitem>
+            <listitem>
+                <para>America/Rosario (65337)</para>
+            </listitem>
+            <listitem>
+                <para>America/Santa_Isabel (65336)</para>
+            </listitem>
+            <listitem>
+                <para>America/Santarem (65335)</para>
+            </listitem>
+            <listitem>
+                <para>America/Santiago (65334)</para>
+            </listitem>
+            <listitem>
+                <para>America/Santo_Domingo (65333)</para>
+            </listitem>
+            <listitem>
+                <para>America/Sao_Paulo (65332)</para>
+            </listitem>
+            <listitem>
+                <para>America/Scoresbysund (65331)</para>
+            </listitem>
+            <listitem>
+                <para>America/Shiprock (65330)</para>
+            </listitem>
+            <listitem>
+                <para>America/Sitka (65329)</para>
+            </listitem>
+            <listitem>
+                <para>America/St_Barthelemy (65328)</para>
+            </listitem>
+            <listitem>
+                <para>America/St_Johns (65327)</para>
+            </listitem>
+            <listitem>
+                <para>America/St_Kitts (65326)</para>
+            </listitem>
+            <listitem>
+                <para>America/St_Lucia (65325)</para>
+            </listitem>
+            <listitem>
+                <para>America/St_Thomas (65324)</para>
+            </listitem>
+            <listitem>
+                <para>America/St_Vincent (65323)</para>
+            </listitem>
+            <listitem>
+                <para>America/Swift_Current (65322)</para>
+            </listitem>
+            <listitem>
+                <para>America/Tegucigalpa (65321)</para>
+            </listitem>
+            <listitem>
+                <para>America/Thule (65320)</para>
+            </listitem>
+            <listitem>
+                <para>America/Thunder_Bay (65319)</para>
+            </listitem>
+            <listitem>
+                <para>America/Tijuana (65318)</para>
+            </listitem>
+            <listitem>
+                <para>America/Toronto (65317)</para>
+            </listitem>
+            <listitem>
+                <para>America/Tortola (65316)</para>
+            </listitem>
+            <listitem>
+                <para>America/Vancouver (65315)</para>
+            </listitem>
+            <listitem>
+                <para>America/Virgin (65314)</para>
+            </listitem>
+            <listitem>
+                <para>America/Whitehorse (65313)</para>
+            </listitem>
+            <listitem>
+                <para>America/Winnipeg (65312)</para>
+            </listitem>
+            <listitem>
+                <para>America/Yakutat (65311)</para>
+            </listitem>
+            <listitem>
+                <para>America/Yellowknife (65310)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Casey (65309)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Davis (65308)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/DumontDUrville (65307)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Macquarie (65306)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Mawson (65305)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/McMurdo (65304)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Palmer (65303)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Rothera (65302)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/South_Pole (65301)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Syowa (65300)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Troll (65299)</para>
+            </listitem>
+            <listitem>
+                <para>Antarctica/Vostok (65298)</para>
+            </listitem>
+            <listitem>
+                <para>Arctic/Longyearbyen (65297)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Aden (65296)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Almaty (65295)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Amman (65294)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Anadyr (65293)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Aqtau (65292)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Aqtobe (65291)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ashgabat (65290)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ashkhabad (65289)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Atyrau (65288)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Baghdad (65287)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Bahrain (65286)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Baku (65285)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Bangkok (65284)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Barnaul (65283)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Beirut (65282)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Bishkek (65281)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Brunei (65280)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Calcutta (65279)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Chita (65278)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Choibalsan (65277)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Chongqing (65276)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Chungking (65275)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Colombo (65274)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Dacca (65273)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Damascus (65272)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Dhaka (65271)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Dili (65270)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Dubai (65269)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Dushanbe (65268)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Famagusta (65267)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Gaza (65266)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Harbin (65265)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Hebron (65264)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ho_Chi_Minh (65263)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Hong_Kong (65262)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Hovd (65261)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Irkutsk (65260)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Istanbul (65259)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Jakarta (65258)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Jayapura (65257)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Jerusalem (65256)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kabul (65255)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kamchatka (65254)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Karachi (65253)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kashgar (65252)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kathmandu (65251)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Katmandu (65250)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Khandyga (65249)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kolkata (65248)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Krasnoyarsk (65247)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kuala_Lumpur (65246)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kuching (65245)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Kuwait (65244)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Macao (65243)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Macau (65242)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Magadan (65241)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Makassar (65240)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Manila (65239)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Muscat (65238)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Nicosia (65237)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Novokuznetsk (65236)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Novosibirsk (65235)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Omsk (65234)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Oral (65233)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Phnom_Penh (65232)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Pontianak (65231)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Pyongyang (65230)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Qatar (65229)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Qyzylorda (65228)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Rangoon (65227)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Riyadh (65226)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Saigon (65225)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Sakhalin (65224)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Samarkand (65223)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Seoul (65222)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Shanghai (65221)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Singapore (65220)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Srednekolymsk (65219)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Taipei (65218)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Tashkent (65217)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Tbilisi (65216)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Tehran (65215)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Tel_Aviv (65214)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Thimbu (65213)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Thimphu (65212)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Tokyo (65211)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Tomsk (65210)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ujung_Pandang (65209)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ulaanbaatar (65208)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ulan_Bator (65207)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Urumqi (65206)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Ust-Nera (65205)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Vientiane (65204)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Vladivostok (65203)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Yakutsk (65202)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Yangon (65201)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Yekaterinburg (65200)</para>
+            </listitem>
+            <listitem>
+                <para>Asia/Yerevan (65199)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Azores (65198)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Bermuda (65197)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Canary (65196)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Cape_Verde (65195)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Faeroe (65194)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Faroe (65193)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Jan_Mayen (65192)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Madeira (65191)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Reykjavik (65190)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/South_Georgia (65189)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/St_Helena (65188)</para>
+            </listitem>
+            <listitem>
+                <para>Atlantic/Stanley (65187)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/ACT (65186)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Adelaide (65185)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Brisbane (65184)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Broken_Hill (65183)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Canberra (65182)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Currie (65181)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Darwin (65180)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Eucla (65179)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Hobart (65178)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/LHI (65177)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Lindeman (65176)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Lord_Howe (65175)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Melbourne (65174)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/NSW (65173)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/North (65172)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Perth (65171)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Queensland (65170)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/South (65169)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Sydney (65168)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Tasmania (65167)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Victoria (65166)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/West (65165)</para>
+            </listitem>
+            <listitem>
+                <para>Australia/Yancowinna (65164)</para>
+            </listitem>
+            <listitem>
+                <para>BET (65163)</para>
+            </listitem>
+            <listitem>
+                <para>BST (65162)</para>
+            </listitem>
+            <listitem>
+                <para>Brazil/Acre (65161)</para>
+            </listitem>
+            <listitem>
+                <para>Brazil/DeNoronha (65160)</para>
+            </listitem>
+            <listitem>
+                <para>Brazil/East (65159)</para>
+            </listitem>
+            <listitem>
+                <para>Brazil/West (65158)</para>
+            </listitem>
+            <listitem>
+                <para>CAT (65157)</para>
+            </listitem>
+            <listitem>
+                <para>CET (65156)</para>
+            </listitem>
+            <listitem>
+                <para>CNT (65155)</para>
+            </listitem>
+            <listitem>
+                <para>CST (65154)</para>
+            </listitem>
+            <listitem>
+                <para>CST6CDT (65153)</para>
+            </listitem>
+            <listitem>
+                <para>CTT (65152)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Atlantic (65151)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Central (65150)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/East-Saskatchewan (65149)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Eastern (65148)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Mountain (65147)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Newfoundland (65146)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Pacific (65145)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Saskatchewan (65144)</para>
+            </listitem>
+            <listitem>
+                <para>Canada/Yukon (65143)</para>
+            </listitem>
+            <listitem>
+                <para>Chile/Continental (65142)</para>
+            </listitem>
+            <listitem>
+                <para>Chile/EasterIsland (65141)</para>
+            </listitem>
+            <listitem>
+                <para>Cuba (65140)</para>
+            </listitem>
+            <listitem>
+                <para>EAT (65139)</para>
+            </listitem>
+            <listitem>
+                <para>ECT (65138)</para>
+            </listitem>
+            <listitem>
+                <para>EET (65137)</para>
+            </listitem>
+            <listitem>
+                <para>EST (65136)</para>
+            </listitem>
+            <listitem>
+                <para>EST5EDT (65135)</para>
+            </listitem>
+            <listitem>
+                <para>Egypt (65134)</para>
+            </listitem>
+            <listitem>
+                <para>Eire (65133)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT (65132)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+0 (65131)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+1 (65130)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+10 (65129)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+11 (65128)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+12 (65127)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+2 (65126)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+3 (65125)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+4 (65124)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+5 (65123)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+6 (65122)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+7 (65121)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+8 (65120)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT+9 (65119)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-0 (65118)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-1 (65117)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-10 (65116)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-11 (65115)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-12 (65114)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-13 (65113)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-14 (65112)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-2 (65111)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-3 (65110)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-4 (65109)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-5 (65108)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-6 (65107)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-7 (65106)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-8 (65105)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT-9 (65104)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/GMT0 (65103)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/Greenwich (65102)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/UCT (65101)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/UTC (65100)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/Universal (65099)</para>
+            </listitem>
+            <listitem>
+                <para>Etc/Zulu (65098)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Amsterdam (65097)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Andorra (65096)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Astrakhan (65095)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Athens (65094)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Belfast (65093)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Belgrade (65092)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Berlin (65091)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Bratislava (65090)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Brussels (65089)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Bucharest (65088)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Budapest (65087)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Busingen (65086)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Chisinau (65085)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Copenhagen (65084)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Dublin (65083)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Gibraltar (65082)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Guernsey (65081)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Helsinki (65080)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Isle_of_Man (65079)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Istanbul (65078)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Jersey (65077)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Kaliningrad (65076)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Kiev (65075)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Kirov (65074)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Lisbon (65073)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Ljubljana (65072)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/London (65071)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Luxembourg (65070)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Madrid (65069)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Malta (65068)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Mariehamn (65067)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Minsk (65066)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Monaco (65065)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Moscow (65064)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Nicosia (65063)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Oslo (65062)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Paris (65061)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Podgorica (65060)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Prague (65059)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Riga (65058)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Rome (65057)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Samara (65056)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/San_Marino (65055)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Sarajevo (65054)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Saratov (65053)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Simferopol (65052)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Skopje (65051)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Sofia (65050)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Stockholm (65049)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Tallinn (65048)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Tirane (65047)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Tiraspol (65046)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Ulyanovsk (65045)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Uzhgorod (65044)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Vaduz (65043)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Vatican (65042)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Vienna (65041)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Vilnius (65040)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Volgograd (65039)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Warsaw (65038)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Zagreb (65037)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Zaporozhye (65036)</para>
+            </listitem>
+            <listitem>
+                <para>Europe/Zurich (65035)</para>
+            </listitem>
+            <listitem>
+                <para>Factory (65034)</para>
+            </listitem>
+            <listitem>
+                <para>GB (65033)</para>
+            </listitem>
+            <listitem>
+                <para>GB-Eire (65032)</para>
+            </listitem>
+            <listitem>
+                <para>GMT+0 (65031)</para>
+            </listitem>
+            <listitem>
+                <para>GMT-0 (65030)</para>
+            </listitem>
+            <listitem>
+                <para>GMT0 (65029)</para>
+            </listitem>
+            <listitem>
+                <para>Greenwich (65028)</para>
+            </listitem>
+            <listitem>
+                <para>HST (65027)</para>
+            </listitem>
+            <listitem>
+                <para>Hongkong (65026)</para>
+            </listitem>
+            <listitem>
+                <para>IET (65025)</para>
+            </listitem>
+            <listitem>
+                <para>IST (65024)</para>
+            </listitem>
+            <listitem>
+                <para>Iceland (65023)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Antananarivo (65022)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Chagos (65021)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Christmas (65020)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Cocos (65019)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Comoro (65018)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Kerguelen (65017)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Mahe (65016)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Maldives (65015)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Mauritius (65014)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Mayotte (65013)</para>
+            </listitem>
+            <listitem>
+                <para>Indian/Reunion (65012)</para>
+            </listitem>
+            <listitem>
+                <para>Iran (65011)</para>
+            </listitem>
+            <listitem>
+                <para>Israel (65010)</para>
+            </listitem>
+            <listitem>
+                <para>JST (65009)</para>
+            </listitem>
+            <listitem>
+                <para>Jamaica (65008)</para>
+            </listitem>
+            <listitem>
+                <para>Japan (65007)</para>
+            </listitem>
+            <listitem>
+                <para>Kwajalein (65006)</para>
+            </listitem>
+            <listitem>
+                <para>Libya (65005)</para>
+            </listitem>
+            <listitem>
+                <para>MET (65004)</para>
+            </listitem>
+            <listitem>
+                <para>MIT (65003)</para>
+            </listitem>
+            <listitem>
+                <para>MST (65002)</para>
+            </listitem>
+            <listitem>
+                <para>MST7MDT (65001)</para>
+            </listitem>
+            <listitem>
+                <para>Mexico/BajaNorte (65000)</para>
+            </listitem>
+            <listitem>
+                <para>Mexico/BajaSur (64999)</para>
+            </listitem>
+            <listitem>
+                <para>Mexico/General (64998)</para>
+            </listitem>
+            <listitem>
+                <para>NET (64997)</para>
+            </listitem>
+            <listitem>
+                <para>NST (64996)</para>
+            </listitem>
+            <listitem>
+                <para>NZ (64995)</para>
+            </listitem>
+            <listitem>
+                <para>NZ-CHAT (64994)</para>
+            </listitem>
+            <listitem>
+                <para>Navajo (64993)</para>
+            </listitem>
+            <listitem>
+                <para>PLT (64992)</para>
+            </listitem>
+            <listitem>
+                <para>PNT (64991)</para>
+            </listitem>
+            <listitem>
+                <para>PRC (64990)</para>
+            </listitem>
+            <listitem>
+                <para>PRT (64989)</para>
+            </listitem>
+            <listitem>
+                <para>PST (64988)</para>
+            </listitem>
+            <listitem>
+                <para>PST8PDT (64987)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Apia (64986)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Auckland (64985)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Bougainville (64984)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Chatham (64983)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Chuuk (64982)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Easter (64981)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Efate (64980)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Enderbury (64979)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Fakaofo (64978)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Fiji (64977)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Funafuti (64976)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Galapagos (64975)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Gambier (64974)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Guadalcanal (64973)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Guam (64972)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Honolulu (64971)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Johnston (64970)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Kiritimati (64969)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Kosrae (64968)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Kwajalein (64967)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Majuro (64966)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Marquesas (64965)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Midway (64964)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Nauru (64963)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Niue (64962)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Norfolk (64961)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Noumea (64960)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Pago_Pago (64959)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Palau (64958)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Pitcairn (64957)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Pohnpei (64956)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Ponape (64955)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Port_Moresby (64954)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Rarotonga (64953)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Saipan (64952)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Samoa (64951)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Tahiti (64950)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Tarawa (64949)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Tongatapu (64948)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Truk (64947)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Wake (64946)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Wallis (64945)</para>
+            </listitem>
+            <listitem>
+                <para>Pacific/Yap (64944)</para>
+            </listitem>
+            <listitem>
+                <para>Poland (64943)</para>
+            </listitem>
+            <listitem>
+                <para>Portugal (64942)</para>
+            </listitem>
+            <listitem>
+                <para>ROC (64941)</para>
+            </listitem>
+            <listitem>
+                <para>ROK (64940)</para>
+            </listitem>
+            <listitem>
+                <para>SST (64939)</para>
+            </listitem>
+            <listitem>
+                <para>Singapore (64938)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/AST4 (64937)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/AST4ADT (64936)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/CST6 (64935)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/CST6CDT (64934)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/EST5 (64933)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/EST5EDT (64932)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/HST10 (64931)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/MST7 (64930)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/MST7MDT (64929)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/PST8 (64928)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/PST8PDT (64927)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/YST9 (64926)</para>
+            </listitem>
+            <listitem>
+                <para>SystemV/YST9YDT (64925)</para>
+            </listitem>
+            <listitem>
+                <para>Turkey (64924)</para>
+            </listitem>
+            <listitem>
+                <para>UCT (64923)</para>
+            </listitem>
+            <listitem>
+                <para>US/Alaska (64922)</para>
+            </listitem>
+            <listitem>
+                <para>US/Aleutian (64921)</para>
+            </listitem>
+            <listitem>
+                <para>US/Arizona (64920)</para>
+            </listitem>
+            <listitem>
+                <para>US/Central (64919)</para>
+            </listitem>
+            <listitem>
+                <para>US/East-Indiana (64918)</para>
+            </listitem>
+            <listitem>
+                <para>US/Eastern (64917)</para>
+            </listitem>
+            <listitem>
+                <para>US/Hawaii (64916)</para>
+            </listitem>
+            <listitem>
+                <para>US/Indiana-Starke (64915)</para>
+            </listitem>
+            <listitem>
+                <para>US/Michigan (64914)</para>
+            </listitem>
+            <listitem>
+                <para>US/Mountain (64913)</para>
+            </listitem>
+            <listitem>
+                <para>US/Pacific (64912)</para>
+            </listitem>
+            <listitem>
+                <para>US/Pacific-New (64911)</para>
+            </listitem>
+            <listitem>
+                <para>US/Samoa (64910)</para>
+            </listitem>
+            <listitem>
+                <para>UTC (64909)</para>
+            </listitem>
+            <listitem>
+                <para>Universal (64908)</para>
+            </listitem>
+            <listitem>
+                <para>VST (64907)</para>
+            </listitem>
+            <listitem>
+                <para>W-SU (64906)</para>
+            </listitem>
+            <listitem>
+                <para>WET (64905)</para>
+            </listitem>
+            <listitem>
+                <para>Zulu (64904)</para>
+            </listitem>
+        </itemizedlist></para>
+</appendix>

@@ -11,7 +11,7 @@
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0 Alpha 1</subtitle>               
-        <edition>4 декабря 2018 — v.0000-1</edition>
+        <edition>6 декабря 2018 — v.0000-1</edition>
         
         <authorgroup>
             <author>
@@ -70,7 +70,9 @@
     <xi:include href="systables.xml" xpointer="element(/1)"/>
     <xi:include href="montables.xml" xpointer="element(/1)"/>
     <xi:include href="sectables.xml" xpointer="element(/1)"/>
+    <xi:include href="syspackage.xml" xpointer="element(/1)"/>
     <xi:include href="charset-coll.xml" xpointer="element(/1)"/>
+    <xi:include href="timezones.xml" xpointer="element(/1)"/>
     <xi:include href="license.xml" xpointer="element(/1)"/>
     <index>
         <info>
