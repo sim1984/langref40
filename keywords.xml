@@ -343,11 +343,15 @@
                 <member>COSH</member>
                 <member>COT</member>
                 <member>COUNT</member>
+                <member>COUNTER</member>
                 <member>COVAR_POP</member>
                 <member>COVAR_SAMP</member>
                 <member>CREATE</member>
                 <member>CROSS</member>
                 <member>CSTRING</member>
+                <member>CTR_BIG_ENDIAN</member>
+                <member>CTR_LITTLE_ENDIAN</member>
+                <member>CTR_LENGTH</member>
                 <member>CUME_DIST</member>
                 <member>CURRENT</member>
                 <member>CURRENT_CONNECTION</member>
@@ -450,6 +454,7 @@
                 <member>INVOKER</member>
                 <member>IS</member>
                 <member>ISOLATION</member>
+                <member>IV</member>
                 <member>JOIN</member>
                 <member>KEY</member>
                 <member>LAG</member>
@@ -479,6 +484,7 @@
                 <member>LONG</member>
                 <member>LOWER</member>
                 <member>LPAD</member>
+                <member>LPARAM</member>
                 <member>MANUAL</member>
                 <member>MAPPING</member>
                 <member>MATCHED</member>
@@ -494,6 +500,7 @@
                 <member>MINUTE</member>
                 <member>MINVALUE</member>
                 <member>MOD</member>
+                <member>MODE</member>
                 <member>MODULE_NAME</member>
                 <member>MONTH</member>
                 <member>NAME</member>
@@ -607,6 +614,13 @@
                 <member>ROW_NUMBER</member>
                 <member>ROWS</member>
                 <member>RPAD</member>
+                <member>RSA_DECRYPT</member>
+                <member>RSA_ENCRYPT</member>
+                <member>RSA_PRIVATE</member>
+                <member>RSA_PUBLIC</member>
+                <member>RSA_SIGN</member>
+                <member>RSA_VERIFY</member>
+                <member>SALT_LENGTH</member>
                 <member>SAVEPOINT</member>
                 <member>SCALAR_ARRAY</member>
                 <member>SCHEMA</member>
@@ -623,6 +637,7 @@
                 <member>SHADOW</member>
                 <member>SHARED</member>
                 <member>SIGN</member>
+                <member>SIGNATURE</member>
                 <member>SIMILAR</member>
                 <member>SIN</member>
                 <member>SINGULAR</member>

@@ -123,11 +123,15 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>COSH</keyword>
       <keyword>COT</keyword>
       <keyword>COUNT</keyword>
+      <keyword>COUNTER</keyword>
       <keyword>COVAR_POP</keyword>
       <keyword>COVAR_SAMP</keyword>
       <keyword>CREATE</keyword>
       <keyword>CROSS</keyword>
       <keyword>CSTRING</keyword>
+      <keyword>CTR_BIG_ENDIAN</keyword>
+      <keyword>CTR_LITTLE_ENDIAN</keyword>
+      <keyword>CTR_LENGTH</keyword>
       <keyword>CUME_DIST</keyword>
       <keyword>CURRENT</keyword>
       <keyword>CURRENT_CONNECTION</keyword>
@@ -230,6 +234,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>INVOKER</keyword>
       <keyword>IS</keyword>
       <keyword>ISOLATION</keyword>
+      <keyword>IV</keyword>
       <keyword>JOIN</keyword>
       <keyword>KEY</keyword>
       <keyword>LAG</keyword>
@@ -259,6 +264,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>LONG</keyword>
       <keyword>LOWER</keyword>
       <keyword>LPAD</keyword>
+      <keyword>LPARAM</keyword>
       <keyword>MANUAL</keyword>
       <keyword>MAPPING</keyword>
       <keyword>MATCHED</keyword>
@@ -274,6 +280,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>MINUTE</keyword>
       <keyword>MINVALUE</keyword>
       <keyword>MOD</keyword>
+      <keyword>MODE</keyword>
       <keyword>MODULE_NAME</keyword>
       <keyword>MONTH</keyword>
       <keyword>NAME</keyword>
@@ -387,6 +394,13 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>ROW_NUMBER</keyword>
       <keyword>ROWS</keyword>
       <keyword>RPAD</keyword>
+      <keyword>RSA_DECRYPT</keyword>
+      <keyword>RSA_ENCRYPT</keyword>
+      <keyword>RSA_PRIVATE</keyword>
+      <keyword>RSA_PUBLIC</keyword>
+      <keyword>RSA_SIGN</keyword>
+      <keyword>RSA_VERIFY</keyword>
+      <keyword>SALT_LENGTH</keyword>
       <keyword>SAVEPOINT</keyword>
       <keyword>SCALAR_ARRAY</keyword>
       <keyword>SCHEMA</keyword>
@@ -403,6 +417,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>SHADOW</keyword>
       <keyword>SHARED</keyword>
       <keyword>SIGN</keyword>
+      <keyword>SIGNATURE</keyword>
       <keyword>SIMILAR</keyword>
       <keyword>SIN</keyword>
       <keyword>SINGULAR</keyword>

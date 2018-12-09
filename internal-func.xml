@@ -4637,91 +4637,6 @@ CHARACTER_LENGTH (<replaceable>str</replaceable>)
                 </formalpara>
             </section>
 
-            <section xml:id="internalfunc-func-string-hash">
-                <info>
-                    <title>HASH</title>
-                    <keywordset>
-                        <keyword>HASH</keyword>
-                    </keywordset>
-                </info>
-                <indexterm><primary>HASH</primary></indexterm>
-                <formalpara>
-                    <title>Доступно в:</title>
-
-                    <para>DSQL, PSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-                    <para>
-                        <programlisting>
-HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</replaceable>])        
-                            
-<replaceable>&lt;algorithm&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
-                        </programlisting>
-                    </para>
-                </formalpara>
-
-                <para>
-                    <table frame="all">
-                        <?dbfo keep-together='auto'?>
-                        <title>Параметры функции HASH</title>
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                            <thead>
-                                <row>
-                                    <entry align="center">Параметр</entry>
-                                    <entry align="center">Описание</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry><replaceable>str</replaceable></entry>
-                                    <entry>
-                                        <para>Выражение строкового типа.</para>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </para>
-
-                <formalpara>
-                    <title>Тип возвращаемого результата:</title>
-                    <para>BIGINT или VARCHAR с кодировкой OCTETS.</para>
-                </formalpara>
-
-                <para>Функция HASH возвращает хэш-значение входной строки. Эта функция полностью
-                    поддерживает текстовые BLOB любой длины и с любым набором символов. </para>
-
-                <para>Если предложение USING не указано, то функция возвращает BIGINT. В этом случае
-                    используется 64-битный вариант некриптографической хэш-функции PJW (также
-                    известной как ELF64) <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                        xlink:href="https://en.wikipedia.org/wiki/PJW_hash_function"
-                        >https://en.wikipedia.org/wiki/PJW_hash_function</link>. Эта функция очень
-                    быстра и может использоваться для общих целей (хеш-таблицы и т. д.), но имеет
-                    большое количество коллизий. Для более надёжного хэширования рекомендуется
-                    использовать другие алгоритмы указывая их с помощью предложения USING.</para>
-
-                <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. В этом
-                    случае функция возвращает результат с типом VARCHAR с кодировкой OCTETS.</para>
-
-                <formalpara>
-                    <title>Примеры:</title>
-                    <para>
-                        <example>
-                            <title>Использование функции HASH</title>
-                            <para><programlisting language="sql">
-SELECT HASH(x) FROM MyTable;
--- результат типа BIGINT
-
-SELECT HASH(x USING SHA256) FROM MyTable;
--- результат типа VARCHAR с кодировкой OCTETS
-                </programlisting></para>
-                        </example>
-                    </para>
-                </formalpara>
-            </section>
             <section xml:id="internalfunc-func-string-left">
                 <info>
                     <title>LEFT</title>
@@ -6268,7 +6183,7 @@ FROM RDB$DATABASE
                 <para>Преобразует время или временную метку в указанный часовой пояс. Если
                     используется ключевое слово LOCAL, то преобразование происходит в часовой пояс
                     сессии.</para>
-                
+
                 <formalpara>
                     <title>Примеры:</title>
                     <para>
@@ -7240,6 +7155,961 @@ TOTALORDER (<replaceable>value1</replaceable>, <replaceable>value2</replaceable>
                         </programlisting>
                 </para>
             </section>
+        </section>
+
+        <section xml:id="internalfunc-func-hash">
+            <info>
+                <title>Хеш функции</title>
+            </info>
+
+            <section xml:id="internalfunc-func-hash-hash">
+                <info>
+                    <title>HASH</title>
+                    <keywordset>
+                        <keyword>HASH</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>HASH</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</replaceable>])        
+                            
+<replaceable>&lt;algorithm&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции HASH</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>str</replaceable></entry>
+                                    <entry>
+                                        <para>Выражение строкового типа.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BIGINT или VARBINARY.</para>
+                </formalpara>
+
+                <para>Функция HASH возвращает хэш-значение входной строки. Эта функция полностью
+                    поддерживает текстовые BLOB любой длины и с любым набором символов. </para>
+
+                <para>Если предложение USING не указано, то функция возвращает BIGINT. В этом случае
+                    используется 64-битный вариант некриптографической хэш-функции PJW (также
+                    известной как ELF64) <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                        xlink:href="https://en.wikipedia.org/wiki/PJW_hash_function"
+                        >https://en.wikipedia.org/wiki/PJW_hash_function</link>. Эта функция очень
+                    быстра и может использоваться для общих целей (хеш-таблицы и т. д.), но имеет
+                    большое количество коллизий. Для более надёжного хэширования рекомендуется
+                    использовать другие алгоритмы указывая их с помощью предложения USING.</para>
+
+                <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. В этом
+                    случае функция возвращает результат с типом VARCHAR с кодировкой OCTETS.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции HASH</title>
+                            <para><programlisting language="sql">
+SELECT HASH(x) FROM MyTable;
+-- результат типа BIGINT
+
+SELECT HASH(x USING SHA256) FROM MyTable;
+-- результат типа VARCHAR с кодировкой OCTETS
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+            </section>
+        </section>
+
+        <section xml:id="internalfunc-func-crypt">
+            <info>
+                <title>Криптографические функции</title>
+            </info>
+
+            <para>В Firebird 4.0 поддерживается только подмножество симметричных алгоритмов
+                шифрования (как блочных так и потоковых), так и RSA.</para>
+
+            <section xml:id="internalfunc-func-crypt-encrypt">
+                <info>
+                    <title>ENCRYPT</title>
+                    <keywordset>
+                        <keyword>ENCRYPT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>ENCRYPT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+ENCRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorithm&gt;</replaceable>] [MODE <replaceable>&lt;mode&gt;</replaceable>] KEY <replaceable>&lt;key&gt;</replaceable>
+  [IV <replaceable>&lt;iv&gt;</replaceable>] [<replaceable>&lt;endianness&gt;</replaceable>] [CTR_LENGTH <replaceable>&lt;ctr_length&gt;</replaceable>] [COUNTER <replaceable>&lt;counter&gt;</replaceable>])        
+                            
+<replaceable>&lt;algorithm&gt;</replaceable> ::= { <replaceable>&lt;block_cipher&gt;</replaceable> | <replaceable>&lt;stream_cipher&gt;</replaceable> }
+
+<replaceable>&lt;block_cipher&gt;</replaceable> ::= 
+  { AES | ANUBIS | BLOWFISH | KHAZAD | RC5 | RC6 | SAFER+ | TWOFISH | XTEA }  
+
+<replaceable>&lt;stream_cipher&gt;</replaceable> ::= { CHACHA20 | RC4 | SOBER128 }
+
+<replaceable>&lt;mode&gt;</replaceable> ::= { CBC | CFB | CTR | ECB | OFB }
+
+<replaceable>&lt;endianness&gt;</replaceable> ::= { CTR_BIG_ENDIAN | CTR_LITTLE_ENDIAN }
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции ENCRYPT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>data</replaceable></entry>
+                                    <entry>
+                                        <para>Выражение строкового типа или BLOB, которое необходимо
+                                            зашифровать.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>algorithm</replaceable></entry>
+                                    <entry>
+                                        <para>Алгоритм шифрования. Поддерживаются как блочные, так и
+                                            потоковые алгоритмы.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>mode</replaceable></entry>
+                                    <entry>
+                                        <para>Режим шифрования. Обязателен для блочных алгоритмов
+                                            шифрования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>key</replaceable></entry>
+                                    <entry>
+                                        <para>Ключ шифрования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>iv</replaceable></entry>
+                                    <entry>
+                                        <para>Вектор инициализаяии (IV). Должен быть указан для всех
+                                            блочных алгоримов шифрования за исключением ECB и всех
+                                            потоковых алгоритмов шифрования за исключением
+                                            RC4.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>endianness</replaceable></entry>
+                                    <entry>
+                                        <para>Порядок байтов счётчика. Может быть указан только в
+                                            режиме CTR. По умолчанию используется
+                                            CTR_LITTLE_ENDIAN.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>ctr_length</replaceable></entry>
+                                    <entry>
+                                        <para>Длина счётчика в байтах. Может быть указана только в
+                                            режиме CTR. По умолчанию равна длине вектора
+                                            инициализации IV.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>counter</replaceable></entry>
+                                    <entry>
+                                        <para>Начальное значение счётчика. Может быть указана только
+                                            для алгоритма CHACHA20. По умолчанию равно 0.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BLOB или VARBINARY.</para>
+                </formalpara>
+                <para>Функция ENCRYPT шифрует данные с использованием симмитричного шифра. Размеры
+                    строк передаваемых в эту функцию должны соответсвовать требованиям выбранного
+                    алгорима и режима.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции ENCRYPT</title>
+                            <para><programlisting language="sql">
+select encrypt('897897' using sober128 key 'AbcdAbcdAbcdAbcd' iv '01234567') from rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-decrypt">DECRYPT</link>. </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-decrypt">
+                <info>
+                    <title>DECRYPT</title>
+                    <keywordset>
+                        <keyword>DECRYPT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>DECRYPT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+DECRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorithm&gt;</replaceable>] [MODE <replaceable>&lt;mode&gt;</replaceable>] KEY <replaceable>&lt;key&gt;</replaceable>
+  [IV <replaceable>&lt;iv&gt;</replaceable>] [<replaceable>&lt;endianness&gt;</replaceable>] [CTR_LENGTH <replaceable>&lt;ctr_length&gt;</replaceable>] [COUNTER <replaceable>&lt;counter&gt;</replaceable>])        
+                            
+<replaceable>&lt;algorithm&gt;</replaceable> ::= { <replaceable>&lt;block_cipher&gt;</replaceable> | <replaceable>&lt;stream_cipher&gt;</replaceable> }
+
+<replaceable>&lt;block_cipher&gt;</replaceable> ::= 
+  { AES | ANUBIS | BLOWFISH | KHAZAD | RC5 | RC6 | SAFER+ | TWOFISH | XTEA }  
+
+<replaceable>&lt;stream_cipher&gt;</replaceable> ::= { CHACHA20 | RC4 | SOBER128 }
+
+<replaceable>&lt;mode&gt;</replaceable> ::= { CBC | CFB | CTR | ECB | OFB }
+
+<replaceable>&lt;endianness&gt;</replaceable> ::= { CTR_BIG_ENDIAN | CTR_LITTLE_ENDIAN }
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции DECRYPT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>data</replaceable></entry>
+                                    <entry>
+                                        <para>Выражение строкового типа или BLOB, которое необходимо
+                                            зашифровать.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>algorithm</replaceable></entry>
+                                    <entry>
+                                        <para>Алгоритм шифрования. Поддерживаются как блочные, так и
+                                            потоковые алгоритмы.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>mode</replaceable></entry>
+                                    <entry>
+                                        <para>Режим шифрования. Обязателен для блочных алгоритмов
+                                            шифрования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>key</replaceable></entry>
+                                    <entry>
+                                        <para>Ключ шифрования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>iv</replaceable></entry>
+                                    <entry>
+                                        <para>Вектор инициализаяии (IV). Должен быть указан для всех
+                                            блочных алгоримов шифрования за исключением ECB и всех
+                                            потоковых алгоритмов шифрования за исключением
+                                            RC4.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>endianness</replaceable></entry>
+                                    <entry>
+                                        <para>Порядок байтов счётчика. Может быть указан только в
+                                            режиме CTR. По умолчанию используется
+                                            CTR_LITTLE_ENDIAN.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>ctr_length</replaceable></entry>
+                                    <entry>
+                                        <para>Длина счётчика в байтах. Может быть указана только в
+                                            режиме CTR. По умолчанию равна длине вектора
+                                            инициализации IV.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>counter</replaceable></entry>
+                                    <entry>
+                                        <para>Начальное значение счётчика. Может быть указана только
+                                            для алгоритма CHACHA20. По умолчанию равно 0.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BLOB или VARBINARY.</para>
+                </formalpara>
+                <para>Функция DECRYPT дешифрует данные с использованием симмитричного шифра. Размеры
+                    строк передаваемых в эту функцию должны соответсвовать требованиям выбранного
+                    алгорима и режима.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции DECRYPT</title>
+                            <para><programlisting language="sql">
+select decrypt(x'0154090759DF' using sober128 key 'AbcdAbcdAbcdAbcd' iv '01234567') 
+from rdb$database;
+
+select decrypt(secret_field using aes mode ofb key '0123456701234567' iv init_vector) 
+from secure_table;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-encrypt">ENCRYPT</link>. </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-rsa_private">
+                <info>
+                    <title>RSA_PRIVATE</title>
+                    <keywordset>
+                        <keyword>RSA_PRIVATE</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RSA_PRIVATE</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RSA_PRIVATE (<replaceable>&lt;size&gt;</replaceable>)
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RSA_PRIVATE</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>size</replaceable></entry>
+                                    <entry>
+                                        <para>Размер ключа в байтах.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>VARBINARY.</para>
+                </formalpara>
+                <para>Функция RSA_PRIVATE возвращает RSA закрытый ключ заданной длины (в байтах) в
+                    PKCS#1 формате как строку VARBINARY.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RSA_PRIVATE</title>
+                            <para><programlisting language="sql">
+select rdb$set_context('USER_SESSION', 'private_key', rsa_private(256))
+from rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-rsa_public">
+                <info>
+                    <title>RSA_PUBLIC</title>
+                    <keywordset>
+                        <keyword>RSA_PUBLIC</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RSA_PUBLIC</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RSA_PUBLIC (<replaceable>&lt;private key&gt;</replaceable>)
+                        </programlisting>
+                    </para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RSA_PUBLIC</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>private key</replaceable></entry>
+                                    <entry>
+                                        <para>RSA закрытый ключ.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>VARBINARY.</para>
+                </formalpara>
+                <para>Функция RSA_PUBLIC возвращает RSA открытый ключ для заданного RSA закрытого
+                    ключа. Оба ключа должны быть в PKCS#1 формате.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RSA_PUBLIC</title>
+
+                            <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
+                                    linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>
+                            </para>
+                            <para><programlisting language="sql">
+select rdb$set_context('USER_SESSION', 'public_key',
+    rsa_public(rdb$get_context('USER_SESSION', 'private_key'))) 
+from rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-rsa_encrypt">
+                <info>
+                    <title>RSA_ENCRYPT</title>
+                    <keywordset>
+                        <keyword>RSA_ENCRYPT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RSA_ENCRYPT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RSA_ENCRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;public_key&gt;</replaceable> [LPARAM <replaceable>&lt;tag&gt;</replaceable>] [HASH <replaceable>&lt;hash&gt;</replaceable>])
+                            
+<replaceable>&lt;hash&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RSA_ENCRYPT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>data</replaceable></entry>
+                                    <entry>
+                                        <para>Данные (строка или BLOB) для шифрования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>public_key</replaceable></entry>
+                                    <entry>
+                                        <para>Открытый RSA ключ, который возвращает функция
+                                            RSA_UBLIC.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>tag</replaceable></entry>
+                                    <entry>
+                                        <para>Дополнительный системный тег, который можно применять
+                                            для определения того, какая система закодировала
+                                            сообщение. Значением по умолчанию является NULL.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>hash</replaceable></entry>
+                                    <entry>
+                                        <para>Алгоритм хеширования. По умолчанию SHA256.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>VARBINARY.</para>
+                </formalpara>
+                <para>Заполняет данные, используя заполнение OAEP, и шифрует их, используя открытый
+                    ключ RSA. Обычно используется для шифрования коротких симметричных ключей,
+                    которые затем используются в блочных шифрах для шифрования сообщения.</para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RSA_ENCRYPT</title>
+
+                            <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
+                                    linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>
+                            </para>
+                            <para><programlisting language="sql">
+select rdb$set_context('USER_SESSION', 'msg', 
+    rsa_encrypt('Some message' key rdb$get_context('USER_SESSION', 'public_key'))) 
+from rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>, <link
+                            linkend="internalfunc-func-crypt-rsa_decrypt">RSA_DECRYPT</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-rsa_decrypt">
+                <info>
+                    <title>RSA_DECRYPT</title>
+                    <keywordset>
+                        <keyword>RSA_DECRYPT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RSA_DECRYPT</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RSA_DECRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_key&gt;</replaceable> [LPARAM <replaceable>&lt;tag&gt;</replaceable>] [HASH <replaceable>&lt;hash&gt;</replaceable>])
+                            
+<replaceable>&lt;hash&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RSA_DECRYPT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>data</replaceable></entry>
+                                    <entry>
+                                        <para>Данные (строка или BLOB) для дешифрования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>private_key</replaceable></entry>
+                                    <entry>
+                                        <para>Закрытый RSA ключ, который возвращает функция
+                                            RSA_PRIVATE.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>tag</replaceable></entry>
+                                    <entry>
+                                        <para>Дополнительный системный тег. Должно быть тем же самым
+                                            значением, которое передавалось RSA_ENCRYPT. Если оно не
+                                            совпадает с тем, который использовался во время
+                                            кодирования, эта функция не расшифровывает пакет.
+                                            Значением по умолчанию является NULL.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>hash</replaceable></entry>
+                                    <entry>
+                                        <para>Алгоритм хеширования. По умолчанию SHA256.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>VARCHAR.</para>
+                </formalpara>
+                <para>Расшифровывает с использованием закрытого ключа RSA, и удаляет OAEP
+                    дополненные данные.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RSA_DECRYPT</title>
+
+                            <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
+                                    linkend="internalfunc-func-crypt-rsa_private"
+                                >RSA_PRIVATE</link>. Данные для расшифровки сипользуются из примера
+                                в <link linkend="internalfunc-func-crypt-rsa_encrypt"
+                                    >RSA_ENCRYPT</link>
+                            </para>
+                            <para><programlisting language="sql">
+select RSA_DECRYPT(rdb$get_context('USER_SESSION', 'msg')
+    key rdb$get_context('USER_SESSION', 'private_key'))
+from RDB$DATABASE;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>,
+                            <link linkend="internalfunc-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-rsa_sign">
+                <info>
+                    <title>RSA_SIGN</title>
+                    <keywordset>
+                        <keyword>RSA_SIGN</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RSA_SIGN</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_key&gt;</replaceable> [HASH <replaceable>&lt;hash&gt;</replaceable>] [SALT_LENGTH <replaceable>&lt;length&gt;</replaceable>])
+                            
+<replaceable>&lt;hash&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RSA_SIGN</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>data</replaceable></entry>
+                                    <entry>
+                                        <para>Данные (строка или BLOB) для кодирования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>private_key</replaceable></entry>
+                                    <entry>
+                                        <para>Закрытый RSA ключ, который возвращает функция
+                                            RSA_PRIVATE.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>hash</replaceable></entry>
+                                    <entry>
+                                        <para>Алгоритм хеширования. По умолчанию SHA256.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>length</replaceable></entry>
+                                    <entry>
+                                        <para>Указывает на длину желаемой соли и, как правило,
+                                            должен быть небольшим. Хорошее значение от 8 до
+                                            16.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>VARBINARY.</para>
+                </formalpara>
+                <para>Выполняет PSS-кодирование дайджеста сообщения для подписи и подписывает его с
+                    использованием закрытого ключа RSA.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RSA_SIGN</title>
+
+                            <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
+                                    linkend="internalfunc-func-crypt-rsa_private"
+                                >RSA_PRIVATE</link>. </para>
+                            <para><programlisting language="sql">
+select rdb$set_context('USER_SESSION', 'msg', 
+    rsa_sign(hash('Test message' using sha256)
+    key rdb$get_context('USER_SESSION', 'private_key'))) 
+from rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-crypt-rsa_verify">
+                <info>
+                    <title>RSA_VERIFY</title>
+                    <keywordset>
+                        <keyword>RSA_VERIFY</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RSA_VERIFY</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;signature&gt;</replaceable> KEY <replaceable>&lt;public_key&gt;</replaceable> [HASH <replaceable>&lt;hash&gt;</replaceable>] 
+  [SALT_LENGTH <replaceable>&lt;length&gt;</replaceable>])
+                            
+<replaceable>&lt;hash&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры функции RSA_VERIFY</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>data</replaceable></entry>
+                                    <entry>
+                                        <para>Данные (строка или BLOB) для кодирования.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>signature</replaceable></entry>
+                                    <entry>
+                                        <para>Подпись. Должно быть значением возвращаемым функцией
+                                            RSA_SIGN.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>public_key</replaceable></entry>
+                                    <entry>
+                                        <para>Открытый RSA ключ, который возвращает функция
+                                            RSA_PUBLIC.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>hash</replaceable></entry>
+                                    <entry>
+                                        <para>Алгоритм хеширования. По умолчанию SHA256.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>length</replaceable></entry>
+                                    <entry>
+                                        <para>Указывает на длину желаемой соли и, как правило,
+                                            должен быть небольшим. Хорошее значение от 8 до
+                                            16.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BOOLEAN.</para>
+                </formalpara>
+                <para>Выполняет PSS-кодирование дайджеста сообщения для подписи и проверяет его
+                    цифровую подпись, используя открытый ключ RSA.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции RSA_SIGN</title>
+
+                            <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
+                                    linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>
+                                Яифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
+                            <para><programlisting language="sql">
+select rsa_verify(hash('Test message' using sha256) 
+    signature rdb$get_context('USER_SESSION', 'msg')
+    key rdb$get_context('USER_SESSION', 'public_key')) 
+from rdb$database;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-crypt-rsa_sign">RSA_SIGN</link>, <link
+                            linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
+                </formalpara>
+            </section>
+
         </section>
 
         <section xml:id="internalfunc-func-cast">
