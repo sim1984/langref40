@@ -4347,7 +4347,7 @@ FOR UPDATE WITH LOCK
 
                 <para>PSQL.</para>
             </formalpara>
-            
+
             <formalpara>
                 <title>Синтаксис:</title>
                 <para>
@@ -4360,7 +4360,7 @@ FROM ...
 <replaceable>&lt;variable-list&gt;</replaceable> ::= [:]<replaceable>psqlvar</replaceable> [, [:]<replaceable>psqlvar</replaceable> ...]    
                     </programlisting>
                 </para>
-            </formalpara>           
+            </formalpara>
 
             <para>В PSQL (хранимых процедурах, триггерах и др.) результаты выборки команды SELECT
                 могут быть построчно загружены в локальные переменные (число, порядок и типы
@@ -4371,13 +4371,13 @@ FROM ...
                 не более одной строки, то есть, если это запрос типа singleton (одиночка). Для
                 запросов, возвращающих несколько строк, PSQL предлагает использовать оператор <link
                     linkend="psql-statements-forselect">FOR SELECT</link>.  </para>
-					
+
             <important>
                 <para>В случае, когда запрос не возвращает данных (ноль строк), значения переменных
                     в списке INTO <replaceable>&lt;variable-list&gt;</replaceable> не
                     изменяется.</para>
-            </important>					
-					
+            </important>
+
             <para>Также, PSQL поддерживает оператор <link linkend="psql-statements-declare-cursor"
                     >DECLARE CURSOR</link>, который связывает именованный курсор с определенной
                 командой SELECT — и этот курсор впоследствии может быть использован для навигации по
@@ -4787,7 +4787,7 @@ FROM
 INSERT INTO <replaceable>target</replaceable>  
 [OVERRIDE {SYSTEM | USER} VALUE]                  
 {DEFAULT VALUES | [(<replaceable>&lt;column_list&gt;</replaceable>)] <replaceable>&lt;value_source&gt;</replaceable>}     
-[RETURNING <replaceable>&lt;returning_list&gt;</replaceable> [INTO <replaceable>&lt;variables&gt;</replaceable>]]       
+[RETURNING {<replaceable>&lt;returning_list&gt;</replaceable> | *} [INTO <replaceable>&lt;variables&gt;</replaceable>]]       
 
 <replaceable>&lt;column_list&gt;</replaceable> ::= <replaceable>colname</replaceable> [, <replaceable>colname</replaceable> ...]       
 
@@ -5107,8 +5107,9 @@ VALUES (12, 'Laptop');
             <para>Оператор INSERT вставляющий только одну строку может включать необязательное
                 предложение RETURNING для возврата значений из вставленной строки. Если предложение
                 указано, то оно может содержать любые столбцы, указанные в операторе, или другие
-                столбцы и выражения. Возвращаемые значения содержат все изменения, произведённые в
-                триггерах BEFORE.</para>
+                столбцы и выражения. Вместо списка столбцов вы можете указать звёздочку (*) для
+                возврата всех значений столбцов таблицы. Возвращаемые значения содержат все
+                изменения, произведённые в триггерах BEFORE.</para>
             <important>
                 <para>В DSQL, оператор с RETURNING всегда возвращает только одну строку. Если
                     указано предложение RETURNING, и обнаружено более одной совпадающей строки,
@@ -5213,7 +5214,7 @@ SET <replaceable>col</replaceable> = {<replaceable>newval</replaceable> | DEFAUL
 [PLAN <replaceable>plan_items</replaceable>]   
 [ORDER BY <replaceable>sort_items</replaceable>]   
 [ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]]   
-[RETURNING <replaceable>&lt;returning_list&gt;</replaceable> [INTO <replaceable>&lt;variables&gt;</replaceable>]]  
+[RETURNING {<replaceable>&lt;returning_list&gt;</replaceable> | [{OLD. | NEW.}]*} [INTO <replaceable>&lt;variables&gt;</replaceable>]]  
 
 <replaceable>&lt;returning_list&gt;</replaceable> ::= 
   <replaceable>ret_value</replaceable> [[AS] <replaceable>ret_alias</replaceable>] [, <replaceable>ret_value</replaceable> [[AS] <replaceable>ret_alias</replaceable>] ...]        
@@ -5545,16 +5546,19 @@ ROWS 20;
                 возврата значений из обновляемой строки. В RETURNING могут включаться любые строки,
                 необязательно только те, которые обновляются.</para>
             <para>Возвращаемые значения содержат изменения, произведённые в триггерах BEFORE, но не
-                в триггерах AFTER. OLD.<replaceable>fieldname</replaceable> и
-                    NEW.<replaceable>fieldname</replaceable> могут быть использованы в качестве имён
-                столбцов. Если OLD. Или NEW. не указано, возвращаются новые значения столбцов
-                (NEW.).</para>
+                в триггерах AFTER. <code>OLD.<replaceable>fieldname</replaceable></code> и
+                        <code>NEW.<replaceable>fieldname</replaceable></code> могут быть
+                использованы в качестве имён столбцов. Если <code>OLD.</code> или <code>NEW.</code>
+                не указано, возвращаются новые значения столбцов (NEW.).</para>
+            <para>Вместо списка столбцов вы можете указать звёздочку (*). В этом случае будут
+                возвращены все значения столбцов таблицы. Звёздочку можно применять со
+                спецификаторами NEW или OLD.</para>
             <note>
                 <para>В DSQL оператор с RETURNING всегда возвращает только одну строку. Если записи
                     не были обновлены оператором, то возвращаемые значения содержат NULL. Это
                     поведение может быть изменено в последующих версиях Firebird.</para>
             </note>
-            
+
             <section xml:id="dml-update-returning-into">
                 <title>INTO</title>
                 <para>Предложение INTO предназначено для передачи значений в локальные переменные.
@@ -5569,6 +5573,17 @@ UPDATE Scholars
 SET first_name = 'Hugh', last_name = 'Pickering'
 WHERE first_name = 'Henry' AND last_name = 'Higgins'
 RETURNING id, old.last_name, new.last_name;
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Использование * в предложении RETURNING в операторе UPDATE</title>
+                    <para>
+                        <programlisting language="sql">
+UPDATE Scholars
+SET first_name = 'Hugh', last_name = 'Pickering'
+WHERE first_name = 'Henry' AND last_name = 'Higgins'
+RETURNING old.*;
                 </programlisting>
                     </para>
                 </example>
@@ -5625,7 +5640,7 @@ RETURNING id, old.last_name, new.last_name;
 UPDATE OR INSERT INTO <replaceable>target</replaceable> [(<replaceable>&lt;column_list&gt;</replaceable>)] 
 VALUES (<replaceable>&lt;value_list&gt;</replaceable>)  
 [MATCHING (<replaceable>&lt;column_list&gt;</replaceable>)]       
-[RETURNING <replaceable>&lt;returning_list&gt;</replaceable> [INTO <replaceable>&lt;variables&gt;</replaceable>]]       
+[RETURNING {<replaceable>&lt;returning_list&gt;</replaceable> | [{OLD. | NEW.}]*} [INTO <replaceable>&lt;variables&gt;</replaceable>]]       
 
 <replaceable>&lt;column_list&gt;</replaceable> ::= <replaceable>colname</replaceable> [, <replaceable>colname</replaceable> ...]       
 
@@ -5772,13 +5787,19 @@ MATCHING (name);
             <para>Предложение RETURNING может содержать любые столбцы, указанные в операторе, или
                 другие столбцы и выражения. Возвращаемые значения содержат все изменения,
                 произведённые в триггерах BEFORE, но не в триггерах AFTER.
-                    OLD.<replaceable>fieldname</replaceable> и
-                    NEW.<replaceable>fieldname</replaceable> могут быть использованы в качестве
-                возвращаемых значений. Для обычных имён столбцов возвращаются новые значения.</para>
-            <para>В DSQL, оператор с RETURNING всегда возвращает только одну строку. Если
-                присутствует предложение RETURNING, и обнаружено более одной совпадающей строки,
-                выдаётся сообщение об ошибке. Это поведение может быть изменено в последующих
-                версиях Firebird.</para>
+                        <code>OLD.<replaceable>fieldname</replaceable></code> и
+                        <code>NEW.<replaceable>fieldname</replaceable></code> могут быть
+                использованы в качестве возвращаемых значений. Для обычных имён столбцов
+                возвращаются новые значения.</para>
+            <para>Вместо списка столбцов вы можете указать звёздочку (*). В этом случае будут
+                возвращены все значения столбцов таблицы. Звёздочку можно применять со
+                спецификаторами NEW или OLD.</para>
+            <note>
+                <para>В DSQL, оператор с RETURNING всегда возвращает только одну строку. Если
+                    присутствует предложение RETURNING, и обнаружено более одной совпадающей строки,
+                    выдаётся сообщение об ошибке. Это поведение может быть изменено в последующих
+                    версиях Firebird.</para>
+            </note>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -5826,7 +5847,7 @@ FROM <replaceable>target</replaceable> [[AS] <replaceable>alias</replaceable>]
 [PLAN <replaceable>plan_items</replaceable>]
 [ORDER BY <replaceable>sort_items</replaceable>]
 [ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]]
-[RETURNING <replaceable>&lt;returning_list&gt;</replaceable> [INTO <replaceable>&lt;variables&gt;</replaceable>]]
+[RETURNING {<replaceable>&lt;returning_list&gt;</replaceable> | *} [INTO <replaceable>&lt;variables&gt;</replaceable>]]
  
 <replaceable>&lt;returning_list&gt;</replaceable> ::= <replaceable>ret_value</replaceable> [[AS] <replaceable>alias_val</replaceable>] [, <replaceable>ret_value</replaceable> [[AS] <replaceable>alias_val</replaceable>] ...]
 
@@ -6079,7 +6100,9 @@ ROWS <replaceable>&lt;m&gt;</replaceable> [TO <replaceable>&lt;n&gt;</replaceabl
             </indexterm>
             <para>Оператор DELETE, удаляющий не более одной строки, может содержать конструкцию
                 RETURNING для возвращения значений удаляемой строки. В RETURNING могут быть указаны
-                любые столбцы, не обязательно все, а также другие столбцы и выражения.</para>
+                любые столбцы, не обязательно все, а также другие столбцы и выражения. Вместо списка
+                столбцов может быть указана звёздочка (*), в этом случае будут возвращаены все
+                столбцы удалённой записи.</para>
             <note>
                 <para>
                     <itemizedlist>
@@ -6152,7 +6175,7 @@ MERGE INTO <replaceable>target</replaceable> [[AS] <replaceable>target_alias</re
 USING <replaceable>&lt;source&gt;</replaceable> [[AS] <replaceable>source_alias</replaceable>] 
 ON <replaceable>&lt;join condition&gt;</replaceable>   
 <replaceable>&lt;merge when&gt;</replaceable> [<replaceable>&lt;merge when&gt;</replaceable> ...]   
-[RETURNING <replaceable>&lt;returning_list&gt;</replaceable> [INTO <replaceable>&lt;variable_list&gt;</replaceable>]]       
+[RETURNING {<replaceable>&lt;returning_list&gt;</replaceable> | [{OLD. | NEW.}]* } [INTO <replaceable>&lt;variable_list&gt;</replaceable>]]       
 
 <replaceable>&lt;merge when&gt;</replaceable> ::= <replaceable>&lt;merge when matched&gt;</replaceable> | <replaceable>&lt;merge when not matched&gt;</replaceable>       
 
@@ -6420,9 +6443,12 @@ WHEN MATCHED THEN
             <para>Имена столбцов могут быть уточнены с помощью префиксов NEW и OLD для определения,
                 какое именно значение вы хотите столбца вы хотите получить до модификации или
                 после.</para>
+            <para>Вместо списка столбцов может быть указана звёздочка (*), в этом случае будут
+                возвращены все столбцы целевой таблицы. Префиксы NEW и OLD могут быть сипользованы
+                совместно с звёздочкой.</para>
             <para>Для предложений WHEN MATCHED UPDATE и MERGE WHEN NOT MATCHED неуточнённые имена
                 столбцов или уточнённые именами таблиц или их псевдонимами понимаются как столбцы с
-                префиксом NEW, для предложений MERGE WHEN MATCHED DELETE – с префиксом OLD.</para>
+                префиксом NEW, для предложений MERGE WHEN MATCHED DELETE —с префиксом OLD.</para>
             <example>
                 <title>Использование оператора MERGE с предложением RETURNING</title>
                 <para>Немного модифицируем наш предыдущий пример, чтобы он затрагивал только одну

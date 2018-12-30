@@ -793,6 +793,12 @@ set time zone local;
                     </example>
                 </para>
             </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="types-datetime-timezone">Часовой пояс</link>. </para>
+            </formalpara>
         </section>
 
         <section xml:id="session-timezone-settimezonebind">
@@ -825,18 +831,19 @@ SET TIME ZONE BIND { NATIVE | LEGACY }
                 данных для клиента.</para>
 
             <para>Старые клиенты могут не понимать новые типы данных, поэтому можно определить
-                привязку к LEGACY, и выражения будут возвращены как <code>TIME WITHOUT TIME ZONE</code> и
-                <code>TIMESTAMP WITHOUT TIME ZONE</code> с соответствующим преобразованием. </para>
-            
+                привязку к LEGACY, и выражения будут возвращены как <code>TIME WITHOUT TIME
+                    ZONE</code> и <code>TIMESTAMP WITHOUT TIME ZONE</code> с соответствующим
+                преобразованием. </para>
+
             <para>Конфигурация привязки применима также к входным параметрам.</para>
-            
+
             <formalpara>
                 <title>Примеры:</title>
-                
+
                 <para>
                     <example>
                         <title>Изменение привзяки для типов времени и даты-времени</title>
-                        
+
                         <para><programlisting language="sql"> 
 set time zone bind native;
 

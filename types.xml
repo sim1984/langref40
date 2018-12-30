@@ -1377,9 +1377,10 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
             <para>Часовой пояс сеанса как следует из названия может быть разным для каждого
                 соединения с базой данных. Он может быть установлен с помощью DPB
-                    <code>isc_dpb_session_time_zone</code>, а если нет, то по умолчанию он считается
-                тем же часовым поясом, который используется операционной системой в которой запущен
-                процесс Firebird.</para>
+                    <code>isc_dpb_session_time_zone</code>, а если нет, то он будет считан из
+                параметра DefaultTimeZone конфигурации <filename>firebird.conf</filename>. Если
+                параметр DefaultTimeZone не установлен, то часовой пояс сеанса будет тем же, что
+                используется операционной системой в которой запущен процесс Firebird.</para>
 
             <para>Часовой пояс сеанса может быть изменён с помощью оператора <link
                     linkend="session-timezone-settimezone">SET TIME ZONE</link> или сброшен в
@@ -1389,8 +1390,8 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
                 -03:00). Список региональных часовых поясов и их идентификаторов см. в приложени
                     <link linkend="timezones">Список региональных часовых поясов</link>. Правила
-                преобразования региональных часовых поясов в смещение в минутах можно получить
-                с помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
+                преобразования региональных часовых поясов в смещение в минутах можно получить с
+                помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
                     >RDB$TIME_ZONE_UTIL.TRANSITIONS</link>.</para>
 
             <para>TIME/TIMESTAMP WITH TIMEZONE считается равным другому TIME/TIMESTAMP WITH

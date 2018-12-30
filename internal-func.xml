@@ -7382,7 +7382,8 @@ ENCRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorit
                         <example>
                             <title>Использование функции ENCRYPT</title>
                             <para><programlisting language="sql">
-select encrypt('897897' using sober128 key 'AbcdAbcdAbcdAbcd' iv '01234567') from rdb$database;
+select encrypt('897897' using sober128 key 'AbcdAbcdAbcdAbcd' iv '01234567') 
+from rdb$database;
                 </programlisting></para>
                         </example>
                     </para>
@@ -7520,10 +7521,12 @@ DECRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorit
                         <example>
                             <title>Использование функции DECRYPT</title>
                             <para><programlisting language="sql">
-select decrypt(x'0154090759DF' using sober128 key 'AbcdAbcdAbcdAbcd' iv '01234567') 
+select decrypt(x'0154090759DF' using sober128 key 'AbcdAbcdAbcdAbcd' 
+               iv '01234567') 
 from rdb$database;
 
-select decrypt(secret_field using aes mode ofb key '0123456701234567' iv init_vector) 
+select decrypt(secret_field using aes mode ofb key '0123456701234567' 
+               iv init_vector) 
 from secure_table;
                 </programlisting></para>
                         </example>
@@ -7973,7 +7976,7 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                     <para>VARBINARY.</para>
                 </formalpara>
                 <para>Выполняет PSS-кодирование дайджеста сообщения для подписи и подписывает его с
-                    использованием закрытого ключа RSA.</para>
+                    использованием закрытого ключа RSA. Возващает подпись сообщения.</para>
                 <formalpara>
                     <title>Примеры:</title>
                     <para>
@@ -8082,7 +8085,8 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
                     <para>BOOLEAN.</para>
                 </formalpara>
                 <para>Выполняет PSS-кодирование дайджеста сообщения для подписи и проверяет его
-                    цифровую подпись, используя открытый ключ RSA.</para>
+                    цифровую подпись, используя открытый ключ RSA. Возвращает результат проверки
+                    подписи.</para>
                 <formalpara>
                     <title>Примеры:</title>
                     <para>
@@ -8091,7 +8095,7 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
 
                             <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
                                     linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>
-                                Яифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
+                                Цифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
                             <para><programlisting language="sql">
 select rsa_verify(hash('Test message' using sha256) 
     signature rdb$get_context('USER_SESSION', 'msg')
