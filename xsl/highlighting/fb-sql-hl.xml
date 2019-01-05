@@ -67,6 +67,8 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>AUTONOMOUS</keyword>
       <keyword>AVG</keyword>
       <keyword>BACKUP</keyword>
+      <keyword>BASE64_ENCODE</keyword>
+      <keyword>BASE64_DECODE</keyword>
       <keyword>BEFORE</keyword>
       <keyword>BEGIN</keyword>
       <keyword>BETWEEN</keyword>
@@ -126,6 +128,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>COUNTER</keyword>
       <keyword>COVAR_POP</keyword>
       <keyword>COVAR_SAMP</keyword>
+      <keyword>CRC32</keyword>
       <keyword>CREATE</keyword>
       <keyword>CROSS</keyword>
       <keyword>CSTRING</keyword>

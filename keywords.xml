@@ -287,6 +287,8 @@
                 <member>AUTONOMOUS</member>
                 <member>AVG</member>
                 <member>BACKUP</member>
+                <member>BASE64_ENCODE</member>
+                <member>BASE64_DECODE</member>
                 <member>BEFORE</member>
                 <member>BEGIN</member>
                 <member>BETWEEN</member>
@@ -346,6 +348,7 @@
                 <member>COUNTER</member>
                 <member>COVAR_POP</member>
                 <member>COVAR_SAMP</member>
+                <member>CRC32</member>
                 <member>CREATE</member>
                 <member>CROSS</member>
                 <member>CSTRING</member>
