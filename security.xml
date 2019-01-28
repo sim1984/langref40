@@ -1819,8 +1819,8 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
             ключевого слова DEFAULT. Любые другие привилегии, предоставленные пользователю, не будут
             затронуты при его входе в систему с указанной ролью. Вход в систему с несколькими ролями
             не поддерживается, однако вы можете права нескольких ролей назначенных по умолчанию. Вы
-            можете изменить текущую роль с помощью оператора <link
-                linkend="session-role">SET ROLE</link>.</para>
+            можете изменить текущую роль с помощью оператора <link linkend="session-role">SET
+                ROLE</link>.</para>
         <para>Роли могут быть грантованы другие роли. При входе с этой ролью пользователь
             автоматически получит права всех ролей выданных с использованием ключевого слова
             DEFAULT.</para>
@@ -2091,6 +2091,11 @@ CREATE ROLE <replaceable>rolename</replaceable> [SET SYSTEM PRIVILEGES TO <repla
                                     <entry>MODIFY_EXT_CONN_POOL</entry>
                                     <entry><para>Управление пулом внешних соединений.</para></entry>
                                 </row>
+                                <row>
+                                    <entry>REPLICATE_INTO_DATABASE</entry>
+                                    <entry><para>Использование API репликации для загрузки наборов
+                                            изменений в базу данных..</para></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -2143,7 +2148,7 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
                         <link linkend="security-roles-drop">DROP ROLE</link>, <link
                             linkend="security-priv-grant">GRANT</link>, <link
                             linkend="security-priv-revoke">REVOKE</link>, <link
-                                linkend="session-role-setrole">SET ROLE</link>, <link
+                            linkend="session-role-setrole">SET ROLE</link>, <link
                             linkend="internalfunc-func-security-sysprivelege"
                             >RDB$SYSTEM_PRIVILEGE</link>. </para>
 
@@ -3597,10 +3602,10 @@ GRANT ALL ON PLG$SRP_VIEW TO SYSTEM PRIVILEGE USER_MANAGEMENT
                     <primary>GRANT</primary>
                     <secondary>ROLE</secondary>
                 </indexterm>
-                
+
                 <formalpara>
                     <title>Синтаксис:</title>
-                    
+
                     <para><programlisting>   
 <replaceable>&lt;grant_roles_stmt&gt;</replaceable> ::= 
   GRANT [DEFAULT] <replaceable>&lt;role_granted&gt;</replaceable> 
@@ -3614,7 +3619,7 @@ GRANT ALL ON PLG$SRP_VIEW TO SYSTEM PRIVILEGE USER_MANAGEMENT
 <replaceable>&lt;role_grantee_item&gt;</replaceable> ::= [USER] <replaceable>username</replaceable> | [ROLE] <replaceable>rolename</replaceable>                           
 </programlisting></para>
                 </formalpara>
-                
+
                 <para>Оператор <database>GRANT</database> может быть использован для назначения
                     ролей для списка пользователей или ролей. В этом случае после предложения GRANT
                     следует список ролей, которые будут назначены списку пользователей или ролей,
