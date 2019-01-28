@@ -1815,6 +1815,12 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                         установлен.</entry>
                                 </row>
                                 <row>
+                                    <entry>REPLICATION_SEQUENCE</entry>
+                                    <entry>Текущее значение последовательности репликации (номер
+                                        последнего сегмента, записанного в журнал
+                                        репликации).</entry>
+                                </row>
+                                <row>
                                     <entry>EXT_CONN_POOL_SIZE</entry>
                                     <entry>Размер пула внешних соединений.</entry>
                                 </row>
