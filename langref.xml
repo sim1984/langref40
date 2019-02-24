@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book version="5.0" xmlns="http://docbook.org/ns/docbook"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xmlns:svg="http://www.w3.org/2000/svg"
-    xmlns:m="http://www.w3.org/1998/Math/MathML"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:db="http://docbook.org/ns/docbook"
-    xml:id="langref" 
-    xml:lang="ru">
+<book version="5.0" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:db="http://docbook.org/ns/docbook" xml:id="langref" xml:lang="ru">
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
-        <subtitle>Firebird 4.0 Beta 1</subtitle>               
-        <edition>28 января 2018 — v.0000-1</edition>
-        
+        <subtitle>Firebird 4.0 Beta 1</subtitle>
+        <edition>23 февраля 2019 — v.0000-1</edition>
+
         <authorgroup>
             <author>
                 <personname><firstname>Денис</firstname><surname>Симонов</surname></personname>
@@ -36,23 +31,23 @@
                 <personname><firstname>Алексей</firstname><surname>Ковязин</surname></personname>
             </author>
         </authorgroup>
-        
+
         <publisher>
             <publishername>Firebird Project</publishername>
         </publisher>
         <copyright>
-            <year>2018</year>
+            <year>2019</year>
             <holder>Firebird Project и все авторы, в соответствии с лицензией <link
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation
-                License Version 1.0</link>. Смотри <link linkend="license">Лицензионное
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation
+                    License Version 1.0</link>. Смотри <link linkend="license">Лицензионное
                     соглашение в Приложении</link>. </holder>
-        </copyright>        
-        
+        </copyright>
+
         <editor>
             <personname>Симонов Денис</personname>
         </editor>
-    </info>   
+    </info>
     <xi:include href="intro.xml" xpointer="element(/1)"/>
     <xi:include href="langstruct.xml" xpointer="element(/1)"/>
     <xi:include href="types.xml" xpointer="element(/1)"/>

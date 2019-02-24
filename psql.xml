@@ -2308,7 +2308,7 @@ AS
         rdb$view_blr IS NULL
       INTO table_name
     DO SUSPEND;
-END
+  END
 
   -- Подпроцедура, возвращающая список представлений
   DECLARE PROCEDURE get_views

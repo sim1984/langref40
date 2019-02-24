@@ -139,8 +139,8 @@
                         <entry><para>8 или 16 байт</para></entry>
                         <entry><para><replaceable>precision</replaceable> = 16 | 34, количество
                                 значащих цифр (точность)</para></entry>
-                        <entry><para>DB2-совместимый тип данных десятичных чисел с плавающей
-                                запятой, основанный на стандарте IEEE754r.</para></entry>
+                        <entry><para>SQL:2016 совместимый тип данных точно хранящий десятичные числа с плавающей запятой,
+                                основанный на стандарте  IEEE 754-2008.</para></entry>
                     </row>
                     <row>
                         <entry><para><code>DOUBLE PRECISION</code></para></entry>
@@ -503,12 +503,13 @@ INSERT INTO MYBIGINTS VALUES (
                 <title>DECFLOAT</title>
             </info>
             <indexterm><primary>DECFLOAT</primary></indexterm>
-            <para>DB2-совместимый числовой тип. DECFLOAT точно сохраняет десятичные значения (в
-                отличие от FLOAT или DOUBLE PRECISION, которые обеспечивают двоичное приближение),
-                поэтому является идеальным выбором для бизнес-приложений. Firebird в соответствии со
-                стандартом IEEE 754r (754-2008) поддерживает точность DECFLOAT 16 и 34 значащих цифр
-                и занимает 8 и 16 байт памяти соответственно. Если точность не указана, то по
-                умолчанию используется точность 34 значащих цифры.</para>
+            <para>DECFLOAT является числовым типом из стандарта SQL:2016, который точно хранит числа
+                с плавающей запятой, в отличие от FLOAT или DOUBLE PRECISION, которые обеспечивают
+                двоичное приближение предполагаемой точности. Firebird в соответствии со стандартом
+                IEEE 754-1985 (IEEE 754-2008) реализует типы DECIMAL64 и DECIMAL128, что
+                обечпечивает точность DECFLOAT 16 и 34 значащих цифр, и занимает 8 и 16 байт памяти
+                соответственно. Если точность не указана, то по умолчанию используется точность 34
+                значащих цифры.</para>
             <para>Все промежуточные вычисления осуществляются с использованием 34-значными
                 значениями.</para>
             <formalpara>
@@ -679,8 +680,7 @@ DECLARE VARIABLE v DECFLOAT(34);
                                 если она является четной и инкрементируется на единицу (округляется
                                 в большую сторону) в противном случае (чтобы получить четную цифру).
                                 Этот режим округления называется также банковским округлением и дает
-                                ощущение справедливого округления. Он является режимом по умолчанию
-                                в DB2, согласно спецификации IEEE.</para>
+                                ощущение справедливого округления. </para>
                         </listitem>
                         <listitem>
                             <para><emphasis role="bold">HALF_DOWN</emphasis>. Округление к
@@ -809,7 +809,8 @@ DECLARE VARIABLE v DECFLOAT(34);
                     </table>
                 </para>
                 <para>Режим округления можно изменить для текущей сессии используя оператор
-                        <database>SET DECFLOAT ROUND</database>.</para>
+                        <database>SET DECFLOAT ROUND</database>. По умолчанию используется режим
+                    округления HALF_UP.</para>
                 <formalpara>
                     <title>Синтаксис:</title>
                     <para>
@@ -832,6 +833,11 @@ SET DECFLOAT ROUND HALF_DOWN;
                         </example>
                     </para>
                 </formalpara>
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями,
+                        изменения выполенные им вступаю в силу немедленно. Его использование
+                        разрешено в том числе и PSQL коде.</para>
+                </note>
             </section>
             <section xml:id="types-float-decfloat-comparation">
                 <info>
@@ -972,7 +978,7 @@ SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>
                     </para>
                 </formalpara>
                 <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
-                    Invalid_operation, Overflow, Underflow.</para>
+                    Invalid_operation, Overflow.</para>
                 <example>
                     <title>Установка ситуаций для которых будет генерироваться исключение</title>
 
@@ -982,6 +988,12 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
                 </programlisting>
                     </para>
                 </example>
+
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями,
+                        изменения выполенные им вступаю в силу немедленно. Его использование
+                        разрешено в том числе и PSQL коде.</para>
+                </note>
             </section>
 
             <section xml:id="types-float-decfloat-bind">
@@ -1048,6 +1060,24 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                                 поле NUMERIC(18, <replaceable>scale</replaceable>).</para>
                         </listitem>
                     </itemizedlist></para>
+
+                <note>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>Привязка к ASCII строке будет иметь тип CHAR(23) для
+                                    DECFLOAT(16) и CHAR(42) для DECFLOAT(34).</para>
+                            </listitem>
+                            <listitem>
+                                <para>Строковое представление зависит от значения DECFLOAT: если оно
+                                    является экспоненциальным, а требования к точности позволяют
+                                    отображать значение без использования научной записи,
+                                    используется полностью выписанный формат.</para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                </note>
+
                 <para>Различные привязки полезны, если вы планируете использовать значения DECFLOAT
                     со старым клиентом, не поддерживающим собственный формат. Можно выбирать между
                     строками (идеальная точность, но плохая поддержка для дальнейшей обработки),
@@ -1056,6 +1086,12 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                     обработки и требуемая точность, но диапазон значений очень ограничен). Когда
                     используется инструмент, подобный универсальному GUI-клиенту, выбор привязки к
                     CHAR подходит в большинстве случаев.</para>
+
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями,
+                        изменения выполенные им вступаю в силу немедленно. Его использование
+                        разрешено в том числе и PSQL коде.</para>
+                </note>
             </section>
             <section xml:id="types-float-decfloat-literals">
                 <info>

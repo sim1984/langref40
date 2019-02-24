@@ -714,6 +714,61 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
                 </formalpara>
             </section>
         </section>
+        
+        <section xml:id="icommon-expr-attimezone">
+            <info>
+                <title>AT</title>
+                <keywordset>
+                    <keyword>AT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>AT</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+                
+                <para>DSQL, PSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>                                                           
+<replaceable>&lt;expr&gt;</replaceable> AT {TIME ZONE <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL}                       
+                        
+<replaceable>&lt;time zone string&gt;</replaceable> ::=
+    '<replaceable>&lt;time zone&gt;</replaceable>'                            
+                            
+<replaceable>&lt;time zone&gt;</replaceable> ::=
+    <replaceable>&lt;time zone region&gt;</replaceable> |
+    [+/-] <replaceable>&lt;hour displacement&gt;</replaceable> [: <replaceable>&lt;minute displacement&gt;</replaceable>]                         
+                        </programlisting>
+                </para>
+            </formalpara>
+            
+            <para>Преобразует время или временную метку в указанный часовой пояс. Если
+                используется ключевое слово LOCAL, то преобразование происходит в часовой пояс
+                сессии.</para>
+            
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции AT</title>
+                        <para><programlisting language="sql">
+select time '12:00 GMT' at time zone '-03'
+  from rdb$database;
+
+select current_timestamp at time zone 'America/Sao_Paulo'
+  from rdb$database;
+
+select timestamp '2018-01-01 12:00 GMT' at local
+  from rdb$database;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>        
+        
         <section xml:id="common-expr-nextvalue">
             <info>
                 <title>NEXT VALUE FOR</title>
