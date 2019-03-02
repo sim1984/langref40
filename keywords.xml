@@ -521,6 +521,7 @@
                 <member>NULL</member>
                 <member>NULLIF</member>
                 <member>NULLS</member>
+                <member>NUMBER</member>
                 <member>NUMERIC</member>
                 <member>OCTET_LENGTH</member>
                 <member>OF</member>

@@ -69,7 +69,8 @@ SET TRANSACTION
   [RESERVING <replaceable>&lt;tables&gt;</replaceable> | USING <replaceable>&lt;dbhandles&gt;</replaceable>]
 
 <replaceable>&lt;isolation level&gt;</replaceable> ::=
-    SNAPSHOT [TABLE STABILITY]
+    SNAPSHOT [TABLE [STABILITY]]
+  | SNAPSHOT AT NUMBER <replaceable>&lt;snapshot number&gt;</replaceable>
   | READ COMMITTED [{[NO] RECORD_VERSION | READ CONSISTENCY}]
  
 <replaceable>&lt;tables&gt;</replaceable> ::= <replaceable>&lt;table_spec&gt;</replaceable> [, <replaceable>&lt;table_spec&gt;</replaceable> ...]
@@ -139,6 +140,12 @@ SET TRANSACTION
                                     <para>Хендл базы данных, к которой транзакция может получить
                                         доступ. Доступно только в ESQL.</para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>snapshot number</replaceable></entry>
+                                <entry><para>Номер снимка другой транзакци, данные снимка базы
+                                        данных которой должны быть общими с новой
+                                        транзакцией.</para></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -234,10 +241,10 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                 модифицировать в <code>READ ONLY</code> транзакциях.</para>
                         </listitem>
                     </itemizedlist>
-                    
+
                     <para>В Firebird API для режимов доступа предусмотрены следующие константы:
-                        <code>isc_tpb_write</code> соответсвует режиму <code>READ WRITE</code>,
-                        <code>isc_tpb_read</code> — <code>READ ONLY</code>.</para>          
+                            <code>isc_tpb_write</code> соответсвует режиму <code>READ WRITE</code>,
+                            <code>isc_tpb_read</code> — <code>READ ONLY</code>.</para>
                 </section>
 
                 <section xml:id="transaction-set_transaction-lock_resolution_mode">
@@ -274,7 +281,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                         <para>Этот режим даёт несколько отличные формы поведения в зависимости от
                             уровня изоляции транзакций.</para>
                         <para>В Firebird API режиму <code>WAIT</code> соответсвует константа
-                            <code>isc_tpb_wait</code>.</para>
+                                <code>isc_tpb_wait</code>.</para>
                     </section>
                     <section xml:id="transaction-set_transaction-no_wait_mode">
                         <title>Режим NO WAIT</title>
@@ -286,7 +293,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                             при появлении конфликта блокировки данная транзакция немедленно вызовет
                             исключение базы данных.</para>
                         <para>В Firebird API режиму <code>NO WAIT</code> соответсвует константа
-                            <code>isc_tpb_nowait</code>.</para>
+                                <code>isc_tpb_nowait</code>.</para>
                     </section>
                 </section>
                 <section xml:id="transaction-set_transaction-isolation_level">
@@ -347,6 +354,42 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                         </note>
                         <para>В Firebird API режиму изолированности <code>SNAPSHOT</code>
                             соответсвует константа <code>isc_tpb_concurrency</code>.</para>
+                        <section xml:id="transaction-isolation_level-snapshot-atnumber">
+                            <title>Предложение AT NUMBER</title>
+                            <para>Транзакцию с уровнем изолированности <code>SNAPSHOT</code> можно
+                                запустить на основе другой транзакции, если известен номер её
+                                снимка. В этом случае эта новая транзакция может видеть те же самые
+                                даные, что и транзакция на основе которой она запущена.</para>
+                            <para>Эта функциональность позволяет моздать паралельные процессы (в
+                                разных подключениях), считывающие согласованые данные из базы
+                                данных. Например, процесс резервного копирования может создавать
+                                несколько потоков, параллельно считывающих данные из базы данных.
+                                Или веб-служба работать с распередёленными вспомогательными
+                                службами, выполняя некоторую обработку.</para>
+                            <para>Это достигается созданием транзакции с использованеим синтаксиса
+                                <programlisting>
+SET TRANSACTION SNAPSHOT  AT NUMBER <replaceable>&lt;snapshot number&gt;</replaceable>                       
+                            </programlisting>
+                                или через API с использованием константы
+                                    <code>isc_tpb_consistency</code>. </para>
+
+                            <para>В Firebird API режиму изолированности <code>SNAPSHOT TABLE
+                                    STABILITY</code> соответсвует константа
+                                    <code>isc_tpb_at_snapshot_number</code>.</para>
+                            <para><replaceable>&lt;snapshot number&gt;</replaceable> из первой
+                                транзакции можно получить используя
+                                <programlisting>
+RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
+         </programlisting>
+                                или через API информаии о транзакции с константой
+                                    <code>fb_info_tra_snapshot_number</code>. </para>
+
+                            <note>
+                                <para>Обратите внимание, <replaceable>&lt;snapshot
+                                        number&gt;</replaceable> должен быть номером снимка активной
+                                    транзакции.</para>
+                            </note>
+                        </section>
                     </section>
                     <section xml:id="transaction-isolation_level-snapshot_table_stability">
                         <title>Уровень изолированности SNAPSHOT TABLE STABILITY</title>
@@ -371,9 +414,6 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                             выполнила неподтверждённое изменение данных любой таблицы базы данных,
                             то запуск транзакции с таким уровнем изоляции приведёт к ошибке базы
                             данных. </para>
-                        <para>В Firebird API режиму изолированности <code>SNAPSHOT TABLE
-                            STABILITY</code> соответсвует константа
-                            <code>isc_tpb_consistency</code>.</para>
                     </section>
                     <section xml:id="transaction-isolation_level-read_commited">
                         <title>Уровень изолированности READ COMMITTED</title>
@@ -392,8 +432,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                             рамках активной транзакции <code>READ COMMITTED</code> без её
                             перезапуска.</para>
                         <para>В Firebird API режиму изолированности <code>READ COMMITTED</code>
-                            соответсвует константа <code>isc_tpb_read_committed</code>.</para>              
-                        
+                            соответсвует константа <code>isc_tpb_read_committed</code>.</para>
+
                         <section xml:id="transaction-isolation_level-read_commited-record_version">
                             <title>RECORD_VERSION</title>
                             <para>Для этого уровня изолированности можно указать один из двух
@@ -423,7 +463,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                             идентификатор текущей транзакции, то будет выдана ошибка
                                             конфликта блокировок.</para>
                                         <para>В Firebird API для способа разрешения конфликтов
-                                            <code>NO RECORD_VERSION</code> соответсвует
+                                                <code>NO RECORD_VERSION</code> соответсвует
                                             константа <code>isc_tpb_no_rec_version</code>.</para>
                                     </listitem>
                                     <listitem>
@@ -435,8 +475,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                                 <code>NO WAIT</code>) никак не влияет на поведение
                                             транзакции при её старте.</para>
                                         <para>В Firebird API для способа разрешения конфликтов
-                                            <code>RECORD_VERSION</code> соответсвует константа
-                                            <code>isc_tpb_rec_version</code>.</para>
+                                                <code>RECORD_VERSION</code> соответсвует константа
+                                                <code>isc_tpb_rec_version</code>.</para>
                                     </listitem>
                                 </itemizedlist></para>
                             <warning>
@@ -447,7 +487,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                         <filename>firebird.conf</filename>) в 0. В этом случае опции
                                     не игнорируются и работают точно так же как в предыдущих
                                     версиях. В будующих версиях этот параметр в
-                                    <filename>firebird.conf</filename> может быть удалён.</para>
+                                        <filename>firebird.conf</filename> может быть удалён.</para>
                             </warning>
                         </section>
                         <section xml:id="transaction-isolation_level-read_commited-read_consistency">
@@ -465,10 +505,10 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                 уровня. В Firebird 4.0 этот режим используется по умолчанию для
                                 транзакций с режимом изолированности <code>READ
                                 COMMITED</code>.</para>
-                            
+
                             <para>В Firebird API для стабильного снимка на уровне SQL оператора
-                                <code>READ CONSISTENCY</code> соответсвует константа
-                                <code>isc_tpb_read_consistency</code>.</para>
+                                    <code>READ CONSISTENCY</code> соответсвует константа
+                                    <code>isc_tpb_read_consistency</code>.</para>
 
                             <section>
                                 <title>Обработка конфликта обновлений</title>

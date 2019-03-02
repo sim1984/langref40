@@ -301,6 +301,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>NULL</keyword>
       <keyword>NULLIF</keyword>
       <keyword>NULLS</keyword>
+      <keyword>NUMBER</keyword>
       <keyword>NUMERIC</keyword>
       <keyword>OCTET_LENGTH</keyword>
       <keyword>OF</keyword>

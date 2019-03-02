@@ -1780,10 +1780,10 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                         Number</entry>
                                 </row>
                                 <row>
-                                    <entry>SNAPSHOT_CN</entry>
-                                    <entry>Значение Commit Number моментального снимка базы данных:
-                                        уровеня транзакции (для транзакции SNAPSHOT или CONSISTENCY)
-                                        или уровеня запроса (для транзакции READ COMMITTED READ
+                                    <entry>SNAPSHOT_NUMBER</entry>
+                                    <entry>Номер моментального снимка базы данных: уровеня
+                                        транзакции (для транзакции SNAPSHOT или CONSISTENCY) или
+                                        уровня запроса (для транзакции READ COMMITTED READ
                                         CONSISTENCY). NULL, если моментальный снимок не
                                         существует.</entry>
                                 </row>
