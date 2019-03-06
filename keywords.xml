@@ -401,6 +401,7 @@
                 <member>ENTRY_POINT</member>
                 <member>ESCAPE</member>
                 <member>EXCEPTION</member>
+                <member>EXCESS</member>
                 <member>EXCLUDE</member>
                 <member>EXECUTE</member>               
                 <member>EXISTS</member>

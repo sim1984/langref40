@@ -3423,8 +3423,8 @@ END
 <replaceable>&lt;param_values&gt;</replaceable> ::= <replaceable>&lt;named_values&gt;</replaceable> | <replaceable>&lt;positional_values&gt;</replaceable>
 
 <replaceable>&lt;named_values&gt;</replaceable> ::= 
-  <replaceable>paramname</replaceable> := <replaceable>value_expr</replaceable> 
-  [, <replaceable>paramname</replaceable> := <replaceable>value_expr</replaceable> ...]
+  [EXCESS] <replaceable>paramname</replaceable> := <replaceable>value_expr</replaceable> 
+  [, [EXCESS] <replaceable>paramname</replaceable> := <replaceable>value_expr</replaceable> ...]
 
 <replaceable>&lt;positional_values&gt;</replaceable> ::= <replaceable>value_expr</replaceable> [, <replaceable>value_expr</replaceable> ...]
 
@@ -3609,7 +3609,13 @@ END
                             <listitem>
                                 <para>Для позиционных параметров число подставляемых значений должно
                                     точно равняться числу параметров (вопросительных знаков) в
-                                    операторе.</para>
+                                    операторе;</para>
+                            </listitem>
+                            <listitem>
+                                <para>Необязательное ключевое слово EXCESS обозначает, что данный
+                                    именованный параметр необязательно должен упоминаться в тексте
+                                    запроса. Обратите внимание, что все не EXCESS параметры должны
+                                    присутствовать в запросе.</para>
                             </listitem>
                         </orderedlist></para>
                     <formalpara>
@@ -3691,6 +3697,40 @@ BEGIN
       ON EXTERNAL connect_string
       INTO license_num;
       ...                                        
+                                    </programlisting>
+                                </para>
+                            </example>
+                            <example>
+                                <title>С избыточнвми (EXCESS) параметрами:</title>
+                                <para>
+                                    <programlisting language="sql">
+<![CDATA[                                        
+CREATE PROCEDURE P_EXCESS (A_ID INT, A_TRAN INT = NULL, A_CONN INT = NULL)
+  RETURNS (ID INT, TRAN INT, CONN INT)
+AS
+DECLARE S VARCHAR(255);
+DECLARE W VARCHAR(255) = '';
+BEGIN
+  S = 'SELECT * FROM TTT WHERE ID = :ID';
+
+  IF (A_TRAN IS NOT NULL)
+  THEN W = W || ' AND TRAN = :a';
+
+  IF (A_CONN IS NOT NULL)
+  THEN W = W || ' AND CONN = :b';
+
+  IF (W <> '')
+  THEN S = S || W;
+
+  -- could raise error if TRAN or CONN is null
+  -- FOR EXECUTE STATEMENT (:S) (a := :A_TRAN, b := A_CONN, id := A_ID)
+
+  -- OK in all cases
+  FOR EXECUTE STATEMENT (:S) (EXCESS a := :A_TRAN, EXCESS b := A_CONN, id := A_ID)
+      INTO :ID, :TRAN, :CONN
+      DO SUSPEND;
+END           
+]]>
                                     </programlisting>
                                 </para>
                             </example>

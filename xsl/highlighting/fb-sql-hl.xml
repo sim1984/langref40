@@ -181,6 +181,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>ENTRY_POINT</keyword>
       <keyword>ESCAPE</keyword>
       <keyword>EXCEPTION</keyword>
+      <keyword>EXCESS</keyword>
       <keyword>EXCLUDE</keyword>
       <keyword>EXECUTE</keyword>
       <keyword>EXISTS</keyword>
