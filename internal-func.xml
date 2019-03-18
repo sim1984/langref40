@@ -1733,6 +1733,12 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     <entry>Глобальная переменная CURRENT_USER.</entry>
                                 </row>
                                 <row>
+                                    <entry>EFFECTIVE_USER</entry>
+                                    <entry>Эффективный пользователь в текущий момент. Указывает
+                                        пользователя с привилегиями которого в текущий момент
+                                        времени выполняется процедура, функция или триггер.</entry>
+                                </row>
+                                <row>
                                     <entry>DB_NAME</entry>
                                     <entry>Каноническое имя текущей базы данных. Это либо имя
                                         псевдонима (если соединение с помощью имён файлов запрещено
@@ -7095,7 +7101,7 @@ QUANTIZE (<replaceable>value</replaceable>, <replaceable>pattern</replaceable>)
                         использовании SNaN функция выдаст исключение, при использовании NULL
                         результатом будет NULL и т.д.</para>
                 </note>
-                
+
                 <formalpara>
                     <title>Примеры:</title>
                     <para>

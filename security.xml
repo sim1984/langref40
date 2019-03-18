@@ -4344,6 +4344,40 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                     </itemizedlist>
                 </para>
             </note>
+
+            <para>В хранимых процедурах, функциях и триггерах вы можете проверить эффективного в
+                настоящий момент пользователя, т.е. пользователя с привилегиями которого выполняется
+                текущий модуль, с помощью системной контекстной переменной EFFECTIVE_USER из
+                пространства имён SYSTEM.
+                <programlisting language="sql">
+select RDB$GET_CONTEXT('SYSTEM', 'EFFECTIVE_USER') from RDB$DATABASE;                
+                </programlisting>    
+            </para>
+            
+            <note>
+                <para>Один и тот же объект может вызываться в разных контекстах безопасности и
+                    требовать различных привилегий. Например у нас есть:<itemizedlist spacing="compact">
+                        <listitem>
+                            <para>хранимая процедура INV с SECURITY INVOKER, которая вставляет
+                                записи в таблицу T;</para>
+                        </listitem>
+                        <listitem>
+                            <para>хранимая процедура DEF с SQL SECURITY DEFINER, которая определена
+                                пользователем SYSDBA.</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>Если пользователь U вызывает процедуру INV, то для доступа к таблице T
+                    потребуется привилегия INSERT выданная пользователю U (и конечно привилегия
+                    EXECUTE для INV). В этом случае U является эффективным пользователем
+                    (EFFECTIVE_USER) во время выполнения INV.</para>
+                <para>Если пользователь U вызывает процедуру DEF, то для доступа к таблице T
+                    потребуется привилегия INSERT выданная пользователю SYSDBA (и EXECUTE на DEF для
+                    пользователя U). В этом случае SYSDBA является эффективным пользователем
+                    (EFFECTIVE_USER) во время выполнения DEF. Если внутри DEF вызывается процедура
+                    INV, то эффективным пользователем по время выполнения INV будет так же
+                    SYSDBA.</para>
+            </note>
+
             <section xml:id="security-priv-context-examples">
                 <title>Примеры</title>
                 <example>
