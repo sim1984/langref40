@@ -3877,7 +3877,7 @@ CREATE GLOBAL TEMPORARY TABLE MYTXGTT (
                                                 корневого каталога Firebird. </para>
                                         </listitem>
                                         <listitem>
-                                            <para><function>ExternalFileAccess =
+                                            <para><function>ExternalFileAccess = Restrict
                                                   d:\databases\outfiles; e:\infiles</function>
                                                 ограничит доступ только двумя директориями Windows.
                                                 Обратите внимание, что любые пути являющиеся
