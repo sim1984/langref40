@@ -3748,15 +3748,27 @@ CREATE GLOBAL TEMPORARY TABLE <replaceable>name</replaceable>
                     </para>
                 </formalpara>
 
+
+                <para>Если в операторе создания глобальной временной таблицы указано необязательное
+                    предложение <database>ON COMMIT DELETE ROWS</database>, то будет создана GTT
+                    транзакционного уровня (по умолчанию). При указании предложения <database>ON
+                        COMMIT PRESERVE ROWS</database> — будет создана GTT уровня соединения с
+                    базой данных.</para>
+                <para>Предложение EXTERNAL [FILE] нельзя использовать для глобальной временной
+                    таблицы.</para>
+
                 <note>
-                    <para>Если в операторе создания глобальной временной таблицы указано
-                        необязательное предложение <database>ON COMMIT DELETE ROWS</database>, то
-                        будет создана GTT транзакционного уровня (по умолчанию). При указании
-                        предложения <database>ON COMMIT PRESERVE ROWS</database> — будет создана GTT
-                        уровня соединения с базой данных.</para>
-                    <para>Предложение EXTERNAL [FILE] нельзя использовать для глобальной временной
-                        таблицы.</para>
+                    <para>Операторы <database>COMMIT RETAINING</database> и <database>ROLLBACK
+                            RETAINING</database> сохраняют данные в глобальных временных таблицах
+                        объявленных как <database>ON COMMIT DELETE ROWS</database>. В Firebird 2.x
+                        была ошибка: <database>COMMIT RETAINING</database> и <database>ROLLBACK
+                            RETAINING</database> делали записи не видимыми для текущей транзакции.
+                        Для возврата поведения 2.x установить параметр
+                            <parameter>ClearGTTAtRetaining</parameter> равным 1 в
+                            <filename>firebird.conf</filename>. Этот параметр может быть удалён в
+                        Firebird 5.0.</para>
                 </note>
+
                 <section>
                     <title>Ограничения GTT</title>
                     <para>GTT обаладают всеми атрибутами обычных таблиц (ключи, внешние ключи,
@@ -7237,16 +7249,17 @@ END
                         подтверждении или откате. Не перехваченные исключения обрабатываются в
                         зависимости от типа события: <itemizedlist spacing="compact">
                             <listitem>
-                                <para>для события TRANSACTION START исключение возвращается клиенту, а
-                                    транзакция отменяется;</para>
+                                <para>для события TRANSACTION START исключение возвращается клиенту,
+                                    а транзакция отменяется;</para>
                             </listitem>
                             <listitem>
-                                <para>для события TRANSACTION COMMIT исключение возвращается клиенту, действия,
-                                    выполненные триггером, и транзакция отменяются;</para>
+                                <para>для события TRANSACTION COMMIT исключение возвращается
+                                    клиенту, действия, выполненные триггером, и транзакция
+                                    отменяются;</para>
                             </listitem>
                             <listitem>
-                                <para>для события TRANSACTION ROLLBACK исключение не возвращается клиенту, а
-                                    транзакция, как и предусмотрено, отменяется.</para>
+                                <para>для события TRANSACTION ROLLBACK исключение не возвращается
+                                    клиенту, а транзакция, как и предусмотрено, отменяется.</para>
                             </listitem>
                         </itemizedlist>
                     </para>
@@ -8526,8 +8539,8 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                             </row>
                             <row>
                                 <entry><replaceable>extbody</replaceable></entry>
-                                <entry><para>Тело внешней процедуры. Строковый литерал который может использоваться UDR для различных
-                                        целей.</para></entry>
+                                <entry><para>Тело внешней процедуры. Строковый литерал который может
+                                        использоваться UDR для различных целей.</para></entry>
                             </row>
                             <row>
                                 <entry><replaceable>module name</replaceable></entry>
@@ -9745,7 +9758,8 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         модулях объявленных как CREATE FUNCTION ... EXTERNAL NAME, называемых UDR
                         (User Defined Routine). Первые являются унаследованными (Legacy) из
                         предыдущих версий Firebird. Их возможности существенно уступают возможностям
-                        нового типа внешних функций. В Firebird 4.0 UDF объявлены устаревшими. </para>
+                        нового типа внешних функций. В Firebird 4.0 UDF объявлены устаревшими.
+                    </para>
                 </warning>
             </section>
             <section xml:id="ddl-function-create-who">
@@ -9956,7 +9970,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
             </note>
             <warning>
                 <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
-                    FUNCTION</code>), то оператор <code>ALTER FUNCTION</code> изменит её на
+                        FUNCTION</code>), то оператор <code>ALTER FUNCTION</code> изменит её на
                     обычную функцию без всяких предупреждений. Это было сделано умышлено для
                     облегчения миграции на новый стиль написания внешних функций известных как
                     UDR.</para>
@@ -10050,8 +10064,8 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 
             <warning>
                 <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
-                    FUNCTION</code>), то оператор <code>CREATE OR ALTER FUNCTION</code> изменит её на
-                    обычную функцию без всяких предупреждений. Это было сделано умышлено для
+                        FUNCTION</code>), то оператор <code>CREATE OR ALTER FUNCTION</code> изменит
+                    её на обычную функцию без всяких предупреждений. Это было сделано умышлено для
                     облегчения миграции на новый стиль написания внешних функций известных как
                     UDR.</para>
             </warning>
@@ -11314,8 +11328,9 @@ END
                                 </row>
                                 <row>
                                     <entry><replaceable>extbody</replaceable></entry>
-                                    <entry>Тело внешней процедуры или функции. Строковый литерал который может
-                                        использоваться UDR для различных целей.</entry>
+                                    <entry>Тело внешней процедуры или функции. Строковый литерал
+                                        который может использоваться UDR для различных
+                                        целей.</entry>
                                 </row>
                                 <row>
                                     <entry><replaceable>engine</replaceable></entry>

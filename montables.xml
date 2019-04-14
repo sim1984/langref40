@@ -716,7 +716,9 @@ WHERE VAR.MON$ATTACHMENT_ID = CURRENT_CONNECTION
                         <row>
                             <entry>MON$CRYPT_PAGE</entry>
                             <entry>BIGINT </entry>
-                            <entry>Количество зашифрованных страниц.</entry>
+                            <entry>Количество зашифрованных страниц в процессе
+                                шифрования/дешифрования; ноль если этот процесс закончился или не
+                                начинался.</entry>
                         </row>
                         <row>
                             <entry>MON$OWNER</entry>

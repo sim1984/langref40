@@ -947,8 +947,15 @@ DROP MAPPING FROM_RT;
                 </listitem>
                 <listitem>
                     <para>Любому пользователю, имеющему права на роль RDB$ADMIN в базе данных
-                        пользователей и права на ту же роль для базы данных в активном подключении
-                        (пользователь должен подключаться к базе данных с ролью RDB$ADMIN);</para>
+                        пользователей и права на ту же роль для базы данных в активном подключении.
+                        Пользователь должен подключаться к базе данных с ролью RDB$ADMIN или
+                        получить её права, если роль назначена в качестве роли по умолчанию;</para>
+                </listitem>
+                <listitem>
+                    <para>Любому пользователю с ролью, которой назначена системная привилегия
+                        USER_MANAGEMENT в базе данных безопасности. Пользователь должен подключаться
+                        к базе данных с этой ролью или получить её права, если роль назначена в
+                        качестве роли по умолчанию;</para>
                 </listitem>
                 <listitem>
                     <para>При включенном флаге AUTO ADMIN MAPPING в базе данных пользователей
@@ -1171,8 +1178,17 @@ CREATE USER "Alex" PASSWORD 'bz23ds';
                     созданного с помощью одного плагина управления пользователями можно удалить или
                     изменить, указав только тот же самый плагин. </para>
             </important>
-            <para>Для создания учётной записи пользователя текущий пользователь должен обладать
-                административными привилегиями.</para>
+            <para>Создать новую учётную запись могут:<itemizedlist>
+                    <listitem>
+                        <para>SYSDBA и другие пользователи являющиеся администраторами в базе данных
+                            безопасности (с ролью RDB$ADMIN);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи вошедшие с ролью или получившие её привилегии (роль
+                            назначена по умолчанию), которой назначена системная привилегия
+                            USER_MANAGEMENT.</para>
+                    </listitem>
+                </itemizedlist></para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -1431,11 +1447,21 @@ ALTER {USER <replaceable>username</replaceable> | CURRENT USER}
             </important>
             <para>Если требуется изменить свою учётную запись, то вместо указания имени текущего
                 пользователя можно использовать предложение CURRENT USER.</para>
-            <para>Для модификации чужой учётной записи пользователя текущий пользователь должен
-                обладать административными привилегиями. Свои собственные учётные записи могут
-                изменять любые пользователи, однако это не относится к опциям GRANT/REVOKE ADMIN
-                ROLE и атрибуту ACTIVE/INACTIVE для изменения которых необходимы административные
-                привилегии.</para>
+            <para>Модифицировать чужую учётную запись могут:<itemizedlist>
+                    <listitem>
+                        <para>SYSDBA и другие пользователи являющиеся администраторами в базе данных
+                            безопасности (с ролью RDB$ADMIN);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи вошедшие с ролью или получившие её привилегии (роль
+                            назначена по умолчанию), которой назначена системная привилегия
+                            USER_MANAGEMENT.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Свои собственные учётные записи могут изменять любые пользователи, однако это не
+                относится к опциям GRANT/REVOKE ADMIN ROLE и атрибуту ACTIVE/INACTIVE для изменения
+                которых необходимы административные привилегии.</para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -1729,8 +1755,17 @@ DROP USER <replaceable>username</replaceable>
                     созданного с помощью одного плагина управления пользователями можно удалить или
                     изменить, указав только тот же самый плагин.</para>
             </important>
-            <para>Для удаления учётной записи пользователя текущий пользователь должен обладать
-                административными привилегиями.</para>
+            <para>Удалить учётную запись могут:<itemizedlist>
+                    <listitem>
+                        <para>SYSDBA и другие пользователи являющиеся администраторами в базе данных
+                            безопасности (с ролью RDB$ADMIN);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи вошедшие с ролью или получившие её привилегии (роль
+                            назначена по умолчанию), которой назначена системная привилегия
+                            USER_MANAGEMENT.</para>
+                    </listitem>
+                </itemizedlist></para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -1762,6 +1797,147 @@ DROP USER Godzilla USING PLUGIN Legacy_UserManager;
                 <para>
                     <link linkend="security-user-create">CREATE USER</link>, <link
                         linkend="security-user-alter">ALTER USER</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="security-user-recreate">
+            <info>
+                <title>RECREATE USER</title>
+                <keywordset>
+                    <keyword>RECREATE USER</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>RECREATE USER</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Создание новой учётной записи пользователя Firebird или пересоздание
+                    существующей.</para>
+            </formalpara>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+
+                <para><programlisting>
+RECREATE USER <replaceable>username</replaceable> PASSWORD '<replaceable>password</replaceable>'
+  [FIRSTNAME '<replaceable>firstname</replaceable>']
+  [MIDDLENAME '<replaceable>middlename</replaceable>']
+  [LASTNAME '<replaceable>lastname</replaceable>']
+  [ACTIVE | INACTIVE]
+  [USING PLUGIN <replaceable>pluginname</replaceable>] 
+  [TAGS (<replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> ...]] )]
+  [GRANT ADMIN ROLE];
+
+<replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
+                </programlisting></para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <title>Параметры оператора RECREATE USER</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>username</replaceable></entry>
+                                <entry>
+                                    <para>Имя пользователя. Максимальная длина 63 символов.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>password</replaceable></entry>
+                                <entry>
+                                    <para>Пароль пользователя. Чувствительно к регистру.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>firstname</replaceable></entry>
+                                <entry>
+                                    <para>Вспомогательная информация: имя пользователя. Максимальная
+                                        длина 32 символа.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>middlename</replaceable></entry>
+                                <entry>
+                                    <para>Вспомогательная информация: &quot;второе имя&quot;
+                                        (отчество, &quot;имя отца&quot;) пользователя. Максимальная
+                                        длина 32 символа.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>lastname</replaceable></entry>
+                                <entry>
+                                    <para>Вспомогательная информация: фамилия пользователя.
+                                        Максимальная длина 32 символа.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>pluginname</replaceable></entry>
+                                <entry>
+                                    <para>Имя плагина управления пользователями, в котором
+                                        необходимо создать нового пользователя.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>tagname</replaceable></entry>
+                                <entry>
+                                    <para>Имя пользовательского атрибута. Максимальная длина 63
+                                        символа. Имя атрибута должно подчиняться правилам
+                                        наименования SQL идентификаторов.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>string value</replaceable></entry>
+                                <entry>
+                                    <para>Значение пользовательского атрибута. Максимальная длина
+                                        255 символов.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Оператор <database>RECREATE USER</database> создаёт нового или пересоздаёт
+                существующего пользователя. Если пользователь с таким именем уже существует, то
+                оператор <database>RECREATE TABLE</database> удалить его и создаст нового.
+                Существующие привилегии при этом будут сохранены.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Создание или пересоздание пользователя.</title>
+
+                        <para><programlisting language="sql"> 
+RECREATE USER john PASSWORD 'fYe_3Ksw'
+FIRSTNAME 'John'
+LASTNAME 'Doe'
+INACTIVE;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="security-user-create">CREATE USER</link>, <link
+                        linkend="security-user-drop">DROP USER</link>. </para>
             </formalpara>
         </section>
         <section xml:id="security-user-list">
@@ -4351,12 +4527,13 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                 пространства имён SYSTEM.
                 <programlisting language="sql">
 select RDB$GET_CONTEXT('SYSTEM', 'EFFECTIVE_USER') from RDB$DATABASE;                
-                </programlisting>    
+                </programlisting>
             </para>
-            
+
             <note>
                 <para>Один и тот же объект может вызываться в разных контекстах безопасности и
-                    требовать различных привилегий. Например у нас есть:<itemizedlist spacing="compact">
+                    требовать различных привилегий. Например у нас есть:<itemizedlist
+                        spacing="compact">
                         <listitem>
                             <para>хранимая процедура INV с SECURITY INVOKER, которая вставляет
                                 записи в таблицу T;</para>
