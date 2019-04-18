@@ -7203,6 +7203,179 @@ TOTALORDER (<replaceable>value1</replaceable>, <replaceable>value2</replaceable>
             </section>
         </section>
 
+        <section xml:id="internalfunc-func-binary">
+            <info>
+                <title>Кодирование и декодирование бинарных данных</title>
+            </info>
+
+            <section xml:id="internalfunc-func-binary-base64_encode">
+                <info>
+                    <title>BASE64_ENCODE</title>
+                    <keywordset>
+                        <keyword>BASE64_ENCODE</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>BASE64_ENCODE</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+BASE64_ENCODE (<replaceable>&lt;binary data&gt;</replaceable>)
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BLOB или VARCHAR.</para>
+                </formalpara>
+                <para>Функция BASE64_ENCODE кодирует входные данные в представлении BASE64. Функция
+                    может работать как с символьной строкой, так и с BLOB.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции BASE64_ENCODE</title>
+                            <para><programlisting language="sql">
+select base64_encode(public_key) from clients;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-binary-base64_decode">BASE64_DECODE</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-binary-base64_decode">
+                <info>
+                    <title>BASE64_DECODE</title>
+                    <keywordset>
+                        <keyword>BASE64_DECODE</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>BASE64_DECODE</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+BASE64_DECODE (<replaceable>&lt;base64 data&gt;</replaceable>)
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BLOB или VARCHAR.</para>
+                </formalpara>
+                <para>Функция BASE64_DECODE декодирует входные данные из представления BASE64.
+                    Функция может работать как с символьной строкой, так и с BLOB.</para>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="internalfunc-func-binary-base64_encode">BASE64_ENCODE</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-binary-hex_encode">
+                <info>
+                    <title>HEX_ENCODE</title>
+                    <keywordset>
+                        <keyword>HEX_ENCODE</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>HEX_ENCODE</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+HEX_ENCODE (<replaceable>&lt;binary data&gt;</replaceable>)
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BLOB или VARCHAR.</para>
+                </formalpara>
+                <para>Функция HEX_ENCODE кодирует двоичные данные в шестнадцатеричное представлении.
+                    Функция может работать как с символьной строкой, так и с BLOB.</para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции HEX_ENCODE</title>
+                            <para><programlisting language="sql">
+select hex_encode(public_key) from clients;
+                </programlisting></para>
+                        </example>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>См. также:</title>
+                    
+                    <para>
+                        <link linkend="internalfunc-func-binary-hex_decode">HEX_DECODE</link>.
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="internalfunc-func-binary-hex_decode">
+                <info>
+                    <title>HEX_DECODE</title>
+                    <keywordset>
+                        <keyword>HEX_DECODE</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>HEX_DECODE</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <programlisting>
+HEX_DECODE (<replaceable>&lt;hex data&gt;</replaceable>)
+                        </programlisting>
+                    </para>
+                </formalpara>
+                <formalpara>
+                    <title>Тип возвращаемого результата:</title>
+                    <para>BLOB или VARBINARY.</para>
+                </formalpara>
+                <para>Функция HEX_DECODE декодирует данные в шестнадцатеричном представлении в
+                    двоичные данные. Функция может работать как с символьной строкой, так и с
+                    BLOB.</para>
+                <formalpara>
+                    <title>См. также:</title>
+                    
+                    <para>
+                        <link linkend="internalfunc-func-binary-hex_encode">HEX_ENCODE</link>.
+                    </para>
+                </formalpara>
+            </section>
+        </section>
+
         <section xml:id="internalfunc-func-hash">
             <info>
                 <title>Хеш функции</title>
@@ -7302,89 +7475,6 @@ SELECT HASH(x USING SHA256) FROM MyTable;
 
             <para>В Firebird 4.0 поддерживается только подмножество симметричных алгоритмов
                 шифрования (как блочных так и потоковых), так и RSA.</para>
-
-            <section xml:id="internalfunc-func-crypt-base64_encode">
-                <info>
-                    <title>BASE64_ENCODE</title>
-                    <keywordset>
-                        <keyword>BASE64_ENCODE</keyword>
-                    </keywordset>
-                </info>
-                <indexterm><primary>BASE64_ENCODE</primary></indexterm>
-                <formalpara>
-                    <title>Доступно в:</title>
-
-                    <para>DSQL, PSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-                    <para>
-                        <programlisting>
-BASE64_ENCODE (<replaceable>&lt;binary data&gt;</replaceable>)
-                        </programlisting>
-                    </para>
-                </formalpara>
-                <formalpara>
-                    <title>Тип возвращаемого результата:</title>
-                    <para>BLOB или VARCHAR.</para>
-                </formalpara>
-                <para>Функция BASE64_ENCODE кодирует входные данные в представлении BASE64. Функция
-                    может работать как с символьной строкой, так и с BLOB.</para>
-                <formalpara>
-                    <title>Примеры:</title>
-                    <para>
-                        <example>
-                            <title>Использование функции BASE64_ENCODE</title>
-                            <para><programlisting language="sql">
-select base64_encode(public_key) from clients;
-                </programlisting></para>
-                        </example>
-                    </para>
-                </formalpara>
-                <formalpara>
-                    <title>См. также:</title>
-
-                    <para>
-                        <link linkend="internalfunc-func-crypt-base64_decode">BASE64_DECODE</link>.
-                    </para>
-                </formalpara>
-            </section>
-
-            <section xml:id="internalfunc-func-crypt-base64_decode">
-                <info>
-                    <title>BASE64_DECODE</title>
-                    <keywordset>
-                        <keyword>BASE64_DECODE</keyword>
-                    </keywordset>
-                </info>
-                <indexterm><primary>BASE64_DECODE</primary></indexterm>
-                <formalpara>
-                    <title>Доступно в:</title>
-
-                    <para>DSQL, PSQL.</para>
-                </formalpara>
-                <formalpara>
-                    <title>Синтаксис:</title>
-                    <para>
-                        <programlisting>
-BASE64_DECODE (<replaceable>&lt;base64 data&gt;</replaceable>)
-                        </programlisting>
-                    </para>
-                </formalpara>
-                <formalpara>
-                    <title>Тип возвращаемого результата:</title>
-                    <para>BLOB или VARCHAR.</para>
-                </formalpara>
-                <para>Функция BASE64_DECODE декодирует входные данные из представления BASE64.
-                    Функция может работать как с символьной строкой, так и с BLOB.</para>
-                <formalpara>
-                    <title>См. также:</title>
-
-                    <para>
-                        <link linkend="internalfunc-func-crypt-base64_encode">BASE64_ENCODE</link>.
-                    </para>
-                </formalpara>
-            </section>
 
             <section xml:id="internalfunc-func-crypt-crc32">
                 <info>

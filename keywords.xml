@@ -437,6 +437,8 @@
                 <member>GROUP</member>
                 <member>HASH</member>
                 <member>HAVING</member>
+                <member>HEX_DECODE</member>
+                <member>HEX_ENCODE</member>
                 <member>HOUR</member>
                 <member>IDENTITY</member>
                 <member>IDLE</member>

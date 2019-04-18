@@ -217,6 +217,8 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>GROUP</keyword>
       <keyword>HASH</keyword>
       <keyword>HAVING</keyword>
+      <keyword>HEX_DECODE</keyword>
+      <keyword>HEX_ENCODE</keyword>
       <keyword>HOUR</keyword>
       <keyword>IDENTITY</keyword>
       <keyword>IDLE</keyword>
