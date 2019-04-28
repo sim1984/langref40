@@ -2823,7 +2823,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                                     <replaceable>val</replaceable>
                                 </entry>
                                 <entry>
-                                    <para>Значение. </para>
+                                    <para>Значение или выражение. </para>
                                 </entry>
                             </row>
                             <row>
@@ -3465,12 +3465,11 @@ ON UPDATE CASCADE ON DELETE SET NULL
                             домене, следует помнить, что выражение в CHECK лишь дополняет условие
                             проверки, которое может уже быть определено в домене.</para>
                     </important>
-                    <para>На уровне столбца выражение в предложении <database>CHECK</database>
-                        ссылается на входящее значение с помощью ключевого слова
-                            <database>VALUE</database>, так же как предложение
-                            <database>CHECK</database> в определении домена. На уровне таблицы
-                        выражение в предложении <database>CHECK</database> ссылается на входящее
-                        значение по идентификатору столбца. </para>
+                    <para>На уровне столбца или таблицы выражение в предложении
+                            <database>CHECK</database> ссылается на входящее значения с помощью с
+                        помощью идентификаторов столбцов, в отличие от доменов, где в ограничении
+                            <database>CHECK</database> для этих целей используется ключевое слово
+                        <database>VALUE</database>. </para>
                     <formalpara>
                         <title>Примеры:</title>
                         <para>
