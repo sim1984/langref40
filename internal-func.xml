@@ -1715,6 +1715,11 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                         Для остальных случаев NULL.</entry>
                                 </row>
                                 <row>
+                                    <entry>CLIENT_HOST</entry>
+                                    <entry>Имя хоста сетевого протокола удаленного клиента. Значение
+                                        возвращается для всех поддерживаемых протоколов.</entry>
+                                </row>
+                                <row>
                                     <entry>CLIENT_PID</entry>
                                     <entry>PID процесса на клиентском компьютере.</entry>
                                 </row>
