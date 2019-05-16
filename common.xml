@@ -1657,7 +1657,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                     <info>
                         <title>Создание регулярных выражений </title>
                     </info>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-symbols">
                         <title>Символы</title>
 
                         <para>В регулярных выражениях большинство символов представляет сами себя,
@@ -1677,7 +1677,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 'APPLE' SIMILAR TO 'Apple' -- в зависимости от сортировки                            
                         </programlisting></para>
                     </simplesect>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-patterns">
                         <title>Шаблоны</title>
 
                         <para>Известным SQL шаблонам _ и % соответствует любой единственный символ и
@@ -1692,7 +1692,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                         <para>Обратите внимание, что шаблон % также соответствует пустой
                             строке.</para>
                     </simplesect>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-classes">
                         <title>Классы символов</title>
 
                         <para>Набор символов, заключённый в квадратные скобки определяют класс
@@ -1781,7 +1781,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                                     <quote><command>_</command></quote> является собственным классом
                             символов, соответствуя любому единственному символу.</para>
                     </simplesect>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-quantors">
                         <title>Кванторы</title>
 
                         <para>Вопросительный знак сразу после символа или класса указывает на то,
@@ -1842,7 +1842,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                         <para>Кванторы ?, * и + сокращение для {0,1}, {0,} и {1,},
                             соответственно.</para>
                     </simplesect>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-or">
                         <title>Термин ИЛИ</title>
 
                         <para>В условиях регулярных выражений можно использовать оператор ИЛИ (|).
@@ -1854,7 +1854,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Nektarin' SIMILAR TO 'M_+|N_+|P_+' – TRUE                                
                         </programlisting></para>
                     </simplesect>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-subexpr">
                         <title>Подвыражения</title>
 
                         <para>Одна или более частей регулярного выражения могут быть сгруппированы в
@@ -1867,7 +1867,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Orange' SIMILAR TO 'O(r(an|in)g|rong)?e' – TRUE                               
                         </programlisting></para>
                     </simplesect>
-                    <simplesect>
+                    <simplesect xml:id="common-regexp-escape">
                         <title>Экранирование специальных символов</title>
 
                         <para>Для исключения из процесса сопоставления специальных символов (которые

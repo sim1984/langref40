@@ -3469,7 +3469,7 @@ ON UPDATE CASCADE ON DELETE SET NULL
                             <database>CHECK</database> ссылается на входящее значения с помощью с
                         помощью идентификаторов столбцов, в отличие от доменов, где в ограничении
                             <database>CHECK</database> для этих целей используется ключевое слово
-                        <database>VALUE</database>. </para>
+                            <database>VALUE</database>. </para>
                     <formalpara>
                         <title>Примеры:</title>
                         <para>
@@ -14504,7 +14504,10 @@ ALTER CHARACTER SET UTF8 SET DEFAULT COLLATION UNICODE_CI_AI;
     </section>
 
     <section xml:id="ddl-comment">
-        <title>COMMENTS</title>
+        <info>
+            <title>COMMENTS</title>
+        </info>
+        
         <para>Объекты базы данных и сама база данных могут содержать примечания. Это удобное
             средство документирования во время разработки базы данных и её поддержки.</para>
         <section xml:id="ddl-commenton">

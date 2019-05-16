@@ -420,7 +420,30 @@ xmlns:exsl="http://exslt.org/common" version="1.0" exclude-result-prefixes="exsl
       <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:subtitle"/>
     </xsl:when>
   </xsl:choose>
-
+    
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:pubdate"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:pubdate"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:revision"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:revision"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:revhistory"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:revhistory"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:releaseinfo"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:releaseinfo"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:edition"/>
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:edition"/>
+  
+  <div class="sponsors">
+    <h3>Спонсоры документации</h3>
+    <figure>
+      <figcaption>Платиновый спонсор</figcaption>
+      <a href="http://moex.com"><img src="images/moex.png" alt="Московская биржа"/></a>
+    </figure>
+    <figure>
+      <figcaption>Золотой спонсор</figcaption>
+      <a href="http://www.ib-aid.com"><img src="images/ibsurgeon.png" alt="IB Surgeon"/></a>
+    </figure>
+  </div>  
+  
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:corpauthor"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:corpauthor"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:authorgroup"/>
@@ -428,23 +451,15 @@ xmlns:exsl="http://exslt.org/common" version="1.0" exclude-result-prefixes="exsl
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:author"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:author"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:othercredit"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:othercredit"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:releaseinfo"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:releaseinfo"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:edition"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:edition"/>  
+  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:othercredit"/>  
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:copyright"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:copyright"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:legalnotice"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:legalnotice"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:pubdate"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:pubdate"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:revision"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:revision"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:revhistory"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:revhistory"/>
+
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:abstract"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:abstract"/>
+  
 </xsl:template>
 
 <xsl:template name="book.titlepage.verso">
@@ -568,7 +583,7 @@ xmlns:exsl="http://exslt.org/common" version="1.0" exclude-result-prefixes="exsl
 </xsl:template>
   
 <xsl:template match="d:edition" mode="book.titlepage.recto.auto.mode">
-<div xsl:use-attribute-sets="book.titlepage.recto.style">
+<div xsl:use-attribute-sets="book.titlepage.recto.style" class="edition">
 <xsl:apply-templates select="." mode="book.titlepage.recto.mode"/>
 </div>
 </xsl:template>  

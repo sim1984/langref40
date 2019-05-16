@@ -14,9 +14,9 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>DocBook PDF FBDoc</String>
                                         <String>DocBook HTML FBDoc</String>
                                         <String>DocBook HTML - Chunk FBDoc</String>
+                                        <String>DocBook PDF FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -166,7 +166,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/D:/fbdoc/langref40/xsl/monohtml.xsl</String>
+                                    <String>${pdu}/xsl/monohtml.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>

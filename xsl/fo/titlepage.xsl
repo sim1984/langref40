@@ -56,7 +56,7 @@
     </fo:block>
     <!-- Логотип спонсора -->
     <fo:block margin-top="0.2cm" text-align="right">
-      <fo:basic-link external-destination="http://moex.com/">
+      <fo:basic-link external-destination="http://moex.com">
         <fo:external-graphic src="url('moex.png')"/>
       </fo:basic-link>
     </fo:block>
@@ -67,7 +67,7 @@
     </fo:block>
     <!-- Логотип спонсора -->
     <fo:block margin-top="0.2cm" text-align="right">
-      <fo:basic-link external-destination="http://www.ib-aid.com/">
+      <fo:basic-link external-destination="http://www.ib-aid.com">
         <fo:external-graphic src="url('ibsurgeon.png')"/>
       </fo:basic-link>
     </fo:block>
