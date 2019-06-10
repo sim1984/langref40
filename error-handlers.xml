@@ -70,62 +70,62 @@
                             <entry>Класс 01 (предупреждения)</entry>
                         </row>
                         <row>
-                            <entry>1000</entry>
+                            <entry>01000</entry>
                             <entry>General Warning</entry>
                             <entry>Общее предупреждение </entry>
                         </row>
                         <row>
-                            <entry>1001</entry>
+                            <entry>01001</entry>
                             <entry>Cursor operation conflict </entry>
                             <entry>Конфликт при операции с курсором </entry>
                         </row>
                         <row>
-                            <entry>1002</entry>
+                            <entry>01002</entry>
                             <entry>Disconnect error </entry>
                             <entry>Ошибка, связанная с разъединением </entry>
                         </row>
                         <row>
-                            <entry>1003</entry>
+                            <entry>01003</entry>
                             <entry>NULL value eliminated in set function </entry>
                             <entry>Значение NULL устраняется в определении функции   </entry>
                         </row>
                         <row>
-                            <entry>1004</entry>
+                            <entry>01004</entry>
                             <entry>String data, right-truncated </entry>
                             <entry>Строковые данные, обрезание справа  </entry>
                         </row>
                         <row>
-                            <entry>1005</entry>
+                            <entry>01005</entry>
                             <entry>Insufficient item descriptor areas </entry>
                             <entry>Недостаточно элементов в области дескрипторов </entry>
                         </row>
                         <row>
-                            <entry>1006</entry>
+                            <entry>01006</entry>
                             <entry>Privilege not revoked </entry>
                             <entry>Привилегии не отозваны</entry>
                         </row>
                         <row>
-                            <entry>1007</entry>
+                            <entry>01007</entry>
                             <entry>Privilege not granted </entry>
                             <entry>Привилегии не выданы </entry>
                         </row>
                         <row>
-                            <entry>1008</entry>
+                            <entry>01008</entry>
                             <entry>Implicit zero-bit padding </entry>
                             <entry>Неявное обрезание нулевого бита</entry>
                         </row>
                         <row>
-                            <entry>1100</entry>
+                            <entry>01100</entry>
                             <entry>Statement reset to unprepared </entry>
                             <entry>Оператор сброшен в состояние unprepared </entry>
                         </row>
                         <row>
-                            <entry>1101</entry>
+                            <entry>01101</entry>
                             <entry>Ongoing transaction has been committed </entry>
                             <entry>Текущая транзакция завершена COMMIT</entry>
                         </row>
                         <row>
-                            <entry>1102</entry>
+                            <entry>01102</entry>
                             <entry>Ongoing transaction has been rolled back </entry>
                             <entry>Текущая транзакция завершена ROLLED BACK</entry>
                         </row>
@@ -136,7 +136,7 @@
                             <entry>Класс ошибок 02 (Нет данных) </entry>
                         </row>
                         <row>
-                            <entry>2000</entry>
+                            <entry>02000</entry>
                             <entry>No data found or no rows affected </entry>
                             <entry>Данные не обнаружены или не затронуты строки</entry>
                         </row>
@@ -147,54 +147,54 @@
                             <entry>Класс ошибок 07 (Ошибки DSQL) </entry>
                         </row>
                         <row>
-                            <entry>7000</entry>
+                            <entry>07000</entry>
                             <entry>Dynamic SQL error </entry>
                             <entry>Ошибка DSQL  </entry>
                         </row>
                         <row>
-                            <entry>7001</entry>
+                            <entry>07001</entry>
                             <entry>Wrong number of input parameters </entry>
                             <entry>Неверное число входных параметров </entry>
                         </row>
                         <row>
-                            <entry>7002</entry>
+                            <entry>07002</entry>
                             <entry>Wrong number of output parameters </entry>
                             <entry>Неверное число выходных параметров </entry>
                         </row>
                         <row>
-                            <entry>7003</entry>
+                            <entry>07003</entry>
                             <entry>Cursor specification cannot be executed </entry>
                             <entry>Определение курсора не может быть выполнено   </entry>
                         </row>
                         <row>
-                            <entry>7004</entry>
+                            <entry>07004</entry>
                             <entry>USING clause required for dynamic parameters </entry>
                             <entry>Для динамического параметра требуется предложение USING  </entry>
                         </row>
                         <row>
-                            <entry>7005</entry>
+                            <entry>07005</entry>
                             <entry>Prepared statement not a cursor-specification </entry>
                             <entry>Подготовленный оператор не является курсор - специфичным  
                             </entry>
                         </row>
                         <row>
-                            <entry>7006</entry>
+                            <entry>07006</entry>
                             <entry>Restricted data type attribute violation </entry>
                             <entry>Исключение по причине запрещенного типа данных для атрибута
                             </entry>
                         </row>
                         <row>
-                            <entry>7007</entry>
+                            <entry>07007</entry>
                             <entry>USING clause required for result fields </entry>
                             <entry>Для возвращаемого поля требуется предложение USING </entry>
                         </row>
                         <row>
-                            <entry>7008</entry>
+                            <entry>07008</entry>
                             <entry>Invalid descriptor count </entry>
                             <entry>Неверный счетчик дескрипторов </entry>
                         </row>
                         <row>
-                            <entry>7009</entry>
+                            <entry>07009</entry>
                             <entry>Invalid descriptor index </entry>
                             <entry>Неверный индекс дескриптора </entry>
                         </row>
@@ -206,32 +206,32 @@
                             <entry>Класс ошибок 08 (Исключения коннекта) </entry>
                         </row>
                         <row>
-                            <entry>8001</entry>
+                            <entry>08001</entry>
                             <entry>Client unable to establish connection </entry>
                             <entry>Клиент не может установить соединение </entry>
                         </row>
                         <row>
-                            <entry>8002</entry>
+                            <entry>08002</entry>
                             <entry>Connection name in use </entry>
                             <entry>Имя соединения уже используется  </entry>
                         </row>
                         <row>
-                            <entry>8003</entry>
+                            <entry>08003</entry>
                             <entry>Connection does not exist </entry>
                             <entry>Соединение не существует </entry>
                         </row>
                         <row>
-                            <entry>8004</entry>
+                            <entry>08004</entry>
                             <entry>Server rejected the connection </entry>
                             <entry>Сервер отверг подключение  </entry>
                         </row>
                         <row>
-                            <entry>8006</entry>
+                            <entry>08006</entry>
                             <entry>Connection failure </entry>
                             <entry>Ошибка при подключении </entry>
                         </row>
                         <row>
-                            <entry>8007</entry>
+                            <entry>08007</entry>
                             <entry>Transaction resolution unknown </entry>
                             <entry>Неизвестно разрешение транзакции  </entry>
                         </row>
