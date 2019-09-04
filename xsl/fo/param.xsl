@@ -10,7 +10,7 @@
     <!--Язык-->
     <xsl:param name="l10n.gentext.language" select="'ru'"/>
 
-    <xsl:param name="hyphenate" select="false"/>
+    <xsl:param name="hyphenate" select="0"/>
     
     <xsl:param name="fop1.extensions" select="1"/>
 
