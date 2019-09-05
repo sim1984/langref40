@@ -714,9 +714,27 @@ WHERE VAR.MON$ATTACHMENT_ID = CURRENT_CONNECTION
                             </entry>
                         </row>
                         <row>
+                            <entry>MON$CRYPT_STATE</entry>
+                            <entry>SMALLINT</entry>
+                            <entry><para>Текущее состояние шифрования:<itemizedlist>
+                                    <listitem>
+                                        <para>0 — не зашифрована;</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>1 — зашифрована;</para>
+                                    </listitem>
+                                        <listitem>
+                                            <para>2 — в процессе дешифрования;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>3 — в процессе шифрования.</para>
+                                        </listitem>
+                                </itemizedlist></para></entry>
+                        </row>
+                        <row>
                             <entry>MON$CRYPT_PAGE</entry>
                             <entry>BIGINT </entry>
-                            <entry>Количество зашифрованных страниц в процессе
+                            <entry>Количество зашифрованных/дешифрованных страниц в процессе
                                 шифрования/дешифрования; ноль если этот процесс закончился или не
                                 начинался.</entry>
                         </row>
