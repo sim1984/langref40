@@ -5,10 +5,10 @@
     </info>
 
     <para>В этой главе описываются операторы управления сессионным окружением. Данные SQL операторы
-        работают вне механизма управления транзакциями, изменения выполенные ими вступаю в силу
+        работают вне механизма управления транзакциями, изменения выполненные ими вступаю в силу
         немедленно.</para>
 
-    <para>Операторы управления сессионным окруженияем доступны в том числе и в PSQL коде. Это
+    <para>Операторы управления сессионным окружением доступны в том числе и в PSQL коде. Это
         особенно полезно в ON CONNECT триггерах.</para>
 
     <para>Операторы управления сессионным окружением разбиты на следующие группы: <itemizedlist>
@@ -408,13 +408,13 @@ SET SESSION IDLE TIMEOUT 8 HOUR
             Данная группа операторов позволяет управлять пулом внешних соединений. При его
             подготовке они описываются как DDL операторы, но имеют немедленный эффект: то есть они
             выполняются немедленно и полностью, не дожидаясь фиксации транзакции. Изменения
-            применяются к экземляру пула в памяти в текущем процессе Firebird. Поэтому изменение в
+            применяются к экземпляру пула в памяти в текущем процессе Firebird. Поэтому изменение в
             одном классическом процессе не влияет на другие классические процессы. Изменения не
             являются постоянными и после перезапуска Firebird будет использовать настройки пула из
                 <filename>firebird.conf</filename>.</para>
 
-        <para>Для выполенения операторов данной группы требуется системная привилегия
-            MODIFY_EXT_CONN_POOL. Подробнее о системных привелегиях см. <link
+        <para>Для выполнения операторов данной группы требуется системная привилегия
+            MODIFY_EXT_CONN_POOL. Подробнее о системных привилегиях см. <link
                 linkend="security-roles-create">CREATE ROLE</link>.</para>
 
         <section xml:id="session-extconnpool-setsize">
@@ -472,7 +472,7 @@ ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>
             <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</code> устанавливает
                 максимальное количество бездействующих соединений в пуле внешних соединений.
                 Допустимые значения от 0 до 1000. Нулевое значение обозначает что пул выключен.
-                Значение по умолчанию оперделяется в <filename>firebird.conf</filename> (параметр
+                Значение по умолчанию определяется в <filename>firebird.conf</filename> (параметр
                 ExtConnPoolSize).</para>
 
         </section>
@@ -532,7 +532,7 @@ ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replace
 
             <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</code> устанавливает
                 время жизни бездействующих соединений в пуле внешних соединений. Допустимые значения
-                от 1 секуды до 24 часов. Значение по умолчанию оперделяется в
+                от 1 секунды до 24 часов. Значение по умолчанию определяется в
                     <filename>firebird.conf</filename> (параметр ExtConnPoolLifeTime в
                 секундах).</para>
 
@@ -741,7 +741,7 @@ SET TRUSTED ROLE
 
     <section xml:id="session-timezone">
         <info>
-            <title>Управление часовым поясом и обработкой часовых поясов</title>
+            <title>Управление часовым поясом сеанса</title>
         </info>
 
         <section xml:id="session-timezone-settimezone">
@@ -798,60 +798,6 @@ set time zone local;
 
                 <para>
                     <link linkend="types-datetime-timezone">Часовой пояс</link>. </para>
-            </formalpara>
-        </section>
-
-        <section xml:id="session-timezone-settimezonebind">
-            <info>
-                <title>SET TIME ZONE BIND</title>
-            </info>
-            <indexterm>
-                <primary>SET TIME ZONE BIND</primary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Изменение привязки типов с WITH TIME ZONE</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <literallayout class="monospaced">
-SET TIME ZONE BIND { NATIVE | LEGACY }                      
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>Оператор изменяет привязку часового пояса сеанса для совместимости со старыми
-                клиентами.</para>
-
-            <para>Значение по умолчанию - NATIVE, что означает, что выражения <code>TIME WITH TIME
-                    ZONE</code> и <code>TIMESTAMP WITH TIME ZONE</code> возвращаются с новыми типами
-                данных для клиента.</para>
-
-            <para>Старые клиенты могут не понимать новые типы данных, поэтому можно определить
-                привязку к LEGACY, и выражения будут возвращены как <code>TIME WITHOUT TIME
-                    ZONE</code> и <code>TIMESTAMP WITHOUT TIME ZONE</code> с соответствующим
-                преобразованием. </para>
-
-            <para>Конфигурация привязки применима также к входным параметрам.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-
-                <para>
-                    <example>
-                        <title>Изменение привзяки для типов времени и даты-времени</title>
-
-                        <para><programlisting language="sql"> 
-set time zone bind native;
-
-set time zone bind legacy;
-                </programlisting>
-                        </para>
-                    </example>
-                </para>
             </formalpara>
         </section>
     </section>
@@ -982,7 +928,7 @@ SET DECFLOAT ROUND HALF_DOWN;
                 </para>
             </formalpara>
 
-            <para>Подробнее о режимах округления лдя типа DECFLOAT см. <link
+            <para>Подробнее о режимах округления для типа DECFLOAT см. <link
                     linkend="types-float-decfloat-round-mode">Режимы округления</link>.</para>
         </section>
 
@@ -1030,6 +976,68 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
             </example>
         </section>
 
+    </section>
+
+    <section xml:id="session-set_bind">
+        <title>Операторы привязки типов</title>
+
+        <para>Данная группа операторов позволяет обеспечить совместимость со старыми клиентами при
+            использовании новых типов данных.</para>
+
+        <section xml:id="session-timezone-settimezonebind">
+            <info>
+                <title>SET TIME ZONE BIND</title>
+            </info>
+            <indexterm>
+                <primary>SET TIME ZONE BIND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение привязки типов с WITH TIME ZONE</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET TIME ZONE BIND { NATIVE | LEGACY }                      
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Оператор изменяет привязку часового пояса сеанса для совместимости со старыми
+                клиентами.</para>
+
+            <para>Значение по умолчанию — NATIVE, что означает, что выражения <code>TIME WITH TIME
+                    ZONE</code> и <code>TIMESTAMP WITH TIME ZONE</code> возвращаются с новыми типами
+                данных для клиента.</para>
+
+            <para>Старые клиенты могут не понимать новые типы данных, поэтому можно определить
+                привязку к LEGACY, и выражения будут возвращены как <code>TIME WITHOUT TIME
+                    ZONE</code> и <code>TIMESTAMP WITHOUT TIME ZONE</code> с соответствующим
+                преобразованием. </para>
+
+            <para>Конфигурация привязки применима также к входным параметрам.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение привзяки для типов времени и даты-времени</title>
+
+                        <para><programlisting language="sql"> 
+set time zone bind native;
+
+set time zone bind legacy;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+
         <section xml:id="session-decfloat-bind">
             <info>
                 <title>SET DECFLOAT BIND</title>
@@ -1041,7 +1049,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
             <formalpara>
                 <title>Назначение:</title>
 
-                <para>Измененение отображения значений DECFLOAT на другие доступные типы
+                <para>Изменение отображения значений DECFLOAT на другие доступные типы
                     данных.</para>
             </formalpara>
             <formalpara>
@@ -1109,6 +1117,86 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                 большинстве случаев.</para>
         </section>
 
+        <section xml:id="session-int128-bind">
+            <info>
+                <title>SET INT128 BIND</title>
+            </info>
+            <indexterm>
+                <primary>SET INT128 BIND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение отображения значений NUMERIC и DECIMAL с точностью более 18 на
+                    другие доступные типы данных.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET INT128 BIND <replaceable>&lt;bind-type&gt;</replaceable>      
+                            
+<replaceable>&lt;bind-type&gt;</replaceable> ::= 
+    NATIVE 
+  | CHAR[ACTER]
+  | DOUBLE PRECISION
+  | BIGINT[, <replaceable>scale</replaceable>]                          
+                        </literallayout>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET INT128 BIND</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><para><replaceable>scale</replaceable></para></entry>
+                                <entry>
+                                    <para>Точность (количество знаков после запятой).</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Оператор SET INT128 BIND управляет каким образом значения типов NUMERIC и DECIMAL
+                с точностью более 18 будут представлены во внешнем мире. Типы NUMERIC и DECIMAL с
+                точностью от 19 до 38 используют для своего представления внутренний тип INT128.
+                Допустимые типы для привязки: <itemizedlist>
+                    <listitem>
+                        <para>NATIVE — используется 128-битное целое;</para>
+                    </listitem>
+                    <listitem>
+                        <para>CHAR[ACTER] — ASCII строка;</para>
+                    </listitem>
+                    <listitem>
+                        <para>DOUBLE PRECISION — используется 8 байтное представление с плавающей
+                            точкой, тоже самое что и для полей типа DOUBLE PRECISION;</para>
+                    </listitem>
+                    <listitem>
+                        <para>BIGINT — используется целое с указанным масштабом, тоже самое что поле
+                            NUMERIC(18, <replaceable>scale</replaceable>).</para>
+                    </listitem>
+                </itemizedlist></para>
+            <para>Различные привязки полезны, если вы планируете использовать значения типов NUMERIC
+                и DECIMAL с точностью более 18 со старым клиентом, не поддерживающим собственный
+                формат. Можно выбирать между строками (идеальная точность, но плохая поддержка для
+                дальнейшей обработки), значения с плавающей запятой (идеальная поддержка для
+                дальнейшей обработки, но с плохой точностью) или масштабированные целые числа
+                (хорошая поддержка дальнейшей обработки и требуемая точность, но диапазон значений
+                очень ограничен). Когда используется инструмент, подобный универсальному
+                GUI-клиенту, выбор привязки к CHAR подходит в большинстве случаев.</para>
+        </section>
     </section>
 
     <section xml:id="session-resetsession">
@@ -1123,7 +1211,7 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
         <formalpara>
             <title>Назначение:</title>
 
-            <para>Сброс сессионого окружения.</para>
+            <para>Сброс сессионного окружения.</para>
         </formalpara>
 
         <formalpara>
@@ -1162,7 +1250,7 @@ ALTER SESSION RESET  
                 </listitem>
                 <listitem>
                     <para>сбрасывает роль в значение переданное в DPB (указанное при подключении) и
-                        очищает кеш привелегий (если роль была изменена с помощью оператора SET
+                        очищает кеш привилегий (если роль была изменена с помощью оператора SET
                         ROLE);</para>
                 </listitem>
                 <listitem>

@@ -65,19 +65,19 @@
                         <entry><para><replaceable>n</replaceable> байт</para></entry>
                         <entry><para>от 1 до <literal>32 767</literal> байт</para></entry>
                         <entry><para>Бинарный тип данных фиксированной длины. Является псевдонимом
-                            типа <code>CHAR(<replaceable>n</replaceable>) CHARACTER SET
-                                OCTETS</code>.</para></entry>
+                                типа <code>CHAR(<replaceable>n</replaceable>) CHARACTER SET
+                                    OCTETS</code>.</para></entry>
                     </row>
                     <row>
                         <entry><para><code>BLOB</code></para></entry>
                         <entry><para>Переменный</para></entry>
                         <entry><para>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный
-                            размер поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер
-                            BLOB поля несколько ниже 2 Гб.</para></entry>
+                                размер поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер
+                                BLOB поля несколько ниже 2 Гб.</para></entry>
                         <entry><para>Тип данных с динамически изменяемым размером для хранения
-                            больших данных, таких как графика, тексты, оцифрованные звуки.
-                            Базовая структурная единица — сегмент. Подтип BLOB описывает
-                            содержимое.</para>
+                                больших данных, таких как графика, тексты, оцифрованные звуки.
+                                Базовая структурная единица — сегмент. Подтип BLOB описывает
+                                содержимое.</para>
                         </entry>
                     </row>
                     <row>
@@ -113,16 +113,16 @@
                         <entry>
                             <para>
                                 <inlineequation>
-                                    <alt>1 &#8804; precision &#8804; 34</alt>
+                                    <alt>1 &#8804; precision &#8804; 38</alt>
                                     <mathphrase>1 &#8804; <replaceable>precision</replaceable>
-                                        &#8804; 34</mathphrase>
+                                        &#8804; 38</mathphrase>
                                 </inlineequation>. Указывает, по меньшей мере, количество цифр для
                                 хранения;</para>
                             <para>
                                 <inlineequation>
-                                    <alt>0 &#8804; scale &#8804; 34</alt>
+                                    <alt>0 &#8804; scale &#8804; 38</alt>
                                     <mathphrase>1 &#8804; <replaceable>scale</replaceable> &#8804;
-                                        34</mathphrase>
+                                        38</mathphrase>
                                 </inlineequation>. Задаёт количество знаков после
                                 разделителя.</para>
                         </entry>
@@ -168,21 +168,22 @@
                         <entry><para>IEEE одинарной точности, 7 цифр</para></entry>
                     </row>
                     <row>
-                        <entry><para><code>FLOAT (<replaceable>precision</replaceable>)</code></para></entry>
+                        <entry><para><code>FLOAT
+                                (<replaceable>precision</replaceable>)</code></para></entry>
                         <entry><para>32 бита или 64 бита</para></entry>
-                        <entry><para><replaceable>precision</replaceable> — точность в двоичных числах, может находится в диапазоне
-                                от 1 до 53.</para>
+                        <entry><para><replaceable>precision</replaceable> — точность в двоичных
+                                числах, может находится в диапазоне от 1 до 53.</para>
                         </entry>
                         <entry><para><itemizedlist spacing="compact">
-                            <listitem>
-                                <para>1 &lt;= p &lt;= 32 — 32-битное одинарной точности (синоним
-                                    типа FLOAT)</para>
-                            </listitem>
-                            <listitem>
-                                <para>33 &lt;= p &lt;= 53 — 64-битное двойной точности (синоним
-                                    типа DOUBLE PRECISION)</para>
-                            </listitem>
-                        </itemizedlist></para></entry>
+                                    <listitem>
+                                        <para>1 &lt;= p &lt;= 32 — 32-битное одинарной точности
+                                            (синоним типа FLOAT)</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>33 &lt;= p &lt;= 53 — 64-битное двойной точности
+                                            (синоним типа DOUBLE PRECISION)</para>
+                                    </listitem>
+                                </itemizedlist></para></entry>
                     </row>
                     <row>
                         <entry>
@@ -201,16 +202,16 @@
                         <entry>
                             <para>
                                 <inlineequation>
-                                    <alt>1 &#8804; precision &#8804; 34</alt>
+                                    <alt>1 &#8804; precision &#8804; 38</alt>
                                     <mathphrase>1 &#8804; <replaceable>precision</replaceable>
-                                        &#8804; 34</mathphrase>
+                                        &#8804; 38</mathphrase>
                                 </inlineequation>. Указывает, по меньшей мере, количество цифр для
                                 хранения;</para>
                             <para>
                                 <inlineequation>
-                                    <alt>0 &#8804; scale &#8804; 34</alt>
+                                    <alt>0 &#8804; scale &#8804; 38</alt>
                                     <mathphrase>1 &#8804; <replaceable>scale</replaceable> &#8804;
-                                        34</mathphrase>
+                                        38</mathphrase>
                                 </inlineequation>. Задаёт количество знаков после
                                 разделителя.</para>
                         </entry>
@@ -223,10 +224,10 @@
                         <entry><para><code>REAL</code></para></entry>
                         <entry><para>32 бита</para></entry>
                         <entry><para><inlineequation>
-                            <alt>1.175 * 10^38 .. 3.402 * 10^38</alt>
-                            <mathphrase>1.175 x 10<superscript>-38</superscript> .. 3.402 x
-                                10<superscript>38</superscript></mathphrase>
-                        </inlineequation></para></entry>
+                                    <alt>1.175 * 10^38 .. 3.402 * 10^38</alt>
+                                    <mathphrase>1.175 x 10<superscript>-38</superscript> .. 3.402 x
+                                            10<superscript>38</superscript></mathphrase>
+                                </inlineequation></para></entry>
                         <entry><para>Является синонимом типа FLOAT.</para></entry>
                     </row>
                     <row>
@@ -1368,15 +1369,21 @@ SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>
                             <entry>BIGINT</entry>
                         </row>
                         <row>
-                            <entry>19 - 34</entry>
+                            <entry>19 - 38</entry>
                             <entry>NUMERIC и DECIMAL</entry>
-                            <entry>DECFLOAT(34)</entry>
-                            <entry>DECFLOAT(34)</entry>
+                            <entry>INT128</entry>
+                            <entry>INT128</entry>
                         </row>
                     </tbody>
                 </tgroup>
             </table>
         </para>
+
+        <note>
+            <para>Тип INT128 является внутренним типом Firebird для представления NUMERIC и DECIMAL
+                с точностью от 19 до 38. Он не доступен в SQL непосредственно.</para>
+        </note>
+
         <section xml:id="types-fixed-numeric">
             <info>
                 <title>NUMERIC</title>
@@ -1414,7 +1421,7 @@ NUMERIC(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                             </row>
                             <row>
                                 <entry><para><code>NUMERIC(20, 2)</code></para></entry>
-                                <entry><para>DECFLOAT(34)</para></entry>
+                                <entry><para>INT128</para></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -1468,7 +1475,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                             </row>
                             <row>
                                 <entry><para><code>DECIMAL(20, 2)</code></para></entry>
-                                <entry><para>DECFLOAT(34)</para></entry>
+                                <entry><para>INT128</para></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -1489,7 +1496,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 результат, имеющий ту же точность и масштаб, что и столбец. SUM и AVG для точного
                 числового типа возвращает результат типа NUMERIC (18, S) или DECIMAL (18, S), где S
                 - масштаб столбца. (Стандарт SQL определяет масштаб результата в таких случаях, в то
-                время как точность SUM или AVG для столюцов с фиксированной точкой определяется
+                время как точность SUM или AVG для столбцов с фиксированной точкой определяется
                 реализацией: мы определяем его как 18.)</para>
 
             <para>Если два операнда OP1 и OP2 являются точными числами с масштабами S1 и S2
@@ -1503,7 +1510,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 что определён стандартом в для умножения.) </para>
 
             <para>Всякий раз, когда выполняется арифметические операции с точными числовыми типами,
-                в случае потери точности будет сообщено об ошибке переполнения, а не возвращёно
+                в случае потери точности будет сообщено об ошибке переполнения, а не возвращено
                 неправильное значение. В качестве примера, который может быть неочевидным для
                 читателя, если столбец DECIMAL (18,4) содержит наиболее отрицательное значение этого
                 типа, -922337203685477.5808, попытка разделить этот столбец на -1 будет сообщать об
