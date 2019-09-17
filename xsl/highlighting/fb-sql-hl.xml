@@ -235,6 +235,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>INSERT</keyword>
       <keyword>INSERTING</keyword>
       <keyword>INT</keyword>
+      <keyword>INT128</keyword>
       <keyword>INTEGER</keyword>
       <keyword>INTO</keyword>
       <keyword>INVOKER</keyword>

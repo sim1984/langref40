@@ -14,11 +14,13 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>DocBook PDF FBDoc</String>
+                                        <String>DocBook HTML FBDoc</String>
+                                        <String>DocBook HTML - Chunk FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
+                                        <String>XSL</String>
                                         <String>XSL</String>
                                     </list>
                                 </field>

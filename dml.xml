@@ -6796,13 +6796,13 @@ END    
                         <row>
                             <entry><replaceable>precision</replaceable></entry>
                             <entry>
-                                <para>Точность. От 1 до 34.</para>
+                                <para>Точность. От 1 до 38.</para>
                             </entry>
                         </row>
                         <row>
                             <entry><replaceable>scale</replaceable></entry>
                             <entry>
-                                <para>Масштаб. От 0 до 34, должно быть меньше или равно
+                                <para>Масштаб. От 0 до 38, должно быть меньше или равно
                                         <replaceable>precision</replaceable>.</para>
                             </entry>
                         </row>

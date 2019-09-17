@@ -1130,6 +1130,9 @@
                                             <para>25 - DECFLOAT(34);</para>
                                         </listitem>
                                         <listitem>
+                                            <para>26 - INT128;</para>
+                                        </listitem>
+                                        <listitem>
                                             <para>27 – DOUBLE PRECISION;</para>
                                         </listitem>
                                         <listitem>
@@ -1288,6 +1291,9 @@
                                         </listitem>
                                         <listitem>
                                             <para>25 – DECFLOAT(34);</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>26 - INT128;</para>
                                         </listitem>
                                         <listitem>
                                             <para>27 – DOUBLE PRECISION;</para>
@@ -1649,6 +1655,9 @@
                                             <para>25 — DECFLOAT(34);</para>
                                         </listitem>
                                         <listitem>
+                                            <para>26 — INT128;</para>
+                                        </listitem>
+                                        <listitem>
                                             <para>27 — DOUBLE PRECISION;</para>
                                         </listitem>
                                         <listitem>
@@ -1711,7 +1720,10 @@
                                             <para>8 — для blob id;</para>
                                         </listitem>
                                         <listitem>
-                                            <para>16 — для DECFLOAT(34).</para>
+                                            <para>16 — для DECFLOAT(34);</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>16 — для INT128.</para>
                                         </listitem>
                                     </itemizedlist>
                                 </para>

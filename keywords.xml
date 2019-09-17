@@ -455,6 +455,7 @@
                 <member>INSERT</member>
                 <member>INSERTING</member>
                 <member>INT</member>
+                <member>INT128</member>
                 <member>INTEGER</member>
                 <member>INTO</member>
                 <member>INVOKER</member>
