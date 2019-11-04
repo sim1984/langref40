@@ -1424,10 +1424,12 @@ WHERE
                             <entry>
                                 <para>Состояние транзакции: <itemizedlist spacing="compact">
                                         <listitem>
-                                            <para>0 — бездействующая;</para>
+                                            <para>0 — бездействующая (не выполнялось ни одного
+                                                запроса);</para>
                                         </listitem>
                                         <listitem>
-                                            <para>1 — активная.</para>
+                                            <para>1 — активная (выполнялся хотя бы один
+                                                запрос).</para>
                                         </listitem>
                                     </itemizedlist>
                                 </para>

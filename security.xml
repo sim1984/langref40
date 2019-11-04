@@ -1010,13 +1010,15 @@ DROP MAPPING FROM_RT;
 
                 <para><programlisting>
 CREATE USER <replaceable>username</replaceable> PASSWORD '<replaceable>password</replaceable>'
+{
   [FIRSTNAME '<replaceable>firstname</replaceable>']
   [MIDDLENAME '<replaceable>middlename</replaceable>']
   [LASTNAME '<replaceable>lastname</replaceable>']
   [ACTIVE | INACTIVE]
-  [USING PLUGIN <replaceable>pluginname</replaceable>] 
-  [TAGS (<replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> ...]] )]
-  [GRANT ADMIN ROLE];
+}
+[USING PLUGIN <replaceable>pluginname</replaceable>] 
+[GRANT ADMIN ROLE]
+[TAGS (<replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> ...]] )]
 
 <replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
                 </programlisting></para>
@@ -1152,13 +1154,6 @@ CREATE USER "Alex" PASSWORD 'bz23ds';
                 соответственно.</para>
             <indexterm>
                 <primary>CREATE USER</primary>
-                <secondary>TAGS</secondary>
-            </indexterm>
-            <para>Кроме того вы можете задать неограниченное количество пользовательских атрибутов с
-                помощью необязательного предложения TAGS. Данная возможность доступна только при
-                использовании Srp в качестве менеджера пользователей.</para>
-            <indexterm>
-                <primary>CREATE USER</primary>
                 <secondary>INACTIVE</secondary>
             </indexterm>
             <indexterm>
@@ -1194,6 +1189,13 @@ CREATE USER "Alex" PASSWORD 'bz23ds';
                     созданного с помощью одного плагина управления пользователями можно удалить или
                     изменить, указав только тот же самый плагин. </para>
             </important>
+            <indexterm>
+                <primary>CREATE USER</primary>
+                <secondary>TAGS</secondary>
+            </indexterm>
+            <para>Кроме того вы можете задать неограниченное количество пользовательских атрибутов с
+                помощью необязательного предложения TAGS. Данная возможность доступна только при
+                использовании Srp в качестве менеджера пользователей.</para>           
             <para>Создать новую учётную запись могут:<itemizedlist>
                     <listitem>
                         <para>SYSDBA и другие пользователи являющиеся администраторами в базе данных
@@ -1303,10 +1305,10 @@ ALTER {USER <replaceable>username</replaceable> | CURRENT USER}
   [MIDDLENAME '<replaceable>middlename</replaceable>']
   [LASTNAME '<replaceable>lastname</replaceable>']
   [ACTIVE | INACTIVE]
-  [TAGS (<replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> ...] )]
 }
 [USING PLUGIN <replaceable>pluginname</replaceable>] 
-[{GRANT | REVOKE} ADMIN ROLE];
+[{GRANT | REVOKE} ADMIN ROLE]
+[TAGS (<replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> ...] )]
   
 <replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
                 </programlisting></para>
@@ -1580,11 +1582,11 @@ CREATE OR ALTER USER <replaceable>username</replaceable>
   [FIRSTNAME '<replaceable>firstname</replaceable>']
   [MIDDLENAME '<replaceable>middlename</replaceable>']
   [LASTNAME '<replaceable>lastname</replaceable>']
-  [ACTIVE | INACTIVE]
-  [TAGS (<replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> ...] )]
+  [ACTIVE | INACTIVE]  
 }
 [USING PLUGIN <replaceable>pluginname</replaceable>] 
-[{GRANT | REVOKE} ADMIN ROLE];
+[{GRANT | REVOKE} ADMIN ROLE]
+[TAGS (<replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> | DROP <replaceable>tagname</replaceable> ...] )]
   
 <replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
                 </programlisting></para>
@@ -1840,13 +1842,15 @@ DROP USER Godzilla USING PLUGIN Legacy_UserManager;
 
                 <para><programlisting>
 RECREATE USER <replaceable>username</replaceable> PASSWORD '<replaceable>password</replaceable>'
+{
   [FIRSTNAME '<replaceable>firstname</replaceable>']
   [MIDDLENAME '<replaceable>middlename</replaceable>']
   [LASTNAME '<replaceable>lastname</replaceable>']
   [ACTIVE | INACTIVE]
-  [USING PLUGIN <replaceable>pluginname</replaceable>] 
-  [TAGS (<replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> ...]] )]
-  [GRANT ADMIN ROLE];
+}
+[USING PLUGIN <replaceable>pluginname</replaceable>]   
+[GRANT ADMIN ROLE]
+[TAGS (<replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> [, <replaceable>&lt;tag&gt;</replaceable> ...]] )]
 
 <replaceable>&lt;tag&gt;</replaceable> ::= <replaceable>tagname</replaceable> = '<replaceable>string value</replaceable>'                    
                 </programlisting></para>
