@@ -1115,7 +1115,7 @@
                                             <para>13 – TIME;</para>
                                         </listitem>
                                         <listitem>
-                                            <para>14 – CHAR;</para>
+                                            <para>14 – CHAR (BINARY);</para>
                                         </listitem>
                                         <listitem>
                                             <para>16 – BIGINT;</para>
@@ -1127,25 +1127,33 @@
                                             <para>24 – DECFLOAT(16);</para>
                                         </listitem>
                                         <listitem>
-                                            <para>25 - DECFLOAT(34);</para>
+                                            <para>25 – DECFLOAT(34);</para>
                                         </listitem>
                                         <listitem>
-                                            <para>26 - INT128;</para>
+                                            <para>26 – INT128;</para>
                                         </listitem>
                                         <listitem>
                                             <para>27 – DOUBLE PRECISION;</para>
                                         </listitem>
                                         <listitem>
+                                            <para>28 – TIME WITH TIME ZONE;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>29 – TIMESTAMP WITH TIME ZONE;</para>
+                                        </listitem>
+                                        <listitem>
                                             <para>35 – TIMESTAMP;</para>
                                         </listitem>
                                         <listitem>
-                                            <para>37 – VARCHAR;</para>
+                                            <para>37 – VARCHAR (VARBINARY);</para>
                                         </listitem>
                                         <listitem>
                                             <para>261 – BLOB.</para>
                                         </listitem>
                                     </itemizedlist> Коды для DECIMAL и NUMERIC имеют тот же размер,
                                     что и целые типы, используемые для их хранения. </para>
+                                <para>Для типов BINARY, VARBINARY поле RDB$FIELD_SUB_TYPE = 0, для
+                                    CHAR и VARCHAR поле RDB$FIELD_SUB_TYPE = 1.</para>
                             </entry>
                         </row>
                         <row>
@@ -1293,10 +1301,16 @@
                                             <para>25 – DECFLOAT(34);</para>
                                         </listitem>
                                         <listitem>
-                                            <para>26 - INT128;</para>
+                                            <para>26 – INT128;</para>
                                         </listitem>
                                         <listitem>
                                             <para>27 – DOUBLE PRECISION;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>28 – TIME WITH TIME ZONE;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>29 – TIMESTAMP WITH TIME ZONE;</para>
                                         </listitem>
                                         <listitem>
                                             <para>35 – TIMESTAMP;</para>
@@ -1661,6 +1675,12 @@
                                             <para>27 — DOUBLE PRECISION;</para>
                                         </listitem>
                                         <listitem>
+                                            <para>28 – TIME WITH TIME ZONE;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>29 – TIMESTAMP WITH TIME ZONE;</para>
+                                        </listitem>
+                                        <listitem>
                                             <para>35 — TIMESTAMP;</para>
                                         </listitem>
                                         <listitem>
@@ -1705,6 +1725,9 @@
                                             <para>4 — для TIME;</para>
                                         </listitem>
                                         <listitem>
+                                            <para>8 — для TIME WITH TIME ZONE;</para>
+                                        </listitem>
+                                        <listitem>
                                             <para>8 — для BIGINT;</para>
                                         </listitem>
                                         <listitem>
@@ -1718,6 +1741,9 @@
                                         </listitem>
                                         <listitem>
                                             <para>8 — для blob id;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>12 — для TIMESTAMP WITH TIME ZONE; </para>
                                         </listitem>
                                         <listitem>
                                             <para>16 — для DECFLOAT(34);</para>
