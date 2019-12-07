@@ -675,7 +675,7 @@ SET ROLE <replaceable>rolename</replaceable>
                         <title>Изменение текущей роли</title>
                         <para><programlisting language="sql">
 SET ROLE manager;
-select current_role from rdb$database;
+SELECT current_role FROM rdb$database;
               
                 </programlisting>
                             <screen>
@@ -856,9 +856,9 @@ SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>
                 Поддерживаются следующие режимы округления совместимые со стандартом IEEE: <itemizedlist>
                     <listitem>
                         <para><emphasis role="bold">CEILING</emphasis>. Округление сверху. Если все
-                            отбрасываемые цифры равны нулю или знак числа отрицателен, последняя
-                            неотбрасываемая цифра не меняется. В противном случае последняя
-                            неотбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            отбрасываемые цифры равны нулю или знак числа отрицателен, последняя не
+                            отбрасываемая цифра не меняется. В противном случае последняя не
+                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
                             сторону).</para>
                     </listitem>
                     <listitem>
@@ -869,8 +869,8 @@ SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>
                         <para><emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
                             значению. Если результат равноудаленный, выполняется округление в
                             большую сторону. Если отбрасываемые значения больше чем или равны
-                            половине (0.5) единицы в следующей левой позиции, последняя
-                            неотбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            половине (0.5) единицы в следующей левой позиции, последняя не
+                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
                             сторону). В противном случае отбрасываемые значения игнорируются. Этот
                             режим округления используется в Firebird по умолчанию.</para>
                     </listitem>
@@ -878,11 +878,11 @@ SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>
                         <para><emphasis role="bold">HALF_EVEN</emphasis>. Округление к ближайшему
                             значению. Если результат равноудаленный, выполняется округление так,
                             чтобы последняя цифра была четной. Если отбрасываемые значения больше
-                            половины (0.5) единицы в следующей левой позиции, последняя
-                            неотбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            половины (0.5) единицы в следующей левой позиции, последняя не
+                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
                             сторону). Если они меньше половины, результат не корректируется (то есть
                             отбрасываемые знаки игнорируются). В противном случае, когда
-                            отбрасываемые значения точно равны половине, последняя неотбрасываемая
+                            отбрасываемые значения точно равны половине, последняя не отбрасываемая
                             цифра не меняется, если она является четной и инкрементируется на
                             единицу (округляется в большую сторону) в противном случае (чтобы
                             получить четную цифру). Этот режим округления называется также
@@ -892,8 +892,8 @@ SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>
                         <para><emphasis role="bold">HALF_DOWN</emphasis>. Округление к ближайшему
                             значению. Если результат равноудаленный, выполняется округление в
                             меньшую сторону. Если отбрасываемые значения больше чем или равны
-                            половине (0.5) единицы в следующей левой позиции, последняя
-                            неотбрасываемая цифра декрементируется на единицу (округляется в меньшую
+                            половине (0.5) единицы в следующей левой позиции, последняя не
+                            отбрасываемая цифра декрементируется на единицу (округляется в меньшую
                             сторону). В противном случае отбрасываемые значения игнорируются.</para>
                     </listitem>
                     <listitem>
@@ -902,9 +902,9 @@ SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>
                     </listitem>
                     <listitem>
                         <para><emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
-                            отбрасываемые цифры равны нулю или знак положителен, последняя
-                            неотбрасываемая цифра не меняется. В противном случае (знак отрицателен)
-                            последняя неотбрасываемая цифра инкрементируется на единицу.</para>
+                            отбрасываемые цифры равны нулю или знак положителен, последняя не
+                            отбрасываемая цифра не меняется. В противном случае (знак отрицателен)
+                            последняя не отбрасываемая цифра инкрементируется на единицу.</para>
                     </listitem>
                     <listitem>
                         <para><emphasis role="bold">REROUND</emphasis>. Округление к большему
@@ -979,224 +979,163 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
     </section>
 
     <section xml:id="session-set_bind">
-        <title>Операторы привязки типов</title>
+        <info>
+            <title>SET BIND OF</title>
+        </info>
+        <indexterm>
+            <primary>SET BIND OF</primary>
+        </indexterm>
 
-        <para>Данная группа операторов позволяет обеспечить совместимость со старыми клиентами при
-            использовании новых типов данных.</para>
+        <formalpara>
+            <title>Назначение:</title>
 
-        <section xml:id="session-timezone-settimezonebind">
-            <info>
-                <title>SET TIME ZONE BIND</title>
-            </info>
-            <indexterm>
-                <primary>SET TIME ZONE BIND</primary>
-            </indexterm>
+            <para>Изменение привязки типа. Обеспечение совместимости со старыми клиентами.</para>
+        </formalpara>
 
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Изменение привязки типов с WITH TIME ZONE</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <literallayout class="monospaced">
-SET TIME ZONE BIND { NATIVE | LEGACY }                      
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>Оператор изменяет привязку часового пояса сеанса для совместимости со старыми
-                клиентами.</para>
-
-            <para>Значение по умолчанию — NATIVE, что означает, что выражения <code>TIME WITH TIME
-                    ZONE</code> и <code>TIMESTAMP WITH TIME ZONE</code> возвращаются с новыми типами
-                данных для клиента.</para>
-
-            <para>Старые клиенты могут не понимать новые типы данных, поэтому можно определить
-                привязку к LEGACY, и выражения будут возвращены как <code>TIME WITHOUT TIME
-                    ZONE</code> и <code>TIMESTAMP WITHOUT TIME ZONE</code> с соответствующим
-                преобразованием. </para>
-
-            <para>Конфигурация привязки применима также к входным параметрам.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-
-                <para>
-                    <example>
-                        <title>Изменение привзяки для типов времени и даты-времени</title>
-
-                        <para><programlisting language="sql"> 
-set time zone bind native;
-
-set time zone bind legacy;
-                </programlisting>
-                        </para>
-                    </example>
-                </para>
-            </formalpara>
-        </section>
-
-        <section xml:id="session-decfloat-bind">
-            <info>
-                <title>SET DECFLOAT BIND</title>
-            </info>
-            <indexterm>
-                <primary>SET DECFLOAT BIND</primary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Изменение отображения значений DECFLOAT на другие доступные типы
-                    данных.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <literallayout class="monospaced">
-SET DECFLOAT BIND <replaceable>&lt;bind-type&gt;</replaceable>      
-                            
-<replaceable>&lt;bind-type&gt;</replaceable> ::= 
-    NATIVE 
-  | CHAR[ACTER]
-  | DOUBLE PRECISION
-  | BIGINT[, <replaceable>scale</replaceable>]                          
-                        </literallayout>
-                </para>
-            </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
             <para>
-                <table frame="all">
-                    <?dbfo keep-together='auto'?>
-                    <title>Параметры оператора SET DECFLOAT BIND</title>
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                        <thead>
-                            <row>
-                                <entry align="center">Параметр</entry>
-                                <entry align="center">Описание</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry><para><replaceable>scale</replaceable></para></entry>
-                                <entry>
-                                    <para>Точность (количество знаков после запятой).</para>
-                                </entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
-            </para>
-            <para>Оператор SET DECFLOAT BIND управляет каким образом значения типа DEСFLOAT будут
-                представлены во внешнем мире. Допустимые типы для привязки: <itemizedlist>
-                    <listitem>
-                        <para>NATIVE — используется IEEE754 двоичное представление;</para>
-                    </listitem>
-                    <listitem>
-                        <para>CHAR[ACTER] — ASCII строка;</para>
-                    </listitem>
-                    <listitem>
-                        <para>DOUBLE PRECISION — используется 8 байтное представление с плавающей
-                            точкой, тоже самое что и для полей типа DOUBLE PRECISION;</para>
-                    </listitem>
-                    <listitem>
-                        <para>BIGINT — используется целое с указанным масштабом, тоже самое что поле
-                            NUMERIC(18, <replaceable>scale</replaceable>).</para>
-                    </listitem>
-                </itemizedlist></para>
-            <para>Различные привязки полезны, если вы планируете использовать значения DECFLOAT со
-                старым клиентом, не поддерживающим собственный формат. Можно выбирать между строками
-                (идеальная точность, но плохая поддержка для дальнейшей обработки), значения с
-                плавающей запятой (идеальная поддержка для дальнейшей обработки, но с плохой
-                точностью) или масштабированные целые числа (хорошая поддержка дальнейшей обработки
-                и требуемая точность, но диапазон значений очень ограничен). Когда используется
-                инструмент, подобный универсальному GUI-клиенту, выбор привязки к CHAR подходит в
-                большинстве случаев.</para>
-        </section>
-
-        <section xml:id="session-int128-bind">
-            <info>
-                <title>SET INT128 BIND</title>
-            </info>
-            <indexterm>
-                <primary>SET INT128 BIND</primary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Изменение отображения значений NUMERIC и DECIMAL с точностью более 18 на
-                    другие доступные типы данных.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <literallayout class="monospaced">
-SET INT128 BIND <replaceable>&lt;bind-type&gt;</replaceable>      
-                            
-<replaceable>&lt;bind-type&gt;</replaceable> ::= 
-    NATIVE 
-  | CHAR[ACTER]
-  | DOUBLE PRECISION
-  | BIGINT[, <replaceable>scale</replaceable>]                          
+                <literallayout class="monospaced">
+SET BIND OF <replaceable>&lt;type-from&gt;</replaceable> TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY }
+                    
+SET BIND OF <replaceable>&lt;type&gt;</replaceable> NATIVE                  
                         </literallayout>
-                </para>
-            </formalpara>
-            <para>
-                <table frame="all">
-                    <?dbfo keep-together='auto'?>
-                    <title>Параметры оператора SET INT128 BIND</title>
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                        <thead>
-                            <row>
-                                <entry align="center">Параметр</entry>
-                                <entry align="center">Описание</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry><para><replaceable>scale</replaceable></para></entry>
-                                <entry>
-                                    <para>Точность (количество знаков после запятой).</para>
-                                </entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
             </para>
-            <para>Оператор SET INT128 BIND управляет каким образом значения типов NUMERIC и DECIMAL
-                с точностью более 18 будут представлены во внешнем мире. Типы NUMERIC и DECIMAL с
-                точностью от 19 до 38 используют для своего представления внутренний тип INT128.
-                Допустимые типы для привязки: <itemizedlist>
-                    <listitem>
-                        <para>NATIVE — используется 128-битное целое;</para>
-                    </listitem>
-                    <listitem>
-                        <para>CHAR[ACTER] — ASCII строка;</para>
-                    </listitem>
-                    <listitem>
-                        <para>DOUBLE PRECISION — используется 8 байтное представление с плавающей
-                            точкой, тоже самое что и для полей типа DOUBLE PRECISION;</para>
-                    </listitem>
-                    <listitem>
-                        <para>BIGINT — используется целое с указанным масштабом, тоже самое что поле
-                            NUMERIC(18, <replaceable>scale</replaceable>).</para>
-                    </listitem>
-                </itemizedlist></para>
-            <para>Различные привязки полезны, если вы планируете использовать значения типов NUMERIC
-                и DECIMAL с точностью более 18 со старым клиентом, не поддерживающим собственный
-                формат. Можно выбирать между строками (идеальная точность, но плохая поддержка для
-                дальнейшей обработки), значения с плавающей запятой (идеальная поддержка для
-                дальнейшей обработки, но с плохой точностью) или масштабированные целые числа
-                (хорошая поддержка дальнейшей обработки и требуемая точность, но диапазон значений
-                очень ограничен). Когда используется инструмент, подобный универсальному
-                GUI-клиенту, выбор привязки к CHAR подходит в большинстве случаев.</para>
-        </section>
+        </formalpara>
+
+        <para>
+            <table frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Параметры оператора SET BIND OF</title>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><replaceable>type-from</replaceable></entry>
+                            <entry>
+                                <para>Тип данных для которого задаётся правило
+                                    преобразования.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><replaceable>type-to</replaceable></entry>
+                            <entry>
+                                <para>Тип данных в который следует преобразовать.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Данный оператор позволяет задать правила описания типов возвращаемых клиенту
+            нестандартным способом — тип <replaceable>type-from</replaceable> автоматически
+            преобразуется к типу <replaceable>type-to</replaceable>.</para>
+
+        <para>Если используется неполное определение типа (например CHAR вместо
+                CHAR(<replaceable>n</replaceable>)) в левой части SET BIND OF приведения, то
+            преобразование будет осуществляться для всех CHAR столбцов, а не только для CHAR(1).
+            Когда неполное определение типа используется в правой части оператора (часть TO), сервер
+            автоматически определит недостающие детали этого типа на основе исходного
+            столбца.</para>
+
+        <para>Ключевое слово LEGACY в части TO используется, когда тип данных, отсутствующий в
+            предыдущей версии Firebird, должен быть представлен способом понятным для старого
+            клиентского программного обеспечения (возможна некоторая потеря данных). Существуют
+            следующие преобразования в LEGACY типы: <table frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Преобразования в legacy типы</title>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" align="left"/>
+                    <colspec colname="c2" colnum="2" align="left"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Native тип</entry>
+                            <entry align="center">Legacy тип</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>BOOLEAN</entry>
+                            <entry>CHAR(5)</entry>
+                        </row>
+                        <row>
+                            <entry>DECFLOAT</entry>
+                            <entry>DOUBLE PRECISION</entry>
+                        </row>
+                        <row>
+                            <entry>NUMERIC(38)</entry>
+                            <entry>NUMERIC(18)</entry>
+                        </row>
+                        <row>
+                            <entry>TIME WITH TIME ZONE</entry>
+                            <entry>TIME WITHOUT TIME ZONE</entry>
+                        </row>
+                        <row>
+                            <entry>TIMESTAMP WITH TIME ZONE</entry>
+                            <entry>TIMESTAMP WITHOUT TIME ZONE</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Установка NATIVE означает, что тип будет использоваться так, как если бы для него не
+            было предыдущих правил преобразования.</para>
+
+        <para>Ту же функциональность можно получить используй тэг <code>isc_dpb_set_bind</code> в
+            DPB. Кроме того, преобразование типов в legacy типы доступные в предыдущих версиях
+            Firebird можно установить с помощью параметра
+                <parameter>DataTypeCompatibility</parameter> в <filename>firebird.conf</filename>
+            или <filename>databases.conf</filename>. Чем позже введено правило (.conf -> DPB ->
+            SQL), тем выше его приоритет.</para>
+
+        <formalpara>
+            <title>Примеры</title>
+            <para>
+                <programlisting language="sql">
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--native    
+</programlisting>
+                <screen>
+                   CAST
+=======================
+                 123.45                    
+                </screen>
+                <programlisting language="sql">
+SET BIND OF DECFLOAT TO DOUBLE PRECISION;
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--double
+</programlisting>
+                <screen>
+                   CAST
+=======================
+      123.4500000000000                    
+                </screen>
+                <programlisting language="sql">
+SET BIND OF DECFLOAT(34) TO CHAR;
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--всё ещё double
+</programlisting>
+                <screen>
+                   CAST
+=======================
+      123.4500000000000                    
+                </screen>
+                <programlisting language="sql">
+SELECT CAST('123.45' AS DECFLOAT(34)) FROM RDB$DATABASE;	--text
+</programlisting>
+                <screen>
+CAST
+==========================================
+123.45                   
+                </screen>
+            </para>
+        </formalpara>
     </section>
 
     <section xml:id="session-resetsession">
