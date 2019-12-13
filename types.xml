@@ -1204,7 +1204,7 @@ SET BIND OF DECFLOAT(34) TO CHAR;
 SET BIND OF DECFLOAT TO NUMERIC(18, 4);
 -- значения столбцов типа DECFLOAT будут преобразованы в тип NUMERIC(18, 4)
 
-SET BIND OF DECFLOAT NATIVE;
+SET BIND OF DECFLOAT TO NATIVE;
 -- возвращает значения столбцов типа DECFLOAT в нативном типе
                             </programlisting>
                         </para>

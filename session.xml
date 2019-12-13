@@ -996,10 +996,8 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
             <title>Синтаксис:</title>
             <para>
                 <literallayout class="monospaced">
-SET BIND OF <replaceable>&lt;type-from&gt;</replaceable> TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY }
-                    
-SET BIND OF <replaceable>&lt;type&gt;</replaceable> NATIVE                  
-                        </literallayout>
+SET BIND OF <replaceable>&lt;type-from&gt;</replaceable> TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY | NATIVE }
+                                                     </literallayout>
             </para>
         </formalpara>
 
