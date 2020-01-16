@@ -288,6 +288,12 @@
                                 используется — FALSE. Для встроенных соединений — возвращает
                                 NULL.</entry>
                         </row>
+                        <row>
+                            <entry>MON$WIRE_CRYPT_PLUGIN</entry>
+                            <entry>CHAR(63) </entry>
+                            <entry>Имя текущего плагина для шифрования сетевого трафика, если оно
+                                используется, в противном случае NULL.</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>

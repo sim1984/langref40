@@ -1865,6 +1865,12 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                         возвращает NULL.</entry>
                                 </row>
                                 <row>
+                                    <entry>WIRE_CRYPT_PLUGIN</entry>
+                                    <entry>Если используется шифрование сетевого трафика, то
+                                        возвращает имя текущего плагина шифрования, в противном
+                                        случае NULL.</entry>
+                                </row>
+                                <row>
                                     <entry>SESSION_IDLE_TIMEOUT</entry>
                                     <entry>Содержит текущее значение тайм-аут простоя соединения в
                                         секундах, который был установлен на уровне соединения, или
