@@ -6,7 +6,7 @@
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0 Beta 2</subtitle>
-        <edition>16 января 2020 — v.0000-1</edition>
+        <edition>20 января 2020 — v.0000-1</edition>
 
         <authorgroup>
             <author>
@@ -36,7 +36,7 @@
             <publishername>Firebird Project</publishername>
         </publisher>
         <copyright>
-            <year>2019</year>
+            <year>2020</year>
             <holder>Firebird Project и все авторы, в соответствии с лицензией <link
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation

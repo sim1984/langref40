@@ -324,7 +324,9 @@ WHERE MON$ATTACHMENT_ID &lt;&gt; CURRENT_CONNECTION
                     <itemizedlist spacing="compact">
                         <listitem>
                             <para>Вся текущая активность в удаляемом соединении немедленно
-                                прекращается, и все активные транзакции откатываются;</para>
+                                прекращается, и все активные транзакции откатываются (триггеры на
+                                события ON DISCONNECT и ON TRANSACTION ROLLBACK не
+                                вызываются);</para>
                         </listitem>
                         <listitem>
                             <para>Закрытое соединение вернёт приложению ошибку с кодом
