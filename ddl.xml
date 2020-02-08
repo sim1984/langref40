@@ -6752,8 +6752,8 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
 <replaceable>&lt;relation_trigger_sql2003&gt;</replaceable> ::= 
   [ACTIVE | INACTIVE]
   {BEFORE | AFTER} <replaceable>&lt;mutation_list&gt;</replaceable>
-  [POSITION <replaceable>number</replaceable>]
   ON {<replaceable>tablename</replaceable> | <replaceable>viewname</replaceable>}
+  [POSITION <replaceable>number</replaceable>]
 
 <replaceable>&lt;database_trigger&gt;</replaceable> ::= 
   [ACTIVE | INACTIVE] 
@@ -7150,7 +7150,7 @@ END
                         <title>Создание DML триггера согласно стандарту SQL-2003</title>
                         <para><programlisting language="sql">
 CREATE TRIGGER set_cust_no
-ACTIVE BEFORE INSERT POSITION 0 ON customer
+ACTIVE BEFORE INSERT ON customer POSITION 0
 AS
 BEGIN
   IF (NEW.cust_no IS NULL) THEN
@@ -7163,7 +7163,7 @@ END
                             пользователя</title>
                         <para><programlisting language="sql">
 CREATE TRIGGER set_cust_no
-ACTIVE BEFORE INSERT POSITION 0 ON customer
+ACTIVE BEFORE INSERT ON customer POSITION 0
 SQL SECURITY DEFINER
 AS
 BEGIN
@@ -7176,8 +7176,8 @@ END
                         <title>Создание DML триггера на несколько событий</title>
                         <para><programlisting language="sql">
 CREATE TRIGGER TR_CUST_LOG
-ACTIVE AFTER INSERT OR UPDATE OR DELETE POSITION 10
-ON CUSTOMER
+ACTIVE AFTER INSERT OR UPDATE OR DELETE 
+ON CUSTOMER POSITION 10
 AS
 BEGIN
   INSERT INTO CHANGE_LOG (LOG_ID,
@@ -8153,7 +8153,7 @@ CREATE OR ALTER TRIGGER <replaceable>trigname</replaceable> {
                     <title>Создание нового или изменение существующего триггера</title>
                     <para><programlisting language="sql">
 CREATE OR ALTER TRIGGER set_cust_no
-ACTIVE BEFORE INSERT POSITION 0 ON customer
+ACTIVE BEFORE INSERT ON customer POSITION 0
 AS
 BEGIN
   IF (NEW.cust_no IS NULL) THEN
@@ -8318,7 +8318,7 @@ RECREATE TRIGGER <replaceable>trigname</replaceable> {
                     <title>Создание или пересоздание триггера</title>
                     <para><programlisting language="sql">
 RECREATE TRIGGER set_cust_no
-ACTIVE BEFORE INSERT POSITION 0 ON customer
+ACTIVE BEFORE INSERT ON customer POSITION 0
 AS
 BEGIN
   IF (NEW.cust_no IS NULL) THEN
