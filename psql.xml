@@ -1044,7 +1044,7 @@ BEGIN
   [<replaceable>&lt;package_item&gt;</replaceable> ...]
 END
 
-{ALTER | RECREATE} PACKAGE BODY <replaceable>package_name</replaceable>  
+RECREATE PACKAGE BODY <replaceable>package_name</replaceable>  
 AS
 BEGIN
   [<replaceable>&lt;package_item&gt;</replaceable> ...]
