@@ -996,7 +996,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
             <title>Синтаксис:</title>
             <para>
                 <literallayout class="monospaced">
-SET BIND OF <replaceable>&lt;type-from&gt;</replaceable> TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY | NATIVE }
+SET BIND OF {<replaceable>&lt;type-from&gt;</replaceable> | TIME ZONE} TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY | EXTENDED | NATIVE }
                                                      </literallayout>
             </para>
         </formalpara>
@@ -1040,9 +1040,14 @@ SET BIND OF <replaceable>&lt;type-from&gt;</replaceable> TO { <replaceable>&lt;t
         <para>Если используется неполное определение типа (например CHAR вместо
                 CHAR(<replaceable>n</replaceable>)) в левой части SET BIND OF приведения, то
             преобразование будет осуществляться для всех CHAR столбцов, а не только для CHAR(1).
-            Когда неполное определение типа используется в правой части оператора (часть TO), сервер
-            автоматически определит недостающие детали этого типа на основе исходного
+            Специальный неполный тип TIME ZONE обозначает все типы (а именно TIME и TIMESTAMP) с
+            TIME ZONE. Когда неполное определение типа используется в правой части оператора (часть
+            TO), сервер автоматически определит недостающие детали этого типа на основе исходного
             столбца.</para>
+        <para>Для этого оператора нет никакой разницы между типами NUMERIC и DECIMAL. Изменение
+            привязки любого NUMERIC не влияет на соответствующий базовый целочисленный тип.
+            Напротив, изменение привязки целочисленного типа данных также влияет на соответствующие
+            NUMERIC.</para>
 
         <para>Ключевое слово LEGACY в части TO используется, когда тип данных, отсутствующий в
             предыдущей версии Firebird, должен быть представлен способом понятным для старого
@@ -1084,6 +1089,10 @@ SET BIND OF <replaceable>&lt;type-from&gt;</replaceable> TO { <replaceable>&lt;t
                 </tgroup>
             </table>
         </para>
+        <para>Использование EXTENDED в части TO заставляет Firebird использовать расширенную форму
+            типа в части FROM. В настоящее время он работает только для <code>{TIME | TIMESTAMP}
+                WITH TIME ZONE</code> — они принудительно приводятся к <code>EXTENDED {TIME |
+                TIMESTAMP} WITH TIME ZONE</code>.</para>
 
         <para>Установка NATIVE означает, что тип будет использоваться так, как если бы для него не
             было предыдущих правил преобразования.</para>
@@ -1134,6 +1143,33 @@ CAST
                 </screen>
             </para>
         </formalpara>
+
+        <example>
+            <title>Использование SET BIND OF TIME ZONE TO EXTENDED</title>
+
+            <para>Если на стороне клиента отсутствует библиотека ICU, то результат следующего
+                запроса будет таким: <programlisting language="sql">
+SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
+</programlisting>
+                <screen>
+                                        CURRENT_TIMESTAMP
+=========================================================
+2020-02-21 16:26:48.0230 GMT*                  
+                </screen>
+            </para>
+            <para>Для того чтобы получить значение смещения времени относительно GMT выполните
+                следующее:
+                <programlisting language="sql">
+SET BIND OF TIME ZONE TO EXTENDED;
+SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
+</programlisting>
+                <screen>
+                                        CURRENT_TIMESTAMP
+=========================================================
+2020-02-21 19:26:55.6820 +03:00                 
+                </screen>
+            </para>
+        </example>
     </section>
 
     <section xml:id="session-resetsession">

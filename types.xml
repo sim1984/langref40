@@ -1558,24 +1558,39 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
                 America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
-                -03:00). Список региональных часовых поясов и их идентификаторов см. в приложени
+                -03:00). Список региональных часовых поясов и их идентификаторов см. в приложении
                     <link linkend="timezones">Список региональных часовых поясов</link>. Правила
                 преобразования региональных часовых поясов в смещение в минутах можно получить с
                 помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
                     >RDB$TIME_ZONE_UTIL.TRANSITIONS</link>.</para>
 
-            <para>TIME/TIMESTAMP WITH TIMEZONE считается равным другому TIME/TIMESTAMP WITH
-                TIMEZONE, если их преобразование в UTC равно, например <code>time '10:00 -02' = time
-                    '09:00 -03'</code>, поскольку оба времени эквивалентны <code>time '12:00
-                    GMT'</code>. Это также справедливо в контексте ограничения UNIQUE и для
-                сортировки.</para>
+            <para><code>{TIME | TIMESTAMP} WITH TIMEZONE</code> считается равным другому <code>{TIME
+                    | TIMESTAMP} WITH TIMEZONE</code>, если их преобразование в UTC равно, например
+                    <code>time '10:00 -02' = time '09:00 -03'</code>, поскольку оба времени
+                эквивалентны <code>time '12:00 GMT'</code>. Это также справедливо в контексте
+                ограничения UNIQUE и для сортировки.</para>
+
+            <para><code>EXTENDED {TIME | TIMESTAMP} WITH TIME ZONE</code> предназначены для
+                использования только при общении с клиентами, они решают проблему представления
+                правильного времени на клиентах, у которых отсутствует библиотека ICU. Нельзя
+                использовать расширенные типы данных в таблицах, процедурах и т. д. Единственный
+                способ использовать эти типы данных — это приведение типов данных, включая
+                инструкцию SET BIND (дополнительную информацию смотри в <link
+                    linkend="session-set_bind">SET BIND OF</link>).</para>
 
             <section xml:id="types-datetime-timezone-storage">
                 <title>Хранение</title>
 
-                <para>TIME/TIMESTAMP WITH TIME ZONE хранится так же как TIME/TIMESTAMP WITHOUT TIME
-                    ZONE плюс 2 байта для идентификации часового пояса или смещения. TIME/TIMESTAMP
-                    часть хранится в UTC (и переводится в сохранённый часовой пояс).</para>
+                <para><code>{TIME | TIMESTAMP} WITH TIME ZONE</code> хранится так же как <code>{TIME
+                        | TIMESTAMP} WITHOUT TIME ZONE</code> плюс 2 байта для идентификации
+                    часового пояса или смещения.</para>
+
+                <para>TIME/TIMESTAMP часть хранится в UTC (и переводится в сохранённый часовой
+                    пояс).</para>
+
+                <para><code>EXTENDED {TIME | TIMESTAMP} WITH TIME ZONE</code> хранится так же как
+                        <code>{TIME | TIMESTAMP} WITH TIME ZONE</code> плюс 2 байта, которые
+                    содержат абсолютное смещение относительно GMT в минутах. </para>
             </section>
 
         </section>
@@ -1633,6 +1648,8 @@ BEGIN
                 <para>
                     <literallayout class="monospaced"> 
 TIME [{WITH | WITHOUT} TIME ZONE]
+
+EXTENDED TIME WITH TIME ZONE
                 </literallayout>
                 </para>
             </formalpara>
@@ -1641,6 +1658,17 @@ TIME [{WITH | WITHOUT} TIME ZONE]
                 диапазоне от 00:00:00.0000 до 23:59:59.9999. По умолчанию тип TIME не содержит
                 информацию о часовом поясе. Для того чтобы тип TIME включал информацию о часовом
                 поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
+
+            <important>
+                <para><code>EXTENDED TIME WITH TIME ZONE</code> предназначен для использования
+                    только при общении с клиентами, он решают проблему представления правильного
+                    времени на клиентах, у которых отсутствует библиотека ICU. Нельзя использовать
+                    расширенные типы данных в таблицах, процедурах и т. д. Единственный способ
+                    использовать эти типы данных — это приведение типов данных, включая инструкцию
+                    SET BIND (дополнительную информацию смотри в <link linkend="session-set_bind"
+                        >SET BIND OF</link>).</para>
+            </important>
+
             <example>
                 <info>
                     <title>Пример использования TIME</title>
@@ -1684,6 +1712,8 @@ BEGIN
                 <para>
                     <literallayout class="monospaced"> 
 TIMESTAMP [{WITH | WITHOUT} TIME ZONE]
+
+EXTENDED TIMESTAMP WITH TIME ZONE
                 </literallayout>
                 </para>
             </formalpara>
@@ -1692,6 +1722,16 @@ TIMESTAMP [{WITH | WITHOUT} TIME ZONE]
                 01.01.0001 00:00:00.0000 до 31.12.9999 23:59:59.9999. По умолчанию тип TIMESTAMP не
                 содержит информацию о часовом поясе. Для того чтобы тип TIMESTAMP включал информацию
                 о часовом поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
+            
+            <important>
+                <para><code>EXTENDED TIMESTAMP WITH TIME ZONE</code> предназначен для использования
+                    только при общении с клиентами, он решают проблему представления правильного
+                    времени на клиентах, у которых отсутствует библиотека ICU. Нельзя использовать
+                    расширенные типы данных в таблицах, процедурах и т. д. Единственный способ
+                    использовать эти типы данных — это приведение типов данных, включая инструкцию
+                    SET BIND (дополнительную информацию смотри в <link linkend="session-set_bind"
+                        >SET BIND OF</link>).</para>
+            </important>
 
             <example>
                 <info>

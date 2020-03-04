@@ -1121,7 +1121,7 @@ END
 
                 <para>
                     <link linkend="ddl-package-alter">ALTER PACKAGE</link>, <link
-                        linkend="ddl-package-body-alter">ALTER PACKAGE BODY</link>.</para>
+                        linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.</para>
             </formalpara>
         </section>
 

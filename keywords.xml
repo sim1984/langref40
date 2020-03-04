@@ -407,6 +407,7 @@
                 <member>EXISTS</member>
                 <member>EXIT</member>
                 <member>EXP</member>
+                <member>EXTENDED</member>
                 <member>EXTERNAL</member>
                 <member>EXTRACT</member>
                 <member>FALSE</member>

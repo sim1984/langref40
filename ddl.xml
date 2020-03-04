@@ -10801,7 +10801,7 @@ END
                         <para>
                             <link linkend="ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="ddl-package-drop">DROP PACKAGE</link>, <link
-                                linkend="ddl-package-body-alter">ALTER PACKAGE BODY</link>. </para>
+                                linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -10884,7 +10884,7 @@ END
                         <para>
                             <link linkend="ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="ddl-package-alter">ALTER PACKAGE</link>, <link
-                                linkend="ddl-package-body-alter">ALTER PACKAGE BODY</link>. </para>
+                                linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -10980,7 +10980,7 @@ DROP PACKAGE APP_VAR;
                         <para>
                             <link linkend="ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="ddl-package-alter">ALTER PACKAGE</link>, <link
-                                linkend="ddl-package-body-alter">DROP PACKAGE BODY</link>. </para>
+                                linkend="ddl-package-body-drop">DROP PACKAGE BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
