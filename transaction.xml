@@ -353,20 +353,20 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                     <code>SNAPSHOT</code>. </para>
                         </note>
                         <para>В Firebird API режиму изолированности <code>SNAPSHOT</code>
-                            соответсвует константа <code>isc_tpb_concurrency</code>.</para>
+                            соответствует константа <code>isc_tpb_concurrency</code>.</para>
                         <section xml:id="transaction-isolation_level-snapshot-atnumber">
                             <title>Предложение AT NUMBER</title>
                             <para>Транзакцию с уровнем изолированности <code>SNAPSHOT</code> можно
                                 запустить на основе другой транзакции, если известен номер её
                                 снимка. В этом случае эта новая транзакция может видеть те же самые
                                 даные, что и транзакция на основе которой она запущена.</para>
-                            <para>Эта функциональность позволяет моздать паралельные процессы (в
-                                разных подключениях), считывающие согласованые данные из базы
+                            <para>Эта функциональность позволяет создать параллельные процессы (в
+                                разных подключениях), считывающие согласованные данные из базы
                                 данных. Например, процесс резервного копирования может создавать
                                 несколько потоков, параллельно считывающих данные из базы данных.
                                 Или веб-служба работать с распередёленными вспомогательными
                                 службами, выполняя некоторую обработку.</para>
-                            <para>Это достигается созданием транзакции с использованеим синтаксиса
+                            <para>Это достигается созданием транзакции с использованием синтаксиса
                                 <programlisting>
 SET TRANSACTION SNAPSHOT  AT NUMBER <replaceable>&lt;snapshot number&gt;</replaceable>                       
                             </programlisting>
@@ -381,7 +381,7 @@ SET TRANSACTION SNAPSHOT  AT NUMBER <replaceable>&lt;snapshot number&gt;</replac
                                 <programlisting>
 RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
          </programlisting>
-                                или через API информаии о транзакции с константой
+                                или через API информации о транзакции с константой
                                     <code>fb_info_tra_snapshot_number</code>. </para>
 
                             <note>
@@ -432,7 +432,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                             рамках активной транзакции <code>READ COMMITTED</code> без её
                             перезапуска.</para>
                         <para>В Firebird API режиму изолированности <code>READ COMMITTED</code>
-                            соответсвует константа <code>isc_tpb_read_committed</code>.</para>
+                            соответствует константа <code>isc_tpb_read_committed</code>.</para>
 
                         <section xml:id="transaction-isolation_level-read_commited-record_version">
                             <title>RECORD_VERSION</title>
@@ -463,7 +463,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                                             идентификатор текущей транзакции, то будет выдана ошибка
                                             конфликта блокировок.</para>
                                         <para>В Firebird API для способа разрешения конфликтов
-                                                <code>NO RECORD_VERSION</code> соответсвует
+                                                <code>NO RECORD_VERSION</code> соответствует
                                             константа <code>isc_tpb_no_rec_version</code>.</para>
                                     </listitem>
                                     <listitem>
@@ -475,7 +475,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                                                 <code>NO WAIT</code>) никак не влияет на поведение
                                             транзакции при её старте.</para>
                                         <para>В Firebird API для способа разрешения конфликтов
-                                                <code>RECORD_VERSION</code> соответсвует константа
+                                                <code>RECORD_VERSION</code> соответствует константа
                                                 <code>isc_tpb_rec_version</code>.</para>
                                     </listitem>
                                 </itemizedlist></para>
@@ -486,7 +486,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                                     установив параметр <parameter>ReadConsistency</parameter> (см.
                                         <filename>firebird.conf</filename>) в 0. В этом случае опции
                                     не игнорируются и работают точно так же как в предыдущих
-                                    версиях. В будующих версиях этот параметр в
+                                    версиях. В будущих версиях этот параметр в
                                         <filename>firebird.conf</filename> может быть удалён.</para>
                             </warning>
                         </section>
@@ -507,7 +507,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                                 COMMITED</code>.</para>
 
                             <para>В Firebird API для стабильного снимка на уровне SQL оператора
-                                    <code>READ CONSISTENCY</code> соответсвует константа
+                                    <code>READ CONSISTENCY</code> соответствует константа
                                     <code>isc_tpb_read_consistency</code>.</para>
 
                             <section>
@@ -522,32 +522,110 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                                     транзакцию <code>READ COMMITTED RECORD_VERSION</code> — оператор
                                     не ждёт завершения активной транзакции и обходит цепочку
                                     бекверсий, в которой ищет версию записи видимую для текущего
-                                    моментального снимка. </para>
+                                    моментального снимка.</para>
 
-                                <para>При возникновении конфликта обновлений поведения Firebird
-                                    меняется. Если конкурирующая транзакция активна, то Firebird
-                                    ждёт (в соответвии с параметром таймаута блокировки), и если
-                                    конкурирующая транзакция всё ещё не зафиксирована, то
-                                    вовращается ошибка кофликта обновлений. Если конкурирующая
-                                    транзакция зафиксирована, то Firebird создаст новый моментальный
-                                    снимок и перезапускает выполнение оператора верхнего уровня. В
-                                    обоих случаях все работы выполненные для оператора верхнего
-                                    уровня будут отменены.</para>
+                                <para>Для режима изолированности <code>READ COMMITTED READ
+                                        CONSISTENCY</code> обработка конфликтов обновлений Firebird
+                                    значительно изменяется. При обнаружении конфликта обновления
+                                    выполняется следующее: <orderedlist numeration="loweralpha">
+                                        <listitem>
+                                            <para>режим изолированности транзакции временно
+                                                переключается в режим READ COMMITTED NO RECORD
+                                                VERSION</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>Firebird устанавливает блокировку записи на
+                                                конфликтную запись</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>Firebird продолжает оценивать оставшиеся записи
+                                                для удаления/обновления в курсоре, а также
+                                                продолжает ставить на них блокировки</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>когда больше нет записей для извлечения,
+                                                запускается механизм для отмены всех выполненных
+                                                действий, выполненных оператором верхнего уровня, и
+                                                сохраняются все установленные блокировки для каждой
+                                                обновлённой/удалённой/заблокированной записи, все
+                                                вставленные записи удаляются</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>затем Firebird восстанавливает режим
+                                                изолированности транзакции как READ COMMITTED READ
+                                                CONSISTENCY, создает новый снимок уровня оператора и
+                                                перезапускает выполнение оператора верхнего
+                                                уровня.</para>
+                                        </listitem>
+                                    </orderedlist></para>
+                                <para>Такой алгоритм позволяет гарантировать, что после перезапуска
+                                    уже обновленные записи останутся заблокированными, они будут
+                                    видны новому снимку и могут быть обновлены снова без дальнейших
+                                    конфликтов. Кроме того, из-за режима согласованности чтения
+                                    набор измененных записей остается согласованным.</para>
 
-                                <para>Это та же самая логика, которая используется в клиентских
-                                    приложениях для обработки конфликтов обновления, но немного
-                                    более эффективная, поскольку исключается сетевой обмен с
-                                    клиентом. Логика перезапуска не применяется к хранимым
-                                    процедурам выбора, если конфликт обновлений происходит
-                                    происходит после возврата любой записи в клиентское приложение.
-                                    В этом случае возвращается ошибка
-                                        <code>isc_update_conflict</code>.</para>
+                                <simplesect>
+                                    <title>Замечания</title>
 
-                                <note>
-                                    <para>По историческим причинам <code>isc_update_conflict</code>
-                                        сообщается как вторичный код ошибки с основным кодом ошибки
-                                            <code>isc_deadlock</code>.</para>
-                                </note>
+                                    <itemizedlist>
+                                        <listitem>
+                                            <para>Приведенный выше алгоритм перезапуска применяется
+                                                к операторам UPDATE, DELETE, SELECT WITH LOCK и
+                                                MERGE, с предложением RETURNING и без него,
+                                                выполняемым непосредственно из пользовательского
+                                                приложения или в составе некоторого объекта PSQL
+                                                (хранимая процедура, функция, триггер, EXECUTE BLOCK
+                                                и т. д.)</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>если оператор UPDATE/DELETE расположена на
+                                                каком-то явном курсоре (WHERE CURRENT OF), то
+                                                Firebird пропускает шаг (c) выше, то есть не
+                                                извлекает и не устанавливает блокировки записи для
+                                                оставшихся записей курсора</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>если оператор верхнего уровня SELECT (или EXECUTE
+                                                BLOCK возвращающий набор данных) и конфликт
+                                                обновления происходит после того, как одна или
+                                                несколько записей были возвращены приложению, то
+                                                ошибка конфликта обновления сообщается как обычно, и
+                                                перезапуск не инициируется</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>рестарт не инициируется для операторов в
+                                                автономных блоках (<code>IN AUTONOMOUS TRANSACTION
+                                                  DO ...</code>)</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>после 10 попыток Firebird прерывает алгоритм
+                                                перезапуска, снимает все блокировки записи,
+                                                восстанавливает режим изоляции транзакции как
+                                                  <code>READ COMMITTED READ CONSISTENCY</code> и
+                                                сообщает о конфликте обновления</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>любая не обработанная ошибка на шаге (c) выше
+                                                останавливает алгоритм перезапуска, и Firebird
+                                                продолжает обработку обычным способом, например,
+                                                ошибка может быть перехвачена и обработана блоком
+                                                PSQL WHEN или сообщена приложению, если она не
+                                                обработана</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>триггеры UPDATE/DELETE сработают многократно для
+                                                одной и той же записи, если выполнение оператора
+                                                было перезапущено и запись обновлена/удалена
+                                                снова</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>по историческим причинам
+                                                  <code>isc_update_conflict</code> сообщается как
+                                                вторичный код ошибки с первичным кодом ошибки
+                                                  <code>isc_deadlock</code>.</para>
+                                        </listitem>
+                                    </itemizedlist>
+                                </simplesect>
                             </section>
                         </section>
                     </section>
