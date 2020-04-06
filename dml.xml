@@ -616,11 +616,14 @@ FROM <replaceable>&lt;source&gt;</replaceable>
     <replaceable>table</replaceable> 
   | <replaceable>view</replaceable>  
   | <replaceable>selectable-stored-procedure</replaceable> [(<replaceable>args</replaceable>)] 
-  | <replaceable>&lt;derived-table&gt;</replaceable> 
+  | <replaceable>&lt;derived-table&gt;</replaceable>
+  | <replaceable>&lt;lateral-derived-table&gt;</replaceable> 
   | <replaceable>&lt;common-table-expression&gt;</replaceable> 
 } [[AS] <replaceable>alias</replaceable>]       
 
-<replaceable>&lt;derived-table&gt;</replaceable> ::= (<replaceable>select-statement</replaceable>) [[AS] <replaceable>alias</replaceable>] [(<replaceable>&lt;column-aliases&gt;</replaceable>)]       
+<replaceable>&lt;derived-table&gt;</replaceable> ::= (<replaceable>select-statement</replaceable>) [[AS] <replaceable>alias</replaceable>] [(<replaceable>&lt;column-aliases&gt;</replaceable>)] 
+
+<replaceable>&lt;lateral-derived-table&gt;</replaceable> ::= LATERAL <replaceable>&lt;derived-table&gt;</replaceable>      
 
 <replaceable>&lt;common-table-expression&gt;</replaceable> ::= WITH [RECURSIVE]      
   <replaceable>&lt;cte-def&gt;</replaceable> [, <replaceable>&lt;cte-def&gt;</replaceable> ...] 
@@ -675,6 +678,10 @@ FROM <replaceable>&lt;source&gt;</replaceable>
                                 <entry>
                                     <para>Производная таблица.</para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>lateral-derived-table</replaceable></entry>
+                                <entry>Производная таблица с горизонтальной связью.</entry>
                             </row>
                             <row>
                                 <entry><replaceable>cte-def</replaceable></entry>
@@ -869,9 +876,11 @@ FROM get_winners('#34517', 'AMS')
 
                     <para>
                         <programlisting>
-(<replaceable>select-query</replaceable>) [[AS] <replaceable>derived-table-alias</replaceable>] [(<replaceable>&lt;derived-column-aliases&gt;</replaceable>)]       
+<replaceable>&lt;derived table</replaceable>&gt; ::= (<replaceable>select-query</replaceable>) [[AS] <replaceable>derived-table-alias</replaceable>] [(<replaceable>&lt;derived-column-aliases&gt;</replaceable>)]       
 
-<replaceable>&lt;derived-column-aliases&gt;</replaceable> := <replaceable>column-alias</replaceable> [, <replaceable>column-alias</replaceable> ...]                                    
+<replaceable>&lt;derived-column-aliases&gt;</replaceable> := <replaceable>column-alias</replaceable> [, <replaceable>column-alias</replaceable> ...]
+
+<replaceable>&lt;lateral-derived-table&gt;</replaceable> ::= LATERAL <replaceable>&lt;derived-table&gt;</replaceable>                                    
                     </programlisting>
                     </para>
                 </formalpara>
@@ -936,7 +945,13 @@ FROM (SELECT *
                                 <para>Оптимизатор может обрабатывать производные таблицы очень
                                     эффективно. Однако если производная таблица включена во
                                     внутреннее соединение и содержит подзапрос, то никакой порядок
-                                    соединения не может быть использован оптимизатором.</para>
+                                    соединения не может быть использован оптимизатором;</para>
+                            </listitem>
+                            <listitem>
+                                <para>Ключевое слово LATERAL позволяет производной таблице ссылаться
+                                    на поля из ранее перечисленных таблиц в текущем
+                                        <replaceable>&lt;table reference
+                                    list&gt;</replaceable>.</para>
                             </listitem>
                         </itemizedlist>
                     </para>
@@ -1196,6 +1211,7 @@ FROM <replaceable>&lt;source&gt;</replaceable>
   | <replaceable>view</replaceable>  
   | <replaceable>selectable-stored-procedure</replaceable> [(<replaceable>args</replaceable>)] 
   | <replaceable>derived-table</replaceable>
+  | <replaceable>lateral-derived-table</replaceable>
   | <replaceable>common-table-expression</replaceable> 
 } [[AS] <replaceable>alias</replaceable>] 
 
@@ -1975,6 +1991,7 @@ JOIN TB ON TA.a = TB.a
             </section>
             <section xml:id="dml-select-joins-sp">
                 <title>Соединения с хранимыми процедурами</title>
+
                 <para>Если соединение происходит с хранимой процедурой, которая не коррелирована с
                     другими потоками данных через входные параметры, то нет никаких особенностей. </para>
                 <para>В противном случае, есть одна особенность: потоки, используемые во входных
@@ -1990,6 +2007,84 @@ SELECT *
 FROM MY_PROC(MY_TAB.F)
 JOIN MY_TAB ON 1 = 1
                     </programlisting>
+                </para>
+            </section>
+            <section xml:id="dml-select-joins-lateral">
+                <info>
+                    <title>Соединения с LATERAL производными таблицами</title>
+                    <keywordset>
+                        <keyword>LATERAL</keyword>
+                    </keywordset>
+                </info>
+
+                <para>Если перед производной таблицей указать ключевое слово LATERAL, то это
+                    позволит ссылаться в них на столбцы предшествующих элементов из списка FROM. Без
+                    LATERAL каждый подзапрос выполняется независимо и поэтому не может обращаться к
+                    другим элементам FROM.</para>
+
+                <para>Элемент LATERAL может находиться на верхнем уровне списка FROM или в дереве
+                    JOIN. В последнем случае он может также ссылаться на любые элементы в левой
+                    части JOIN, справа от которого он находится.</para>
+
+                <para>Когда элемент FROM содержит ссылки LATERAL, то запрос выполняется следующим
+                    образом: сначала вычисляется значения всех столбцов о которых зависит
+                    производная таблица с ключевым словом LATERAL, затем вычисляется сама
+                    производная таблица с LATERAL для каждой полученной записи. Результирующие
+                    строки полученные из производной таблицы c LATERAL соединяются со строками из
+                    которых они получены.</para>
+
+                <para>В качестве соединений допускается следующие CROSS JOIN и LEFT OUTER JOIN.
+                    Внутреннее соединение также допустимо, но не рекомендуется, поскольку могут
+                    возникнуть проблемы при вычислении условия соединения потоков.</para>
+
+                <para>В качестве примера выведем результаты лошадей и их последние промеры. Если у
+                    лошади нет ни одного промера, то она не будет выведена:
+                    <programlisting language="sql">
+SELECT
+    HORSE.NAME,
+    M.BYDATE,
+    M.HEIGHT_HORSE,
+    M.LENGTH_HORSE
+FROM HORSE
+CROSS JOIN LATERAL(SELECT
+                       *
+                   FROM MEASURE
+                   WHERE MEASURE.CODE_HORSE = HORSE.CODE_HORSE
+                   ORDER BY MEASURE.BYDATE DESC
+                   FETCH FIRST ROW ONLY) M                    
+                </programlisting>
+                    другой вариант написание этого запроса
+                    <programlisting language="sql">
+SELECT
+    HORSE.NAME,
+    M.BYDATE,
+    M.HEIGHT_HORSE,
+    M.LENGTH_HORSE
+FROM HORSE,
+     LATERAL(SELECT
+                       *
+                   FROM MEASURE
+                   WHERE MEASURE.CODE_HORSE = HORSE.CODE_HORSE
+                   ORDER BY MEASURE.BYDATE DESC
+                   FETCH FIRST ROW ONLY) M                    
+                </programlisting>
+                </para>
+                <para>Если необходимо выводить лошадей, не зависимо есть ли у них хотя бы один
+                    промер, то необходимо заменить CROSS JOIN на LEFT JOIN:
+                    <programlisting language="sql">
+SELECT
+    HORSE.NAME,
+    M.BYDATE,
+    M.HEIGHT_HORSE,
+    M.LENGTH_HORSE
+FROM HORSE
+LEFT JOIN LATERAL(SELECT
+                       *
+                   FROM MEASURE
+                   WHERE MEASURE.CODE_HORSE = HORSE.CODE_HORSE
+                   ORDER BY MEASURE.BYDATE DESC
+                   FETCH FIRST ROW ONLY) M ON TRUE                    
+                </programlisting>
                 </para>
             </section>
         </section>
