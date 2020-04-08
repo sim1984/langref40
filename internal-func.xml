@@ -2509,6 +2509,96 @@ select rdb$get_transaction_cn(123) from rdb$database;
                 </formalpara>
             </section>
         </section>
+        <section xml:id="internalfunc-func-make_dbkey">
+            <info>
+                <title>MAKE_DBKEY</title>
+                <keywordset>
+                    <keyword>MAKE_DBKEY</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>MAKE_DBKEY</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, PSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+MAKE_DBKEY ({<replaceable>rel_name</replaceable> | <replaceable>rel_id</replaceable>}, <replaceable>recnum</replaceable> [, <replaceable>dpnum</replaceable> [, <replaceable>ppnum</replaceable>]]})                         
+                        </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции MAKE_DBKEY</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>rel_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя таблицы</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>rel_id</replaceable></entry>
+                                <entry>
+                                    <para>Идентификатор таблицы. Можно найти в
+                                        RDB$RELATIONS.RDB$RELATION_ID</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>recnum</replaceable></entry>
+                                <entry>
+                                    <para>Номер записи</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>dpnum</replaceable></entry>
+                                <entry>
+                                    <para>Номер страницы данных DP</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>ppnum</replaceable></entry>
+                                <entry>
+                                    <para>Номер страницы указателей на данные PP</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Функция MAKE_DBKEY возвращает указатель на запись по номеру записи в таблице. В
+                качестве первого аргумента указывает имя таблицы или её идентификатор. Вторым
+                аргументом указывается номер нужной записи в таблице.</para>
+            <para>Третьим необязательным аргументом можно указать номер страницы данных DP
+                относительно которой будет отсчитываться номер записи.</para>
+            <para>Четвертым необязательным аргументом можно указать номер страницы указателей PP. В
+                этом случае номер страницы данных DP будет указываться относительно тех DP, на
+                которые есть указатели на заданной странице PP.</para>
+            <para>Эта функция может быть использована для разбиения большой таблицы на несколько
+                относительно равномерных частей, например по диапазонам страниц PP. Такое разбиение
+                может применяться при параллельном резервном копировании таблицы. <programlisting language="sql">
+<![CDATA[                
+SELECT * FROM SOME_TABLE
+WHERE RDB$DB_KEY >= MAKE_DBKEY(:relId, 0, 0, :ppNum)
+AND RDB$DB_KEY < MAKE_DBKEY(:relId, 0, 0, :ppNum + 1)
+]]>
+            </programlisting>
+            </para>
+        </section>
         <section xml:id="internalfunc-func-math">
             <info>
                 <title>Математические функции</title>

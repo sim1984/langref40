@@ -249,6 +249,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>LAST_DAY</keyword>
       <keyword>LAST_VALUE</keyword>
       <keyword>LASTNAME</keyword>
+      <keyword>LATERAL</keyword>
       <keyword>LEAD</keyword>
       <keyword>LEADING</keyword>
       <keyword>LEAVE</keyword>
@@ -272,6 +273,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>LOWER</keyword>
       <keyword>LPAD</keyword>
       <keyword>LPARAM</keyword>
+      <keyword>MAKE_DBKEY</keyword>
       <keyword>MANUAL</keyword>
       <keyword>MAPPING</keyword>
       <keyword>MATCHED</keyword>

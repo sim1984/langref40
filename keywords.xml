@@ -111,7 +111,7 @@
                 <member>INTEGER</member>
                 <member>INTO</member>
                 <member>IS</member>
-                <member>JOIN</member>
+                <member>JOIN</member>                
                 <member>LEADING</member>
                 <member>LEFT</member>
                 <member>LIKE</member>
@@ -469,6 +469,7 @@
                 <member>LAST_DAY</member>
                 <member>LAST_VALUE</member>
                 <member>LASTNAME</member>
+                <member>LATERAL</member>
                 <member>LEAD</member>
                 <member>LEADING</member>
                 <member>LEAVE</member>               
@@ -492,6 +493,7 @@
                 <member>LOWER</member>
                 <member>LPAD</member>
                 <member>LPARAM</member>
+                <member>MAKE_DBKEY</member>
                 <member>MANUAL</member>
                 <member>MAPPING</member>
                 <member>MATCHED</member>
