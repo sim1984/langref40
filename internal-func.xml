@@ -2580,23 +2580,118 @@ MAKE_DBKEY ({<replaceable>rel_name</replaceable> | <replaceable>rel_id</replacea
                     </tgroup>
                 </table>
             </para>
-            <para>Функция MAKE_DBKEY возвращает указатель на запись по номеру записи в таблице. В
-                качестве первого аргумента указывает имя таблицы или её идентификатор. Вторым
-                аргументом указывается номер нужной записи в таблице.</para>
-            <para>Третьим необязательным аргументом можно указать номер страницы данных DP
-                относительно которой будет отсчитываться номер записи.</para>
-            <para>Четвертым необязательным аргументом можно указать номер страницы указателей PP. В
-                этом случае номер страницы данных DP будет указываться относительно тех DP, на
-                которые есть указатели на заданной странице PP.</para>
-            <para>Эта функция может быть использована для разбиения большой таблицы на несколько
-                относительно равномерных частей, например по диапазонам страниц PP. Такое разбиение
-                может применяться при параллельном резервном копировании таблицы. <programlisting language="sql">
-<![CDATA[                
-SELECT * FROM SOME_TABLE
-WHERE RDB$DB_KEY >= MAKE_DBKEY(:relId, 0, 0, :ppNum)
-AND RDB$DB_KEY < MAKE_DBKEY(:relId, 0, 0, :ppNum + 1)
+            <para>Функция MAKE_DBKEY создает значение DBKEY, используя имя или идентификатор
+                таблицы, номер записи и, необязательно, логический номер страницы данных и страницы
+                указателя.</para>
+            <note>
+                <title>Замечания</title>
+                <orderedlist>
+                    <listitem>
+                        <para>Если первый аргумент (таблица) является строковым выражением или
+                            литералом, то он обрабатывается как имя таблицы, и Firebird ищет
+                            соответствующий идентификатор таблицы. Поиск чувствителен к
+                            регистру.</para>
+                        <para>В случае строкового литерала идентификатор таблицы оценивается во
+                            время подготовки. В случае выражения, идентификатор таблицы оценивается
+                            во время выполнения.</para>
+                        <para>Если таблица не может быть найдена, возникает ошибка
+                                <literal>isc_relnotdef</literal>.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Если первый аргумент (таблица) является числовым выражением или
+                            литералом, то он обрабатывается как идентификатор таблицы и используется
+                            «как есть», без проверки существования таблицы.</para>
+                        <para>Если значение аргумента отрицательно или превышает максимально
+                            допустимый идентификатор таблицы (в настоящее время 65535), то
+                            возвращается NULL.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Второй аргумент (<replaceable>recnum</replaceable>) представляет собой
+                            абсолютный номер записи в отношении (если следующие аргументы —
+                                <replaceable>dpnum</replaceable> и <replaceable>ppnum</replaceable>
+                            — отсутствуют) или номер записи относительно первой записи, указанной в
+                            следующих аргументах.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Третий аргумент (<replaceable>dpnum</replaceable>) — это логический
+                            номер страницы данных (DP) в таблице (если следующий аргумент —
+                                <replaceable>ppnum</replaceable> — отсутствует) или номер страницы
+                            данных относительно первой страницы данных, адресованной заданным
+                                <replaceable>ppnum</replaceable>.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Четвёртый аргумент (<replaceable>ppnum</replaceable>) — это логический
+                            номер страницы указателя (PP) в таблице.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Все числа начинаются с нуля. Максимально допустимое значение для
+                                <replaceable>dpnum</replaceable> и <replaceable>ppnum</replaceable>
+                            составляет 2<superscript>32</superscript> (4294967296).</para>
+                        <para>Если указан параметр <replaceable>dpnum</replaceable>, значение
+                                <replaceable>recnum</replaceable> может быть отрицательным.</para>
+                        <para>Если <replaceable>dpnum</replaceable> отсутствует и
+                                <replaceable>recnum</replaceable> отрицательно, возвращается
+                            NULL.</para>
+                        <para>Если указан <replaceable>ppnum</replaceable>, то
+                                <replaceable>dpnum</replaceable> может быть отрицательным.</para>
+                        <para>Если <replaceable>ppnum</replaceable> отсутствует и
+                                <replaceable>dpnum</replaceable> отрицателен, возвращается
+                            NULL.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Если какой-либо из указанных аргументов имеет значение NULL, результат
+                            также равен NULL.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Первый аргумент (таблица) описывается как INTEGER, но может быть
+                            переопределен приложением как VARCHAR или CHAR.</para>
+                        <para><replaceable>recnum</replaceable>, <replaceable>dpnum</replaceable> и
+                                <replaceable>ppnum</replaceable> описываются как BIGINT
+                            (64-разрядное целое число со знаком).</para>
+                    </listitem>
+                </orderedlist>
+            </note>
+
+            <para>Примеры: <orderedlist>
+                    <listitem>
+                        <para>Запрос выбирает запись, используя имя таблицы (имя таблицы в верхнем
+                            регистре)
+                            <programlisting language="sql">
+select * from rdb$relations where rdb$db_key = make_dbkey('RDB$RELATIONS', 0)                            
+                        </programlisting>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Запрос выбирает запись, используя идентификатор таблицы
+                            <programlisting language="sql">
+select * from rdb$relations where rdb$db_key = make_dbkey(6, 0)                          
+                        </programlisting>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Запрос выбирает все записи, которые физически находятся на первой
+                            странице данных в таблице <programlisting language="sql">
+<![CDATA[
+select * from rdb$relations
+where rdb$db_key >= make_dbkey(6, 0, 0)
+  and rdb$db_key <  make_dbkey(6, 0, 1)  
 ]]>
-            </programlisting>
+                        </programlisting>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Запрос выбирает все записи, которые физически находятся на первой
+                            странице данных 6-й страницы указателя в таблице
+                            <programlisting language="sql">
+<![CDATA[
+select * from SOMETABLE
+where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
+  and rdb$db_key <  make_dbkey('SOMETABLE', 0, 1, 5) 
+]]>
+                        </programlisting>
+                        </para>
+                    </listitem>
+                </orderedlist>
             </para>
         </section>
         <section xml:id="internalfunc-func-math">
