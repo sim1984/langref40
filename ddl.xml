@@ -598,13 +598,18 @@ ALTER {DATABASE | SCHEMA}
   | {SET DEFAULT CHARACTER SET <replaceable>charset</replaceable>}
   | {SET DEFAULT SQL SECURITY {DEFINER | INVOKER}}
   | {SET LINGER TO <replaceable>seconds</replaceable> | DROP LINGER}
-  | {ENCRYPT WITH <replaceable>plugin_name</replaceable> [KEY <replaceable>key_name</replaceable>] | DECRYPT};
+  | {ENCRYPT WITH <replaceable>plugin_name</replaceable> [KEY <replaceable>key_name</replaceable>] | DECRYPT}
+  | {ENABLE | DISABLE} PUBLICATION
+  | ADD {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
+  | DROP {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
 
 <replaceable>&lt;add_sec_clause&gt;</replaceable> ::= ADD FILE <replaceable>&lt;sec_file&gt;</replaceable> 
 
 <replaceable>&lt;sec_file&gt;</replaceable> ::= '<replaceable>filepath</replaceable>'
   [STARTING [AT [PAGE]] <replaceable>pagenum</replaceable>]
   [LENGTH [=] <replaceable>num</replaceable> [PAGE[S]]
+                        
+<replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...]                        
 </programlisting>
                 </para>
             </formalpara>
@@ -684,6 +689,15 @@ ALTER {DATABASE | SCHEMA}
                                 <entry>
                                     <para>Имя ключа шифрования.</para>
                                 </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>table_list</replaceable></entry>
+                                <entry>Список таблиц, которые необходим разрешить или запретить для
+                                    публикации (репликации).</entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>tablename</replaceable></entry>
+                                <entry>Имя таблицы.</entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -984,10 +998,10 @@ ALTER DATABASE SET LINGER 0;
                     <primary>ALTER DATABASE</primary>
                     <secondary>ENCRYPT WITH</secondary>
                 </indexterm>
-                <para>Предложение <database>ENCRYPT WITH</database> шифрует базу данных с помощью
-                    указанного плагина шифрования. Шифрование начинается сразу после этого оператора
-                    и будет выполняться в фоновом режиме. Нормальная работа с базами данных не
-                    нарушается во время шифрования. </para>
+                <para>Оператор ALTER DATABASE с предложением <database>ENCRYPT WITH</database>
+                    шифрует базу данных с помощью указанного плагина шифрования. Шифрование
+                    начинается сразу после этого оператора и будет выполняться в фоновом режиме.
+                    Нормальная работа с базами данных не нарушается во время шифрования. </para>
                 <note>
                     <para>Процесс шифрования может быть проконтролирован с помощью поля
                         MON$CRYPT_PAGE в псевдо-таблице MON$DATABASE или просмотрен на странице
@@ -1007,7 +1021,8 @@ select MON$CRYPT_PAGE * 100 / MON$PAGES from MON$DATABASE
                     <primary>ALTER DATABASE</primary>
                     <secondary>DECRYPT</secondary>
                 </indexterm>
-                <para>Предложение <database>DECRYPT</database> дешифрует базу данных. </para>
+                <para>Оператор ALTER DATABASE с предложением <database>DECRYPT</database> дешифрует
+                    базу данных. </para>
                 <formalpara>
                     <title>Примеры:</title>
 
@@ -1032,6 +1047,97 @@ ALTER DATABASE DECRYPT;
                         </example>
                     </para>
                 </formalpara>
+            </section>
+            <section xml:id="ddl-database-alter-publication">
+                <title>Управление репликацией</title>
+                <indexterm>
+                    <primary>ALTER DATABASE</primary>
+                    <secondary>ENABLE PUBLICATION</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>ALTER DATABASE</primary>
+                    <secondary>DISABLE PUBLICATION</secondary>
+                </indexterm>
+
+                <para>Оператор ALTER DATABASE с предложением ENABLE PUBLICATION включает репликацию
+                    базы данных.</para>
+                <programlisting language="sql">  
+ALTER DATABASE ENABLE PUBLICATION         
+</programlisting>
+                <para>Для отключения репликации базы данных выполните оператор
+                    <programlisting language="sql">  
+ALTER DATABASE DISABLE PUBLICATION         
+</programlisting>
+                </para>
+                <para>Изменения будут применены сразу после подтверждения транзакции.</para>
+                <indexterm>
+                    <primary>ALTER DATABASE</primary>
+                    <secondary>ADD TABLE TO PUBLICATION</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>ALTER DATABASE</primary>
+                    <secondary>ADD ALL TO PUBLICATION</secondary>
+                </indexterm>
+                <para>При настойке репликации должен быть определен набор репликации (он же
+                    публикация). Он включает в себя таблицы, которые должны быть реплицированы. Это
+                    также делается с помощью команды DDL:
+                    <programlisting>  
+ALTER DATABASE ADD {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
+
+<replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...] 
+</programlisting>
+                </para>
+                <para>При использовании ключевого слова ALL в набор репликации будут включены все
+                    таблицы, включая те что будут созданы позднее. Команда будет выглядеть следующим
+                    образом:
+                    <programlisting language="sql">  
+ALTER DATABASE ADD ALL TO PUBLICATION       
+</programlisting>
+                </para>
+                <para>Вы можете задать конкретный набор таблиц для репликации. Для этого после
+                    ключевого слова TABLE необходимо указать список таблиц через запятую. В
+                    следующем примере мы разрешаем репликацию для таблиц t1 и t2:
+                    <programlisting language="sql">  
+ALTER DATABASE ADD TABLE t1, t2 TO PUBLICATION       
+</programlisting>
+                </para>
+                <indexterm>
+                    <primary>ALTER DATABASE</primary>
+                    <secondary>DROP TABLE FROM PUBLICATION</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>ALTER DATABASE</primary>
+                    <secondary>DROP ALL FROM PUBLICATION</secondary>
+                </indexterm>
+                <para>Для исключения таблиц из набора репликации (публикации) используется следующий
+                    оператор:
+                    <programlisting>  
+ALTER DATABASE DROP {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
+
+<replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...] 
+</programlisting>
+                </para>
+                <para>При использовании ключевого слова ALL из набора репликации будут исключены все
+                    таблицы. Если ранее в публикацию были добавлены все таблицы с использованием
+                    ключевого слова ALL, то данный оператор отключит автоматическую публикацию для
+                    вновь создаваемых таблиц. Команда будет выглядеть следующим образом:
+                    <programlisting language="sql">  
+ALTER DATABASE DROP ALL FROM PUBLICATION       
+</programlisting>
+                </para>
+                <para>Вы можете задать конкретный набор таблиц для исключения из репликации. Для
+                    этого после ключевого слова TABLE необходимо указать список таблиц через
+                    запятую. В следующем примере мы исключаем таблицы t1 и t2 из набора репликации:
+                    <programlisting language="sql">  
+ALTER DATABASE DROP TABLE t1, t2 FROM PUBLICATION       
+</programlisting>
+                </para>
+                <para>Таблицы, включенные для репликации, могут быть дополнительно отфильтрованы с
+                    использованием двух параметров в файле конфигурации
+                        <filename>replication.conf</filename>: <parameter>include_filter</parameter>
+                    и <parameter>exclude_filter</parameter>. Это регулярные выражения, которые
+                    применяются к именам таблиц и определяют правила для включения таблиц в набор
+                    репликации или исключения их из набора репликации.</para>
             </section>
             <section xml:id="ddl-database-alter-who">
                 <title>Кто может выполнить ALTER DATABASE?</title>
@@ -2465,7 +2571,8 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
   [EXTERNAL [FILE] '<replaceable>&lt;filespec&gt;</replaceable>']
   (<replaceable>&lt;col_def&gt;</replaceable> [, <replaceable>&lt;col_def&gt;</replaceable> | <replaceable>&lt;tconstraint&gt;</replaceable> ...])  
   [ON COMMIT {DELETE | PRESERVE} ROWS]
-  [SQL SECURITY {DEFINER | INVOKER}]   
+  [SQL SECURITY {DEFINER | INVOKER}] 
+  [{ENABLE | DISABLE} PUBLICATION]  
 
 <replaceable>&lt;col_def&gt;</replaceable> ::= <replaceable>&lt;regular_col_def&gt;</replaceable> | <replaceable>&lt;computed_col_def&gt;</replaceable> | <replaceable>&lt;identity_col_def&gt;</replaceable>        
                     
@@ -3497,13 +3604,7 @@ CREATE TABLE PLACES (
                 <title>Привилегии выполнения</title>
                 <indexterm>
                     <primary>CREATE TABLE</primary>
-                    <secondary>COMPUTED BY</secondary>
-                    <tertiary>SQL SECURITY</tertiary>
-                </indexterm>
-                <indexterm>
-                    <primary>CREATE TABLE</primary>
-                    <secondary>GENERATED ALWAYS AS</secondary>
-                    <tertiary>SQL SECURITY</tertiary>
+                    <secondary>SQL SECURITY</secondary>
                 </indexterm>
                 <para>Необязательное предложение SQL SECURITY в спецификации таблицы позволяет
                     задать с какими привилегиями вычисляются вычисляемые столбцы. Если выбрана опция
@@ -3521,6 +3622,25 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                 </programlisting>
                     </para>
                 </tip>
+            </section>
+            <section xml:id="ddl-table-create-publication">
+                <title>Управление репликацией</title>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>ENABLE PUBLICATION</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>DISABLE PUBLICATION</secondary>
+                </indexterm>
+                <para>Необязательное предложение ENABLE PUBLICATION включает таблицу в набор
+                    репликации (публикацию). Если ранее был выполнен оператор <code>ALTER DATABASE
+                        ADD ALL TO PUBLICATION</code>, то таблица будет включена в публикацию даже
+                    если предложение ENABLE PUBLICATION не указано.</para>
+                <para>Необязательное предложение DISABLE PUBLICATION исключает таблицу из набора
+                    репликации (публикации). Это предложение имеет смысл указывать только если ранее
+                    был выполнен оператор <code>ALTER DATABASE ADD ALL TO PUBLICATION</code>,
+                    который автоматически добавляет вновь созданные таблицы в публикацию.</para>
             </section>
             <section xml:id="ddl-table-create-who">
                 <title>Кто может создать таблицу?</title>
@@ -3561,6 +3681,17 @@ CREATE TABLE STOCK (
   MODELNAME CHAR(10) NOT NULL,
   ITEMID INTEGER NOT NULL,
   CONSTRAINT MOD_UNIQUE UNIQUE (MODELNAME, ITEMID));                   
+                </programlisting></para>
+                </example>
+                <example>
+                    <title>Создание таблицы с добавлением её в набор репликации</title>
+                    <para><programlisting language="sql">
+CREATE TABLE STOCK (
+  MODEL SMALLINT NOT NULL CONSTRAINT PK_STOCK PRIMARY KEY,
+  MODELNAME CHAR(10) NOT NULL,
+  ITEMID INTEGER NOT NULL,
+  CONSTRAINT MOD_UNIQUE UNIQUE (MODELNAME, ITEMID))
+ENABLE PUBLICATION;                   
                 </programlisting></para>
                 </example>
                 <example>
@@ -4050,6 +4181,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
   | DROP SQL SECURITY
   | ALTER [COLUMN] <replaceable>colname</replaceable> <replaceable>&lt;col_mod&gt;</replaceable>
   | ALTER SQL SECURITY {DEFINER | INVOKER}
+  | {ENABLE | DISABLE} PUBLICATION
                         
 <replaceable>&lt;col_def&gt;</replaceable> ::= 
     <replaceable>&lt;regular_col_def&gt;</replaceable> 
@@ -4967,6 +5099,29 @@ ALTER SQL SECURITY DEFINER;
                 </programlisting>
                     </para>
                 </informalexample>
+            </section>
+            <section xml:id="ddl-table-alter-publication">
+                <title>Управление репликацией</title>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ENABLE PUBLICATION</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>DISABLE PUBLICATION</secondary>
+                </indexterm>
+                <para>Предложение ENABLE PUBLICATION включает таблицу в набор репликации
+                    (публикацию). Соответственно предложение DISABLE PUBLICATION исключает таблицу
+                    из набора репликации.</para>
+                <example>
+                    <title>Добавление таблицы в набор репликации</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE COUNTRY
+ENABLE PUBLICATION;
+                </programlisting>
+                    </para>
+                </example>
             </section>
             <section xml:id="ddl-table-alter-who">
                 <title>Кто может изменить таблицу?</title>
@@ -10801,7 +10956,8 @@ END
                         <para>
                             <link linkend="ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="ddl-package-drop">DROP PACKAGE</link>, <link
-                                linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>. </para>
+                                linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.
+                        </para>
                     </formalpara>
                 </section>
             </section>
@@ -10884,7 +11040,8 @@ END
                         <para>
                             <link linkend="ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="ddl-package-alter">ALTER PACKAGE</link>, <link
-                                linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>. </para>
+                                linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.
+                        </para>
                     </formalpara>
                 </section>
             </section>

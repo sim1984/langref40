@@ -388,6 +388,7 @@
                 <member>DESCRIPTOR</member>
                 <member>DETERMINISTIC</member>
                 <member>DIFFERENCE</member>
+                <member>DISABLE</member>
                 <member>DISCONNECT</member>
                 <member>DISTINCT</member>
                 <member>DO</member>
@@ -395,6 +396,7 @@
                 <member>DOUBLE</member>
                 <member>DROP</member>
                 <member>ELSE</member>
+                <member>ENABLE</member>
                 <member>ENCRYPT</member>
                 <member>ENGINE</member>
                 <member>END</member>
@@ -574,6 +576,7 @@
                 <member>PRIVILEGES</member>
                 <member>PROCEDURE</member>
                 <member>PROTECTED</member>
+                <member>PUBLICATION</member>
                 <member>QUANTIZE</member>
                 <member>RAND</member>
                 <member>RANGE</member>

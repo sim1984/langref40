@@ -133,6 +133,17 @@
                         <entry><link linkend="systables-procedures">RDB$PROCEDURES</link></entry>
                         <entry>Описания хранимых процедур.</entry>
                     </row>
+                    <row>
+                        <entry><link xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xlink:href="#systables-publication_tables"
+                                >RDB$PUBLICATION_TABLES</link></entry>
+                        <entry>Таблицы включенные в публикацию.</entry>
+                    </row>
+                    <row>
+                        <entry><link xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xlink:href="#systables-publications">RDB$PUBLICATIONS</link></entry>
+                        <entry>Публикации. Публикация — набор таблиц для репликации.</entry>
+                    </row>
                     <row valign="middle">
                         <entry><link linkend="systables-ref_constraints"
                             >RDB$REF_CONSTRAINTS</link></entry>
@@ -2787,6 +2798,114 @@
                 </tgroup>
             </table>
         </para>
+    </section>
+    <section xml:id="systables-publication_tables">
+        <info>
+            <title>RDB$PUBLICATION_TABLES</title>
+            <keywordset>
+                <keyword>RDB$PUBLICATION_TABLES</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RDB$PUBLICATION_TABLES</primary>
+        </indexterm>
+        <para>Таблицы включенные в набор репликации (публикацию).</para>
+        <para>
+            <table xml:id="systables-tbl-publication_tables" frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Описание столбцов таблицы RDB$PUBLICATION_TABLES</title>
+                <tgroup cols="3">
+                    <colspec colname="colColumn" colnum="1" colwidth="4*" align="left"/>
+                    <colspec colname="colType" colnum="2" colwidth="3*" align="left"/>
+                    <colspec colname="colDesc" colnum="3" colwidth="5*" align="left"/>
+                    <thead>
+                        <row valign="middle">
+                            <entry align="center">Наименование столбца</entry>
+                            <entry align="center">Тип данных</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>RDB$PUBLICATION_NAME</entry>
+                            <entry>CHAR(63)</entry>
+                            <entry>Имя публикации.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$TABLE_NAME</entry>
+                            <entry>CHAR(63)</entry>
+                            <entry>Имя таблицы.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+    </section>
+    <section xml:id="systables-publications">
+        <info>
+            <title>RDB$PUBLICATIONS</title>
+            <keywordset>
+                <keyword>RDB$PUBLICATIONS</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RDB$PUBLICATIONS</primary>
+        </indexterm>
+        <para>Публикации. Публикация — набор таблиц для репликации.</para>
+        <para>
+            <table xml:id="systables-tbl-publications" frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Описание столбцов таблицы RDB$PUBLICATIONS</title>
+                <tgroup cols="3">
+                    <colspec colname="colColumn" colnum="1" colwidth="4*" align="left"/>
+                    <colspec colname="colType" colnum="2" colwidth="3*" align="left"/>
+                    <colspec colname="colDesc" colnum="3" colwidth="5*" align="left"/>
+                    <thead>
+                        <row valign="middle">
+                            <entry align="center">Наименование столбца</entry>
+                            <entry align="center">Тип данных</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>RDB$PUBLICATION_NAME</entry>
+                            <entry>CHAR(63)</entry>
+                            <entry>Имя публикации.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$OWNER_NAME</entry>
+                            <entry>CHAR(63)</entry>
+                            <entry>Владелец. Имя пользователя, создавшего публикацию.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$SYSTEM_FLAG</entry>
+                            <entry>SMALLINT</entry>
+                            <entry>Указывает, что публикация определена пользователем (значение 0)
+                                или системой (значение 1 или выше).</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$ACTIVE_FLAG</entry>
+                            <entry>SMALLINT</entry>
+                            <entry>Активная ли публикация. 1 — публикация активна, 0 — публикация
+                                отключена.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$AUTO_ENABLE</entry>
+                            <entry>SMALLINT</entry>
+                            <entry>Признак автоматического добавления новых таблиц в публикацию. 1 —
+                                новые таблицы автоматически добавляются в публикацию, 0 — не
+                                добавляются (требуется ручное добавление).</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+        <note>
+            <para>В Firebird 4.0 может быть только одна системная публикация — публикация по
+                умолчанию с именем RDB$DEFAULT. В следующий версиях Firebird будет возможность
+                создавать несколько пользовательских публикаций.</para>
+        </note>
     </section>
     <section xml:id="systables-ref_constraints">
         <info>
