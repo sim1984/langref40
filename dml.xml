@@ -950,8 +950,11 @@ FROM (SELECT *
                             <listitem>
                                 <para>Ключевое слово LATERAL позволяет производной таблице ссылаться
                                     на поля из ранее перечисленных таблиц в текущем
-                                        <replaceable>&lt;table reference
-                                    list&gt;</replaceable>.</para>
+                                        <replaceable>&lt;table reference list&gt;</replaceable>.
+                                    Подробнее смотрите в разделе <link
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        xlink:href="#dml-select-joins-lateral">Соединение с LATERAL
+                                        производными таблицами</link>.</para>
                             </listitem>
                         </itemizedlist>
                     </para>
@@ -2016,6 +2019,9 @@ JOIN MY_TAB ON 1 = 1
                         <keyword>LATERAL</keyword>
                     </keywordset>
                 </info>
+                <indexterm>
+                    <primary>LATERAL</primary>
+                </indexterm>
 
                 <para>Если перед производной таблицей указать ключевое слово LATERAL, то это
                     позволит ссылаться в них на столбцы предшествующих элементов из списка FROM. Без
