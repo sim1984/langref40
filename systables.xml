@@ -2718,7 +2718,7 @@
                         <row>
                             <entry>RDB$OWNER_NAME</entry>
                             <entry>CHAR(63)</entry>
-                            <entry>Имя пользователя - владельца (создателя) процедуры.</entry>
+                            <entry>Имя пользователя — владельца (создателя) процедуры.</entry>
                         </row>
                         <row>
                             <entry>RDB$RUNTIME</entry>
