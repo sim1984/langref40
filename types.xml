@@ -1578,6 +1578,46 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 инструкцию SET BIND (дополнительную информацию смотри в <link
                     linkend="session-set_bind">SET BIND OF</link>).</para>
 
+            <section xml:id="types-datetime-timezone-time_rb_semantics">
+                <title>Региональная семантика TIME WITH TIME ZONE</title>
+
+                <para>По определению региональные часовые пояса зависят от момента (дата и время —
+                    или timestamp), чтобы узнать его смещение UTC относительно GMT. Но Firebird
+                    также поддерживает региональные часовые пояса в значениях <code>TIME WITH TIME
+                        ZONE</code>.</para>
+
+                <para>При построении значения <code>TIME WITH TIME ZONE</code> из литерала или его
+                    преобразования, значение UTC должно быть вычислено и не может быть изменено,
+                    поэтому текущая дата может не использоваться. В этом случае используется
+                    фиксированная дата <literal>2020-01-01</literal>. Таким образом, при сравнении
+                        <code>TIME WITH TIME ZONE</code> с различными часовыми поясами сравнение
+                    выполняется аналогично тому, как они представляют собой значения <code>TIMESTAMP
+                        WITH TIME ZONE</code> на заданную дату. </para>
+
+                <para>Однако при преобразовании между типами <code>TIMESTAMP</code> в <code>TIME
+                        WITH TIME ZONE</code> эта фиксированная дата не используется, в противном
+                    случае могут наблюдаться некоторые странные преобразования, когда текущая дата
+                    имеет другое смещение (из-за изменений летнего времени), чем в
+                        <literal>2020-01-01</literal>. В этом случае при преобразовании <code>TIME
+                        WITH TIME ZONE</code> в <code>TIMESTAMP WITH TIME ZONE</code> сохраняется
+                    часть времени (если это возможно). Например, если текущая дата
+                        <literal>2020-05-03</literal>, эффективное смещение в часовом поясе
+                    America/Los_Angeles равно -420, а его эффективное смещение в
+                        <literal>2020-01-01</literal> равно -480, но <code>cast(time '10:00:00
+                        America/Los_Angeles' as timestamp with time zone)</code> даст в результате
+                        <literal>2020-05-03 10:00:00.0000 America/Los_Angeles</literal> вместо
+                    корректировки временной части. </para>
+
+                <para>Но в дату, когда начинается летнее время, пропущен час, например, для часового
+                    пояса America/Los_Angeles в <code>2021-03-14</code> нет времени с
+                        <code>02:00:00</code> до <code>02:59:59</code>. В этом случае преобразование
+                    выполняется как построение литерала, и час корректируется до следующего
+                    допустимого значения. Например, в <literal>2021-03-14</literal>
+                    <code>cast(time '02:10:00 America/Los_Angeles' as timestamp with time
+                        zone)</code> даст результат <literal>2021-03-14 03:10:00.0000
+                        America/Los_Angeles</literal>.</para>
+            </section>
+
             <section xml:id="types-datetime-timezone-storage">
                 <title>Хранение</title>
 
@@ -1722,7 +1762,7 @@ EXTENDED TIMESTAMP WITH TIME ZONE
                 01.01.0001 00:00:00.0000 до 31.12.9999 23:59:59.9999. По умолчанию тип TIMESTAMP не
                 содержит информацию о часовом поясе. Для того чтобы тип TIMESTAMP включал информацию
                 о часовом поясе необходимо использовать его с модификатором WITH TIME ZONE.</para>
-            
+
             <important>
                 <para><code>EXTENDED TIMESTAMP WITH TIME ZONE</code> предназначен для использования
                     только при общении с клиентами, он решают проблему представления правильного

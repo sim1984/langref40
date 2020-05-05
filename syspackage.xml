@@ -69,9 +69,9 @@ DATABASE_VERSION
                     <?dbfo keep-together='auto'?>
                     <title>Входные параметры процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS</title>
                     <tgroup cols="3">
-                        <colspec colname="c1" colnum="1" colwidth="1.0*" align="left"/>
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
                         <colspec colname="c2" colnum="2" colwidth="1.0*" align="left"/>
-                        <colspec colname="c3" colnum="3" colwidth="2.0*" align="justify"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.8*" align="justify"/>
                         <thead>
                             <row>
                                 <entry align="center">Параметр</entry>
@@ -106,9 +106,9 @@ DATABASE_VERSION
                     <?dbfo keep-together='auto'?>
                     <title>Выходные параметры процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS</title>
                     <tgroup cols="3">
-                        <colspec colname="c1" colnum="1" colwidth="1.0*" align="left"/>
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
                         <colspec colname="c2" colnum="2" colwidth="1.0*" align="left"/>
-                        <colspec colname="c3" colnum="3" colwidth="2.0*" align="justify"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.8*" align="justify"/>
                         <thead>
                             <row>
                                 <entry align="center">Параметр</entry>
