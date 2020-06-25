@@ -29,10 +29,13 @@
                 <member>AS</member>
                 <member>AT</member>
                 <member>AVG</member>
+                <member>BASE64_DECODE</member>
+                <member>BASE64_ENCODE</member>
                 <member>BEGIN</member>
                 <member>BETWEEN</member>
                 <member>BIGINT</member>
                 <member>BINARY</member>
+                <member>BIND</member>
                 <member>BIT_LENGTH</member>
                 <member>BLOB</member>
                 <member>BOOLEAN</member>
@@ -49,10 +52,13 @@
                 <member>COLLATE</member>
                 <member>COLUMN</member>
                 <member>COMMIT</member>
+                <member>COMPARE_DECFLOAT</member>
                 <member>CONNECT</member>
+                <member>CONSISTENCY</member>               
                 <member>CONSTRAINT</member>
                 <member>CORR</member>
                 <member>COUNT</member>
+                <member>COUNTER</member>
                 <member>COVAR_POP</member>
                 <member>COVAR_SAMP</member>
                 <member>CREATE</member>
@@ -69,6 +75,7 @@
                 <member>DATE</member>
                 <member>DAY</member>
                 <member>DEC</member>
+                <member>DECFLOAT</member>
                 <member>DECIMAL</member>
                 <member>DECLARE</member>
                 <member>DEFAULT</member>
@@ -150,8 +157,13 @@
                 <member>PRECISION</member>
                 <member>PRIMARY</member>
                 <member>PROCEDURE</member>
+                <member>PUBLICATION</member>
                 <member>RDB$DB_KEY</member>
+                <member>RDB$GET_TRANSACTION_CN</member>
+                <member>RDB$ERROR</member>
                 <member>RDB$RECORD_VERSION</member>
+                <member>RDB$ROLE_IN_USE</member>
+                <member>RDB$SYSTEM_PRIVILEGE</member>
                 <member>REAL</member>
                 <member>RECORD_VERSION</member>
                 <member>RECREATE</member>
@@ -458,6 +470,7 @@
                 <member>INSERT</member>
                 <member>INSERTING</member>
                 <member>INT</member>
+                <member>INT128</member>
                 <member>INTEGER</member>
                 <member>INTO</member>
                 <member>INVOKER</member>
@@ -607,6 +620,7 @@
                 <member>RELEASE</member>
                 <member>REPLACE</member>
                 <member>REQUESTS</member>
+                <member>RESET</member>
                 <member>RESERV</member>
                 <member>RESERVING</member>
                 <member>RESTART</member>

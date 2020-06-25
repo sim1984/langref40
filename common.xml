@@ -824,7 +824,7 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                 зависимости от истинности некоторого условия или условий. В данном разделе описано
                 лишь одно условное выражение CASE. Остальные условные выражения являются
                 производными встроенными функциями и описаны в разделе <link
-                    linkend="internalfunc-func">Скалярные функции</link>.</para>
+                    linkend="internalfunc-func-case">Условные функции</link>.</para>
             <section xml:id="common-expr-cond-case">
                 <info>
                     <title>CASE</title>

@@ -573,8 +573,7 @@ SELECT rdb$character_set_name FROM rdb$database
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="internalfunc-func">Скалярные функции</link>, <link
-                            linkend="internalfunc-agg">Агрегатные функции</link>, <link
+                        <link linkend="internalfunc-agg">Агрегатные функции</link>, <link
                             linkend="internalfunc-window">Оконные (аналитические) функции</link>,
                             <link linkend="internalfunc-contextvar">Контекстные переменные</link>,
                             <link linkend="common-expr-cond-case">CASE</link>, <link
@@ -1054,6 +1053,44 @@ FROM (SELECT
                     <para>Эта особенность текущей реализации и она может быть изменена в следующих
                         версиях сервера.</para>
                 </note>
+            </section>
+            <section xml:id="dml-select-from-lateral_devired_table">
+                <title>Латеральные производные таблицы</title>
+
+                <para>Производная таблица, определенная с помощью ключевого слова LATERAL,
+                    называется латеральной производной таблицей. Если производная таблица определена
+                    как латеральная, то разрешается ссылаться на другие таблицы в том же предложении
+                    FROM, но только на те, которые были объявлены до этого в предложении
+                    FROM.</para>
+
+                <example>
+                    <title>Примеры запрос с латеральными производными таблицами</title>
+                    <para>
+                        <programlisting>
+select dt.population, dt.city_name, c.country_name
+from (select distinct country_name from cities) AS c,
+LATERAL (select first 1 city_name, population
+         from cities
+         where cities.country_name = c.country_name
+         order by population desc) AS dt;                            
+                        </programlisting>
+                    </para>
+                    <para>
+                        <programlisting>
+select salespeople.name,
+       max_sale.amount,
+       customer_of_max_sale.customer_name
+from salespeople,
+LATERAL ( select max(amount) as amount from all_sales
+          where all_sales.salesperson_id = salespeople.id
+         ) as max_sale,
+LATERAL ( select customer_name from all_sales
+          where all_sales.salesperson_id = salespeople.id
+            and all_sales.amount = max_sale.amount
+        ) as customer_of_max_sale;                          
+                        </programlisting>
+                    </para>
+                </example>
             </section>
             <section xml:id="dml-select-from-cte">
 
@@ -2023,8 +2060,10 @@ JOIN MY_TAB ON 1 = 1
                     <primary>LATERAL</primary>
                 </indexterm>
 
-                <para>Если перед производной таблицей указать ключевое слово LATERAL, то это
-                    позволит ссылаться в них на столбцы предшествующих элементов из списка FROM. Без
+                <para>Производная таблица, определенная с помощью ключевого слова LATERAL,
+                    называется латеральной производной таблицей. Если производная таблица определена
+                    как латеральная, то разрешается ссылаться на другие таблицы в том же предложении
+                    FROM, но только на те, которые были объявлены раньше в предложении FROM. Без
                     LATERAL каждый подзапрос выполняется независимо и поэтому не может обращаться к
                     другим элементам FROM.</para>
 

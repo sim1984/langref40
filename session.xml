@@ -1044,10 +1044,9 @@ SET BIND OF {<replaceable>&lt;type-from&gt;</replaceable> | TIME ZONE} TO { <rep
             TIME ZONE. Когда неполное определение типа используется в правой части оператора (часть
             TO), сервер автоматически определит недостающие детали этого типа на основе исходного
             столбца.</para>
-        <para>Для этого оператора нет никакой разницы между типами NUMERIC и DECIMAL. Изменение
-            привязки любого NUMERIC не влияет на соответствующий базовый целочисленный тип.
-            Напротив, изменение привязки целочисленного типа данных также влияет на соответствующие
-            NUMERIC.</para>
+        <para>Изменение связывания любого NUMERIC и DECIMAL типа не влияет на соответствующий
+            базовый целочисленный тип. Напротив, изменение привязки целочисленного типа данных также
+            влияет на соответствующие NUMERIC и DECIMAL.</para>
 
         <para>Ключевое слово LEGACY в части TO используется, когда тип данных, отсутствующий в
             предыдущей версии Firebird, должен быть представлен способом понятным для старого
@@ -1074,8 +1073,8 @@ SET BIND OF {<replaceable>&lt;type-from&gt;</replaceable> | TIME ZONE} TO { <rep
                             <entry>DOUBLE PRECISION</entry>
                         </row>
                         <row>
-                            <entry>NUMERIC(38)</entry>
-                            <entry>NUMERIC(18)</entry>
+                            <entry>INT128</entry>
+                            <entry>BIGINT</entry>
                         </row>
                         <row>
                             <entry>TIME WITH TIME ZONE</entry>
