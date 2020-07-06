@@ -3253,7 +3253,8 @@ CEIL[ING] (<replaceable>number</replaceable>)
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>BIGINT или DOUBLE PRECISION.</para>
+                <para>BIGINT, INT128, DECFLOAT или DOUBLE PRECISION в зависимости от типа
+                    аргумента.</para>
             </formalpara>
 
             <para>Функция CEIL возвращает наименьшее целое число, большее или равное
@@ -3567,7 +3568,8 @@ FLOOR (<replaceable>number</replaceable>)
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>BIGINT или DOUBLE PRECISION.</para>
+                <para>BIGINT, INT128, DECFLOAT или DOUBLE PRECISION в зависимости от типа
+                    аргумента.</para>
             </formalpara>
 
             <para>Функция FLOOR возвращает целое число, меньшее или равное аргументу.</para>
@@ -3835,7 +3837,7 @@ MOD (<replaceable>a</replaceable>, <replaceable>b</replaceable>)
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER или BIGINT.</para>
+                <para>INTEGER, BIGINT или INT128 в зависимости от типов аргументов.</para>
             </formalpara>
 
             <para>Функция MOD возвращает остаток от целочисленного деления. </para>
@@ -4028,7 +4030,8 @@ ROUND (<replaceable>number</replaceable> [, <replaceable>scale</replaceable>])
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER, масштабируемый BIGINT, DOUBLE PRECISION.</para>
+                <para>масштабируемое целое (INTEGER, BIGINT или INT128) или DECFLOAT, или DOUBLE
+                    PRECISION в зависимости от типа <replaceable>number</replaceable>.</para>
             </formalpara>
 
             <para>Функция ROUND округляет число до ближайшего целого числа. Если дробная часть равна
@@ -4508,7 +4511,8 @@ TRUNC (<replaceable>number</replaceable> [, <replaceable>scale</replaceable>])
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER, масштабируемый BIGINT, DOUBLE PRECISION.</para>
+                <para>масштабируемое целое (INTEGER, BIGINT или INT128) или DECFLOAT, или DOUBLE
+                    PRECISION в зависимости от типа <replaceable>number</replaceable>.</para>
             </formalpara>
 
             <para>Функция TRUNC усекает число до ближайшего целого числа. С дополнительным
@@ -8983,7 +8987,7 @@ BIN_AND (<replaceable>number</replaceable> [, <replaceable>number</replaceable> 
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER или BIGINT.</para>
+                <para>INTEGER, BIGINT или INT128.</para>
             </formalpara>
 
             <para>Функция BIN_AND возвращает результат побитовой операции AND (И) аргументов.</para>
@@ -9043,7 +9047,7 @@ BIN_NOT (<replaceable>number</replaceable>)
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER или BIGINT.</para>
+                <para>INTEGER, BIGINT или INT128.</para>
             </formalpara>
 
             <para>Функция BIN_NOT возвращает результат побитовой операции NOT над аргументом.</para>
@@ -9104,7 +9108,7 @@ BIN_OR (<replaceable>number</replaceable> [, <replaceable>number</replaceable> .
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER или BIGINT.</para>
+                <para>INTEGER, BIGINT или INT128.</para>
             </formalpara>
 
             <para>Функция BIN_OR возвращает результат побитовой операции OR (ИЛИ) аргументов. </para>
@@ -9172,7 +9176,7 @@ BIN_SHL (<replaceable>number</replaceable>, <replaceable>shift</replaceable>)
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>BIGINT.</para>
+                <para>BIGINT или INT128.</para>
             </formalpara>
 
             <para>Функция BIN_SHL возвращает первый параметр, побитно смещённый влево на значение
@@ -9240,7 +9244,7 @@ BIN_SHR (<replaceable>number</replaceable>, <replaceable>shift</replaceable>)
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>BIGINT.</para>
+                <para>BIGINT или INT128.</para>
             </formalpara>
 
             <para>Функция BIN_SHR возвращает первый параметр, побитно смещённый вправо на значение
@@ -9305,7 +9309,7 @@ BIN_XOR (<replaceable>number</replaceable> [, <replaceable>number</replaceable> 
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>INTEGER или BIGINT.</para>
+                <para>INTEGER, BIGINT или INT128.</para>
             </formalpara>
 
             <para>Функция BIN_XOR возвращает результат побитовой операции XOR аргументов. </para>
@@ -10375,7 +10379,9 @@ AVG([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <re
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+                <para>DOUBLE PRECISION, DECFLOAT или масштабируемое целое (INTEGER, BIGINT или
+                    INT128) в зависимости от типа аргумента функции
+                    <replaceable>expr</replaceable>.</para>
             </formalpara>
 
             <para>Функция AVG возвращает среднее значение для группы. Значения NULL
@@ -10668,8 +10674,7 @@ MAX([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <re
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>DOUBLE PRECISION или масштабируемый BIGINT в зависимости от типа аргумента
-                    функции <replaceable>expr</replaceable>.</para>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
             </formalpara>
 
             <para>Функция MAX возвращает максимальный элемент выборки, которые не равны NULL. При
@@ -10850,7 +10855,10 @@ SUM([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <re
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+                <para>DOUBLE PRECISION, DECFLOAT или масштабируемое целое (INTEGER, BIGINT или
+                    INT128) в зависимости от типа аргумента функции <replaceable>expr</replaceable>.
+                    Обычно, если это возможно, выбирается тип с большей вместимостью, чем тип
+                    выражения <replaceable>expr</replaceable>.</para>
             </formalpara>
 
             <para>Функция SUM возвращает сумму элементов выборки, которые не равны NULL. При пустой
