@@ -2295,6 +2295,9 @@ ALTER DOMAIN <replaceable>name</replaceable>
                 допустимый тип. Не допустимы любые изменения типа, которые могут привести к потере
                 данных. Например, количество символов в новом типе для домена не может быть меньше,
                 чем было установлено ранее.</para>
+            <note>
+                <para>Изменение типа не поддерживается для типа BLOB и массивов.</para>
+            </note>
             <indexterm>
                 <primary>ALTER DOMAIN</primary>
                 <secondary>SET NOT NULL</secondary>
