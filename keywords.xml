@@ -360,9 +360,9 @@
                 <member>COUNTER</member>
                 <member>COVAR_POP</member>
                 <member>COVAR_SAMP</member>
-                <member>CRC32</member>
                 <member>CREATE</member>
                 <member>CROSS</member>
+                <member>CRYPT_HASH</member>
                 <member>CSTRING</member>
                 <member>CTR_BIG_ENDIAN</member>
                 <member>CTR_LITTLE_ENDIAN</member>

@@ -7601,7 +7601,7 @@ HEX_DECODE (<replaceable>&lt;hex data&gt;</replaceable>)
                     <programlisting>
 HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</replaceable>])        
                             
-<replaceable>&lt;algorithm&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+<replaceable>&lt;algorithm&gt;</replaceable> ::= { CRC32 }                            
                         </programlisting>
                 </para>
             </formalpara>
@@ -7633,11 +7633,11 @@ HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</repl
 
             <formalpara>
                 <title>Тип возвращаемого результата:</title>
-                <para>BIGINT или VARBINARY.</para>
+                <para>BIGINT.</para>
             </formalpara>
 
-            <para>Функция HASH возвращает хэш-значение входной строки. Эта функция полностью
-                поддерживает текстовые BLOB любой длины и с любым набором символов. </para>
+            <para>Функция HASH возвращает некриптографический хэш входной строки. Эта функция
+                полностью поддерживает текстовые BLOB любой длины и с любым набором символов. </para>
 
             <para>Если предложение USING не указано, то функция возвращает BIGINT. В этом случае
                 используется 64-битный вариант некриптографической хэш-функции PJW (также известной
@@ -7645,11 +7645,11 @@ HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</repl
                     xlink:href="https://en.wikipedia.org/wiki/PJW_hash_function"
                     >https://en.wikipedia.org/wiki/PJW_hash_function</link>. Эта функция очень
                 быстра и может использоваться для общих целей (хеш-таблицы и т. д.), но имеет
-                большое количество коллизий. Для более надёжного хэширования рекомендуется
-                использовать другие алгоритмы указывая их с помощью предложения USING.</para>
+                большое количество коллизий. </para>
 
-            <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. В этом
-                случае функция возвращает результат с типом VARCHAR с кодировкой OCTETS.</para>
+            <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. На данный
+                момент поддерживается только один алгоритм CRC32, использующий  полиномом
+                0x04C11DB7. В этом случае функция возвращает результат с типом INTEGER.</para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -7660,8 +7660,87 @@ HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</repl
 SELECT HASH(x) FROM MyTable;
 -- результат типа BIGINT
 
-SELECT HASH(x USING SHA256) FROM MyTable;
--- результат типа VARCHAR с кодировкой OCTETS
+SELECT HASH(x USING CRC32) FROM MyTable;
+-- результат типа INTEGER
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="internalfunc-func-hash-crypt_hash">
+            <info>
+                <title>CRYPT_HASH</title>
+                <keywordset>
+                    <keyword>CRYPT_HASH</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>CRYPT_HASH</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, PSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+CRYPT_HASH (<replaceable>str</replaceable> USING <replaceable>&lt;algorithm&gt;</replaceable>)        
+                            
+<replaceable>&lt;algorithm&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
+                        </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции CRYPT_HASH</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>str</replaceable></entry>
+                                <entry>
+                                    <para>Выражение строкового типа.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>VARBINARY.</para>
+            </formalpara>
+
+            <para>Функция CRYPT_HASH возвращает криптографический хэш входной строки, используя
+                указанный алгоритм. Эта функция полностью поддерживает текстовые BLOB любой длины и
+                с любым набором символов. Предложение USING позволяет указать алгоритм по которому
+                вычисляет хэш. </para>
+
+            <note>
+                <para>Алгоритмы MD5 и SHA1 не рекомендуются для использования из-за известных
+                    серьезных проблем, которые предоставляются ТОЛЬКО для обратной
+                    совместимости.</para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции CRYPT_HASH</title>
+                        <para><programlisting language="sql">
+SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
+-- результат типа VARBINARY
                 </programlisting></para>
                     </example>
                 </para>
@@ -7676,46 +7755,6 @@ SELECT HASH(x USING SHA256) FROM MyTable;
 
         <para>В Firebird 4.0 поддерживается только подмножество симметричных алгоритмов шифрования
             (как блочных так и потоковых), так и RSA.</para>
-
-        <section xml:id="internalfunc-func-crypt-crc32">
-            <info>
-                <title>CRC32</title>
-                <keywordset>
-                    <keyword>CRC32</keyword>
-                </keywordset>
-            </info>
-            <indexterm><primary>CRC32</primary></indexterm>
-            <formalpara>
-                <title>Доступно в:</title>
-
-                <para>DSQL, PSQL.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-CRC32 (<replaceable>&lt;data&gt;</replaceable>)
-                        </programlisting>
-                </para>
-            </formalpara>
-            <formalpara>
-                <title>Тип возвращаемого результата:</title>
-                <para>VARCHAR.</para>
-            </formalpara>
-            <para>Функция CRC32 возвращает CRC-32 с полиномом 0x04C11DB7. Функция может работать с
-                любым типом данных.</para>
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование функции CRC32</title>
-                        <para><programlisting language="sql">
-select crc32(job_title) from job;
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-        </section>
 
         <section xml:id="internalfunc-func-crypt-encrypt">
             <info>
@@ -7794,8 +7833,8 @@ ENCRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorit
                             <row>
                                 <entry><replaceable>iv</replaceable></entry>
                                 <entry>
-                                    <para>Вектор инициализаяии (IV). Должен быть указан для всех
-                                        блочных алгоримов шифрования за исключением ECB и всех
+                                    <para>Вектор инициализации (IV). Должен быть указан для всех
+                                        блочных алгоритмов шифрования за исключением ECB и всех
                                         потоковых алгоритмов шифрования за исключением RC4.</para>
                                 </entry>
                             </row>
@@ -7830,8 +7869,8 @@ ENCRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorit
                 <title>Тип возвращаемого результата:</title>
                 <para>BLOB или VARBINARY.</para>
             </formalpara>
-            <para>Функция ENCRYPT шифрует данные с использованием симмитричного шифра. Размеры строк
-                передаваемых в эту функцию должны соответсвовать требованиям выбранного алгорима и
+            <para>Функция ENCRYPT шифрует данные с использованием симметричного шифра. Размеры строк
+                передаваемых в эту функцию должны соответствовать требованиям выбранного алгоритма и
                 режима.</para>
 
             <formalpara>
@@ -7931,8 +7970,8 @@ DECRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorit
                             <row>
                                 <entry><replaceable>iv</replaceable></entry>
                                 <entry>
-                                    <para>Вектор инициализаяии (IV). Должен быть указан для всех
-                                        блочных алгоримов шифрования за исключением ECB и всех
+                                    <para>Вектор инициализации (IV). Должен быть указан для всех
+                                        блочных алгоритмов шифрования за исключением ECB и всех
                                         потоковых алгоритмов шифрования за исключением RC4.</para>
                                 </entry>
                             </row>
@@ -7967,9 +8006,9 @@ DECRYPT (<replaceable>&lt;data&gt;</replaceable> [USING <replaceable>&lt;algorit
                 <title>Тип возвращаемого результата:</title>
                 <para>BLOB или VARBINARY.</para>
             </formalpara>
-            <para>Функция DECRYPT дешифрует данные с использованием симмитричного шифра. Размеры
-                строк передаваемых в эту функцию должны соответсвовать требованиям выбранного
-                алгорима и режима.</para>
+            <para>Функция DECRYPT дешифрует данные с использованием симметричного шифра. Размеры
+                строк передаваемых в эту функцию должны соответствовать требованиям выбранного
+                алгоритма и режима.</para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -8426,7 +8465,7 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                 <para>VARBINARY.</para>
             </formalpara>
             <para>Выполняет PSS-кодирование дайджеста сообщения для подписи и подписывает его с
-                использованием закрытого ключа RSA. Возващает подпись сообщения.</para>
+                использованием закрытого ключа RSA. Возвращает подпись сообщения.</para>
             <formalpara>
                 <title>Примеры:</title>
                 <para>
@@ -8437,7 +8476,7 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                                 linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
-    rsa_sign(hash('Test message' using sha256)
+    rsa_sign(crypt_hash('Test message' using sha256)
     key rdb$get_context('USER_SESSION', 'private_key'))) 
 from rdb$database;
                 </programlisting></para>
@@ -8543,7 +8582,7 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
                                 linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>
                             Цифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
                         <para><programlisting language="sql">
-select rsa_verify(hash('Test message' using sha256) 
+select rsa_verify(crypt_hash('Test message' using sha256) 
     signature rdb$get_context('USER_SESSION', 'msg')
     key rdb$get_context('USER_SESSION', 'public_key')) 
 from rdb$database;

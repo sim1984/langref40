@@ -127,10 +127,10 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>COUNT</keyword>
       <keyword>COUNTER</keyword>
       <keyword>COVAR_POP</keyword>
-      <keyword>COVAR_SAMP</keyword>
-      <keyword>CRC32</keyword>
+      <keyword>COVAR_SAMP</keyword>     
       <keyword>CREATE</keyword>
       <keyword>CROSS</keyword>
+      <keyword>CRYPT_HASH</keyword>
       <keyword>CSTRING</keyword>
       <keyword>CTR_BIG_ENDIAN</keyword>
       <keyword>CTR_LITTLE_ENDIAN</keyword>
