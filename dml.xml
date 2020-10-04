@@ -6721,10 +6721,7 @@ EXECUTE PROCEDURE <replaceable>procname</replaceable>
                                 их использовать;</para>
                         </listitem>
                         <listitem>
-                            <para>В DSQL приложениях, использующих Firebird API или иную обёртку,
-                                вызов процедуры через EXECUTE PROCEDURE не требует указания
-                                предложения RETURNING_VALUES для получения выходных значений в
-                                однострочный буфер.</para>
+                            <para>Предложение RETURNING_VALUES доступно только в PSQL.</para>
                         </listitem>
                     </itemizedlist>
                 </para>
