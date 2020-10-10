@@ -774,6 +774,27 @@ WHERE VAR.MON$ATTACHMENT_ID = CURRENT_CONNECTION
                                 </para>
                             </entry>
                         </row>
+                        <row>
+                            <entry>MON$GUID</entry>
+                            <entry>CHAR(38)</entry>
+                            <entry>GUID базы данных.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$FILE_ID</entry>
+                            <entry>VARCHAR(255)</entry>
+                            <entry>Уникальный идентификатор базы данных на уровне файловой
+                                системы.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$NEXT_ATTACHMENT</entry>
+                            <entry>BIGINT</entry>
+                            <entry>Номер (идентификатор) следующего соединения.</entry>
+                        </row>
+                        <row>
+                            <entry>MON$NEXT_STATEMENT</entry>
+                            <entry>BIGINT</entry>
+                            <entry>Номер (идентификатор) следующего SQL запроса.</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>

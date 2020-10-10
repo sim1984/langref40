@@ -1797,6 +1797,15 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                 <entry>Версия сервера Firebird. </entry>
                             </row>
                             <row>
+                                <entry>DB_GUID</entry>
+                                <entry>GUID базы данных.</entry>
+                            </row>
+                            <row>
+                                <entry>DB_FILE_ID</entry>
+                                <entry>Уникальный идентификатор текущей базы данных на уровне
+                                    файловой системы.</entry>
+                            </row>
+                            <row>
                                 <entry>ISOLATION_LEVEL</entry>
                                 <entry>Уровень изоляции текущей транзакции — CURRENT_TRANSACTION.
                                     Значения: &quot;READ_COMMITED&quot;, &quot;SNAPSHOT&quot; или
