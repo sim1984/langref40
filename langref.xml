@@ -6,7 +6,7 @@
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0 RC 1</subtitle>
-        <edition>10 октября 2020 — v.0000-1</edition>
+        <edition>28 октября 2020 — v.0000-1</edition>
 
         <authorgroup>
             <author>
@@ -67,7 +67,6 @@
     <xi:include href="sectables.xml" xpointer="element(/1)"/>
     <xi:include href="syspackage.xml" xpointer="element(/1)"/>
     <xi:include href="charset-coll.xml" xpointer="element(/1)"/>
-    <xi:include href="timezones.xml" xpointer="element(/1)"/>
     <xi:include href="license.xml" xpointer="element(/1)"/> 
     <index xml:lang="ru">
         <info>

@@ -223,6 +223,7 @@ Copyright (C) 2012 Michiel Hendriks, Martin Hujer, k42b3
       <keyword>HEX_DECODE</keyword>
       <keyword>HEX_ENCODE</keyword>
       <keyword>HOUR</keyword>
+      <keyword>INCLUDE</keyword>
       <keyword>IDENTITY</keyword>
       <keyword>IDLE</keyword>
       <keyword>IF</keyword>

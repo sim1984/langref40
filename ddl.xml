@@ -600,8 +600,8 @@ ALTER {DATABASE | SCHEMA}
   | {SET LINGER TO <replaceable>seconds</replaceable> | DROP LINGER}
   | {ENCRYPT WITH <replaceable>plugin_name</replaceable> [KEY <replaceable>key_name</replaceable>] | DECRYPT}
   | {ENABLE | DISABLE} PUBLICATION
-  | ADD {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
-  | DROP {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
+  | INCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
+  | EXCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
 
 <replaceable>&lt;add_sec_clause&gt;</replaceable> ::= ADD FILE <replaceable>&lt;sec_file&gt;</replaceable> 
 
@@ -1050,15 +1050,10 @@ ALTER DATABASE DECRYPT;
             </section>
             <section xml:id="ddl-database-alter-publication">
                 <title>Управление репликацией</title>
-                <indexterm>
-                    <primary>ALTER DATABASE</primary>
-                    <secondary>ENABLE PUBLICATION</secondary>
-                </indexterm>
-                <indexterm>
-                    <primary>ALTER DATABASE</primary>
-                    <secondary>DISABLE PUBLICATION</secondary>
-                </indexterm>
-
+                <indexterm><primary>ALTER DATABASE</primary><secondary>ENABLE
+                        PUBLICATION</secondary></indexterm>
+                <indexterm><primary>ALTER DATABASE</primary><secondary>DISABLE
+                        PUBLICATION</secondary></indexterm>
                 <para>Оператор ALTER DATABASE с предложением ENABLE PUBLICATION включает репликацию
                     базы данных.</para>
                 <programlisting language="sql">  
@@ -1070,19 +1065,15 @@ ALTER DATABASE DISABLE PUBLICATION
 </programlisting>
                 </para>
                 <para>Изменения будут применены сразу после подтверждения транзакции.</para>
-                <indexterm>
-                    <primary>ALTER DATABASE</primary>
-                    <secondary>ADD TABLE TO PUBLICATION</secondary>
-                </indexterm>
-                <indexterm>
-                    <primary>ALTER DATABASE</primary>
-                    <secondary>ADD ALL TO PUBLICATION</secondary>
-                </indexterm>
+                <indexterm><primary>ALTER DATABASE</primary><secondary>INCLUDE TABLE TO
+                        PUBLICATION</secondary></indexterm>
+                <indexterm><primary>ALTER DATABASE</primary><secondary>INCLUDE ALL TO
+                        PUBLICATION</secondary></indexterm>
                 <para>При настойке репликации должен быть определен набор репликации (он же
                     публикация). Он включает в себя таблицы, которые должны быть реплицированы. Это
                     также делается с помощью команды DDL:
                     <programlisting>  
-ALTER DATABASE ADD {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
+ALTER DATABASE INCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
 
 <replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...] 
 </programlisting>
@@ -1091,28 +1082,24 @@ ALTER DATABASE ADD {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} T
                     таблицы, включая те что будут созданы позднее. Команда будет выглядеть следующим
                     образом:
                     <programlisting language="sql">  
-ALTER DATABASE ADD ALL TO PUBLICATION       
+ALTER DATABASE INCLUDE ALL TO PUBLICATION       
 </programlisting>
                 </para>
                 <para>Вы можете задать конкретный набор таблиц для репликации. Для этого после
                     ключевого слова TABLE необходимо указать список таблиц через запятую. В
                     следующем примере мы разрешаем репликацию для таблиц t1 и t2:
                     <programlisting language="sql">  
-ALTER DATABASE ADD TABLE t1, t2 TO PUBLICATION       
+ALTER DATABASE INCLUDE TABLE t1, t2 TO PUBLICATION       
 </programlisting>
                 </para>
-                <indexterm>
-                    <primary>ALTER DATABASE</primary>
-                    <secondary>DROP TABLE FROM PUBLICATION</secondary>
-                </indexterm>
-                <indexterm>
-                    <primary>ALTER DATABASE</primary>
-                    <secondary>DROP ALL FROM PUBLICATION</secondary>
-                </indexterm>
+                <indexterm><primary>ALTER DATABASE</primary><secondary>EXCLUDE TABLE FROM
+                        PUBLICATION</secondary></indexterm>
+                <indexterm><primary>ALTER DATABASE</primary><secondary>EXCLUDE ALL FROM
+                        PUBLICATION</secondary></indexterm>
                 <para>Для исключения таблиц из набора репликации (публикации) используется следующий
                     оператор:
                     <programlisting>  
-ALTER DATABASE DROP {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
+ALTER DATABASE EXCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
 
 <replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...] 
 </programlisting>
@@ -1122,14 +1109,14 @@ ALTER DATABASE DROP {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} 
                     ключевого слова ALL, то данный оператор отключит автоматическую публикацию для
                     вновь создаваемых таблиц. Команда будет выглядеть следующим образом:
                     <programlisting language="sql">  
-ALTER DATABASE DROP ALL FROM PUBLICATION       
+ALTER DATABASE EXCLUDE ALL FROM PUBLICATION       
 </programlisting>
                 </para>
                 <para>Вы можете задать конкретный набор таблиц для исключения из репликации. Для
                     этого после ключевого слова TABLE необходимо указать список таблиц через
                     запятую. В следующем примере мы исключаем таблицы t1 и t2 из набора репликации:
                     <programlisting language="sql">  
-ALTER DATABASE DROP TABLE t1, t2 FROM PUBLICATION       
+ALTER DATABASE EXCLUDE TABLE t1, t2 FROM PUBLICATION       
 </programlisting>
                 </para>
                 <para>Таблицы, включенные для репликации, могут быть дополнительно отфильтрованы с

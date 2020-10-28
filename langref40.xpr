@@ -376,7 +376,6 @@
         <file name="supplement.xml"/>
         <file name="syspackage.xml"/>
         <file name="systables.xml"/>
-        <file name="timezones.xml"/>
         <file name="transaction.xml"/>
         <file name="types.xml"/>
     </projectTree>

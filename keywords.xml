@@ -409,6 +409,7 @@
                 <member>DROP</member>
                 <member>ELSE</member>
                 <member>ENABLE</member>
+                <member>ENCLUDE</member>
                 <member>ENCRYPT</member>
                 <member>ENGINE</member>
                 <member>END</member>
