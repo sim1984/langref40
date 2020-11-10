@@ -2442,8 +2442,8 @@ WHERE rating &gt; ALL
                 <example>
                     <title>Квантор ANY</title>
 
-                    <para>Вывести только тех заказчиков, чьи оценки выше, чем у любого заказчика в
-                        Риме.</para>
+                    <para>Вывести только тех заказчиков, чьи оценки выше, чем у какого-либо
+                        заказчика в Риме.</para>
                     <para>
                         <programlisting language="sql">  
 SELECT * 

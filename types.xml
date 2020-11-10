@@ -1596,8 +1596,9 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
                 America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
-                -03:00). Список региональных часовых поясов и их идентификаторов см. в приложении
-                    <link linkend="timezones">Список региональных часовых поясов</link>. Правила
+                -03:00). Список региональных часовых поясов и их идентификаторов можно посмотреть 
+                в таблице
+                <link linkend="systables-timezones">RDB$TIME_ZONES</link>. Правила
                 преобразования региональных часовых поясов в смещение в минутах можно получить с
                 помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
                     >RDB$TIME_ZONE_UTIL.TRANSITIONS</link>.</para>

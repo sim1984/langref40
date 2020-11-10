@@ -2769,6 +2769,25 @@ THEN <replaceable>&lt;compound_statement&gt;</replaceable>
                 составной оператор или после ключевого слова THEN. Иначе (если условие возвращает
                 FALSE или UNKNOWN) выполняется составной оператор после ключевого слова ELSE, если
                 оно присутствует. Условие всегда заключается в круглые скобки.</para>
+            
+            <formalpara>
+                <title>Примеры:</title>
+                
+                <para>
+                    <example>
+                        <title>Использование оператора IF</title>
+                        <para><programlisting language="sql">
+...
+IF (FIRST IS NOT NULL) THEN
+  LINE2 = FIRST || ' ' || LAST;
+ELSE
+  LINE2 = LAST;
+...      
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>            
+            
             <sidebar>
                 <title>Оператор ветвления</title>
 
@@ -2802,23 +2821,6 @@ C = CASE
                 </para>
             </sidebar>
 
-            <formalpara>
-                <title>Примеры:</title>
-
-                <para>
-                    <example>
-                        <title>Использование оператора IF</title>
-                        <para><programlisting language="sql">
-...
-IF (FIRST IS NOT NULL) THEN
-  LINE2 = FIRST || ' ' || LAST;
-ELSE
-  LINE2 = LAST;
-...      
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
             <formalpara>
                 <title>См. также:</title>
 
