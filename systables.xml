@@ -48,6 +48,13 @@
                         <entry><link linkend="systables-collations">RDB$COLLATIONS</link></entry>
                         <entry>Порядки сортировки для всех наборов символов.</entry>
                     </row>
+                    <row>
+                        <entry><link linkend="systables-config">RDB$CONFIG</link></entry>
+                        <entry>Виртуальная таблица, отображающая актуальные параметры конфигурации,
+                            заданные в <filename>firebird.conf</filename>,
+                                <filename>databases.conf</filename> или через передаваемые через
+                            DPB.</entry>
+                    </row>
                     <row valign="middle">
                         <entry><link linkend="systables-database">RDB$DATABASE</link></entry>
                         <entry>Основные данные о базе данных.</entry>
@@ -605,6 +612,85 @@
                             <entry>RDB$OWNER_NAME</entry>
                             <entry>CHAR(63)</entry>
                             <entry>Имя пользователя — владельца (создателя) сортировки.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+    </section>
+    <section xml:id="systables-config">
+        <info>
+            <title>RDB$CONFIG</title>
+            <keywordset>
+                <keyword>RDB$CONFIG</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RDB$CONFIG</primary>
+        </indexterm>
+        <para>Виртуальная таблица, отображающая актуальные параметры конфигурации, заданные в
+                <filename>firebird.conf</filename>, <filename>databases.conf</filename> или через
+            передаваемые через DPB.</para>
+        <para>Таблица RDB$CONFIG при необходимости заполняется из структур в памяти, а экземпляр
+            хранится на уровне запроса SQL. По соображениям безопасности доступ разрешен только
+            SYSDBA и владельцу базы данных. Непривилегированный пользователь видит пустое
+            содержимое, ошибка не возникает.</para>
+        <para>
+            <table xml:id="systables-tbl-config" frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Описание столбцов таблицы RDB$CONFIG</title>
+                <tgroup cols="3">
+                    <colspec colname="colColumn" colnum="1" colwidth="4*" align="left"/>
+                    <colspec colname="colType" colnum="2" colwidth="3*" align="left"/>
+                    <colspec colname="colDesc" colnum="3" colwidth="5*" align="left"/>
+                    <thead valign="middle">
+                        <row>
+                            <entry align="center">Наименование столбца</entry>
+                            <entry align="center">Тип данных</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>RDB$CONFIG_ID</entry>
+                            <entry>INTEGER</entry>
+                            <entry>Уникальный идентификатор записи. Не имеет значения.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$CONFIG_NAME</entry>
+                            <entry>VARCHAR(63)</entry>
+                            <entry>Наименование параметра, например
+                                    <quote>DefaultDbCachePages</quote>,
+                                    <quote>TempCacheLimit</quote> и т. д.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$CONFIG_VALUE</entry>
+                            <entry>VARCHAR(255)</entry>
+                            <entry>Фактическое значение настройки, может задаваться в конфигурации и
+                                при необходимости браться из ядра Firebird (в случае неверного
+                                значения).</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$CONFIG_DEFAULT</entry>
+                            <entry>VARCHAR(255)</entry>
+                            <entry>Значение настройки по умолчанию, фиксированное в коде
+                                Firebird.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$CONFIG_IS_SET</entry>
+                            <entry>BOOLEAN</entry>
+                            <entry>TRUE, если значение установлено пользователем, FALSE в противном
+                                случае.</entry>
+                        </row>
+                        <row>
+                            <entry>RDB$CONFIG_SOURCE</entry>
+                            <entry>VARCHAR(255)</entry>
+                            <entry>Имя конфигурационного файла, в котором был задан параметр,
+                                относительно корневой папки firebird, например:
+                                    <quote>firebird.conf</quote>, <quote>databases.conf</quote> или
+                                специальное значение <quote>DPB</quote>, если параметр был
+                                установлен в DPB, если значение параметра не было задано, то это
+                                поле содержит NULL.</entry>
                         </row>
                     </tbody>
                 </tgroup>
