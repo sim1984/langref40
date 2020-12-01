@@ -1289,41 +1289,48 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
                         <colspec colname="colDesc" colwidth="5*"/>
                         <tbody>
                             <row valign="middle">
-                                <entry align="left">При соединении с базой данных</entry>
-                                <entry align="center"><database>(ON CONNECT)</database></entry>
+                                <entry align="left">После соединения с базой данных, или сброса
+                                    сессионного окружения</entry>
+                                <entry align="center"><database>ON CONNECT</database></entry>
                                 <entry align="left">Перед выполнением триггера автоматически
                                     запускается транзакция по умолчанию</entry>
                             </row>
                             <row valign="middle">
-                                <entry align="left">При отсоединении от базы данных</entry>
-                                <entry align="center"><database>(ON DISCONNECT)</database></entry>
+                                <entry align="left">Перед отсоединении от базы данных или сбросом
+                                    сессионного окружения</entry>
+                                <entry align="center"><database>ON DISCONNECT</database></entry>
                                 <entry align="left">Перед выполнением триггера автоматически
                                     запускается транзакция по умолчанию</entry>
                             </row>
                             <row valign="middle">
-                                <entry align="left">При старте транзакции</entry>
-                                <entry align="center"><database>(ON TRANSACTION
-                                    START)</database></entry>
+                                <entry align="left">После старта транзакции</entry>
+                                <entry align="center"><database>ON TRANSACTION
+                                    START</database></entry>
                                 <entry align="left">Триггер выполняется в контексте текущей
                                     транзакции</entry>
                             </row>
                             <row valign="middle">
-                                <entry align="left">При подтверждении транзакции</entry>
-                                <entry align="center"><database>(ON TRANSACTION
-                                    COMMIT)</database></entry>
+                                <entry align="left">Перед подтверждением транзакции</entry>
+                                <entry align="center"><database>ON TRANSACTION
+                                    COMMIT</database></entry>
                                 <entry align="left">Триггер выполняется в контексте текущей
                                     транзакции</entry>
                             </row>
                             <row valign="middle">
-                                <entry align="left">При отмене транзакции</entry>
-                                <entry align="center"><database>(ON TRANSACTION
-                                    ROLLBACK)</database></entry>
+                                <entry align="left">Перед отменой транзакции</entry>
+                                <entry align="center"><database>ON TRANSACTION
+                                    ROLLBACK</database></entry>
                                 <entry align="left">Триггер выполняется в контексте текущей
                                     транзакции</entry>
                             </row>
                         </tbody>
                     </tgroup>
                 </informaltable></para>
+
+            <para>Контекстная переменная <link linkend="internalfunc-contextvar-resetting"
+                    >RESETTING</link> может использоваться в триггерах на события ON CONNECT и ON
+                DISCONNECT для того, чтобы отличить сброс сеанса от подключения/отключения от базы
+                данных.</para>
         </section>
 
         <section xml:id="psql-triggers-ddl">
@@ -2769,10 +2776,10 @@ THEN <replaceable>&lt;compound_statement&gt;</replaceable>
                 составной оператор или после ключевого слова THEN. Иначе (если условие возвращает
                 FALSE или UNKNOWN) выполняется составной оператор после ключевого слова ELSE, если
                 оно присутствует. Условие всегда заключается в круглые скобки.</para>
-            
+
             <formalpara>
                 <title>Примеры:</title>
-                
+
                 <para>
                     <example>
                         <title>Использование оператора IF</title>
@@ -2786,8 +2793,8 @@ ELSE
                 </programlisting></para>
                     </example>
                 </para>
-            </formalpara>            
-            
+            </formalpara>
+
             <sidebar>
                 <title>Оператор ветвления</title>
 

@@ -105,10 +105,9 @@ DATE DEFAULT CURRENT_DATE NOT NULL
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-contextvar-today">'TODAY'</link>, <link
-                        linkend="internalfunc-contextvar-current_timestamp"
-                    >CURRENT_TIMESTAMP</link>, <link linkend="internalfunc-contextvar-current_time"
-                        >CURRENT_TIME</link>. </para>
+                    <link linkend="internalfunc-contextvar-current_timestamp"
+                        >CURRENT_TIMESTAMP</link>, <link
+                        linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>. </para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-contextvar-current_role">
@@ -269,10 +268,9 @@ SELECT CURRENT_TIME(2) FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-contextvar-now">'NOW'</link>, <link
-                        linkend="internalfunc-contextvar-current_timestamp"
-                    >CURRENT_TIMESTAMP</link>, <link linkend="internalfunc-contextvar-current_date"
-                        >CURRENT_DATE</link>. </para>
+                    <link linkend="internalfunc-contextvar-current_timestamp"
+                        >CURRENT_TIMESTAMP</link>, <link
+                        linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>. </para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-contextvar-current_timestamp">
@@ -359,8 +357,7 @@ SELECT CURRENT_TIMESTAMP(2) FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-contextvar-now">'NOW'</link>, <link
-                        linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
+                    <link linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
                         linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>. </para>
             </formalpara>
         </section>
@@ -759,7 +756,6 @@ SELECT LOCALTIME(2) FROM RDB$DATABASE;
 
                 <para>
                     <link linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
-                        linkend="internalfunc-contextvar-now">'NOW'</link>, <link
                         linkend="internalfunc-contextvar-current_timestamp"
                     >CURRENT_TIMESTAMP</link>, <link linkend="internalfunc-contextvar-current_date"
                         >CURRENT_DATE</link>. </para>
@@ -853,10 +849,9 @@ SELECT LOCALTIMESTAMP(2) FROM RDB$DATABASE;
 
                 <para>
                     <link linkend="internalfunc-contextvar-current_timestamp"
-                        >CURRENT_TIMESTAMP</link>, <link linkend="internalfunc-contextvar-now"
-                        >'NOW'</link>, <link linkend="internalfunc-contextvar-current_time"
-                        >CURRENT_TIME</link>, <link linkend="internalfunc-contextvar-current_date"
-                        >CURRENT_DATE</link>. </para>
+                        >CURRENT_TIMESTAMP</link>, <link
+                        linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
+                        linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>. </para>
             </formalpara>
         </section>
 
@@ -919,104 +914,7 @@ NEW
                     <link linkend="internalfunc-contextvar-old">OLD</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-contextvar-now">
-            <info>
-                <title>'NOW'</title>
-                <keywordset>
-                    <keyword>'NOW'</keyword>
-                </keywordset>
-            </info>
-            <indexterm><primary>NOW</primary></indexterm>
-            <formalpara>
-                <title>Доступно в:</title>
 
-                <para>DSQL, PSQL, ESQL.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-'NOW'                    
-                    </programlisting>
-                </para>
-            </formalpara>
-
-            <para>Не является переменной, а является строковым литералом. При использовании
-                преобразования типов данных, например, с помощью функции CAST() в тип даты/времени
-                позволяет получить текущую дату и/или время. Точность составляет 3 знака после
-                запятой (миллисекунды). Написание 'NOW' не зависит от регистра, при преобразовании в
-                дату функция игнорирует все пробелы слева и справа от слова.</para>
-            <note>
-                <para>Поскольку 'NOW' всегда возвращает актуальные значения даты и времени при
-                    использовании CAST() для приведения типов данных она может использоваться для
-                    измерения временных интервалов и скорости выполнения кода в процедурах,
-                    триггерах и блоках кода PSQL.</para>
-            </note>
-
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование переменной 'NOW'</title>
-                        <para><programlisting language="sql">
-SELECT CAST('Now' AS DATE) FROM rdb$database;
--- возвратит, например 2014-10-03
-
-SELECT CAST('now' AS TIME) FROM rdb$database;
--- возвратит, например 14:20:19.6170
-
-SELECT CAST('NOW' AS TIMESTAMP) FROM rdb$database;
--- возвратит, например 2014-10-03 14:20:19.6170
-                </programlisting></para>
-                    </example>
-                    <example>
-                        <title>Использование 'NOW' измерения длительности выполнения кода</title>
-                        <para><programlisting language="sql">
-<![CDATA[
-EXECUTE BLOCK
-RETURNS (ms BIGINT)
-AS
-DECLARE VARIABLE t1 TIME;
-DECLARE VARIABLE n BIGINT;
-BEGIN
-  t1 = CAST('now' AS TIME);
-  /* Долгая операция  */
-  SELECT COUNT(*) FROM rdb$types, rdb$types, rdb$types INTO n;
-  /*======*/
-  ms = DATEDIFF(MILLISECOND FROM t1 TO CAST('now' AS TIME));
-  SUSPEND;
-END
-]]> 
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-            <note>
-                <title>Обратите внимание</title>
-
-                <para>Начиная с Firebird 4.0 использование 'NOW' в сокращённом синтаксисе для
-                    литералов дат и времени запрещено. Ранее такие выражения были разрешены.
-                    Поскольку они вычислялись на этапе синтаксического анализа (подготовка запроса
-                    или компиляция процедуры, функции или триггера), то использование таких
-                    выражений в компилируемом PSQL приводило к тому, что значение "замораживалось"
-                    на момент компиляции, и возвращалось не актуальное значение.</para>
-            </note>
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="internalfunc-contextvar-current_timestamp"
-                        >CURRENT_TIMESTAMP</link>, <link
-                        linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>, <link
-                        linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
-                        linkend="internalfunc-contextvar-today">TODAY</link>, <link
-                        linkend="internalfunc-contextvar-tomorrow">TOMORROW</link>, <link
-                        linkend="internalfunc-contextvar-yesterday">YESTERDAY</link>, <link
-                        linkend="types-cast-dateliteral">Преобразование строк в дату и время</link>.
-                </para>
-            </formalpara>
-        </section>
         <section xml:id="internalfunc-contextvar-old">
             <info>
                 <title>OLD</title>
@@ -1070,6 +968,64 @@ OLD
 
                 <para>
                     <link linkend="internalfunc-contextvar-new">NEW</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-contextvar-resetting">
+            <info>
+                <title>RESETTING</title>
+                <keywordset>
+                    <keyword>RESETTING</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>RESETTING</primary></indexterm>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>PSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+RESETTING                     
+                        </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BOOLEAN</para>
+            </formalpara>
+
+            <para>Контекстная переменная RESETTING доступна только коде триггеров на события ON
+                CONNECT и ON DISCONNECT, и может использоваться в любом месте, где можно
+                использовать логический предикат. Системная переменная RESETTING, позволяет
+                обнаружить случай, когда триггер базы данных срабатывает из-за сброса сеанса,
+                например с помощью оператора <code>ALTER SESSION RESET</code>. Её значение TRUE,
+                если выполняется сброс сеанса, и FALSE в противном случае.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование переменной RESETTING</title>
+                        <para><programlisting language="sql">
+...
+IF (RESETTING) THEN
+BEGIN
+  -- выполняется сброс сеанса
+END
+...
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="session-resetsession">ALTER SESSION RESET</link>.</para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-contextvar-row_count">
@@ -1323,136 +1279,7 @@ END
                         linkend="error">Коды ошибок SQLSTATE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-contextvar-today">
-            <info>
-                <title>'TODAY'</title>
-                <keywordset>
-                    <keyword>'TODAY'</keyword>
-                </keywordset>
-            </info>
 
-            <indexterm><primary>TODAY</primary></indexterm>
-
-            <formalpara>
-                <title>Доступно в:</title>
-
-                <para>DSQL, PSQL, ESQL.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-'TODAY'                    
-                    </programlisting>
-                </para>
-            </formalpara>
-
-            <para>Не является переменной, а является строковым литералом. При использовании
-                преобразования типов данных, например, с помощью функции CAST() в тип даты/времени
-                позволяет получить текущую дату. Написание 'TODAY' не зависит от регистра, при
-                преобразовании в дату функция игнорирует все пробелы слева и справа от слова.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование переменной 'TODAY'</title>
-                        <para><programlisting language="sql">
-SELECT CAST('Today' AS DATE) FROM rdb$database;
- -- возвратит, например 2014-10-03
-SELECT CAST('TODAY' AS TIMESTAMP) FROM rdb$database;
- -- возвратит, например 2014-10-03 00:00:00.0000
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-            <note>
-                <title>Обратите внимание</title>
-
-                <para>Начиная с Firebird 4.0 использование 'TODAY' в сокращённом синтаксисе для
-                    литералов дат и времени запрещено. Ранее такие выражения были разрешены.
-                    Поскольку они вычислялись на этапе синтаксического анализа (подготовка запроса
-                    или компиляция процедуры, функции или триггера), то использование таких
-                    выражений в компилируемом PSQL приводило к тому, что значение "замораживалось"
-                    на момент компиляции, и возвращалось не актуальное значение.</para>
-            </note>
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>, <link
-                        linkend="internalfunc-contextvar-tomorrow">TOMORROW</link>, <link
-                        linkend="internalfunc-contextvar-yesterday">YESTERDAY</link>, <link
-                        linkend="types-cast-dateliteral">Преобразование строк в дату и время</link>.
-                </para>
-            </formalpara>
-        </section>
-        <section xml:id="internalfunc-contextvar-tomorrow">
-            <info>
-                <title>'TOMORROW'</title>
-                <keywordset>
-                    <keyword>'TOMORROW'</keyword>
-                </keywordset>
-            </info>
-
-            <indexterm><primary>TOMORROW</primary></indexterm>
-
-            <formalpara>
-                <title>Доступно в:</title>
-
-                <para>DSQL, PSQL, ESQL.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-'TOMORROW'                    
-                    </programlisting>
-                </para>
-            </formalpara>
-
-            <para>Не является переменной, а является строковым литералом. При использовании
-                преобразования, например, с помощью функции CAST() в тип даты / времени позволяет
-                получить дату, следующую за текущей. Написание 'TOMORROW' не зависит от регистра,
-                при преобразовании в дату функция игнорирует все пробелы слева и справа от
-                слова.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование переменной 'TOMORROW'</title>
-                        <para><programlisting language="sql">
-SELECT CAST('Tomorrow' AS DATE) FROM rdb$database;
--- возвратит, например 2014-10-04
-
-SELECT CAST('TOMORROW' AS TIMESTAMP) FROM rdb$database;
--- возвратит, например 2014-10-04 00:00:00.0000
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-            <note>
-                <title>Обратите внимание</title>
-
-                <para>Начиная с Firebird 4.0 использование 'TOMORROW' в сокращённом синтаксисе для
-                    литералов дат и времени запрещено. Ранее такие выражения были разрешены.
-                    Поскольку они вычислялись на этапе синтаксического анализа (подготовка запроса
-                    или компиляция процедуры, функции или триггера), то использование таких
-                    выражений в компилируемом PSQL приводило к тому, что значение "замораживалось"
-                    на момент компиляции, и возвращалось не актуальное значение.</para>
-            </note>
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>, <link
-                        linkend="internalfunc-contextvar-today">TODAY</link>, <link
-                        linkend="internalfunc-contextvar-yesterday">YESTERDAY</link>, <link
-                        linkend="types-cast-dateliteral">Преобразование строк в дату и время</link>.
-                </para>
-            </formalpara>
-        </section>
         <section xml:id="internalfunc-contextvar-updating">
             <info>
                 <title>UPDATING</title>
@@ -1510,69 +1337,7 @@ END
                         linkend="internalfunc-contextvar-deleting">DELETING</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-contextvar-yesterday">
-            <info>
-                <title>'YERSTERDAY'</title>
-                <keywordset>
-                    <keyword>'YERSTERDAY'</keyword>
-                </keywordset>
-            </info>
 
-            <indexterm><primary>YERSTERDAY</primary></indexterm>
-
-            <formalpara>
-                <title>Доступно в:</title>
-
-                <para>DSQL, PSQL, ESQL.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <programlisting>
-'YERSTERDAY'                    
-                    </programlisting>
-                </para>
-            </formalpara>
-
-            <para>Не является переменной, а является строковым литералом. При использовании
-                преобразования, например, с помощью функции CAST() в тип даты / времени позволяет
-                получить дату, предыдущую перед текущей. Написание 'YERSTERDAY' не зависит от
-                регистра, при преобразовании в дату функция игнорирует все пробелы слева и справа от
-                слова.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование переменной 'YERSTERDAY'</title>
-                        <para><programlisting language="sql">
-SELECT CAST('Yesterday' AS DATE) FROM rdb$database;
---возвратит, например 2014-10-04
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-            <note>
-                <title>Обратите внимание</title>
-
-                <para>Начиная с Firebird 4.0 использование 'YERSTERDAY' в сокращённом синтаксисе для
-                    литералов дат и времени запрещено. Ранее такие выражения были разрешены.
-                    Поскольку они вычислялись на этапе синтаксического анализа (подготовка запроса
-                    или компиляция процедуры, функции или триггера), то использование таких
-                    выражений в компилируемом PSQL приводило к тому, что значение "замораживалось"
-                    на момент компиляции, и возвращалось не актуальное значение.</para>
-            </note>
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>, <link
-                        linkend="internalfunc-contextvar-today">TODAY</link>, <link
-                        linkend="internalfunc-contextvar-tomorrow">TOMORROW</link>, <link
-                        linkend="types-cast-dateliteral">Преобразование строк в дату и время</link>.
-                </para>
-            </formalpara>
-        </section>
         <section xml:id="internalfunc-contextvar-user">
             <info>
                 <title>USER</title>
@@ -7657,8 +7422,8 @@ HASH (<replaceable>str</replaceable> [USING <replaceable>&lt;algorithm&gt;</repl
                 большое количество коллизий. </para>
 
             <para>Предложение USING позволяет указать алгоритм по которому вычисляет хэш. На данный
-                момент поддерживается только один алгоритм CRC32, использующий  полиномом
-                0x04C11DB7. В этом случае функция возвращает результат с типом INTEGER.</para>
+                момент поддерживается только один алгоритм CRC32, использующий полиномом 0x04C11DB7.
+                В этом случае функция возвращает результат с типом INTEGER.</para>
 
             <formalpara>
                 <title>Примеры:</title>

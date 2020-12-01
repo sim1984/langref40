@@ -7355,10 +7355,12 @@ END
                 <para>Триггер может быть создан для одного из событий базы данных: <itemizedlist
                         spacing="compact">
                         <listitem>
-                            <para>CONNECT (соединение с базой данных);</para>
+                            <para>CONNECT (соединение с базой данных или после сброса
+                                сеанса);</para>
                         </listitem>
                         <listitem>
-                            <para>DISCONNECT (отсоединение от базы данных);</para>
+                            <para>DISCONNECT (отсоединение от базы данных или перед сбросом
+                                сеанса);</para>
                         </listitem>
                         <listitem>
                             <para>TRANSACTION START (старт транзакции); </para>
@@ -7370,6 +7372,12 @@ END
                             <para>TRANSACTION ROLLBACK (откат транзакции). </para>
                         </listitem>
                     </itemizedlist></para>
+
+                <para>Контекстная переменная <link linkend="internalfunc-contextvar-resetting"
+                        >RESETTING</link> может использоваться в триггерах на события CONNECT и
+                    DISCONNECT для того, чтобы отличить сброс сеанса от подключения/отключения от
+                    базы данных.</para>
+
                 <para>Указать для триггера несколько событий базы данных невозможно.</para>
                 <section xml:id="ddl-trigger-db-exception">
                     <title>Выполнение триггеров на событие базы данных и обработка
@@ -7389,6 +7397,11 @@ END
                             </listitem>
                         </itemizedlist>
                     </para>
+                    <para>Триггеры на события CONNECT и DISCONNECT срабатывают также при выполнении
+                        оператора сброса сессионного окружения. Особенности обработки ошибок в
+                        триггерах на события CONNECT и DISCONNECT смотри в секции <link
+                            linkend="session-resetsession">ALTER SESSION RESET</link>.</para>
+
                     <para>Триггеры на события транзакций срабатывают при старте транзакции, её
                         подтверждении или откате. Не перехваченные исключения обрабатываются в
                         зависимости от типа события: <itemizedlist spacing="compact">

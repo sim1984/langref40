@@ -1157,8 +1157,7 @@ SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
                 </screen>
             </para>
             <para>Для того чтобы получить значение смещения времени относительно GMT выполните
-                следующее:
-                <programlisting language="sql">
+                следующее: <programlisting language="sql">
 SET BIND OF TIME ZONE TO EXTENDED;
 SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
 </programlisting>
@@ -1206,6 +1205,24 @@ ALTER SESSION RESET  
 
         <para>Данный оператор делает следующее: <itemizedlist>
                 <listitem>
+                    <para>генерируется ошибка (isc_ses_reset_err), если в текущем соединении
+                        существует какая-либо открытая транзакция, кроме текущей транзакции и
+                        подготовленных транзакций 2PC, которые разрешены и игнорируются этой
+                        проверкой;</para>
+                </listitem>
+                <listitem>
+                    <para>системная переменная RESETTING устанавливается в TRUE;</para>
+                </listitem>
+                <listitem>
+                    <para>запускаются триггеры базы данных на событие ON DISCONNECT, если они
+                        присутствуют и разрешены для текущего соединения;</para>
+                </listitem>
+                <listitem>
+                    <para>текущая пользовательская транзакция откатывается (ROLLBACK), если она
+                        есть. Если в текущей активной транзакции были произведены изменения, то
+                        будет выдано предупреждение;</para>
+                </listitem>
+                <listitem>
                     <para>сбрасывает установленные параметры DECFLOAT (BIND, TRAP и ROUND) в
                         значения по умолчанию;</para>
                 </listitem>
@@ -1217,34 +1234,49 @@ ALTER SESSION RESET  
                         USER_SESSION;</para>
                 </listitem>
                 <listitem>
-                    <para>очищает содержимое всех используемых глобальных таблиц уровня соединения
-                        (COMMIT PRESERVE ROWS);</para>
-                </listitem>
-                <listitem>
                     <para>сбрасывает роль в значение переданное в DPB (указанное при подключении) и
                         очищает кеш привилегий (если роль была изменена с помощью оператора SET
                         ROLE);</para>
                 </listitem>
                 <listitem>
-                    <para>текущая активная транзакция откатывается и стартуется новая с теми же
-                        параметрами, после рестарта.</para>
+                    <para>очищает содержимое всех используемых глобальных таблиц уровня соединения
+                        (GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS);</para>
+                </listitem>
+                <listitem>
+                    <para>запускаются триггеры базы данных на событие ON CONNECT, если они
+                        присутствуют и разрешены для текущего соединения;</para>
+                </listitem>
+                <listitem>
+                    <para>начинает новую транзакцию с теми же свойствами, что и транзакция, которая
+                        была отменена (если транзакция присутствовала до сброса);</para>
+                </listitem>
+                <listitem>
+                    <para>системная переменная RESETTING устанавливается в FALSE.</para>
                 </listitem>
             </itemizedlist></para>
-        <warning>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>Если в текущей активной транзакции были произведены изменения, то
-                            будет выдано предупреждение.</para>
-                    </listitem>
-                    <listitem>
-                        <para>Если в текущей сессии активны другие транзакции, то будет выдана
-                            ошибка. При проверке транзакций перед сбросом сессии подготовленные 2PC
-                            транзакции игнорируются.</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-        </warning>
+
+        <simplesect>
+            <title>Обработка ошибок</title>
+
+            <para>Ошибка, возникшая в триггере ON DISCONNECT, прерывает сброс сеанса и оставляет
+                состояние сеанса неизменным. Такие ошибки сообщаются с кодом основной ошибки
+                    <code>isc_session_reset_err</code> и текстом ошибки <quote>Cannot reset user
+                    session</quote>.</para>
+
+            <para>Ошибки, возникающие после того, как триггеры ON DISCONNECT выполнены, прерывают
+                выполнение оператора сброса сеанса и само соединение. Такие ошибки сообщались с
+                кодом основной ошибки <code>isc_session_reset_failed</code> и текстом ошибки
+                    <quote>Reset of user session failed. Connection is shut down</quote>.
+                Последующие операции по подключению (кроме отсоединения) завершатся ошибкой
+                    <code>isc_att_shutdown</code>.</para>
+            
+            <formalpara>
+                <title>См. также:</title>
+                
+                <para>
+                    <link linkend="internalfunc-contextvar-resetting">RESETTING</link>.</para>
+            </formalpara>
+        </simplesect>
     </section>
 
 </chapter>

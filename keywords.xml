@@ -180,6 +180,7 @@
                 <member>REGR_SYY</member>
                 <member>RELEASE</member>
                 <member>RESET</member>
+                <member>RESETTING</member>
                 <member>RETURN</member>
                 <member>RETURNING_VALUES</member>
                 <member>RETURNS</member>
@@ -622,6 +623,7 @@
                 <member>REPLACE</member>
                 <member>REQUESTS</member>
                 <member>RESET</member>
+                <member>RESETTING</member>
                 <member>RESERV</member>
                 <member>RESERVING</member>
                 <member>RESTART</member>

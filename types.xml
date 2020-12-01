@@ -199,12 +199,12 @@
                         <entry><para><code>INT128</code></para></entry>
                         <entry><para>128 бит</para></entry>
                         <entry><para>
-                            <inlineequation>
-                                <alt>-2^127 .. 2^127 - 1</alt>
-                                <mathphrase>-2<superscript>127</superscript> ..
-                                    2<superscript>127</superscript> - 1</mathphrase>
-                            </inlineequation>
-                        </para></entry>
+                                <inlineequation>
+                                    <alt>-2^127 .. 2^127 - 1</alt>
+                                    <mathphrase>-2<superscript>127</superscript> ..
+                                            2<superscript>127</superscript> - 1</mathphrase>
+                                </inlineequation>
+                            </para></entry>
                         <entry><para> </para></entry>
                     </row>
                     <row>
@@ -405,15 +405,15 @@ CREATE TABLE WHOLELOTTARECORDS (
                 <title>INT128</title>
             </info>
             <indexterm><primary>INT128</primary></indexterm>
-            <para>INT128 — не стандартный 128 битный целочисленный тип данных.  </para>
+            <para>INT128 — не стандартный 128 битный целочисленный тип данных. </para>
             <para>Числа типа INT128 находятся в диапазоне -2<superscript>127</superscript> ..
-                2<superscript>127</superscript> - 1</para>
+                    2<superscript>127</superscript> - 1</para>
             <formalpara>
                 <title>Примеры:</title>
                 <para>
                     <example>
                         <title>Использование типа INT128</title>
-                        
+
                         <para>
                             <programlisting language="sql">  
 CREATE PROCEDURE PROC1 (PAR1 INT128) 
@@ -1596,9 +1596,8 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
                 America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
-                -03:00). Список региональных часовых поясов и их идентификаторов можно посмотреть 
-                в таблице
-                <link linkend="systables-timezones">RDB$TIME_ZONES</link>. Правила
+                -03:00). Список региональных часовых поясов и их идентификаторов можно посмотреть в
+                таблице <link linkend="systables-timezones">RDB$TIME_ZONES</link>. Правила
                 преобразования региональных часовых поясов в смещение в минутах можно получить с
                 помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
                     >RDB$TIME_ZONE_UTIL.TRANSITIONS</link>.</para>
@@ -3148,6 +3147,7 @@ WHERE (SH.SIZE = ? OR ? IS NULL)
             <info>
                 <title>Явное преобразование типов данных</title>
             </info>
+            <indexterm><primary>CAST</primary></indexterm>
 
             <para>В тех случаях, когда требуется выполнить явное преобразование одного типа в
                 другой, используют функцию CAST. </para>
@@ -3404,6 +3404,22 @@ FROM RDB$DATABASE;
                     </table>
                 </para>
                 <para>
+                    <indexterm>
+                        <primary>CAST</primary>
+                        <secondary>'NOW'</secondary>
+                    </indexterm>
+                    <indexterm>
+                        <primary>CAST</primary>
+                        <secondary>'TODAY'</secondary>
+                    </indexterm>
+                    <indexterm>
+                        <primary>CAST</primary>
+                        <secondary>'TOMORROW'</secondary>
+                    </indexterm>
+                    <indexterm>
+                        <primary>CAST</primary>
+                        <secondary>'YESTERDAY'</secondary>
+                    </indexterm>
                     <table xml:id="types-tbl-dateliteral">
                         <?dbfo keep-together='auto'?>
                         <title>Литералы с предопределёнными значениями даты и времени</title>
@@ -3485,6 +3501,12 @@ FROM RDB$DATABASE;
                         </listitem>
                     </itemizedlist>
                 </para>
+                <para>При использовании преобразования строковых литералов в тип даты/времени с
+                    помощью функции CAST() вычисление значения всегда происходит в момент
+                    выполнения.</para>
+                <para>При преобразовании строковых литералов с предопределёнными значениями даты и
+                    времени в тип TIMESTAMP точность составляет 3 знака после запятой
+                    (миллисекунды).</para>
                 <tip>
                     <para>Настоятельно рекомендуем в литералах дат использовать только формы с
                         полным указанием года в виде 4 цифр во избежание путаницы. </para>
@@ -3541,6 +3563,32 @@ FROM rdb$database
             </programlisting>
                     </para>
                 </formalpara>
+                <note>
+                    <para>Поскольку <code>CAST('NOW' AS TIMESTAMP)</code> всегда возвращает
+                        актуальные значения даты и времени, то она может использоваться для
+                        измерения временных интервалов и скорости выполнения кода в процедурах,
+                        триггерах и блоках кода PSQL.</para>
+                </note>
+                <example>
+                    <title>Использование <code>CAST('NOW' AS TIMESTAMP)</code> измерения длительности выполнения кода</title>
+                    <para><programlisting language="sql">
+<![CDATA[
+EXECUTE BLOCK
+RETURNS (ms BIGINT)
+AS
+DECLARE VARIABLE t1 TIME;
+DECLARE VARIABLE n BIGINT;
+BEGIN
+  t1 = CAST('now' AS TIMESTAMP);
+  /* Долгая операция  */
+  SELECT COUNT(*) FROM rdb$types, rdb$types, rdb$types INTO n;
+  /*======*/
+  ms = DATEDIFF(MILLISECOND FROM t1 TO CAST('now' AS TIMESTAMP));
+  SUSPEND;
+END
+]]> 
+                </programlisting></para>
+                </example>
                 <formalpara>
                     <title>См. также:</title>
 
