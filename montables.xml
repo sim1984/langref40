@@ -1156,6 +1156,12 @@ FETCH FIRST 10 ROWS ONLY
                             <entry>BIGINT </entry>
                             <entry>Количество повторно прочитанных записей. </entry>
                         </row>
+                        <row>
+                            <entry>MON$RECORD_IMGC</entry>
+                            <entry>BIGINT</entry>
+                            <entry>Количество записей вычищенных промежуточной сборкой
+                                мусора.</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
