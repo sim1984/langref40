@@ -1545,12 +1545,6 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                 <entry>Глобальная переменная CURRENT_USER.</entry>
                             </row>
                             <row>
-                                <entry>EFFECTIVE_USER</entry>
-                                <entry>Эффективный пользователь в текущий момент. Указывает
-                                    пользователя с привилегиями которого в текущий момент времени
-                                    выполняется процедура, функция или триггер.</entry>
-                            </row>
-                            <row>
                                 <entry>DB_NAME</entry>
                                 <entry>Каноническое имя текущей базы данных. Это либо имя псевдонима
                                     (если соединение с помощью имён файлов запрещено DatabaseAccess
@@ -1558,17 +1552,47 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     базы данных.</entry>
                             </row>
                             <row>
-                                <entry>ENGINE_VERSION</entry>
-                                <entry>Версия сервера Firebird. </entry>
+                                <entry>DB_FILE_ID</entry>
+                                <entry>Уникальный идентификатор текущей базы данных на уровне
+                                    файловой системы.</entry>
                             </row>
                             <row>
                                 <entry>DB_GUID</entry>
                                 <entry>GUID базы данных.</entry>
                             </row>
                             <row>
-                                <entry>DB_FILE_ID</entry>
-                                <entry>Уникальный идентификатор текущей базы данных на уровне
-                                    файловой системы.</entry>
+                                <entry>EFFECTIVE_USER</entry>
+                                <entry>Эффективный пользователь в текущий момент. Указывает
+                                    пользователя с привилегиями которого в текущий момент времени
+                                    выполняется процедура, функция или триггер.</entry>
+                            </row>
+                            <row>
+                                <entry>ENGINE_VERSION</entry>
+                                <entry>Версия сервера Firebird. </entry>
+                            </row>
+                            <row>
+                                <entry>EXT_CONN_POOL_SIZE</entry>
+                                <entry>Размер пула внешних соединений.</entry>
+                            </row>
+                            <row>
+                                <entry>EXT_CONN_POOL_LIFETIME</entry>
+                                <entry>Время жизни неактивных соединений в пуле внешних
+                                    соединений.</entry>
+                            </row>
+                            <row>
+                                <entry>EXT_CONN_POOL_IDLE_COUNT</entry>
+                                <entry>Текущее количество неактивных соединений в пуле внешних
+                                    соединений.</entry>
+                            </row>
+                            <row>
+                                <entry>EXT_CONN_POOL_ACTIVE_COUNT</entry>
+                                <entry>Текущее количество активных соединений в пуле внешних
+                                    соединений.</entry>
+                            </row>
+                            <row>
+                                <entry>GLOBAL_CN</entry>
+                                <entry>Последнее значение текущего глобального счётчика Commit
+                                    Number</entry>
                             </row>
                             <row>
                                 <entry>ISOLATION_LEVEL</entry>
@@ -1593,17 +1617,25 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     чтения. FALSE для R/W транзакций TRUE для ReadOnly. </entry>
                             </row>
                             <row>
+                                <entry>REPLICA_MODE</entry>
+                                <entry><para>Режим репликации: пустая строка или NULL — первичная база данных, "READ-ONLY" — реплика в
+                                        режиме только чтение, "READ-WRITE" — реплика в режиме чтение
+                                        и запись.</para></entry>
+                            </row>
+                            <row>
+                                <entry>REPLICATION_SEQUENCE</entry>
+                                <entry>Текущее значение последовательности репликации (номер
+                                    последнего сегмента, записанного в журнал репликации).</entry>
+                            </row>
+                            <row>
                                 <entry>SESSION_ID</entry>
                                 <entry>Глобальная переменная CURRENT_CONNECTION.</entry>
                             </row>
                             <row>
-                                <entry>TRANSACTION_ID</entry>
-                                <entry>Глобальная переменная CURRENT_TRANSACTION.</entry>
-                            </row>
-                            <row>
-                                <entry>GLOBAL_CN</entry>
-                                <entry>Последнее значение текущего глобального счётчика Commit
-                                    Number</entry>
+                                <entry>SESSION_IDLE_TIMEOUT</entry>
+                                <entry>Содержит текущее значение тайм-аут простоя соединения в
+                                    секундах, который был установлен на уровне соединения, или ноль,
+                                    если тайм-аут не был установлен. </entry>
                             </row>
                             <row>
                                 <entry>SNAPSHOT_NUMBER</entry>
@@ -1611,6 +1643,16 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     (для транзакции SNAPSHOT или CONSISTENCY) или уровня запроса
                                     (для транзакции READ COMMITTED READ CONSISTENCY). NULL, если
                                     моментальный снимок не существует.</entry>
+                            </row>
+                            <row>
+                                <entry>STATEMENT_TIMEOUT</entry>
+                                <entry>Содержит текущее значение тайм-аута выполнения оператора в
+                                    миллисекундах, который был установлен на уровне подключения, или
+                                    ноль, если тайм-аут не был установлен.</entry>
+                            </row>
+                            <row>
+                                <entry>TRANSACTION_ID</entry>
+                                <entry>Глобальная переменная CURRENT_TRANSACTION.</entry>
                             </row>
                             <row>
                                 <entry>WIRE_COMPRESSED</entry>
@@ -1630,42 +1672,6 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                 <entry>Если используется шифрование сетевого трафика, то возвращает
                                     имя текущего плагина шифрования, в противном случае
                                     NULL.</entry>
-                            </row>
-                            <row>
-                                <entry>SESSION_IDLE_TIMEOUT</entry>
-                                <entry>Содержит текущее значение тайм-аут простоя соединения в
-                                    секундах, который был установлен на уровне соединения, или ноль,
-                                    если тайм-аут не был установлен. </entry>
-                            </row>
-                            <row>
-                                <entry>STATEMENT_TIMEOUT</entry>
-                                <entry>Содержит текущее значение тайм-аута выполнения оператора в
-                                    миллисекундах, который был установлен на уровне подключения, или
-                                    ноль, если тайм-аут не был установлен.</entry>
-                            </row>
-                            <row>
-                                <entry>REPLICATION_SEQUENCE</entry>
-                                <entry>Текущее значение последовательности репликации (номер
-                                    последнего сегмента, записанного в журнал репликации).</entry>
-                            </row>
-                            <row>
-                                <entry>EXT_CONN_POOL_SIZE</entry>
-                                <entry>Размер пула внешних соединений.</entry>
-                            </row>
-                            <row>
-                                <entry>EXT_CONN_POOL_LIFETIME</entry>
-                                <entry>Время жизни неактивных соединений в пуле внешних
-                                    соединений.</entry>
-                            </row>
-                            <row>
-                                <entry>EXT_CONN_POOL_IDLE_COUNT</entry>
-                                <entry>Текущее количество неактивных соединений в пуле внешних
-                                    соединений.</entry>
-                            </row>
-                            <row>
-                                <entry>EXT_CONN_POOL_ACTIVE_COUNT</entry>
-                                <entry>Текущее количество активных соединений в пуле внешних
-                                    соединений.</entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -1719,7 +1725,7 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
             </para>
             <note>
                 <para>Ещё раз обратите внимание на то, что пространства имён и имена переменных
-                    регистрочувствительны, должны быть непустыми строками, и заключены в
+                    регистрочувствительны, должны быть не пустыми строками, и заключены в
                     кавычки!</para>
             </note>
 

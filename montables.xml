@@ -795,6 +795,25 @@ WHERE VAR.MON$ATTACHMENT_ID = CURRENT_CONNECTION
                             <entry>BIGINT</entry>
                             <entry>Номер (идентификатор) следующего SQL запроса.</entry>
                         </row>
+                        <row>
+                            <entry>MON$REPLICA_MODE</entry>
+                            <entry>SMALLINT</entry>
+                            <entry><para>Режим репликации: <itemizedlist>
+                                    <listitem>
+                                        <para>0 - NONE — база данных является первичной;</para>
+                                    </listitem>
+                                        <listitem>
+                                            <para>1 - READ-ONLY — реплика в режиме только
+                                                чтение;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>2 - READ-WRITE — реплика в режиме чтение и
+                                                запись.</para>
+                                        </listitem>
+                                </itemizedlist>
+                            </para>
+                            </entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
