@@ -14,14 +14,12 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>DocBook PDF FBDoc</String>
                                         <String>DocBook HTML FBDoc</String>
                                         <String>DocBook HTML - Chunk FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
-                                        <String>XSL</String>
                                         <String>XSL</String>
                                         <String>XSL</String>
                                     </list>
@@ -357,8 +355,10 @@
     </meta>
     <projectTree name="langref40.xpr">
         <folder path="xsl/"/>
+        <file name="agg-func.xml"/>
         <file name="charset-coll.xml"/>
         <file name="common.xml"/>
+        <file name="context-var.xml"/>
         <file name="ddl.xml"/>
         <file name="dml.xml"/>
         <file name="error-handlers.xml"/>
@@ -378,5 +378,6 @@
         <file name="systables.xml"/>
         <file name="transaction.xml"/>
         <file name="types.xml"/>
+        <file name="window-func.xml"/>
     </projectTree>
 </project>

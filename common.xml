@@ -92,7 +92,7 @@
                         </row>
                         <row>
                             <entry>Контекстные переменные</entry>
-                            <entry>Встроенные <link linkend="internalfunc-contextvar">контекстные
+                            <entry>Встроенные <link linkend="context-var">контекстные
                                     переменные</link>.</entry>
                         </row>
                         <row>

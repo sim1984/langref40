@@ -45,7 +45,7 @@ FROM rdb$database;
                             <screen>
 DATABASE_VERSION
 ================
-2018g                                
+2020d                                
                             </screen>
                         </para>
                     </example>

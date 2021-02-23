@@ -1,0 +1,1639 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="window-func" xml:lang="ru">
+    <info>
+        <title>Оконные (аналитические) функции</title>
+        <keywordset>
+            <keyword>OVER</keyword>
+        </keywordset>
+    </info>
+    <indexterm><primary>OVER</primary></indexterm>
+    <para>Согласно SQL спецификации оконные функции (также известные как аналитические функции)
+        являются своего рода агрегатными функциями, не уменьшающими степень детализации. При этом
+        агрегированные данные выводятся вместе с неагрегированными.</para>
+    <para>Синтаксически вызов оконной функции есть указание её имени, за которым всегда следует
+        ключевое слово OVER() с возможными аргументами внутри скобок. В этом и заключается её
+        синтаксическое отличие от обычной функции или агрегатной функции. Оконные функции могут
+        находиться только в списке SELECT и предложении ORDER BY.</para>
+    <para>Предложение OVER может содержать разбивку по группам (&quot;секционирование&quot;),
+        сортировку и рамку окна.</para>
+    <formalpara>
+        <title>Доступно в:</title>
+
+        <para>DSQL. </para>
+    </formalpara>
+    <formalpara>
+        <title>Синтаксис:</title>
+
+        <para><programlisting>
+<replaceable>&lt;window function&gt;</replaceable> ::=    
+  <replaceable>&lt;function name&gt;</replaceable>([<replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;expr&gt;</replaceable> ...]]) OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                      
+     
+<replaceable>&lt;function name&gt;</replaceable> ::=
+     <replaceable>&lt;aggregate function&gt;</replaceable> 
+   | <replaceable>&lt;ranking function&gt;</replaceable>
+   | <replaceable>&lt;navigation function&gt;</replaceable> 
+               
+<replaceable>&lt;window specification&gt;</replaceable> ::= 
+   ([<replaceable>&lt;window name&gt;</replaceable>] [<replaceable>&lt;window partition&gt;</replaceable>] [<replaceable>&lt;window order&gt;</replaceable>] [<replaceable>&lt;window frame&gt;</replaceable>])  
+ 
+                  
+<replaceable>&lt;window partition&gt;</replaceable> ::= PARTITION BY <replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;expr&gt;</replaceable> ...]
+
+<replaceable>&lt;window order&gt;</replaceable> ::= 
+  ORDER BY <replaceable>&lt;expr&gt;</replaceable> [<replaceable>&lt;direction&gt;</replaceable>] [<replaceable>&lt;nulls placement&gt;</replaceable>]  
+        [, <replaceable>&lt;expr&gt;</replaceable> [<replaceable>&lt;direction&gt;</replaceable>] [<replaceable>&lt;nulls placement&gt;</replaceable>] ...]
+
+<replaceable>&lt;direction&gt;</replaceable> ::= {ASC | DESC} 
+
+<replaceable>&lt;nulls placement&gt;</replaceable> ::= NULLS {FIRST | LAST} 
+                
+<replaceable>&lt;window frame&gt;</replaceable> ::= 
+  {ROWS | RANGE} <replaceable>&lt;window frame extent&gt;</replaceable>                
+
+<replaceable>&lt;window frame extent&gt;</replaceable> ::= 
+  <replaceable>&lt;window frame preceding&gt;</replaceable> | <replaceable>&lt;window frame between&gt;</replaceable> 
+
+<replaceable>&lt;window frame preceding&gt;</replaceable> ::= 
+  UNBOUNDED PRECEDING | <replaceable>&lt;expr&gt;</replaceable> PRECEDING | CURRENT ROW 
+
+<replaceable>&lt;window frame between&gt;</replaceable> ::= 
+  BETWEEN { UNBOUNDED PRECEDING | <replaceable>&lt;expr&gt;</replaceable> PRECEDING | <replaceable>&lt;expr&gt;</replaceable> FOLLOWING | CURRENT ROW } 
+      AND { UNBOUNDED FOLLOWING | <replaceable>&lt;expr&gt;</replaceable> PRECEDING | <replaceable>&lt;expr&gt;</replaceable> FOLLOWING | CURRENT ROW }
+       
+<replaceable>&lt;ranking function&gt;</replaceable> ::= 
+    DENSE_RANK 
+  | RANK
+  | PERCENT_RANK 
+  | CUME_DIST
+  | NTILE
+  | ROW_NUMBER 
+
+<replaceable>&lt;navigation function&gt;</replaceable> ::= 
+    LEAD 
+  | LAG 
+  | FIRST_VALUE 
+  | LAST_VALUE 
+  | NTH_VALUE
+   
+<replaceable>&lt;query spec&gt;</replaceable> ::=
+  SELECT
+    [<replaceable>&lt;first clause&gt;</replaceable>] [<replaceable>&lt;skip clause&gt;</replaceable>]
+    [<replaceable>&lt;distinct clause&gt;</replaceable>]
+    <replaceable>&lt;select list&gt;</replaceable>
+    <replaceable>&lt;from clause&gt;</replaceable>
+    [<replaceable>&lt;where clause&gt;</replaceable>]
+    [<replaceable>&lt;group clause&gt;</replaceable>]
+    [<replaceable>&lt;having clause&gt;</replaceable>]
+    [<replaceable>&lt;named windows clause&gt;</replaceable>]
+    [<replaceable>&lt;order clause&gt;</replaceable>]
+    [<replaceable>&lt;rows clause&gt;</replaceable>]
+    [<replaceable>&lt;offset clause&gt;</replaceable>] [<replaceable>&lt;limit clause&gt;</replaceable>]
+    [<replaceable>&lt;plan clause&gt;</replaceable>]
+
+<replaceable>&lt;named windows clause&gt;</replaceable> ::=
+  WINDOW <replaceable>&lt;window definition&gt;</replaceable> [, <replaceable>&lt;window definition&gt;</replaceable>] ...
+
+<replaceable>&lt;window definition&gt;</replaceable> ::=
+  <replaceable>&lt;window name&gt;</replaceable> AS <replaceable>&lt;window specification&gt;</replaceable>  
+                                
+            </programlisting></para>
+    </formalpara>
+
+    <para>
+        <table frame="all">
+            <?dbfo keep-together='auto'?>
+            <title>Параметры оконных функций</title>
+            <tgroup cols="2">
+                <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                <thead>
+                    <row>
+                        <entry align="center">Параметр</entry>
+                        <entry align="center">Описание</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry><replaceable>expr</replaceable></entry>
+                        <entry>
+                            <para>Выражение. Может содержать столбец таблицы, константу, переменную,
+                                выражение, скалярную или агрегатную функцию. Оконные функции в
+                                качестве выражения не допускаются.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>window partition</replaceable></entry>
+                        <entry>
+                            <para>Выражение секционирования.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>window order</replaceable></entry>
+                        <entry>
+                            <para>Выражение сортировки.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>window frame</replaceable></entry>
+                        <entry>
+                            <para>Выражение для задания рамки окна.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>window name</replaceable></entry>
+                        <entry>
+                            <para>Имя окна.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>direction</replaceable></entry>
+                        <entry>
+                            <para>Направление сортировки.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>nulls placement</replaceable></entry>
+                        <entry>
+                            <para>Положение псевдозначения NULL в отсортированном наборе.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>aggregate function</replaceable></entry>
+                        <entry>
+                            <para>Агрегатная функция.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>ranking function</replaceable></entry>
+                        <entry>
+                            <para>Ранжирующая функция.</para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><replaceable>navigation function</replaceable></entry>
+                        <entry>
+                            <para>Навигационная функция.</para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </para>
+
+    <section xml:id="internalfunc-window-agg">
+        <info>
+            <title>Агрегатные функции</title>
+        </info>
+        <para>Все агрегатные функции могут быть использованы в качестве оконных функций, при
+            добавлении предложения OVER. </para>
+        <para>Допустим, у нас есть таблица EMPLOYEE со столбцами ID, NAME и SALARY. Нам необходимо
+            показать для каждого сотрудника, соответствующую ему заработную плату и процент от фонда
+            заработной платы.</para>
+        <para>Простым запросом это решается следующим
+            образом:<programlisting language="sql">
+select
+    id,
+    department,
+    salary,
+    salary / (select sum(salary) from employee) percentage
+from employee
+order by id;                
+            </programlisting></para>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+id department salary percentage
+-- ---------- ------ ----------
+1  R &amp; D       10.00     0.2040
+2  SALES       12.00     0.2448
+3  SALES        8.00     0.1632
+4  R &amp; D        9.00     0.1836
+5  R &amp; D       10.00     0.2040                    
+                </screen>
+            </para>
+        </formalpara>
+        <para>Запрос повторяется и может работать довольно долго, особенно если EMPLOYEE является
+            сложным представлением.</para>
+        <para>Этот запрос может быть переписан в более быстрой и элегантной форме с использованием
+            оконных
+            функций:<programlisting language="sql">
+select
+  id,
+  department,
+  salary,
+  salary / sum(salary) OVER () percentage
+from employee
+order by id;                    
+            </programlisting></para>
+        <para>Здесь <emphasis role="bold">sum(salary) OVER ()</emphasis> вычисляет сумму всех
+            зарплат из запроса (таблицы сотрудников). </para>
+    </section>
+    <section xml:id="internalfunc-window-partition">
+        <info>
+            <title>Секционирование</title>
+            <keywordset>
+                <keyword>PARTITION BY</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>OVER</primary>
+            <secondary>PARTITION BY</secondary>
+        </indexterm>
+        <para>Как и для агрегатных функций, которые могут работать отдельно или по отношению к
+            группе, оконные функции тоже могут работать для групп, которые называются
+            &quot;секциями&quot; (partition) или разделами. </para>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para><programlisting>
+<replaceable>&lt;window function&gt;</replaceable>(...) OVER (PARTITION BY <replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;expr&gt;</replaceable> ...])                      
+            </programlisting></para>
+        </formalpara>
+        <para>Для каждой строки, оконная функция обсчитывает только строки, которые попадают в то же
+            самую секцию, что и текущая строка.</para>
+        <para>Агрегирование над группой может давать более одной строки, таким образом, к
+            результирующему набору, созданному секционированием, присоединяются результаты из
+            основного запроса, используя тот же список выражений, что и для секции.</para>
+        <para>Продолжая пример с сотрудниками, вместо того чтобы считать процент зарплаты каждого
+            сотрудника от суммарной зарплаты сотрудников, посчитаем процент от суммарной зарплаты
+            сотрудников того же
+            отдела:<programlisting language="sql">
+select
+  id,
+  department,
+  salary,
+  salary / sum(salary) OVER (PARTITION BY department) percentage
+from employee
+order by id;                    
+            </programlisting></para>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+id department salary percentage
+-- ---------- ------ ----------
+1  R &amp; D       10.00     0.3448
+2  SALES       12.00     0.6000
+3  SALES        8.00     0.4000
+4  R &amp; D        9.00     0.3103
+5  R &amp; D       10.00     0.3448                   
+                </screen>
+            </para>
+        </formalpara>
+    </section>
+    <section xml:id="internalfunc-window-order">
+        <info>
+            <title>Сортировка</title>
+            <keywordset>
+                <keyword>ORDER BY</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>OVER</primary>
+            <secondary>ORDER BY</secondary>
+        </indexterm>
+        <para>Предложение ORDER BY может быть использовано с секционированием или без него.
+            Предложение ORDER BY внутри OVER задаёт порядок, в котором оконная функция будет
+            обрабатывать строки. Этот порядок не обязан совпадать с порядком вывода строк. </para>
+        <para>Для стандартных агрегатных функций, предложение ORDER BY внутри предложения OVER
+            заставляет возвращать частичные результаты агрегации по мере обработки записей.</para>
+        <formalpara>
+            <title>Пример</title>
+            <para>
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  SUM(salary) OVER (ORDER BY salary) AS cumul_salary
+FROM employee
+ORDER BY salary;                 
+                </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+id salary cumul_salary
+-- ------ ------------
+3    8.00         8.00
+4    9.00        17.00
+1   10.00        37.00
+5   10.00        37.00
+2   12.00        49.00                 
+                </screen>
+            </para>
+        </formalpara>
+        <para>В этом случае cumul_salary возвращает частичную/накопительную агрегацию (функции SUM).
+            Может показаться странным, что значение 37,00 повторяется для идентификаторов 1 и 5, но
+            так и должно быть. Сортировка (ORDER BY) ключей группирует их вместе, и агрегат
+            вычисляется единожды (но суммируя сразу два значения 10,00). Чтобы избежать этого, вы
+            можете добавить поле ID в конце предложения ORDER BY.</para>
+        <para>Это происходит потому, что не задана рамка окна, которая по умолчанию, с указанием
+            ORDER BY состоит из всех строк от начала раздела до текущей строки и строк, равных
+            текущей по значению выражения ORDER BY (т.е. RANGE BETWEEN UNBOUNDED PRECEDING AND
+            CURRENT ROW). Без ORDER BY рамка по умолчанию состоит из всех строк раздела. Подробней о
+                <link linkend="internalfunc-window-framing">рамке окна</link> (кадрах окна) будет
+            рассказано далее.</para>
+        <para>Вы можете использовать несколько окон с различными сортировками, и дополнять
+            предложение ORDER BY опциями ASC/DESC и NULLS FIRST/LAST.</para>
+        <para>С секциями предложение ORDER BY работает таким же образом, но на границе каждой секции
+            агрегаты сбрасываются.</para>
+        <para>Все агрегатные функции могут использовать предложение ORDER BY, за исключением
+            LIST().</para>
+        <para>Следующий пример показывает сумму кредита, накопленную сумму выплат и остаток по
+            выплатам.</para>
+        <formalpara>
+            <title>Пример</title>
+            <para>
+                <programlisting language="sql">
+SELECT
+  payments.id AS id,
+  payments.bydate AS bydate,
+  credit.amount AS credit_amount,
+  payments.amount AS pay,
+  SUM(payments.amount) OVER(ORDER BY payments.bydate) AS s_amount,
+  SUM(payments.amount) OVER(ORDER BY payments.bydate,
+                                     payments.id) AS s_amount2,
+  credit.amount - SUM(payments.amount) OVER(ORDER BY payments.bydate,
+                                                     payments.id) AS balance
+FROM credit
+JOIN payments ON payments.credit_id = credit.id
+WHERE credit.id = 1
+ORDER BY payments.bydate                
+                </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
+-- ---------- ------------- ------ -------- --------- ----------
+1  15.01.2015 1000000       100000  100000  100000    900000
+2  15.02.2015 1000000       150000  250000  250000    750000
+3  15.03.2015 1000000       130000  400000  380000    620000
+4  15.03.2015 1000000        20000  400000  400000    600000
+5  15.04.2015 1000000       200000  600000  600000    400000
+6  15.05.2015 1000000       150000  750000  750000    250000
+7  15.06.2015 1000000       150000 1000000  900000    100000
+8  15.06.2015 1000000       100000 1000000 1000000         0               
+                </screen>
+            </para>
+        </formalpara>
+    </section>
+    <section xml:id="internalfunc-window-framing">
+        <info>
+            <title>Рамка окна</title>
+            <keywordset>
+                <keyword>ROWS</keyword>
+                <keyword>RANGE</keyword>
+                <keyword>PRECEDING</keyword>
+                <keyword>FOLLOWING</keyword>
+                <keyword>UNBOUNDED</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>OVER</primary>
+            <secondary>ROWS</secondary>
+        </indexterm>
+        <indexterm>
+            <primary>OVER</primary>
+            <secondary>RANGE</secondary>
+        </indexterm>
+        <para>Набор строк внутри секции которым оперирует оконная функция называется <emphasis
+                role="italic">рамкой окна</emphasis> (кадры окна). Рамка окна состоит из трёх
+            частей: единица (unit), начальная граница и конечная граница. В качестве единицы может
+            быть использовано ключевые слова RANGE или ROWS, которые указывают каким образом
+            определены границы окна. Границы окна определяются следующими выражениями:<itemizedlist
+                spacing="compact">
+                <listitem>
+                    <para><code><replaceable>&lt;expr&gt;</replaceable> PRECEDING</code></para>
+                </listitem>
+                <listitem>
+                    <para><code><replaceable>&lt;expr&gt;</replaceable> FOLLOWING</code></para>
+                </listitem>
+                <listitem>
+                    <para><code>CURRENT ROW</code></para>
+                </listitem>
+            </itemizedlist></para>
+        <para>Предложения ROWS и RANGE требуют, чтобы было указано предложение ORDER BY. Если
+            предложение ORDER BY отсутствует, то для агрегатных функций рамка окна состоит из всех
+            строк в разбиении. Если задано предложение ORDER BY, то по умолчанию рамка окна состоит
+            из всех строк, от начала разбиения до текущей строки, плюс любые следующие строки,
+            которые равны текущей строке в соответствии с предложением ORDER BY, т.е. <code>RANGE
+                BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code>. </para>
+        <para>Предложение ROWS ограничивает строки внутри секции путем указания фиксированного числа
+            строк, предшествующих или следующих после текущей строки. В качестве альтернативы
+            предложение RANGE логически ограничивает строки внутри секции путем указания диапазона
+            значений в отношении к значению текущей строки. Предшествующие и последующие строки
+            определяются на основании порядка, заданного в предложении ORDER BY. </para>
+        <para>Если рамка окна задаётся с помощью предложения RANGE, то предложение ORDER BY может
+            содержать только одно выражение и выражение должно быть числового типа, DATE, TIME или
+            TIMESTAMP. Для границ <code><replaceable>&lt;expr&gt;</replaceable> PRECEDING</code> и
+                    <code><replaceable>&lt;expr&gt;</replaceable> FOLLOWING</code> выражения
+                    <code><replaceable>&lt;expr&gt;</replaceable></code> добавляются и вычитаются к
+            выражению указанному в ORDER BY, таким образом получаются границы значений для рамки.
+            Затем все строки (внутри секции) между границам считаются частью результирующей рамки
+            окна.</para>
+        <para>Если рамка окна задаётся с помощью предложения ROWS, то на предложение ORDER BY не
+            накладывается ограничений на количество и типы выражений. В этом случае фраза
+                <replaceable>&lt;expr&gt;</replaceable> PRECEDING указывает количество строк
+            предшествующее текущей строке, соответственно фраза
+                <replaceable>&lt;expr&gt;</replaceable> FOLLOWING указывает количество строк после
+            текущей строки.</para>
+        <para>Фраза <code>UNBOUNDED PRECEDING</code> указывает, что окно начинается с первой строки
+            секции. <code>UNBOUNDED PRECEDING</code> может быть указано только как начальная точка
+            окна. </para>
+        <para>Фраза <code>UNBOUNDED FOLLOWING</code> указывает, что окно заканчивается последней
+            строкой секции. <code>UNBOUNDED FOLLOWING</code> может быть указано только как конечная
+            точка окна. </para>
+        <para><code>UNBOUNDED PRECEDING</code> и <code>UNBOUNDED FOLLOWING</code> работают одинаково
+            для предложений ROWS и RANGE.</para>
+        <para>Фраза CURRENT ROW указывает, что окно начинается или заканчивается на текущей строке
+            при использовании совместно с предложением ROWS или что окно заканчивается на текущем
+            значении при использовании с предложением RANGE. CURRENT ROW может быть задана и как
+            начальная, и как конечная точка.</para>
+        <para>Предложение BETWEEN используется совместно с ключевым словом ROWS или RANGE для
+            указания нижней (начальной) или верхней (конечной) граничной точки окна. Верхняя граница
+            не может быть меньше нижней границы.</para>
+        <note>
+            <para>Если указана только начальная точка окна, то конечной точкой окна считается
+                CURRENT ROW. Например, если указано <code>ROWS 1 PRECEDING</code>, то это аналогично
+                указанию <code>ROWS BETWEEN 1 PRECEDING AND CURRENT ROW</code>. </para>
+        </note>
+        <para>Некоторые оконные функции игнорируют выражение рамки. Функции ROW_NUMBER, LAG и LEAD
+            всегда работают как <code>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code>. В то
+            время как DENSE_RANK, RANK, PERCENT_RANK и CUME_DIST работают как <code>RANGE BETWEEN
+                UNBOUNDED PRECEDING AND CURRENT ROW</code>.</para>
+        <para>Функции FIRST_VALUE, LAST_VALUE и NTH_VALUE работают на рамке, но RANGE работает
+            идентично ROWS.</para>
+        <para>Таким образом, предложения ROWS и RANGE позволяют довольно гибко настроить размер
+            плавающего окна. Чаще всего встречаются следующие варианты: <itemizedlist>
+                <listitem>
+                    <para>Нижняя граница фиксирована (совпадает с первой строкой упорядоченной
+                        группы), а верхняя граница ползёт (совпадает с текущей строкой упорядоченной
+                        группы). В этом случае получаем нарастающий итог (кумулятивный агрегат). В
+                        этом случае размер окна меняется (расширяется в одну сторону) и само окно
+                        движется за счёт расширения. Возможна и обратная ситуация, когда нижняя
+                        граница ползёт, а верхняя зафиксирована. В этом случае окно будет
+                        сужаться.</para>
+                </listitem>
+                <listitem>
+                    <para>Если верхняя и нижняя границы фиксированы относительно текущей строки,
+                        например 1 строка до текущей и 2 после текущей, то получаем скользящий
+                        агрегат. В этом случае размер окна фиксирован, а само окно скользит.</para>
+                </listitem>
+            </itemizedlist></para>
+        <section xml:id="internalfunc-window-framing-range">
+            <title>Окна диапазона</title>
+            <para>Окна диапазона объединяют строки в соответствии с заданным порядком. Например,
+                если рамка окна задана выражением RANGE 5 PRECEDING, то будет сгенерировано
+                перемещающееся окно, включающее предыдущие строки группы, значение которых меньше
+                текущего не более чем на 5.</para>
+            <formalpara>
+                <title>Пример:</title>
+
+                <para>
+                    <example>
+                        <title>Использование окон диапазона</title>
+                        <para><programlisting language="sql">
+SELECT
+    id,
+    salary,
+    SUM(salary) OVER() AS s1,
+    SUM(salary) OVER(ORDER BY salary) AS s2,
+    SUM(salary) OVER(ORDER BY salary 
+                     RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS s3,
+    SUM(salary) OVER(ORDER BY salary 
+                     RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS s4,
+    SUM(salary) OVER(ORDER BY salary 
+                     RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS s5,
+    SUM(salary) OVER(ORDER BY salary 
+                     RANGE BETWEEN CURRENT ROW AND 1 FOLLOWING) AS s6,
+    SUM(salary) OVER(ORDER BY salary 
+                     RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS s7,
+    SUM(salary) OVER(ORDER BY salary RANGE 1 PRECEDING) AS s8
+FROM
+    employee  
+                </programlisting>
+                            <screen>                    
+ID  SALARY     S1      S2      S3      S4      S5      S6      S7      S8
+-------------------------------------------------------------------------
+3     8.00  49.00    8.00    8.00   49.00   49.00   17.00   17.00    8.00
+4     9.00  49.00   17.00   17.00   41.00   49.00   29.00   37.00   17.00
+1    10.00  49.00   37.00   37.00   32.00   49.00   20.00   29.00   29.00
+5    10.00  49.00   37.00   37.00   32.00   49.00   20.00   29.00   29.00
+2    12.00  49.00   49.00   49.00   12.00   49.00   12.00   12.00   12.00     
+</screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+            <para>Для того чтобы понять, какие значения будут входить в диапазон, можно использовать
+                функции <link linkend="internalfunc-window-nav-first_value">FIRST_VALUE</link> и
+                    <link linkend="internalfunc-window-nav-last_value">LAST_VALUE</link>. Это
+                помогает увидеть диапазоны окна и проверить, корректно ли установлены
+                параметры.</para>
+        </section>
+        <section xml:id="internalfunc-window-framing-rows">
+            <title>Окна строк</title>
+            <para>Окна срок задаются в физических единицах, строках. Например, если рамка окна
+                задана выражением ROWS 5 PRECEDING, то окно будет включать в себя до 6 строк:
+                текущую и пять предыдущих (порядок определяется конструкцией ORDER BY).</para>
+            <formalpara>
+                <title>Пример:</title>
+
+                <para>
+                    <example>
+                        <title>Использование окон диапазона</title>
+                        <para><programlisting language="sql">
+SELECT
+    id,
+    salary,
+    SUM(salary) OVER() AS s1,
+    SUM(salary) OVER(ORDER BY salary) AS s2,
+    SUM(salary) OVER(ORDER BY salary 
+                     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS s3,
+    SUM(salary) OVER(ORDER BY salary 
+                     ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS s4,
+    SUM(salary) OVER(ORDER BY salary 
+                     ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS s5,
+    SUM(salary) OVER(ORDER BY salary 
+                     ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS s6,
+    SUM(salary) OVER(ORDER BY salary 
+                     ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS s7,
+    SUM(salary) OVER(ORDER BY salary ROWS 1 PRECEDING) AS s8
+FROM
+    employee  
+                </programlisting>
+                            <screen>                    
+ID SALARY      S1      S2      S3      S4      S5      S6      S7      S8
+-------------------------------------------------------------------------
+3    8.00   49.00    8.00    8.00   49.00   49.00   17.00   17.00    8.00
+4    9.00   49.00   17.00   17.00   41.00   49.00   19.00   27.00   17.00
+1   10.00   49.00   37.00   27.00   32.00   49.00   20.00   29.00   19.00
+5   10.00   49.00   37.00   37.00   22.00   49.00   22.00   32.00   20.00
+2   12.00   49.00   49.00   49.00   12.00   49.00   12.00   22.00   22.00   
+</screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="internalfunc-window-naming">
+        <title>Именованные окна</title>
+        <para>Для того чтобы не писать каждый раз сложные выражения для задания окна, имя окна можно
+            задать в предложении WINDOW. Имя окна может быть использовано в предложении OVER для
+            ссылки на определение окна, кроме того оно может быть использовано в качестве базового
+            окна для другого именованного или встроенного (в предложении OVER) окна. Окна с рамкой
+            (с предложениями RANGE и ROWS) не могут быть использованы в качестве базового окна (но
+            могут быть использованы в предложении OVER <replaceable>&lt;window
+                name&gt;</replaceable>). Окно, которое использует ссылку на базовое окно, не может
+            иметь предложение PARTITION BY и не может переопределять сортировку с помощью
+            предложения ORDER BY.</para>
+        <formalpara>
+            <title>Пример:</title>
+
+            <para>
+                <example>
+                    <title>Использование именованных окон</title>
+                    <para>
+                        <programlisting language="sql">
+SELECT
+    id,
+    department,
+    salary,
+    count(*) OVER w1,
+    first_value(salary) OVER w2,
+    last_value(salary) OVER w2,
+    sum(salary) over (w2 ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS s
+FROM employee
+WINDOW w1 AS (PARTITION BY department),
+       w2 AS (w1 ORDER BY salary)
+ORDER BY department, salary;
+                                </programlisting>
+                    </para>
+                </example>
+            </para>
+        </formalpara>
+    </section>
+    <section xml:id="internalfunc-window-rank">
+        <info>
+            <title>Ранжирующие функции</title>
+        </info>
+        <para>Ранжирующие функции вычисляют порядковый номер ранга внутри секции окна. </para>
+        <para>Эти функции могут применяться с использованием секционирования и сортировки и без них.
+            Однако их использование без сортировки почти никогда не имеет смысла.</para>
+        <para>Функции ранжирования могут быть использованы для создания различных типов инкрементных
+            счётчиков. Рассмотрим SUM(1) OVER (ORDER BY SALARY) в качестве примера того, что они
+            могут делать, каждая из них различным образом. Ниже приведён пример запроса, который
+            позволяет сравнить их поведение по сравнению с SUM.</para>
+        <para>Пример:
+            <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  DENSE_RANK() OVER (ORDER BY salary),
+  RANK() OVER (ORDER BY salary),
+  PERCENT_RANK() OVER(ORDER BY salary),
+  CUME_DIST() OVER(ORDER BY salary),
+  NTILE(3) OVER(ORDER BY salary),
+  ROW_NUMBER() OVER (ORDER BY salary),
+  SUM(1) OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+        </para>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+id salary dense_rank rank      percent_rank         cume_dist ntile row_number sum
+-- ------ ---------- ---- ----------------- ----------------- ----- ---------- ---
+3    8.00          1    1 0.000000000000000 0.200000000000000     1          1   1
+4    9.00          2    2 0.250000000000000 0.400000000000000     1          2   2
+1   10.00          3    3 0.500000000000000 0.800000000000000     2          3   4
+5   10.00          3    3 0.500000000000000 0.800000000000000     2          4   4
+2   12.00          4    5 1.000000000000000 1.000000000000000     3          5   5
+                </screen>
+            </para>
+        </formalpara>
+        <section xml:id="internalfunc-window-rank-dense_rank">
+            <info>
+                <title>DENSE_RANK</title>
+                <keywordset>
+                    <keyword>DENSE_RANK</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>DENSE_RANK</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+DENSE_RANK() OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BIGINT</para>
+            </formalpara>
+
+            <para>Возвращает ранг строк в секции результирующего набора без промежутков в
+                ранжировании. Строки с одинаковыми значениями
+                    <replaceable>&lt;order_exp&gt;</replaceable> получают одинаковый ранг в пределах
+                группы <replaceable>&lt;partition_exp&gt;</replaceable>, если она указана. Ранг
+                строки равен количеству различных значений рангов в секции, предшествующих текущей
+                строке, увеличенному на единицу.</para>
+            <para>Пример:
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  DENSE_RANK() OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+            </para>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+id salary dense_rank 
+-- ------ ---------- 
+3    8.00          1    
+4    9.00          2    
+1   10.00          3    
+5   10.00          3    
+2   12.00          4                   
+                </screen>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
+                        linkend="internalfunc-window-rank-row_number">ROW_NUMBER</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-rank-rank">
+            <info>
+                <title>RANK</title>
+                <keywordset>
+                    <keyword>RANK</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>RANK</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+RANK() OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BIGINT</para>
+            </formalpara>
+
+            <para>Возвращает ранг каждой строки в секции результирующего набора. Строки с
+                одинаковыми значениями <replaceable>&lt;order_exp&gt;</replaceable> получают
+                одинаковый ранг в пределах группы <replaceable>&lt;partition_exp&gt;</replaceable>,
+                если она указана. Ранг строки вычисляется как единица плюс количество рангов,
+                находящихся до этой строки.</para>
+            <para>Пример:
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  RANK() OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+            </para>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+id salary rank 
+-- ------ ------ 
+3    8.00      1    
+4    9.00      2    
+1   10.00      3    
+5   10.00      3    
+2   12.00      5                   
+                </screen>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-rank-dense_rank">DENSE_RANK</link>, <link
+                        linkend="internalfunc-window-rank-row_number">ROW_NUMBER</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-rank-percent_rank">
+            <info>
+                <title>PERCENT_RANK</title>
+                <keywordset>
+                    <keyword>PERCENT_RANK</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>PERCENT_RANK</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+PERCENT_RANK() OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION</para>
+            </formalpara>
+
+            <para>Возвращает относительный ранг текущей строки в группе строк. Функция PERCENT_RANK
+                используется для вычисления относительного положения значения в секции или
+                результирующем наборе запроса. Диапазон значений, возвращаемый функцией
+                PERCENT_RANK, больше 0 и меньше или равен 1. В первой строке любого набора
+                PERCENT_RANK равна 0. Значения NULL по умолчанию включаются и рассматриваются как
+                наименьшие возможные значения. </para>
+            <note>
+                <para>Функция PERNCENT RANK вычисляется как
+                    <programlisting>
+(RANK-1)/(<replaceable>total rows</replaceable> - 1)
+                            </programlisting>,
+                    где <replaceable>total rows</replaceable> общее количество строк в
+                    секции.</para>
+            </note>
+            <para>Пример:
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  PERCENT_RANK() OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+            </para>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+id salary percent_rank 
+-- ------ ------------ 
+3    8.00          0.0    
+4    9.00         0.25    
+1   10.00          0.5    
+5   10.00          0.5    
+2   12.00          1.0                   
+                </screen>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
+                        linkend="internalfunc-window-rank-cume_dist">CUME_DIST</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-rank-cume_dist">
+            <info>
+                <title>CUME_DIST</title>
+                <keywordset>
+                    <keyword>CUME_DIST</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>CUME_DIST</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+CUME_DIST() OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION</para>
+            </formalpara>
+
+            <para>Функция CUME_DIST рассчитывает кумулятивное распределение значения в наборе
+                данных. Возвращаемое значение находится в диапазоне от 0 до 1. Функция CUME_DIST
+                рассчитывается как (число строк, предшествующих или равных текущей) / (общее число
+                строк). Для равных значений всегда вычисляется одно и то же значение накопительного
+                распределения. Значения NULL по умолчанию включаются и рассматриваются как
+                наименьшие возможные значения. </para>
+            <para>Пример:
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  CUME_DIST() OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+            </para>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+id salary    cume_dist 
+-- ------ ------------ 
+3    8.00          0.2    
+4    9.00          0.4    
+1   10.00          0.8    
+5   10.00          0.8    
+2   12.00          1.0                   
+                </screen>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
+                        linkend="internalfunc-window-rank-percent_rank">PERCENT_RANK</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-rank-ntile">
+            <info>
+                <title>NTILE</title>
+                <keywordset>
+                    <keyword>NTILE</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>NTILE</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+NTILE(<replaceable>&lt;expr&gt;</replaceable>) OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора NTILE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение целочисленного типа. Указывает количество групп,
+                                        на которые необходимо разделить каждую секцию. </para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BIGINT</para>
+            </formalpara>
+
+            <para>Функция NTILE распределяет строки упорядоченной секции в заданное количество групп
+                так, чтобы размеры групп были максимально близки. Группы нумеруются, начиная с
+                единицы. Для каждой строки функция NTILE возвращает номер группы, которой
+                принадлежит строка.</para>
+            <para>Если количество строк в секции не делится на
+                    <replaceable>&lt;expr&gt;</replaceable>, то формируются группы двух размеров,
+                отличающихся на единицу. Группы большего размера следуют перед группами меньшего
+                размера в порядке, заданном в предложении OVER.</para>
+            <para>Пример:
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  NTILE(3) OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+            </para>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+id salary        ntile 
+-- ------ ------------ 
+3    8.00            1    
+4    9.00            1    
+1   10.00            2    
+5   10.00            2    
+2   12.00            3                   
+                </screen>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-rank-row_number">
+            <info>
+                <title>ROW_NUMBER</title>
+                <keywordset>
+                    <keyword>ROW_NUMBER</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>ROW_NUMBER</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+ROW_NUMBER() OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}       
+                                 </programlisting>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BIGINT</para>
+            </formalpara>
+
+            <para>Возвращает последовательный номер строки в секции результирующего набора, где 1
+                соответствует первой строке в каждой из секций.</para>
+            <para>Пример:
+                <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  ROW_NUMBER() OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                
+                </programlisting>
+            </para>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+id salary row_number 
+-- ------ ---------- 
+3    8.00          1    
+4    9.00          2    
+1   10.00          3    
+5   10.00          4    
+2   12.00          5                   
+                </screen>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
+                        linkend="internalfunc-window-rank-dense_rank">DENSE_RANK</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="internalfunc-window-nav">
+        <info>
+            <title>Навигационные функции</title>
+        </info>
+        <para>Навигационные функции получают простые (не агрегированные) значения выражения из
+            другой строки запроса в той же секции.</para>
+        <important>
+            <para>Функции FIRST_VALUE, LAST_VALUE и NTH_VALUE оперируют на рамке окна (кадрах окна).
+                По умолчанию, если задано предложение ORDER BY, то рамка состоит из всех строк, от
+                начала разбиения до текущей строки, плюс любые следующие строки, которые равны
+                текущей строке в соответствии с предложением ORDER BY,
+                т.е.<programlisting>
+RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW                        
+                    </programlisting>
+            </para>
+            <para>Из-за этого результаты функций NTH_VALUE и в особенности LAST_VALUE могут
+                показаться странными. Для устранения этого "недостатка" вы можете задать другую
+                рамку окна, например:
+                <programlisting>
+ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING                        
+                    </programlisting>
+            </para>
+        </important>
+        <example>
+            <title>Навигационные функции</title>
+            <para><programlisting language="sql">
+SELECT
+  id,
+  salary,
+  FIRST_VALUE(salary) OVER (ORDER BY salary),
+  LAST_VALUE(salary) OVER (ORDER BY salary),
+  NTH_VALUE(salary, 2) OVER (ORDER BY salary),
+  LAG(salary) OVER (ORDER BY salary),
+  LEAD(salary) OVER (ORDER BY salary)
+FROM employee
+ORDER BY salary;                    
+                </programlisting></para>
+        </example>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+id salary first_value last_value nth_value    lag   lead
+-- ------ ----------- ---------- --------- ------ ------
+3    8.00        8.00       8.00    &lt;null&gt; &lt;null&gt;   9.00
+4    9.00        8.00       9.00      9.00   8.00  10.00
+1   10.00        8.00      10.00      9.00   9.00  10.00
+5   10.00        8.00      10.00      9.00  10.00  12.00
+2   12.00        8.00      12.00      9.00  10.00 &lt;null&gt;                
+                </screen>
+            </para>
+        </formalpara>
+        <para>Вариант с изменённой рамкой окна для функций LAST_VALUE и NTH_VALUE
+            <programlisting language="sql">
+SELECT
+  id,
+  salary,
+  FIRST_VALUE(salary) OVER (ORDER BY salary),
+  LAST_VALUE(salary) OVER w,
+  NTH_VALUE(salary, 2) OVER w,
+  LAG(salary) OVER (ORDER BY salary),
+  LEAD(salary) OVER (ORDER BY salary)
+FROM employee
+WINDOW 
+  w AS (ORDER BY salary ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+ORDER BY salary;                    
+                </programlisting>
+        </para>
+        <formalpara>
+            <title>Результат</title>
+            <para>
+                <screen>
+id salary first_value last_value nth_value    lag   lead
+-- ------ ----------- ---------- --------- ------ ------
+3    8.00        8.00      12.00      9.00 &lt;null&gt;   9.00
+4    9.00        8.00      12.00      9.00   8.00  10.00
+1   10.00        8.00      12.00      9.00   9.00  10.00
+5   10.00        8.00      12.00      9.00  10.00  12.00
+2   12.00        8.00      12.00      9.00  10.00 &lt;null&gt;                
+                </screen>
+            </para>
+        </formalpara>
+        <section xml:id="internalfunc-window-nav-first_value">
+            <info>
+                <title>FIRST_VALUE</title>
+                <keywordset>
+                    <keyword>FIRST_VALUE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>FIRST_VALUE</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+FIRST_VALUE(<replaceable>&lt;expr&gt;</replaceable>) OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора FIRST_VALUE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Возвращает первое значение из упорядоченного набора значений рамки окна.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-nav-last_value">LAST_VALUE</link>, <link
+                        linkend="internalfunc-window-nav-nth_value">NTH_VALUE</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-nav-lag">
+            <info>
+                <title>LAG</title>
+                <keywordset>
+                    <keyword>LAG</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>LAG</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+LAG(<replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;offset&gt;</replaceable> [, <replaceable>&lt;default&gt;</replaceable>]]) 
+  OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                 
+                </programlisting></para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора LAG</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>offset</replaceable></entry>
+                                <entry>
+                                    <para>Количество строк до строки перед текущей строкой, из
+                                        которой необходимо получить значение. Если значение
+                                        аргумента не указано, то по умолчанию принимается 1.
+                                            <replaceable>offset</replaceable> может быть столбцом,
+                                        вложенным запросом или другим выражением, с помощью которого
+                                        вычисляется целая положительная величина, или другим типом,
+                                        который может быть неявно преобразован в bigint.
+                                            <replaceable>offset</replaceable> не может быть
+                                        отрицательным значением или аналитической функцией.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>default</replaceable></entry>
+                                <entry>
+                                    <para>Значение по умолчанию, которое возвращается, в случае если
+                                        смещение (<replaceable>offset</replaceable>) указывает за
+                                        пределы секции. По умолчанию равно NULL</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция LAG обеспечивает доступ к строке с заданным физическим смещением
+                    (<replaceable>offset</replaceable>) перед началом текущей строки. </para>
+            <para>Если смещение (<replaceable>offset</replaceable>) указывает за пределы секции, то
+                будет возвращено значение <replaceable>default</replaceable>, которое по умолчанию
+                равно NULL.</para>
+
+            <bridgehead renderas="sect5">Примеры:</bridgehead>
+
+            <example>
+                <title>Использование функции LAG</title>
+                <para>Предположим у вас есть таблица rate, которая хранит курс валюты на каждый
+                    день. Необходимо проследить динамику изменения курса за последние пять
+                    дней.<programlisting language="sql">
+SELECT
+  bydate,
+  cost,
+  cost - LAG(cost) OVER(ORDER BY bydate) AS change,
+  100 * (cost - LAG(cost) OVER(ORDER BY bydate)) /
+    LAG(cost) OVER(ORDER BY bydate) AS percent_change
+FROM rate
+WHERE bydate BETWEEN DATEADD(-4 DAY TO current_date)
+  AND current_date
+ORDER BY bydate
+                </programlisting></para>
+            </example>
+            <formalpara>
+                <title>Результат</title>
+                <para>
+                    <screen>
+bydate        cost    change   percent_change
+----------   -----   -------   --------------
+27.10.2014   31.00    &lt;null&gt;           &lt;null&gt;
+28.10.2014   31.53      0.53           1.7096
+29.10.2014   31.40     -0.13          -0.4123
+30.10.2014   31.67      0.27           0.8598
+31.10.2014   32.00      0.33           1.0419              
+                </screen>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-nav-lead">LEAD</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-nav-last_value">
+            <info>
+                <title>LAST_VALUE</title>
+                <keywordset>
+                    <keyword>LAST_VALUE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>LAST_VALUE</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+LAST_VALUE(<replaceable>&lt;expr&gt;</replaceable>) OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора LAST_VALUE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Возвращает последнее значение из упорядоченного набора значений рамки окна.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-nav-first_value">FIRST_VALUE</link>, <link
+                        linkend="internalfunc-window-nav-nth_value">NTH_VALUE</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-nav-lead">
+            <info>
+                <title>LEAD</title>
+                <keywordset>
+                    <keyword>LEAD</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>LEAD</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+LEAD(<replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;offset&gt;</replaceable> [, <replaceable>&lt;default&gt;</replaceable>]])
+  OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}                  
+                </programlisting></para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора LEAD</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>offset</replaceable></entry>
+                                <entry>
+                                    <para>Количество строк после текущей строки до строки, из
+                                        которой необходимо получить значение. Если значение
+                                        аргумента не указано, то по умолчанию принимается 1.
+                                             <replaceable>offset</replaceable> может быть столбцом,
+                                        вложенным запросом или другим выражением, с помощью которого
+                                        вычисляется целая положительная величина, или другим типом,
+                                        который может быть неявно преобразован в bigint.
+                                            <replaceable>offset</replaceable> не может быть
+                                        отрицательным значением или аналитической функцией.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>default</replaceable></entry>
+                                <entry>
+                                    <para>Значение по умолчанию, которое возвращается, в случае если
+                                        смещение (<replaceable>offset</replaceable>) указывает за
+                                        пределы секции. По умолчанию равно NULL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция LEAD обеспечивает доступ к строке на заданном физическом смещении
+                    (<replaceable>offset</replaceable>) после текущей строки. </para>
+            <para>Если смещение (<replaceable>offset</replaceable>) указывает за пределы секции, то
+                будет возвращено значение <replaceable>default</replaceable>, которое по умолчанию
+                равно NULL.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-nav-lag">LAG</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="internalfunc-window-nav-nth_value">
+            <info>
+                <title>NTH_VALUE</title>
+                <keywordset>
+                    <keyword>NTH_VALUE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>NTH_VALUE</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+NTH_VALUE(<replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;offset&gt;</replaceable>]) [FROM FIRST | FROM LAST]
+  OVER {<replaceable>&lt;window specification&gt;</replaceable> | <replaceable>&lt;window name&gt;</replaceable>}             
+                </programlisting></para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора NTH_VALUE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>offset</replaceable></entry>
+                                <entry>
+                                    <para>Номер записи, начиная с первой (опция FROM FIRST) или
+                                        последней (опция FROM LAST) записи.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция NTH_VALUE возвращает N-ое значение, начиная с первой (опция FROM FIRST)
+                или последней (опция FROM LAST) записи. По умолчанию используется опция FROM FIRST.
+                Смещение 1 от первой записи будет эквивалентно функции FIRST_VALUE, смещение 1 от
+                последней записи будет эквивалентно функции LAST_VALUE. </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="dml-select">SELECT</link>, <link
+                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
+                        linkend="internalfunc-window-order">ORDER BY</link>, <link
+                        linkend="internalfunc-window-nav-first_value">FIRST_VALUE</link>, <link
+                        linkend="internalfunc-window-nav-last_value">LAST_VALUE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="internalfunc-window-aggarg">
+        <info>
+            <title>Агрегатные функции внутри оконных</title>
+        </info>
+        <para>В качестве аргументов оконных функций, а также в предложении OVER разрешено
+            использование агрегатных функций (но не оконных). В этом случае сначала вычисляются
+            агрегатные функции, а только затем на них накладываются окна оконных функций.</para>
+        <note>
+            <para>При использовании агрегатных функции в качестве аргументов оконных функций, все
+                столбцы, не используемые в агрегатных функциях должны быть указаны в предложении
+                GROUP BY.</para>
+        </note>
+
+        <example>
+            <title>Использование агрегатной функции в качестве аргумента оконной</title>
+            <para><programlisting language="sql">
+SELECT
+    code_employee_group,
+    AVG(salary) AS avg_salary,
+    RANK() OVER(ORDER BY AVG(salary)) AS salary_rank
+FROM employee
+GROUP BY code_employee_group  
+</programlisting></para>
+        </example>
+    </section>
+</chapter>

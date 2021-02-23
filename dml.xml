@@ -574,8 +574,8 @@ SELECT rdb$character_set_name FROM rdb$database
 
                     <para>
                         <link linkend="internalfunc-agg">Агрегатные функции</link>, <link
-                            linkend="internalfunc-window">Оконные (аналитические) функции</link>,
-                            <link linkend="internalfunc-contextvar">Контекстные переменные</link>,
+                            linkend="window-func">Оконные (аналитические) функции</link>,
+                            <link linkend="context-var">Контекстные переменные</link>,
                             <link linkend="common-expr-cond-case">CASE</link>, <link
                             linkend="common-subquery">Подзапросы</link>. </para>
 
@@ -2827,7 +2827,7 @@ GROUP BY class
             </indexterm>
 
             <para>Предложение WINDOW предназначено для задания именованных окон, которые
-                используются <link linkend="internalfunc-window">оконными функциями</link>.
+                используются <link linkend="window-func">оконными функциями</link>.
                 Поскольку выражение окна может быть довольно сложным и использоваться многократно
                 такая функциональность бывает полезной.</para>
 
@@ -2925,7 +2925,7 @@ ORDER BY department, salary;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-window">Оконные (аналитические) функции</link>.
+                    <link linkend="window-func">Оконные (аналитические) функции</link>.
                 </para>
             </formalpara>
         </section>
