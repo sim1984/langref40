@@ -14555,12 +14555,13 @@ COMMENT ON <replaceable>&lt;object&gt;</replaceable> IS {'<replaceable>sometext<
   | GENERATOR 
   | INDEX 
   | PACKAGE 
-  | USER 
   | ROLE 
   | SEQUENCE 
   | TABLE 
   | TRIGGER 
-  | VIEW               
+  | VIEW    
+  
+COMMENT ON <replaceable>&lt;username&gt;</replaceable> [USING PLUGIN <replaceable>&lt;plugin_name&gt;</replaceable>] IS {'<replaceable>sometext</replaceable>' | NULL}  
                 </programlisting></para>
             </formalpara>
             <para>
@@ -14625,6 +14626,14 @@ COMMENT ON <replaceable>&lt;object&gt;</replaceable> IS {'<replaceable>sometext<
                                     <para>Имя пакета.</para>
                                 </entry>
                             </row>
+                            <row>
+                                <entry><replaceable>username</replaceable></entry>
+                                <entry><para>Имя пользователя.</para></entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>plugin_name</replaceable></entry>
+                                <entry><para>Имя плагина управления пользователями.</para></entry>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table>
@@ -14634,6 +14643,12 @@ COMMENT ON <replaceable>&lt;object&gt;</replaceable> IS {'<replaceable>sometext<
                 Комментарии при этом сохраняются в текстовые поля RDB$DESCRIPTION типа BLOB
                 соответствующей системной таблицы (из этих полей клиентское приложение может
                 просмотреть комментарии). </para>
+            <para>При добавлении комментария для пользователя вы можете уточнить в каком плагине
+                управления пользователями он находится с помощью необязательного предложения USING
+                PLUGIN. Если это предложение отсутствует, то предполагает что пользователь создан в
+                плагине управления по умолчанию, то есть первого плагина указанного в параметре
+                UserManager в файле <filename>firebird.conf</filename> или
+                    <filename>databases.conf</filename>.</para>
             <note>
                 <para>Если вы вводите пустой комментарий (''), то он будет сохранен в базе данных
                     как NULL. </para>
@@ -14710,6 +14725,17 @@ IS 'Установка диапазона дат';
 COMMENT ON 
 PROCEDURE PARAMETER APP_VAR.SET_DATERANGE.ADATEBEGIN 
 IS 'Дата начала';  
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Добавление комментария для ппользователя.</title>
+                    
+                    <para><programlisting language="sql"> 
+COMMENT ON USER BOB35 IS 'Это Боб из плагина по умолчанию';  
+
+COMMENT ON USER JHON USING PLUGIN Legacy_UserManager 
+IS 'Это Джон из плагина Legacy_UserManager';  
                 </programlisting>
                     </para>
                 </example>
