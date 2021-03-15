@@ -14729,7 +14729,7 @@ IS 'Дата начала';
                     </para>
                 </example>
                 <example>
-                    <title>Добавление комментария для ппользователя.</title>
+                    <title>Добавление комментария для пользователя.</title>
                     
                     <para><programlisting language="sql"> 
 COMMENT ON USER BOB35 IS 'Это Боб из плагина по умолчанию';  
