@@ -71,9 +71,9 @@
                     <row>
                         <entry><para><code>BLOB</code></para></entry>
                         <entry><para>Переменный</para></entry>
-                        <entry><para>Нет. Размер сегмента BLOB ограничивается 64К. Максимальный
-                                размер поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер
-                                BLOB поля несколько ниже 2 Гб.</para></entry>
+                        <entry><para>Размер сегмента BLOB ограничивается 64К. Максимальный размер
+                                поля BLOB 4 Гб. Для размера страницы 4096 максимальный размер BLOB
+                                поля несколько ниже 2 Гб.</para></entry>
                         <entry><para>Тип данных с динамически изменяемым размером для хранения
                                 больших данных, таких как графика, тексты, оцифрованные звуки.
                                 Базовая структурная единица — сегмент. Подтип BLOB описывает
@@ -329,7 +329,7 @@
             <para>Числа типа SMALLINT находятся в диапазоне -2<superscript>15</superscript> ..
                     2<superscript>15</superscript> - 1, или -32768 .. 32767. </para>
             <formalpara>
-                <title>Примеры:</title>
+                <title>Пример:</title>
 
                 <para>
                     <programlisting language="sql">  
@@ -351,7 +351,7 @@ CREATE DOMAIN RGB_VALUE AS SMALLINT;
             <para>Числа типа INTEGER находятся в диапазоне -2<superscript>31</superscript> ..
                     2<superscript>31</superscript> - 1, или -2 147 483 648 .. 2 147 483 647.</para>
             <formalpara>
-                <title>Примеры:</title>
+                <title>Пример:</title>
 
                 <para>
                     <programlisting language="sql">  
@@ -2349,23 +2349,27 @@ ORDER BY NAME COLLATE PXW_CYRL
                                 <row valign="middle">
                                     <entry>UCS_BASIC</entry>
                                     <entry>Сортировка работает в соответствии с положением символа в
-                                        таблице (бинарная): Пример: A, B, a, b, a... </entry>
+                                        таблице (бинарная).</entry>
                                 </row>
                                 <row valign="middle">
                                     <entry>UNICODE</entry>
                                     <entry>Сортировка работает в соответствии с алгоритмом UCA
-                                        (Unicode Collation Algorithm) (алфавитная). Пример: a, A, a,
-                                        b, B... </entry>
+                                        (Unicode Collation Algorithm) (алфавитная).</entry>
                                 </row>
                                 <row valign="middle">
                                     <entry>UTF-8</entry>
-                                    <entry>Сортировка происходит без учёта регистра символа.
-                                    </entry>
+                                    <entry>По умолчанию используется двоичное сопоставление,
+                                        идентичное UCS_BASIC, которое было добавлено для
+                                        совместимости с SQL стандартом. </entry>
+                                </row>
+                                <row valign="middle">
+                                    <entry>UNICODE_CI</entry>
+                                    <entry>Сортировка без учета регистра символов. </entry>
                                 </row>
                                 <row valign="middle">
                                     <entry>UNICODE_CI_AI</entry>
-                                    <entry>Сортировка происходит без учёта регистра символа, в
-                                        алфавитном порядке.</entry>
+                                    <entry>Сортировка без учета регистра и без учета диакритических
+                                        знаков в алфавитном порядке.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2481,7 +2485,8 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
 
                 <para>
                     <literallayout class="monospaced">  
-CHAR [(<replaceable>length</replaceable>)] [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
+{CHAR | CHARACTER} [(<replaceable>length</replaceable>)] 
+  [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
                      </literallayout>
                 </para>
             </formalpara>
@@ -2507,7 +2512,8 @@ CHAR [(<replaceable>length</replaceable>)] [CHARACTER SET <replaceable>&lt;chars
 
                 <para>
                     <literallayout class="monospaced">  
-VARCHAR (<replaceable>length</replaceable>) [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
+ {VARCHAR | {CHAR | CHARACTER} VARYING} (<replaceable>length</replaceable>) 
+  [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>] [COLLATE <replaceable>&lt;collate&gt;</replaceable>]                 
                      </literallayout>
                 </para>
             </formalpara>
@@ -2524,7 +2530,7 @@ VARCHAR (<replaceable>length</replaceable>) [CHARACTER SET <replaceable>&lt;char
 
                 <para>
                     <literallayout class="monospaced">  
-NCHAR [(<replaceable>length</replaceable>)]                 
+{NCHAR | NATIONAL {CHAR | CHARACTER}} [(<replaceable>length</replaceable>)]                 
                      </literallayout>
                 </para>
             </formalpara>
@@ -2784,8 +2790,7 @@ BINARY [(<replaceable>&lt;length&gt;</replaceable>)]
 
                 <para>
                     <literallayout class="monospaced">  
-    VARBINARY (<replaceable>&lt;length&gt;</replaceable>)             
-  | BINARY VARYING (<replaceable>&lt;length&gt;</replaceable>)            
+{VARBINARY  | BINARY VARYING} (<replaceable>&lt;length&gt;</replaceable>)            
                 </literallayout>
                 </para>
             </formalpara>
@@ -2835,8 +2840,9 @@ CREATE TABLE INFO (
                 <para>
                     <literallayout class="monospaced">  
 BLOB [SUB_TYPE <replaceable>&lt;subtype&gt;</replaceable>]
-[SEGMENT SIZE <replaceable>&lt;seg_length&gt;</replaceable>]
-[CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>]                 
+  [SEGMENT SIZE <replaceable>&lt;seg_length&gt;</replaceable>]
+  [CHARACTER SET <replaceable>&lt;charset&gt;</replaceable>]   
+  [COLLATE <replaceable>&lt;collation name&gt;</replaceable>]                      
                 </literallayout>
                 </para>
             </formalpara>
@@ -2993,26 +2999,41 @@ CREATE TABLE SAMPLE_ARR (
                 </para>
             </informalexample>
             <para>Так будет создана таблица с полем типа массива из четырёх целых. Индексы данного
-                массива от 1 до 4. Для определения верхней и нижней границы значений индекса следует
-                воспользоваться следующим синтаксисом:
-                <literallayout class="monospaced">  
+                массива от 1 до 4. </para>
+
+            <section>
+                <title>Указание явных границ для измерений</title>
+
+                <para>По умолчанию размеры начинаются с 1. Для определения верхней и нижней границы
+                    значений индекса следует воспользоваться следующим синтаксисом:
+                    <literallayout class="monospaced">  
 [<replaceable>&lt;нижняя&gt;</replaceable>:<replaceable>&lt;верхняя&gt;</replaceable>]                
             </literallayout>
-            </para>
-            <para>Добавление новой размерности в синтаксисе идёт через запятую. Пример создания
-                таблицы с массивом размерности два, в котором нижняя граница значений начинается с
-                нуля:
-                <programlisting language="sql">  
+                </para>
+            </section>
+
+            <section>
+                <title>Добавление дополнительных измерений</title>
+
+                <para>Добавление новой размерности в синтаксисе идёт через запятую. Пример создания
+                    таблицы с массивом размерности два, в котором нижняя граница значений начинается
+                    с нуля:
+                    <programlisting language="sql">  
 CREATE TABLE SAMPLE_ARR2 (
   ID INTEGER NOT NULL PRIMARY KEY,
   ARR_INT INTEGER [0:3, 0:3]);             
             </programlisting>
-            </para>
-            <para>СУБД не предоставляет большого набора инструментов для работы с содержимым
-                массивов. База данных <filename>employee.fdb</filename>, которая находится в
-                дистрибутиве Firebird, содержит пример хранимой процедуры, показывающей возможности
-                работы с массивами. Ниже приведён её текст:
-                <programlisting language="sql">  
+                </para>
+            </section>
+
+            <section>
+                <title>Использование массивов</title>
+
+                <para>СУБД не предоставляет большого набора инструментов для работы с содержимым
+                    массивов. База данных <filename>employee.fdb</filename>, которая находится в
+                    дистрибутиве Firebird, содержит пример хранимой процедуры, показывающей
+                    возможности работы с массивами. Ниже приведён её текст:
+                    <programlisting language="sql">  
 CREATE OR ALTER PROCEDURE SHOW_LANGS (
   CODE VARCHAR(5),
   GRADE SMALLINT,
@@ -3041,10 +3062,11 @@ BEGIN
   END
 END
             </programlisting>
-            </para>
-            <para>Если приведённых выше возможностей достаточно для ваших задач, то вы вполне можете
-                применять массивы для своих проектов. В настоящее время совершенствования механизмов
-                обработки массивов средствами СУБД не производится. </para>
+                </para>
+                <para>Если приведённых выше возможностей достаточно для ваших задач, то вы вполне
+                    можете применять массивы для своих проектов. В настоящее время совершенствования
+                    механизмов обработки массивов средствами СУБД не производится. </para>
+            </section>
         </section>
     </section>
     <section xml:id="types-special">
@@ -3158,7 +3180,7 @@ WHERE (SH.SIZE = ? OR ? IS NULL)
 
                 <para>
                     <literallayout class="monospaced">  
-CAST (<replaceable>&lt;value&gt;</replaceable> | NULL AS <replaceable>&lt;data_type&gt;</replaceable>)
+CAST (<replaceable>&lt;expression></replaceable> | NULL AS <replaceable>&lt;data_type&gt;</replaceable>)
 
 <replaceable>&lt;data_type&gt;</replaceable> ::= 
      <replaceable>sql_datatype</replaceable>
@@ -3171,7 +3193,7 @@ CAST (<replaceable>&lt;value&gt;</replaceable> | NULL AS <replaceable>&lt;data_t
                 <title>Преобразование к домену</title>
                 <para>При преобразовании к домену учитываются объявленные для него ограничения,
                     например, NOT NULL или описанные в CHECK и если
-                        <replaceable>&lt;value&gt;</replaceable> не пройдёт проверку, то
+                        <replaceable>&lt;expression&gt;</replaceable> не пройдёт проверку, то
                     преобразование не удастся. В случае если дополнительно указывается TYPE OF
                     (преобразование к базовому типу), при преобразовании игнорируются любые
                     ограничения домена. При использовании TYPE OF с типом (VAR)CHAR набор символов и
@@ -3570,7 +3592,8 @@ FROM rdb$database
                         триггерах и блоках кода PSQL.</para>
                 </note>
                 <example>
-                    <title>Использование <code>CAST('NOW' AS TIMESTAMP)</code> измерения длительности выполнения кода</title>
+                    <title>Использование <code>CAST('NOW' AS TIMESTAMP)</code> измерения
+                        длительности выполнения кода</title>
                     <para><programlisting language="sql">
 <![CDATA[
 EXECUTE BLOCK
@@ -3895,6 +3918,355 @@ DROP DOMAIN Test_Domain;
                 <para>
                     <link linkend="ddl-domain-drop">DROP DOMAIN</link>. </para>
             </formalpara>
+        </section>
+    </section>
+
+    <section xml:id="types-declare">
+        <title>Синтаксис объявления типа данных</title>
+
+        <para>В этом разделе описывается синтаксис объявления типов данных. Объявление типа данных
+            чаще всего встречается в операторах DDL, но также в CAST и EXECUTE BLOCK.</para>
+
+        <para>На приведенный ниже синтаксис есть ссылки из других частей этого руководства. </para>
+
+        <section xml:id="types-declare-scalar">
+            <title>Синтаксис скалярных типов данных</title>
+
+            <para>Скалярные типы данных — это простые типы данных, которые содержат одно значение.
+                Синтаксис типов BLOB рассматривается отдельно в секции <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob"
+                    >Синтаксисе типов данных BLOB</link>. </para>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+<replaceable>&lt;domain_or_non_array_type&gt;</replaceable> ::=
+    <replaceable>&lt;dscalar_datatype&gt;</replaceable>
+  | <replaceable>&lt;blob_datatype&gt;</replaceable>
+  | [TYPE OF] <replaceable>domain</replaceable>
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>                        
+                        
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::= 
+    {SMALLINT | INT[EGER] | BIGINT | INT128}
+  | BOOLEAN 
+  | {FLOAT | REAL | DOUBLE PRECISION} 
+  | [LONG] FLOAT [<replaceable>binary precision</replaceable>]
+  | DECFLOAT[({16 | 34})]
+  | DATE
+  | {TIME | TIMESTAMP} [{WITH | WITHOUT} TIME ZONE]
+  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
+  | {VARCHAR | {CHAR | CHARACTER} VARYING} (<replaceable>length</replaceable>)
+    [CHARACTER SET <replaceable>charset</replaceable>]
+  | {CHAR | CHARACTER} [(<replaceable>length</replaceable>)] [CHARACTER SET <replaceable>charset</replaceable>]
+  | {NCHAR | NATIONAL {CHARACTER | CHAR}} VARYING (<replaceable>length</replaceable>)
+  | {NCHAR | NATIONAL {CHARACTER | CHAR}} [(<replaceable>length</replaceable>)]                                      
+                    </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <title>Параметры декларации скалярных типов</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>
+                                    <replaceable>domain</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Имя домена (только не домены типа массив).</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>rel</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Имя таблицы или представления.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>col</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Имя столбца таблицы или представления (только столбцы не
+                                        типа массив).</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>binary precision</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Двоичная точность. От 1 до 64 бит.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>precision</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Десятичная точность. От 1 до 38 десятичных цифр.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>scale</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Масштаб или количество знаков после запятой. От 0 до 38.
+                                        Оно должно быть меньше или равно точности.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>length</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Максимальная длина строки в символах.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>charset</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Набор символов.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>domain_or_non_array_type</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Типы, не являющиеся массивами, которые можно использовать
+                                        в коде PSQL и операторе CAST.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <section>
+                <title>Использование доменов в объявлениях</title>
+
+                <para>Имя домена может быть указано как тип параметра PSQL или локальной переменной.
+                    Параметр или переменная наследует все атрибуты домена. Если для параметра или
+                    переменной указано значение по умолчанию, оно переопределяет значение по
+                    умолчанию, указанное в определении домена. </para>
+
+                <para>Если предложение <code>TYPE OF</code> добавлено перед именем домена, то
+                    используется только тип данных домена: любые другие атрибуты домена —
+                    ограничение NOT NULL, ограничение CHECK, значение по умолчанию — не проверяются
+                    и не используются. Однако, если домен имеет текстовый тип, всегда используются
+                    его набор символов и последовательность сортировки. </para>
+            </section>
+
+
+            <section>
+                <title>Использование TYPE OF COLUMN в объявлениях</title>
+
+                <para>Входные и выходные параметры или локальные переменные также могут быть
+                    объявлены с использованием типа данных столбцов в существующих таблицах и
+                    представлениях. Для этого используется предложение <code>TYPE OF COLUMN</code>,
+                    в котором в качестве аргумента указывается
+                            <code><replaceable>relationname</replaceable>.<replaceable>columnname</replaceable></code>. </para>
+
+                <para>Когда используется <code>TYPE OF COLUMN</code>, параметр или переменная
+                    наследует только тип данных и — для строковых типов — набор символов и
+                    последовательность сортировки. Ограничения и значение столбца по умолчанию
+                    игнорируются. </para>
+            </section>
+        </section>
+
+        <section xml:id="types-declare-blob">
+            <title>Синтаксис типов данных BLOB</title>
+
+            <para>Типы данных BLOB содержат данные в двоичном, символьном или пользовательском
+                формате неопределенного размера. Для получения дополнительной информации см. <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-binary-blob"
+                    >BLOB</link>. </para>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::=
+    BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}]
+    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
+  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])]                                    
+                    </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <title>Параметры декларации типа BLOB</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>
+                                    <replaceable>charset</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Набор символов (игнорируется для всех подтипов кроме 1
+                                        (TEXT)).</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>subtype_num</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Номер подтипа BLOB.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>subtype_name</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Мнемоническое имя подтипа BLOB; это может быть TEXT,
+                                        BINARY или одно из (других) стандартных или настраиваемых
+                                        имен, определенных в <code>RDB$TYPES</code> для <code>RDB$FIELD_NAME = 'RDB$FIELD_SUB_TYPE'</code>. </para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>seglen</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Размер сегмента не может быть больше 65535, по умолчанию —
+                                        80, если не указан. Размер сегмента может быть может быть
+                                        переопределён клиентом и в большинстве случаев не
+                                        учитвается.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+        </section>
+        <section>
+            <title>Синтаксис массивов</title>
+            
+            <para>Тип данных массив содержит несколько скалярных значений в одном или многомерном
+                массиве. Для получения дополнительной информации см. <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-array">Тип
+                    массив</link>. </para>
+            
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= 
+    {SMALLINT | INT[EGER] | BIGINT | INT128} <replaceable>&lt;array_dim&gt;</replaceable>
+  | BOOLEAN <replaceable>&lt;array_dim&gt;</replaceable>
+  | {FLOAT | REAL | DOUBLE PRECISION} <replaceable>&lt;array_dim&gt;</replaceable>
+  | [LONG] FLOAT [<replaceable>binary precision</replaceable>] <replaceable>&lt;array_dim&gt;</replaceable>
+  | DECFLOAT[({16 | 34})] <replaceable>&lt;array_dim&gt;</replaceable>
+  | DATE <replaceable>&lt;array_dim&gt;</replaceable>
+  | {TIME | TIMESTAMP} [{WITH | WITHOUT} TIME ZONE] <replaceable>&lt;array_dim&gt;</replaceable>
+  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])]  <replaceable>&lt;array_dim&gt;</replaceable>
+  | {VARCHAR | {CHAR | CHARACTER} VARYING} (<replaceable>length</replaceable>)  <replaceable>&lt;array_dim&gt;</replaceable>
+    [CHARACTER SET <replaceable>charset</replaceable>]
+  | {CHAR | CHARACTER} [(<replaceable>length</replaceable>)]  <replaceable>&lt;array_dim&gt;</replaceable> [CHARACTER SET <replaceable>charset</replaceable>]
+  | {NCHAR | NATIONAL {CHARACTER | CHAR}} VARYING (<replaceable>length</replaceable>) <replaceable>&lt;array_dim&gt;</replaceable>
+  | {NCHAR | NATIONAL {CHARACTER | CHAR}} [(<replaceable>length</replaceable>)] <replaceable>&lt;array_dim&gt;</replaceable>
+                        
+ <replaceable>&lt;array_dim&gt;</replaceable> ::= '[' [<replaceable>m</replaceable>:]<replaceable>n</replaceable> [,[<replaceable>m</replaceable>:]<replaceable>n</replaceable> ...] ']'                        
+                    </programlisting>
+                </para>
+            </formalpara>
+            
+            <para>
+                <table frame="all">
+                    <title>Параметры декларации массивов</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>
+                                    <replaceable>binary precision</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Двоичная точность. От 1 до 64 бит.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>precision</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Десятичная точность. От 1 до 38 десятичных цифр.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>scale</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Масштаб или количество знаков после запятой. От 0 до 38.
+                                        Оно должно быть меньше или равно точности.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>length</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Максимальная длина строки в символах.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>charset</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Набор символов.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <replaceable>m</replaceable>, <replaceable>n</replaceable>
+                                </entry>
+                                <entry>
+                                    <para>Целые числа, определяющие диапазон индекса измерения массива.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
         </section>
     </section>
 </chapter>
