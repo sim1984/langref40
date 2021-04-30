@@ -99,9 +99,4 @@ Language Reference for Firebird 4.0
 
 -   многостраничный HTML —
     <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip>
-
--   экспериментальный вариант одностраничного HTML через Asciidoc —
-    <https://github.com/sim1984/langref40/releases/download/langref40/langref40.html>
-
--   MS Word —
-    <https://github.com/sim1984/langref40/releases/download/langref40/langref40.docx>        
+     
