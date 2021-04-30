@@ -5,8 +5,8 @@
     xmlns:db="http://docbook.org/ns/docbook" xml:id="langref" xml:lang="ru">
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
-        <subtitle>Firebird 4.0 RC 1</subtitle>
-        <edition>28 апреля 2021 — v.0000-1</edition>
+        <subtitle>Firebird 4.0</subtitle>
+        <edition>30 апреля 2021 — v.0001-1</edition>
 
         <authorgroup>
             <author>
