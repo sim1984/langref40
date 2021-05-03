@@ -1,7 +1,7 @@
 <!DOCTYPE chapter>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="ddl" xml:lang="ru">
     <info>
-        <title>Операторы DDL</title>
+        <title>Операторы определения данных (DDL)</title>
     </info>
 
     <para>Data Definition Language (DDL) — язык описания данных. С помощью этого подмножества языка
@@ -1604,28 +1604,21 @@ CREATE DOMAIN <replaceable>name</replaceable> [AS] <replaceable>&lt;datatype&gt;
   [COLLATE <replaceable>collation</replaceable>];
 
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [<replaceable>&lt;array_dim&gt;</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] 
-    [(<replaceable>size</replaceable>)] [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>   
 
-<replaceable>&lt;array_dim&gt;</replaceable> ::= <emphasis role="bold">[</emphasis>[<replaceable>x</replaceable>:]<replaceable>y</replaceable> [,[<replaceable>x</replaceable>:]<replaceable>y</replaceable> ...]<emphasis role="bold">]</emphasis>
-
-<replaceable>&lt;dom_condition&gt;</replaceable> ::= {
+<replaceable>&lt;dom_condition&gt;</replaceable> ::= 
     <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;val&gt;</replaceable> AND <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] IN (<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...] | <replaceable>&lt;select_list&gt;</replaceable>)
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] NULL
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] DISTINCT <replaceable>&lt;val&gt;</replaceable>
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}
   | <replaceable>&lt;val&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] STARTING [WITH] <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] LIKE <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>]
@@ -1637,22 +1630,30 @@ CREATE DOMAIN <replaceable>name</replaceable> [AS] <replaceable>&lt;datatype&gt;
   | NOT <replaceable>&lt;dom_condition&gt;</replaceable>
   | <replaceable>&lt;dom_condition&gt;</replaceable> OR <replaceable>&lt;dom_condition&gt;</replaceable>
   | <replaceable>&lt;dom_condition&gt;</replaceable> AND <replaceable>&lt;dom_condition&gt;</replaceable>
-}
 
-<replaceable>&lt;operator&gt;</replaceable> ::= {= | &lt; | &gt; | &lt;= | &gt;= | !&lt; | !&gt; | &lt;&gt; | !=}
+
+<replaceable>&lt;operator&gt;</replaceable> ::= 
+    &lt;> | != | ^= | ~= | = | &lt; | > | &lt;= | >=
+  | !&lt; | ^&lt; | ~&lt; | !> | ^> | ~>
 
 <replaceable>&lt;val&gt;</replaceable> ::= {
     VALUE
-  | <replaceable>literal</replaceable>
+  | <replaceable>&lt;literal&gt;</replaceable>
   | <replaceable>&lt;context_var&gt;</replaceable>
   | <replaceable>&lt;expression&gt;</replaceable>
   | NULL
   | NEXT VALUE FOR <replaceable>genname</replaceable>
   | GEN_ID(<replaceable>genname</replaceable>, <replaceable>&lt;val&gt;</replaceable>)
-  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</replaceable>)
+  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;cast_type&gt;</replaceable>)
   | (<replaceable>&lt;select_one&gt;</replaceable>)
   | func(<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...])
 }
+
+<replaceable>&lt;cast_type&gt;</replaceable> ::=
+   <replaceable>&lt;datatype&gt;</replaceable> 
+  | [TYPE OF] <replaceable>domain</replaceable> 
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>                       
+                        
 </programlisting>
                 </para>
             </formalpara>
@@ -1708,72 +1709,9 @@ CREATE DOMAIN <replaceable>name</replaceable> [AS] <replaceable>&lt;datatype&gt;
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>array_dim</replaceable></entry>
-                                <entry>
-                                    <para>Размерность массива. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>x</replaceable></entry>
-                                <entry>
-                                    <para>Начальный номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>y</replaceable></entry>
-                                <entry>
-                                    <para>Последний номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Точность. От 1 до 34. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
-                                            <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах. </para>
-                                </entry>
-                            </row>
-                            <row>
                                 <entry><replaceable>charset</replaceable></entry>
                                 <entry>
                                     <para>Набор символов. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seglen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>val</replaceable></entry>
-                                <entry>
-                                    <para>Значение. </para>
                                 </entry>
                             </row>
                             <row>
@@ -2007,38 +1945,28 @@ NUMERIC(18, 3) [2];
                 <para>
                     <programlisting>  
 ALTER DOMAIN <replaceable>name</replaceable>
-  [{TO <replaceable>new_name</replaceable>}]
-  [{SET DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>} | 
-    DROP DEFAULT}]
+  [TO <replaceable>new_name</replaceable>]
+  [TYPE <replaceable>&lt;datatype&gt;</replaceable>]
+  [{SET DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}} | DROP DEFAULT]  
   [{SET | DROP} NOT NULL]
-  [{ADD [CONSTRAINT] CHECK (<replaceable>&lt;dom_condition&gt;</replaceable>) | 
-    DROP CONSTRAINT}]
-  [{TYPE <replaceable>&lt;datatype&gt;</replaceable>}];
-
+  [{ADD [CONSTRAINT] CHECK (<replaceable>&lt;dom_condition&gt;</replaceable>)} | DROP CONSTRAINT]
 
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [<replaceable>&lt;array_dim&gt;</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] 
-    [(<replaceable>size</replaceable>)] [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>   
 
-<replaceable>&lt;array_dim&gt;</replaceable> ::= <emphasis role="bold">[</emphasis><replaceable>x</replaceable>:<replaceable>y</replaceable> [,<replaceable>x</replaceable>:<replaceable>y</replaceable> ...]<emphasis role="bold">]</emphasis>
-
-<replaceable>&lt;dom_condition&gt;</replaceable> ::= {
+<replaceable>&lt;dom_condition&gt;</replaceable> ::= 
     <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;val&gt;</replaceable> AND <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] IN (<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...] | <replaceable>&lt;select_list&gt;</replaceable>)
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] NULL
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] DISTINCT <replaceable>&lt;val&gt;</replaceable>
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}
   | <replaceable>&lt;val&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] STARTING [WITH] <replaceable>&lt;val&gt;</replaceable>
   | <replaceable>&lt;val&gt;</replaceable> [NOT] LIKE <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>]
@@ -2050,22 +1978,29 @@ ALTER DOMAIN <replaceable>name</replaceable>
   | NOT <replaceable>&lt;dom_condition&gt;</replaceable>
   | <replaceable>&lt;dom_condition&gt;</replaceable> OR <replaceable>&lt;dom_condition&gt;</replaceable>
   | <replaceable>&lt;dom_condition&gt;</replaceable> AND <replaceable>&lt;dom_condition&gt;</replaceable>
-}
 
-<replaceable>&lt;operator&gt;</replaceable> ::= {= | &lt; | &gt; | &lt;= | &gt;= | !&lt; | !&gt; | &lt;&gt; | !=}
 
-<replaceable>&lt;val&gt;</replaceable> ::= {
+<replaceable>&lt;operator&gt;</replaceable> ::= 
+    &lt;> | != | ^= | ~= | = | &lt; | > | &lt;= | >=
+  | !&lt; | ^&lt; | ~&lt; | !> | ^> | ~>
+
+<replaceable>&lt;val&gt;</replaceable> ::= 
     VALUE
-  | <replaceable>literal</replaceable>
+  | <replaceable>&lt;literal&gt;</replaceable>
   | <replaceable>&lt;context_var&gt;</replaceable>
   | <replaceable>&lt;expression&gt;</replaceable>
   | NULL
   | NEXT VALUE FOR <replaceable>genname</replaceable>
   | GEN_ID(<replaceable>genname</replaceable>, <replaceable>&lt;val&gt;</replaceable>)
-  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</replaceable>)
+  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;cast_type&gt;</replaceable>)
   | (<replaceable>&lt;select_one&gt;</replaceable>)
   | func(<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...])
-}
+
+
+<replaceable>&lt;cast_type&gt;</replaceable> ::=
+   <replaceable>&lt;datatype&gt;</replaceable> 
+  | [TYPE OF] <replaceable>domain</replaceable> 
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>
                     </programlisting>
                 </para>
             </formalpara>
@@ -2124,75 +2059,6 @@ ALTER DOMAIN <replaceable>name</replaceable>
                                 <entry><replaceable>collation</replaceable></entry>
                                 <entry>
                                     <para>Порядок сортировки. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>array_dim</replaceable></entry>
-                                <entry>
-                                    <para>Размерность массива. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>x</replaceable></entry>
-                                <entry>
-                                    <para>Начальный номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>y</replaceable></entry>
-                                <entry>
-                                    <para>Последний номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Точность. От 1 до 34. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
-                                            <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>charset</replaceable></entry>
-                                <entry>
-                                    <para>Набор символов. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seglen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>val</replaceable></entry>
-                                <entry>
-                                    <para>Значение. </para>
                                 </entry>
                             </row>
                             <row>
@@ -2567,8 +2433,8 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
 <replaceable>&lt;col_def&gt;</replaceable> ::= <replaceable>&lt;regular_col_def&gt;</replaceable> | <replaceable>&lt;computed_col_def&gt;</replaceable> | <replaceable>&lt;identity_col_def&gt;</replaceable>        
                     
 <replaceable>&lt;regular_col_def&gt;</replaceable> ::= 
-  <replaceable>colname</replaceable> { <replaceable>&lt;datatype&gt;</replaceable> | <replaceable>domainname</replaceable> } 
-  [DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}] 
+  <replaceable>colname</replaceable> { <replaceable>&lt;datatype&gt;</replaceable> | <replaceable>domain_name</replaceable> } 
+  [DEFAULT {<replaceable>&lt;literal&gt;</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}] 
   [NOT NULL]     
   [<replaceable>&lt;col_constraint&gt;</replaceable>]
   [COLLATE <replaceable>collation_name</replaceable>]        
@@ -2590,23 +2456,15 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
     START WITH <replaceable>startvalue</replaceable>
   | INCREMENT [BY] <replaceable>incrementvalue</replaceable>
                     
-<replaceable>&lt;datatype&gt;</replaceable> ::= {
-    {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)] 
-      [<replaceable>&lt;array_dim&gt;</replaceable>] [CHARACTER SET <replaceable>charset_name</replaceable>] 
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-      [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-      [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset_name</replaceable>]   
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
-}
-    
-<replaceable>&lt;array_dim&gt;</replaceable> ::= <emphasis role="bold">[</emphasis>[<replaceable>m</replaceable>:]<replaceable>n</replaceable> [,[<replaceable>m</replaceable>:]<replaceable>n</replaceable> ...]<emphasis role="bold">]</emphasis>       
+                    
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>                   
                     
 <replaceable>&lt;col_constraint&gt;</replaceable> ::= [CONSTRAINT <replaceable>constr_name</replaceable>] 
 {   UNIQUE [<replaceable>&lt;using_index&gt;</replaceable>] 
@@ -2633,12 +2491,13 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
 
 <replaceable>&lt;using_index&gt;</replaceable> ::= USING [ASC[ENDING] | DESC[ENDING]] INDEX <replaceable>indexname</replaceable>   
 
-<replaceable>&lt;check_condition&gt;</replaceable> ::= { 
+<replaceable>&lt;check_condition&gt;</replaceable> ::=  
     <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;val&gt;</replaceable> AND <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] IN (<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...] | <replaceable>&lt;select_list&gt;</replaceable>) 
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] NULL 
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] DISTINCT <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}
   | <replaceable>&lt;val&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] STARTING [WITH] <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] LIKE <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>] 
@@ -2650,24 +2509,29 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
   | NOT <replaceable>&lt;check_condition&gt;</replaceable>   
   | <replaceable>&lt;check_condition&gt;</replaceable> OR <replaceable>&lt;check_condition&gt;</replaceable>   
   | <replaceable>&lt;check_condition&gt;</replaceable> AND <replaceable>&lt;check_condition&gt;</replaceable> 
-}    
+    
  
 <replaceable>&lt;operator&gt;</replaceable> ::= 
-  &lt;&gt; | != | ^=  | ~= | = | &lt; | &gt; | &lt;= | &gt;= | !&lt; | ^&lt; | ~&lt; | !&gt; | ^> | ~>     
+    &lt;> | != | ^= | ~= | = | &lt; | > | &lt;= | >=
+  | !&lt; | ^&lt; | ~&lt; | !> | ^> | ~>    
                     
 <replaceable>&lt;val&gt;</replaceable> ::=  
     <replaceable>colname</replaceable> [<emphasis role="bold">[</emphasis><replaceable>&lt;array_idx&gt;</replaceable> [, <replaceable>&lt;array_idx&gt;</replaceable> ...]<emphasis role="bold">]</emphasis>] 
-  | <replaceable>literal</replaceable>   
+  | <replaceable>&lt;literal&gt;</replaceable>   
   | <replaceable>&lt;context_var&gt;</replaceable>   
   | <replaceable>&lt;expression&gt;</replaceable>   
   | NULL   
   | NEXT VALUE FOR <replaceable>genname</replaceable>   
   | GEN_ID(<replaceable>genname</replaceable>, <replaceable>&lt;val&gt;</replaceable>)   
-  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</replaceable>)   
+  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;cast_type&gt;</replaceable>)   
   | (<replaceable>&lt;select_one&gt;</replaceable>)   
   | <replaceable>func</replaceable>(<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...])   
      
-                </programlisting></para>
+<replaceable>&lt;cast_type&gt;</replaceable> ::=
+   <replaceable>&lt;datatype&gt;</replaceable> 
+  | [TYPE OF] <replaceable>domain_name</replaceable> 
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>
+               </programlisting></para>
             </formalpara>
             <para>
                 <table frame="all">
@@ -2710,7 +2574,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;datatype&gt;</replaceable>
+                                    <replaceable>datatype</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Тип данных SQL. </para>
@@ -2741,7 +2605,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;col_constraint&gt;</replaceable>
+                                    <replaceable>col_constraint</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Ограничение столбца. </para>
@@ -2749,7 +2613,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;tconstraint&gt;</replaceable>
+                                    <replaceable>tconstraint</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Ограничение таблицы. </para>
@@ -2781,10 +2645,10 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;using_index&gt;</replaceable></entry>
+                                <entry><replaceable>using_index</replaceable></entry>
                                 <entry>
-                                    <para>Позвляет задать имя автоматически создаваемого индекса для
-                                        ограничения, и опционально определить, какой это будет
+                                    <para>Позволяет задать имя автоматически создаваемого индекса
+                                        для ограничения, и опционально определить, какой это будет
                                         индекс — по возрастанию (по умолчанию) или по
                                         убыванию.</para>
                                 </entry>
@@ -2808,7 +2672,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;check_condition&gt;</replaceable>
+                                    <replaceable>check_condition</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Условие проверки ограничения. Выполняется, если
@@ -2828,104 +2692,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;array_dim&gt;</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Размерность массива. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>m</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Начальный номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>n</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Последний номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>precision</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Точность. От 1 до 38. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>scale</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Масштаб. От 0 до 38, должно быть меньше или равно
-                                            <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>size</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>charset_name</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Набор символов. Необходимо указывать, если вы хотите чтобы
-                                        набор символов столбца отличался от набора символов по
-                                        умолчанию для базы данных.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>subtype_num</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>subtype_name</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>seglen</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>val</replaceable>
-                                </entry>
-                                <entry>
-                                    <para>Значение или выражение. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry>
-                                    <replaceable>&lt;select_one&gt;</replaceable>
+                                    <replaceable>select_one</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Оператор SELECT выбирающий один столбец и возвращающий
@@ -2934,7 +2701,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;select_list&gt;</replaceable>
+                                    <replaceable>select_list</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Оператор SELECT выбирающий один столбец и возвращающий
@@ -2943,7 +2710,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;select_expr&gt;</replaceable>
+                                    <replaceable>select_expr</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Оператор SELECT выбирающий несколько столбцов и
@@ -2952,7 +2719,7 @@ CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
                             </row>
                             <row>
                                 <entry>
-                                    <replaceable>&lt;experssion&gt;</replaceable>
+                                    <replaceable>experssion</replaceable>
                                 </entry>
                                 <entry>
                                     <para>Выражение. </para>
@@ -3891,7 +3658,7 @@ CREATE GLOBAL TEMPORARY TABLE <replaceable>name</replaceable>
 
                 <section>
                     <title>Ограничения GTT</title>
-                    <para>GTT обаладают всеми атрибутами обычных таблиц (ключи, внешние ключи,
+                    <para>GTT обладают всеми атрибутами обычных таблиц (ключи, внешние ключи,
                         индексы и триггеры), но имеют ряд ограничений:</para>
                     <para>
                         <itemizedlist spacing="compact">
@@ -4202,7 +3969,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
   | <replaceable>&lt;identity_col_mod&gt;</replaceable> 
 
 <replaceable>&lt;regular_col_mod&gt;</replaceable> ::=                      
-  |  TYPE { <replaceable>&lt;datatype&gt;</replaceable>  | <replaceable>domainname</replaceable> }  
+  |  TYPE { <replaceable>&lt;datatype&gt;</replaceable>  | <replaceable>domain_name</replaceable> }  
   |  SET DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>} 
   |  DROP DEFAULT 
   |  SET NOT NULL
@@ -4220,23 +3987,14 @@ ALTER TABLE <replaceable>tablename</replaceable>
      RESTART [ WITH <replaceable>startvalue</replaceable> ]  
   |  SET INCREMENT [BY] <replaceable>incrementvalue</replaceable>                          
 
-<replaceable>&lt;datatype&gt;</replaceable> ::= {
-    {SMALLINT | INT[EGER] | BIGINT} [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | BOOLEAN [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | {FLOAT | DOUBLE PRECISION} [<replaceable>&lt;array_dim&gt;</replaceable>]
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP} [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)] 
-      [<replaceable>&lt;array_dim&gt;</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>] 
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-      [<replaceable>&lt;array_dim&gt;</replaceable>] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] [SEGMENT SIZE <replaceable>seglen</replaceable>] 
-      [CHARACTER SET <replaceable>charset</replaceable>]   
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
-}
-    
-<replaceable>&lt;array_dim&gt;</replaceable> ::= <emphasis role="bold">[</emphasis>[<replaceable>m</replaceable>:]<replaceable>n</replaceable> [,[<replaceable>m</replaceable>:]<replaceable>n</replaceable> ...]<emphasis role="bold">]</emphasis>        
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>       
                     
 <replaceable>&lt;col_constraint&gt;</replaceable> ::= 
   [CONSTRAINT <replaceable>constr_name</replaceable>] 
@@ -4265,12 +4023,13 @@ ALTER TABLE <replaceable>tablename</replaceable>
 
 <replaceable>&lt;using_index&gt;</replaceable> ::= USING [ASC[ENDING] | DESC[ENDING]] INDEX <replaceable>indexname</replaceable>   
 
-<replaceable>&lt;check_condition&gt;</replaceable> ::= { 
+<replaceable>&lt;check_condition&gt;</replaceable> ::=  
     <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;val&gt;</replaceable> AND <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] IN (<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...] | <replaceable>&lt;select_list&gt;</replaceable>) 
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] NULL 
   | <replaceable>&lt;val&gt;</replaceable> IS [NOT] DISTINCT <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}
   | <replaceable>&lt;val&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] STARTING [WITH] <replaceable>&lt;val&gt;</replaceable> 
   | <replaceable>&lt;val&gt;</replaceable> [NOT] LIKE <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>] 
@@ -4282,10 +4041,11 @@ ALTER TABLE <replaceable>tablename</replaceable>
   | NOT <replaceable>&lt;check_condition&gt;</replaceable>   
   | <replaceable>&lt;check_condition&gt;</replaceable> OR <replaceable>&lt;check_condition&gt;</replaceable>   
   | <replaceable>&lt;check_condition&gt;</replaceable> AND <replaceable>&lt;check_condition&gt;</replaceable> 
-}    
+    
  
 <replaceable>&lt;operator&gt;</replaceable> ::= 
-  &lt;&gt; | != | ^=  | ~= | = | &lt; | &gt; | &lt;= | &gt;= | !&lt; | ^&lt; | ~&lt; | !&gt; | ^> | ~>     
+    &lt;> | != | ^= | ~= | = | &lt; | > | &lt;= | >=
+  | !&lt; | ^&lt; | ~&lt; | !> | ^> | ~>       
                     
 <replaceable>&lt;val&gt;</replaceable> ::=  
     <replaceable>colname</replaceable> [<emphasis role="bold">[</emphasis><replaceable>&lt;array_idx&gt;</replaceable> [, <replaceable>&lt;array_idx&gt;</replaceable> ...]<emphasis role="bold">]</emphasis>] 
@@ -4299,7 +4059,12 @@ ALTER TABLE <replaceable>tablename</replaceable>
   | (<replaceable>&lt;select_one&gt;</replaceable>)   
   | <replaceable>func</replaceable>(<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...])   
                        
-                </programlisting>
+
+<replaceable>&lt;cast_type&gt;</replaceable> ::=
+   <replaceable>&lt;datatype&gt;</replaceable> 
+  | [TYPE OF] <replaceable>domain_name</replaceable> 
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+               </programlisting>
                 </para>
             </formalpara>
             <para>
@@ -4323,7 +4088,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;operation&gt;</replaceable></entry>
+                                <entry><replaceable>operation</replaceable></entry>
                                 <entry>
                                     <para>Одна из допустимых операций по изменению структуры
                                         таблицы.</para>
@@ -4363,7 +4128,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;datatype&gt;</replaceable></entry>
+                                <entry><replaceable>datatype</replaceable></entry>
                                 <entry>
                                     <para>Тип данных SQL. </para>
                                 </entry>
@@ -4388,13 +4153,13 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                     отлично от 0. </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;col_constraint&gt;</replaceable></entry>
+                                <entry><replaceable>col_constraint</replaceable></entry>
                                 <entry>
                                     <para>Ограничение столбца. </para>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;tconstraint&gt;</replaceable></entry>
+                                <entry><replaceable>tconstraint</replaceable></entry>
                                 <entry>
                                     <para>Ограничение таблицы. </para>
                                 </entry>
@@ -4419,10 +4184,10 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;using_index&gt;</replaceable></entry>
+                                <entry><replaceable>using_index</replaceable></entry>
                                 <entry>
-                                    <para>Позвляет задать имя автоматически создаваемого индекса для
-                                        ограничения, и опционально определить, какой это будет
+                                    <para>Позволяет задать имя автоматически создаваемого индекса
+                                        для ограничения, и опционально определить, какой это будет
                                         индекс — по возрастанию (по умолчанию) или по
                                         убыванию.</para>
                                 </entry>
@@ -4441,7 +4206,7 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;check_condition&gt;</replaceable></entry>
+                                <entry><replaceable>check_condition</replaceable></entry>
                                 <entry>
                                     <para>Условие проверки ограничения. Выполняется, если
                                         оценивается как TRUE или NULL/UNKNOWN.</para>
@@ -4457,97 +4222,28 @@ ALTER TABLE <replaceable>tablename</replaceable>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;array_dim&gt;</replaceable></entry>
-                                <entry>
-                                    <para>Размерность массива. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>n</replaceable></entry>
-                                <entry>
-                                    <para>Начальный номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>m</replaceable></entry>
-                                <entry>
-                                    <para>Последний номер элемента в массиве, положительное целое
-                                        число. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Точность. От 1 до 38. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Масштаб. От 0 до 38, должно быть меньше или равно
-                                            <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>charset_name</replaceable></entry>
-                                <entry>
-                                    <para>Имя набора символов. Необходимо указывать, если вы хотите
-                                        чтобы набор символов столбца отличался от набора символов по
-                                        умолчанию для базы данных. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seglen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>&lt;select_one&gt;</replaceable></entry>
+                                <entry><replaceable>select_one</replaceable></entry>
                                 <entry>
                                     <para>Оператор SELECT выбирающий один столбец и возвращающий
                                         только одну строку. </para>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;select_list&gt;</replaceable></entry>
+                                <entry><replaceable>select_list</replaceable></entry>
                                 <entry>
                                     <para>Оператор SELECT выбирающий один столбец и возвращающий
                                         ноль и более строк.</para>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;select_expr&gt;</replaceable></entry>
+                                <entry><replaceable>select_expr</replaceable></entry>
                                 <entry>
                                     <para>Оператор SELECT выбирающий несколько столбцов и
                                         возвращающий ноль и более строк.</para>
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>&lt;experssion&gt;</replaceable></entry>
+                                <entry><replaceable>experssion</replaceable></entry>
                                 <entry>
                                     <para>Выражение. </para>
                                 </entry>
@@ -6912,15 +6608,15 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
 
 <replaceable>&lt;mutation_list&gt;</replaceable> ::= <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable>]]
 
-<replaceable>&lt;mutation&gt;</replaceable> ::= { INSERT | UPDATE | DELETE }
+<replaceable>&lt;mutation&gt;</replaceable> ::=  INSERT | UPDATE | DELETE 
 
-<replaceable>&lt;db_event&gt;</replaceable> ::= { 
+<replaceable>&lt;db_event&gt;</replaceable> ::=  
     CONNECT 
   | DISCONNECT 
   | TRANSACTION START 
   | TRANSACTION COMMIT 
   | TRANSACTION ROLLBACK 
-}
+
 
 <replaceable>&lt;ddl_events&gt;</replaceable> ::= {
     ANY DDL STATEMENT
@@ -8547,21 +8243,16 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                     
 <replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'    
 
-<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain_name</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
                     
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} 
-  | BOOLEAN 
-  | {FLOAT | DOUBLE PRECISION} 
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP}
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])]                     
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>                      
 
 <replaceable>&lt;routine body&gt;</replaceable> ::=
     <replaceable>&lt;SQL routine spec&gt;</replaceable>
@@ -8738,9 +8429,9 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>domain</replaceable></entry>
+                                <entry><replaceable>domain_name</replaceable></entry>
                                 <entry>
-                                    <para>Домен.</para>
+                                    <para>Имя домена.</para>
                                 </entry>
                             </row>
                             <row>
@@ -8753,55 +8444,6 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                                 <entry><replaceable>col</replaceable></entry>
                                 <entry>
                                     <para>Имя столбца таблицы или представления.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Общее количество значащих цифр, которое способен сохранить
-                                        параметр (от 1 до 38).</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Количество цифр после десятичной точки. От 0 до 38, должно
-                                        быть меньше или равно
-                                        <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>charset</replaceable></entry>
-                                <entry>
-                                    <para>Набор символов. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seqlen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535. </para>
                                 </entry>
                             </row>
                         </tbody>
@@ -8931,8 +8573,8 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         оператор. Составной оператор состоит из одного или нескольких PSQL
                         операторов, заключенных между ключевыми словами BEGIN и END. Составной
                         оператор может содержать один или несколько других составных операторов.
-                        Вложеность ограничена 512 уровнями. Любой из BEGIN ... END блоков может быть
-                        пустым, в том числе и главный блок.</para>
+                        Вложенность ограничена 512 уровнями. Любой из BEGIN ... END блоков может
+                        быть пустым, в том числе и главный блок.</para>
                 </section>
             </section>
             <section xml:id="ddl-procedure-create-external">
@@ -9454,18 +9096,13 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
 <replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
                     
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} 
-  | BOOLEAN 
-  | {FLOAT | DOUBLE PRECISION} 
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP}
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])]                     
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>                      
 
 <replaceable>&lt;routine body&gt;</replaceable> ::=
     <replaceable>&lt;SQL routine spec&gt;</replaceable>
@@ -9638,9 +9275,9 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>domain</replaceable></entry>
+                                <entry><replaceable>domain_name</replaceable></entry>
                                 <entry>
-                                    <para>Домен.</para>
+                                    <para>Имя домена.</para>
                                 </entry>
                             </row>
                             <row>
@@ -9653,55 +9290,6 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                                 <entry><replaceable>col</replaceable></entry>
                                 <entry>
                                     <para>Имя столбца таблицы или представления.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Общее количество значащих цифр, которое способен сохранить
-                                        параметр (от 1 до 38).</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Количество цифр после десятичной точки. От 0 до 38, должно
-                                        быть меньше или равно
-                                        <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>charset</replaceable></entry>
-                                <entry>
-                                    <para>Набор символов. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. См. <link
-                                            linkend="types-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seqlen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535. </para>
                                 </entry>
                             </row>
                         </tbody>
@@ -10491,21 +10079,16 @@ END
                     
 <replaceable>&lt;param_decl&gt;</replaceable> ::= <replaceable>paramname</replaceable> <replaceable>&lt;type&gt;</replaceable> [NOT NULL] [COLLATE <replaceable>collation</replaceable>]
 
-<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain_name</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
                     
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} 
-  | BOOLEAN 
-  | {FLOAT | DOUBLE PRECISION} 
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP}
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link>   
                                  
                         </programlisting>
                     </para>
@@ -10602,9 +10185,9 @@ END
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry><replaceable>domain</replaceable></entry>
+                                    <entry><replaceable>domain_name</replaceable></entry>
                                     <entry>
-                                        <para>Домен. </para>
+                                        <para>Имя домена. </para>
                                     </entry>
                                 </row>
                                 <row>
@@ -10617,55 +10200,6 @@ END
                                     <entry><replaceable>col</replaceable></entry>
                                     <entry>
                                         <para>Имя столбца таблицы или представления. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>precision</replaceable></entry>
-                                    <entry>
-                                        <para>Общее количество значащих цифр, которое способен
-                                            сохранить параметр (от 1 до 38).</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>scale</replaceable></entry>
-                                    <entry>
-                                        <para>Количество цифр после десятичной точки. От 0 до 38,
-                                            должно быть меньше или равно
-                                                <replaceable>precision</replaceable>. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>size</replaceable></entry>
-                                    <entry>
-                                        <para>Максимальный размер строки в символах. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>charset</replaceable></entry>
-                                    <entry>
-                                        <para>Набор символов. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>subtype_num</replaceable></entry>
-                                    <entry>
-                                        <para>Номер подтипа BLOB. См. <link
-                                                linkend="types-binary-blob-subtype">Подтипы
-                                                BLOB</link>.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>subtype_name</replaceable></entry>
-                                    <entry>
-                                        <para>Мнемоника подтипа BLOB. См. <link
-                                                linkend="types-binary-blob-subtype">Подтипы
-                                                BLOB</link>.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>seqlen</replaceable></entry>
-                                    <entry>
-                                        <para>Размер сегмента, не может превышать 65535. </para>
                                     </entry>
                                 </row>
                             </tbody>
@@ -11309,20 +10843,16 @@ END
                     
 <replaceable>&lt;param_decl&gt;</replaceable> ::= <replaceable>paramname</replaceable> <replaceable>&lt;type&gt;</replaceable> [NOT NULL] [COLLATE <replaceable>collation</replaceable>]
 
-<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain_name</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
                     
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} 
-  | BOOLEAN 
-  | {FLOAT | DOUBLE PRECISION} 
-  | {DATE | TIME | TIMESTAMP}
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-array">См. Синтаксис массивов</link> 
                                             
 <replaceable>&lt;routine body&gt;</replaceable> ::= <replaceable>&lt;sql routine body&gt;</replaceable> | <replaceable>&lt;external body reference&gt;</replaceable>                   
     
@@ -11534,9 +11064,9 @@ END
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry><replaceable>domain</replaceable></entry>
+                                    <entry><replaceable>domain_name</replaceable></entry>
                                     <entry>
-                                        <para>Домен. </para>
+                                        <para>Имя домена. </para>
                                     </entry>
                                 </row>
                                 <row>
@@ -11549,55 +11079,6 @@ END
                                     <entry><replaceable>col</replaceable></entry>
                                     <entry>
                                         <para>Имя столбца таблицы или представления. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>precision</replaceable></entry>
-                                    <entry>
-                                        <para>Общее количество значащих цифр, которое способен
-                                            сохранить параметр (от 1 до 38).</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>scale</replaceable></entry>
-                                    <entry>
-                                        <para>Количество цифр после десятичной точки. От 0 до 38,
-                                            должно быть меньше или равно
-                                                <replaceable>precision</replaceable>. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>size</replaceable></entry>
-                                    <entry>
-                                        <para>Максимальный размер строки в символах. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>charset</replaceable></entry>
-                                    <entry>
-                                        <para>Набор символов. </para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>subtype_num</replaceable></entry>
-                                    <entry>
-                                        <para>Номер подтипа BLOB. См. <link
-                                                linkend="types-binary-blob-subtype">Подтипы
-                                                BLOB</link>.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>subtype_name</replaceable></entry>
-                                    <entry>
-                                        <para>Мнемоника подтипа BLOB. См. <link
-                                                linkend="types-binary-blob-subtype">Подтипы
-                                                BLOB</link>.</para>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry><replaceable>seqlen</replaceable></entry>
-                                    <entry>
-                                        <para>Размер сегмента, не может превышать 65535. </para>
                                     </entry>
                                 </row>
                             </tbody>
@@ -11960,16 +11441,22 @@ END
 DECLARE EXTERNAL FUNCTION <replaceable>funcname</replaceable>
 [<replaceable>&lt;arg_type_decl&gt;</replaceable> [, <replaceable>&lt;arg_type_decl&gt;</replaceable> ...]]
 RETURNS { 
-  <replaceable>sqltype</replaceable> [BY {DESCRIPTOR | VALUE}] | 
+  <replaceable>&lt;sqltype&gt;</replaceable> [BY {DESCRIPTOR | VALUE}] | 
   CSTRING(<replaceable>length</replaceable>) | 
   PARAMETER <replaceable>param_num</replaceable> }
 [FREE_IT]
 ENTRY_POINT '<replaceable>entry_point</replaceable>' MODULE_NAME '<replaceable>library_name</replaceable>';
 
 <replaceable>&lt;arg_type_decl&gt;</replaceable> ::= 
-  <replaceable>sqltype</replaceable> [{BY DESCRIPTOR} | NULL] | 
+  <replaceable>&lt;sqltype&gt;</replaceable> [{BY DESCRIPTOR} | NULL] | 
   CSTRING(<replaceable>length</replaceable>) [NULL]   
-                       </programlisting></para>
+  
+<replaceable>&lt;sqltype&gt;</replaceable> ::= <replaceable>&lt;scalar_datatype&gt;</replaceable> |  <replaceable>&lt;blob_datatype&gt;</replaceable> 
+  
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>  
+             </programlisting></para>
             </formalpara>
             <para>
                 <table frame="all">
@@ -12041,8 +11528,8 @@ ENTRY_POINT '<replaceable>entry_point</replaceable>' MODULE_NAME '<replaceable>l
                 качестве параметров функций. Помимо SQL типов можно указать тип CSTRING. В этом
                 случае параметр является нуль терминальной строкой с максимальной длиной
                     <replaceable>length</replaceable> байт. Существует несколько механизмов передачи
-                параметра из движка Firebird во внешню функцию, каждый из этих механизмов будет
-                расмотрен отдельно.</para>
+                параметра из движка Firebird во внешнюю функцию, каждый из этих механизмов будет
+                рассмотрен отдельно.</para>
             <para> По умолчанию входные параметры передаются по ссылке. Не существует отдельного
                 предложения для явного указания, что параметр передаётся по ссылке. </para>
             <para>При передаче NULL значения по ссылке оно преобразуется в эквивалент нуля,
@@ -12064,9 +11551,8 @@ ENTRY_POINT '<replaceable>entry_point</replaceable>' MODULE_NAME '<replaceable>l
                 дескриптору. В этом случае параметр UDF получит указатель на внутреннюю структуру,
                 известную как дескриптор, несущую информацию о типе данных, подтипе, точности,
                 наборе символов и сортировке, масштабе, указателе на сами данные и некоторых флагах,
-                которых фалгов, в том числе NULL индикаторе. Отметим, что это объявление работает
-                только в том случае, если внешняя функция написана с использованием
-                дескриптора.</para>
+                в том числе NULL индикаторе. Отметим, что это объявление работает только в том
+                случае, если внешняя функция написана с использованием дескриптора.</para>
             <warning>
                 <para> При передаче параметра функции по дескриптору передаваемое значение не
                     приводится к задекларированному типу данных. </para>
@@ -12075,7 +11561,7 @@ ENTRY_POINT '<replaceable>entry_point</replaceable>' MODULE_NAME '<replaceable>l
                 <primary>DECLARE EXTERNAL FUNCTION</primary>
                 <secondary>BY SCALAR_ARRAY</secondary>
             </indexterm>
-            <para>Предложение BY SCALAR_ARRAY используетеся при передачи массивов в качестве входных
+            <para>Предложение BY SCALAR_ARRAY используется при передачи массивов в качестве входных
                 параметров. В отличие от других типов, вы не можете вернуть массив из UDF. </para>
             <indexterm>
                 <primary>DECLARE EXTERNAL FUNCTION</primary>

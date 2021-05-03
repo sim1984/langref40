@@ -3942,7 +3942,7 @@ DROP DOMAIN Test_Domain;
                 <para>
                     <programlisting>
 <replaceable>&lt;domain_or_non_array_type&gt;</replaceable> ::=
-    <replaceable>&lt;dscalar_datatype&gt;</replaceable>
+    <replaceable>&lt;scalar_datatype&gt;</replaceable>
   | <replaceable>&lt;blob_datatype&gt;</replaceable>
   | [TYPE OF] <replaceable>domain</replaceable>
   | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>                        
@@ -4160,7 +4160,7 @@ DROP DOMAIN Test_Domain;
                                     <para>Размер сегмента не может быть больше 65535, по умолчанию —
                                         80, если не указан. Размер сегмента может быть может быть
                                         переопределён клиентом и в большинстве случаев не
-                                        учитвается.</para>
+                                        учитывается.</para>
                                 </entry>
                             </row>
                         </tbody>
@@ -4168,7 +4168,7 @@ DROP DOMAIN Test_Domain;
                 </table>
             </para>
         </section>
-        <section>
+        <section xml:id="types-declare-array">
             <title>Синтаксис массивов</title>
             
             <para>Тип данных массив содержит несколько скалярных значений в одном или многомерном

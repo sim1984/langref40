@@ -1,7 +1,7 @@
 <!DOCTYPE chapter>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="psql" xml:lang="ru">
     <info>
-        <title>Процедурный язык PSQL</title>
+        <title>Операторы процедурного SQL (PSQL)</title>
     </info>
 
     <para>Procedural SQL (PSQL) — процедурное расширение языка SQL. Это подмножество языка
@@ -74,8 +74,19 @@
                 <indexterm>
                     <primary>SQL SECURITY</primary>
                 </indexterm>
-                <para>Необязательное предложение SQL SECURITY позволяет задать с какими привилегиями
-                    выполняется PSQL модуль. Если выбрана опция INVOKER, то PSQL модуль выполняются
+                <para>PSQL код может выполнятся в одном из следующих режимов:<itemizedlist
+                        spacing="compact">
+                        <listitem>
+                            <para>С привилегиями вызывающего пользователя (привилегии
+                                CURRENT_USER);</para>
+                        </listitem>
+                        <listitem>
+                            <para>С привилегиями определяющего пользователя (владельца объекта
+                                метаданных).</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>Привилегии выполнения PSQL модуля указывается в его заголовке в необязательное
+                    предложение SQL SECURITY. Если выбрана опция INVOKER, то PSQL модуль выполняются
                     с привилегиями вызывающего пользователя. Если выбрана опция DEFINER, то PSQL
                     модуль выполняется с привилегиями определяющего пользователя (владельца). Эти
                     привилегии будут дополнены привилегиями выданные самому PSQL модулю с помощью
@@ -86,118 +97,244 @@
                     пользователя.</para>
             </section>
 
-            <section xml:id="psql-elements-declare">
-                <title>Секция деклараций</title>
-
-                <para>Тело PSQL модуля начинается после ключевого слова AS. Тело модуля состоит из
-                    секции деклараций и составного оператора.</para>
-
-                <para>Секция деклараций может содержать объявления локальной переменной, курсора или
-                    подпрограммы (подпроцедуры или подфункции). Каждый тип объявления будет
-                    рассмотрен отдельно.</para>
-
-                <formalpara>
-                    <title>См. также:</title>
-                    <para>
-                        <link linkend="psql-statements-declare-var">DECLARE VARIABLE</link>, <link
-                            linkend="psql-statements-declare-cursor">DECLARE CURSOR</link>, <link
-                            linkend="psql-statements-declare-procedure">DECLARE PROCEDURE</link>,
-                            <link linkend="psql-statements-declare-function">DECLARE FUNCTION</link>
-                    </para>
-                </formalpara>
-            </section>
-
             <section xml:id="psql-elements-body">
                 <title>Тело модуля</title>
 
-                <para>После необязательной секции деклараций обязательно следует составной оператор,
-                    содержащий описание выполняемых программой действий. Операторные скобки BEGIN
-                    ... END определяют составной оператор или блок операторов, который выполняется
-                    как одна единица кода. В самих программах возможно присутствие произвольного
-                    количества блоков, как последовательных, так и вложенных друг в друга.
-                    Максимальная глубина ограничена 512 уровнями вложенности блоков. Все операторы
-                    за исключением блоков BEGIN ... END отделяются друг от друга точкой с запятой
-                    (;). Никакой другой символ не является допустимым терминатором операторов
-                    PSQL.</para>
+                <para>Тело модуля может быть написано на языке PSQL или быть телом внешнего
+                    модуля.</para>
+                
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para><programlisting>
+<replaceable>&lt;routine body&gt;</replaceable> ::=
+    <replaceable>&lt;SQL routine spec&gt;</replaceable>
+  | <replaceable>&lt;external body reference&gt;</replaceable>
+                    
+<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
+  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
 
-                <sidebar xml:id="psql-setterm">
-                    <title>Изменение терминатора в <application>isql</application></title>
 
-                    <para>Здесь мы немного отвлечёмся для того, чтобы объяснить как переключить
-                        терминатор в утилите <application>isql</application>. Это необходимо чтобы
-                        иметь возможность определять в ней PSQL модули, не конфликтуя с самим
-                            <application>isql</application>, который использует тот же самый символ,
-                        точку с запятой (;), как разделитель операторов.</para>
+<replaceable>&lt;rights clause&gt;</replaceable> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
 
-                    <formalpara>
-                        <title>isql команда SET TERM</title>
-                        <para/>
-                    </formalpara>
-                    <formalpara>
-                        <title>Назначение:</title>
-                        <para>Изменение символа(ов) терминатора, чтобы избежать конфликта с
-                            терминатором в PSQL операторах.</para>
-                    </formalpara>
-                    <formalpara>
-                        <title>Доступно в:</title>
+     
+<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
+  AS       
+    [<replaceable>&lt;declarations&gt;</replaceable>]       
+  BEGIN       
+    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
+  END                      
 
-                        <para>ISQL.</para>
-                    </formalpara>
-                    <formalpara>
-                        <title>Синтаксис:</title>
+<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
-                        <para><programlisting>
+<replaceable>&lt;declare_item&gt;</replaceable> ::=      
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
+
+<replaceable>&lt;external body reference&gt;</replaceable> ::=
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
+
+<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'                         
+                    </programlisting>
+                    </para>
+                </formalpara>
+                
+                <para>
+                    <table frame="all">
+                        <title>Параметры оператора CREATE PROCEDURE</title>
+                        <?dbfo keep-together='auto'?>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>inparam</replaceable></entry>
+                                    <entry>
+                                        <para>Описание входного параметра.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>outparam</replaceable></entry>
+                                    <entry>
+                                        <para>Описание выходного параметра.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>declare_var</replaceable></entry>
+                                    <entry>
+                                        <para>Объявление локальной переменной. </para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>declare_cursor</replaceable></entry>
+                                    <entry>
+                                        <para>Объявление именованного курсора. </para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>subfunc_decl</replaceable></entry>
+                                    <entry>
+                                        <para>Объявление подпрограммы – функции.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>subproc_decl</replaceable></entry>
+                                    <entry>
+                                        <para>Объявление подпрограммы – процедуры. </para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>subfunc_impl</replaceable></entry>
+                                    <entry>Реализация подпрограммы – функции.</entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>subproc_impl</replaceable></entry>
+                                    <entry>Реализация подпрограммы – процедуры.</entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>extbody</replaceable></entry>
+                                    <entry><para>Тело внешней процедуры. Строковый литерал который может
+                                        использоваться UDR для различных целей.</para></entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>module name</replaceable></entry>
+                                    <entry>
+                                        <para>Имя внешнего модуля, в котором расположена функция.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>routine name</replaceable></entry>
+                                    <entry>
+                                        <para>Внутреннее имя функции внутри внешнего модуля. </para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>misc info</replaceable></entry>
+                                    <entry>
+                                        <para>Определяемая пользователем информация для передачи в
+                                            функцию внешнего модуля. </para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><replaceable>engine</replaceable></entry>
+                                    <entry>
+                                        <para>Имя движка для использования внешних функций. Обычно
+                                            указывается имя UDR. </para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <section xml:id="psql-elements-body-psql">
+
+                    <title>Тело PSQL модуля</title>
+
+                    <para>Тело PSQL начинается с необязательного раздела, в котором объявляются
+                        переменные, курсоры и подпрограммы, за которым следует блок операторов,
+                        которые выполняются в логической последовательности, как программа. Блок
+                        операторов — или составной оператор — заключен в ключевые слова BEGIN и END
+                        и выполняется как единый блок кода. Основной блок <code>BEGIN ... END</code>
+                        может содержать любое количество других блоков <code>BEGIN ... END</code>,
+                        как встроенных, так и последовательных. Максимальная вложенность блоков
+                        составляет 512 уровней. Все операторы, кроме BEGIN и END, заканчиваются
+                        точкой с запятой (<quote>;</quote>). Никакой другой символ не может
+                        использоваться в качестве терминатора для операторов PSQL. </para>
+
+
+                    <sidebar xml:id="psql-setterm">
+                        <title>Изменение терминатора в <application>isql</application></title>
+
+                        <para>Здесь мы немного отвлечёмся для того, чтобы объяснить как переключить
+                            терминатор в утилите <application>isql</application>. Это необходимо
+                            чтобы иметь возможность определять в ней PSQL модули, не конфликтуя с
+                            самим <application>isql</application>, который использует тот же самый
+                            символ, точку с запятой (;), как разделитель операторов.</para>
+
+                        <formalpara>
+                            <title>isql команда SET TERM</title>
+                            <para/>
+                        </formalpara>
+                        <formalpara>
+                            <title>Назначение:</title>
+                            <para>Изменение символа(ов) терминатора, чтобы избежать конфликта с
+                                терминатором в PSQL операторах.</para>
+                        </formalpara>
+                        <formalpara>
+                            <title>Доступно в:</title>
+
+                            <para>ISQL.</para>
+                        </formalpara>
+                        <formalpara>
+                            <title>Синтаксис:</title>
+
+                            <para><programlisting>
 SET TERM <replaceable>&lt;new_terminator&gt;</replaceable><replaceable>&lt;old_terminator&gt;</replaceable>
                 </programlisting></para>
-                    </formalpara>
-                    <para>
-                        <table frame="all">
-                            <?dbfo keep-together='auto'?>
-                            <title>Параметры оператора SET TERM</title>
-                            <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                                <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                                <thead>
-                                    <row>
-                                        <entry align="center">Параметр</entry>
-                                        <entry align="center">Описание</entry>
-                                    </row>
-                                </thead>
-                                <tbody>
-                                    <row>
-                                        <entry><replaceable>new_terminator</replaceable></entry>
-                                        <entry>
-                                            <para>Новый терминатор.</para>
-                                        </entry>
-                                    </row>
-                                    <row>
-                                        <entry><replaceable>old_terminator</replaceable></entry>
-                                        <entry>
-                                            <para>Старый терминатор.</para>
-                                        </entry>
-                                    </row>
-                                </tbody>
-                            </tgroup>
-                        </table>
-                    </para>
+                        </formalpara>
+                        <para>
+                            <table frame="all">
+                                <?dbfo keep-together='auto'?>
+                                <title>Параметры оператора SET TERM</title>
+                                <tgroup cols="2">
+                                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                                    <thead>
+                                        <row>
+                                            <entry align="center">Параметр</entry>
+                                            <entry align="center">Описание</entry>
+                                        </row>
+                                    </thead>
+                                    <tbody>
+                                        <row>
+                                            <entry><replaceable>new_terminator</replaceable></entry>
+                                            <entry>
+                                                <para>Новый терминатор.</para>
+                                            </entry>
+                                        </row>
+                                        <row>
+                                            <entry><replaceable>old_terminator</replaceable></entry>
+                                            <entry>
+                                                <para>Старый терминатор.</para>
+                                            </entry>
+                                        </row>
+                                    </tbody>
+                                </tgroup>
+                            </table>
+                        </para>
 
-                    <para>При написании триггеров и хранимых процедур в текстах скриптов, создающих
-                        требуемые программные объекты базы данных, во избежание двусмысленности
-                        относительно использования символа завершения операторов (по нормам SQL это
-                        точка с запятой) применяется оператор SET TERM, который, строго говоря, не
-                        является оператором SQL, а является командой интерактивного инструмента
-                            <application>isql</application>. При помощи этого оператора перед
-                        началом создания триггера или хранимой процедуры задаётся символ или строка
-                        символов, являющийся завершающим в конце текста триггера или хранимой
-                        процедуры. После описания текста соответствующего программного объекта при
-                        помощи того же оператора SET TERM значение терминатора возвращается к
-                        обычному варианту — точка с запятой.</para>
-                    <para>Альтернативный терминатор может быть любой произвольной строкой символов
-                        за исключением точки с запятой, пробела и апострофа. Если вы используете
-                        буквенный символ, то он будет чувствителен к регистру.</para>
-                    <example>
-                        <title>Задание альтернативного терминатора</title>
-                        <para><programlisting language="sql">
+                        <para>При написании триггеров и хранимых процедур в текстах скриптов,
+                            создающих требуемые программные объекты базы данных, во избежание
+                            двусмысленности относительно использования символа завершения операторов
+                            (по нормам SQL это точка с запятой) применяется оператор SET TERM,
+                            который, строго говоря, не является оператором SQL, а является командой
+                            интерактивного инструмента <application>isql</application>. При помощи
+                            этого оператора перед началом создания триггера или хранимой процедуры
+                            задаётся символ или строка символов, являющийся завершающим в конце
+                            текста триггера или хранимой процедуры. После описания текста
+                            соответствующего программного объекта при помощи того же оператора SET
+                            TERM значение терминатора возвращается к обычному варианту — точка с
+                            запятой.</para>
+                        <para>Альтернативный терминатор может быть любой произвольной строкой
+                            символов за исключением точки с запятой, пробела и апострофа. Если вы
+                            используете буквенный символ, то он будет чувствителен к
+                            регистру.</para>
+                        <example>
+                            <title>Задание альтернативного терминатора</title>
+                            <para><programlisting language="sql">
 SET TERM ^;
 
 CREATE OR ALTER PROCEDURE SHIP_ORDER (
@@ -213,8 +350,24 @@ SET TERM ;^
 
 /* Другие операторы DDL */
                 </programlisting></para>
-                    </example>
-                </sidebar>
+                        </example>
+                    </sidebar>
+                </section>
+
+                <section xml:id="psql-elements-body-external">
+                    <title>Тело внешнего модуля</title>
+
+
+                    <para>Тело внешнего модуля определяет механизм UDR, используемый для выполнения
+                        внешнего модуля, и дополнительно указывает имя вызываемой процедуры UDR
+                            (<replaceable>&lt;extname&gt;</replaceable>) и/или строку
+                            (<replaceable>&lt;extbody&gt;</replaceable>) с семантикой, специфичной
+                        для UDR. </para>
+
+                    <para>Конфигурация внешних модулей и механизмов UDR не рассматривается далее в
+                        этом справочнике по языку. За подробностями обращайтесь к документации по
+                        конкретному движку UDR. </para>
+                </section>
             </section>
         </section>
     </section>
@@ -293,10 +446,10 @@ SET TERM ;^
                     заданное в предложении RETURNS заголовка процедуры.</para>
                 <para>Обращение к селективной хранимой процедуре осуществляется при помощи оператора
                     SELECT (см. <link linkend="dml-select-from-sp">Выборка из селективной хранимой
-                        процедуры</link>). См. <link linkend="ddl-procedure-create-examples"
-                        >пример</link> создания селективной хранимой процедуры в конце раздела <link
+                        процедуры</link>). См. <link linkend="ddl-procedure-create-examples">пример
+                        создания селективной хранимой процедуры</link> в конце раздела <link
                         linkend="ddl-procedure-create">CREATE PROCEDURE</link> главы
-                        <quote>Операторы DDL</quote>.</para>
+                        <quote>Операторы определения данных DDL</quote>.</para>
             </simplesect>
         </section>
 
@@ -304,80 +457,11 @@ SET TERM ;^
             <title>Создание хранимой процедуры</title>
 
             <para>Синтаксис создания выполняемых хранимых процедур и селективных процедур ничем не
-                отличается.</para>
-            <formalpara>
-                <title>Синтаксис (не полный):</title>
+                отличается. Разница заключается в логике программного кода. </para>
 
-                <para><programlisting>
-{CREATE [OR ALTER] | RECREATE} PROCEDURE <replaceable>procname</replaceable> 
-[(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
-RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])   
-<replaceable>&lt;routine body&gt;</replaceable>
-      
-<replaceable>&lt;routine body&gt;</replaceable> ::=
-    <replaceable>&lt;SQL routine spec&gt;</replaceable>
-  | <replaceable>&lt;external body reference&gt;</replaceable>
-                    
-<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
-  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
-
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
-
-     
-<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                      
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'
-                       </programlisting></para>
-            </formalpara>
-
-            <para>Заголовок хранимой процедуры обязательно содержит имя процедуры, которое должно
-                быть уникальным среди имён хранимых процедур, таблиц и представлений. В нем так же
-                может быть описано некоторое количество входных и выходных параметров. Входные
-                параметры перечисляются после имени процедуры внутри пары скобок. Выходные
-                параметры, которые являются обязательными для селективных процедур, перечисляются
-                внутри пары скобок в предложении RETURNS.</para>
-
-            <para>Тело хранимой процедуры может содержать объявление локальных переменных, курсоров
-                и подпрограмм. После секции объявления следует основной блок BEGIN ... END, в
-                который заключается PSQL код процедуры. В этом блоке могут содержаться DML и PSQL
-                операторы, а также вложенные BEGIN ... END блоки. Любой из BEGIN ... END блоков
-                может быть пустым, в том числе и главный блок. Это позволяет разрабатывать процедуры
-                пошагово, методом сверху вниз.</para>
-
-            <para>Хранимая процедура может быть расположена во внешнем модуле. В этом случае вместо
-                тела процедуры указывается место её расположения во внешнем модуле с помощью
-                предложения EXTERNAL NAME. Аргументом этого предложения является строка, в которой
-                через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и
-                определённая пользователем информация. В предложении ENGINE указывается имя движка
-                для обработки подключения внешних модулей. В Firebird для работы с внешними модулями
-                используется движок UDR. После ключевого слова AS может быть указан строковый
-                литерал — "тело" внешней процедуры, оно может быть использовано внешнем модулем для
-                различных целей.</para>
-
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-procedure-create">CREATE PROCEDURE</link>).</para>
+            <para>Для получения информации о создание хранимых процедур см. <link
+                    linkend="ddl-procedure-create">CREATE PROCEDURE</link> в главе <quote>Операторы
+                    определения данных DDL</quote>.</para>
         </section>
 
         <section xml:id="psql-procedure-alter">
@@ -385,69 +469,21 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
 
             <para>В существующих хранимых процедурах можно изменять набор входных и выходных
                 параметров и тело процедуры.</para>
-            <formalpara>
-                <title>Синтаксис (не полный):</title>
 
-                <para><programlisting>
-ALTER PROCEDURE <replaceable>procname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
-RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])    
-<replaceable>&lt;routine body&gt;</replaceable>
-        
-<replaceable>&lt;routine body&gt;</replaceable> ::=
-    <replaceable>&lt;SQL routine spec&gt;</replaceable>
-  | <replaceable>&lt;external body reference&gt;</replaceable>
-                    
-<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
-  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
+            <para>Для получения информации об изменении существующих хранимых процедур см. <link
+                    linkend="ddl-procedure-alter">ALTER PROCEDURE</link>, <link
+                    linkend="ddl-procedure-createoralter">CREATE OR ALTER PROCEDURE</link>, <link
+                    linkend="ddl-procedure-recreate">RECREATE PROCEDURE</link> в главе
+                    <quote>Операторы определения данных DDL</quote>. </para>
 
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
-
-     
-<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                      
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'   
-                       </programlisting></para>
-            </formalpara>
-
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-procedure-alter">ALTER PROCEDURE</link>).</para>
         </section>
 
         <section xml:id="psql-procedure-drop">
             <title>Удаление хранимой процедуры</title>
 
-            <para>Для удаления хранимых процедур используется оператор DROP PROCEDURE.</para>
-            <formalpara>
-                <title>Синтаксис (полный):</title>
-
-                <para><programlisting>
-DROP PROCEDURE <replaceable>procname</replaceable>;  
-                       </programlisting></para>
-            </formalpara>
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-procedure-drop">DROP PROCEDURE</link>).</para>
+            <para>Для получения информации об удалении хранимых процедур см. <link
+                    linkend="ddl-procedure-drop">DROP PROCEDURE</link> в главе <quote>Операторы
+                    определения данных DDL</quote>. </para>
         </section>
     </section>
     <section xml:id="psql-function">
@@ -465,148 +501,29 @@ DROP PROCEDURE <replaceable>procname</replaceable>;
         <section xml:id="psql-function-create">
             <title>Создание хранимой функции</title>
 
-            <formalpara>
-                <title>Синтаксис (не полный):</title>
-
-                <para><programlisting>
-{CREATE [OR ALTER] | RECREATE} FUNCTION <replaceable>funcname</replaceable> 
-[(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
-RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>]
-[DETERMINISTIC]  
-<replaceable>&lt;routine body&gt;</replaceable>
-
-<replaceable>&lt;routine body&gt;</replaceable> ::=
-    <replaceable>&lt;SQL routine spec&gt;</replaceable>
-  | <replaceable>&lt;external body reference&gt;</replaceable>
-                    
-<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
-  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
+            <para>Для получения информации о создание хранимых функций см. <link
+                    linkend="ddl-function-create">CREATE FUNCTION</link> в главе <quote>Операторы
+                    определения данных DDL</quote>.</para>
 
 
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
-
-     
-<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                      
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'   
- 
-                       </programlisting></para>
-            </formalpara>
-            <para>Заголовок хранимой функции обязательно содержит имя функции, которое должно быть
-                уникальным среди имён хранимых функции. В нем так же может быть описано некоторое
-                количество входных параметров и тип выходного результата. Входные параметры
-                перечисляются после имени процедуры внутри пары скобок. Тип выходного результата
-                указывается в предложении RETURNS.</para>
-            <para>Тело хранимой функции может содержать объявление локальных переменных, курсоров и
-                подпрограмм. После секции объявления следует основной блок BEGIN ... END, в который
-                заключается PSQL код функции. В этом блоке могут содержаться DML и PSQL операторы, а
-                также вложенные BEGIN ... END блоки. Любой из BEGIN ... END блоков может быть
-                пустым, в том числе и главный блок. Это позволяет разрабатывать функции пошагово,
-                методом сверху вниз.</para>
-            <para>Хранимая функция может быть расположена во внешнем модуле. В этом случае вместо
-                тела функции указывается место её расположения во внешнем модуле с помощью
-                предложения EXTERNAL NAME. Аргументом этого предложения является строка, в которой
-                через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и
-                определённая пользователем информация. В предложении ENGINE указывается имя движка
-                для обработки подключения внешних модулей. В Firebird для работы с внешними модулями
-                используется движок UDR. После ключевого слова AS может быть указан строковый
-                литерал — "тело" внешней функции, оно может быть использовано внешнем модулем для
-                различных целей.</para>
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-function-create">CREATE FUNCTION</link>).</para>
         </section>
 
         <section xml:id="psql-function-alter">
             <title>Изменение хранимой функции</title>
 
-            <para>В существующих хранимых функциях можно изменять набор входных параметров, тип
-                результата и тело функции.</para>
-            <formalpara>
-                <title>Синтаксис (не полный):</title>
-
-                <para><programlisting>
-ALTER FUNCTION <replaceable>funcname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
-RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>] 
-[DETERMINISTC]  
-<replaceable>&lt;routine body&gt;</replaceable>  
-
-<replaceable>&lt;routine body&gt;</replaceable> ::=
-    <replaceable>&lt;SQL routine spec&gt;</replaceable>
-  | <replaceable>&lt;external body reference&gt;</replaceable>
-                    
-<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
-  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
-
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
-
-     
-<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                      
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'
-    
-                       </programlisting></para>
-            </formalpara>
-
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-function-alter">ALTER FUNCTION</link>).</para>
+            <para>Для получения информации об изменении существующих хранимых функций см. <link
+                    linkend="ddl-function-alter">ALTER FUNCTION</link>, <link
+                    linkend="ddl-function-createoralter">CREATE OR ALTER FUNCTION</link>, <link
+                    linkend="ddl-function-recreate">RECREATE FUNCTION</link> в главе
+                    <quote>Операторы определения данных DDL</quote>. </para>
         </section>
 
         <section xml:id="psql-function-drop">
             <title>Удаление хранимой функции</title>
 
-            <para>Для удаления хранимых функций используется оператор DROP FUNCTION.</para>
-            <formalpara>
-                <title>Синтаксис (полный):</title>
-
-                <para><programlisting>
-DROP FUNCTION <replaceable>funcname</replaceable>;  
-                       </programlisting></para>
-            </formalpara>
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-function-drop">DROP FUNCTION</link>).</para>
+            <para>Для получения информации об удалении хранимых функций см. <link
+                    linkend="ddl-function-drop">DROP FUNCTION</link> в главе <quote>Операторы
+                    определения данных DDL</quote>. </para>
         </section>
     </section>
     <section xml:id="psql-block">
@@ -760,395 +677,31 @@ END
         <section xml:id="psql-package-create">
             <title>Создание пакета</title>
 
-            <formalpara>
-                <title>Синтаксис:</title>
-
-                <para>
-                    <programlisting>
-{CREATE [OR ALTER] | RECREATE} PACKAGE <replaceable>package_name</replaceable>  
-[<replaceable>&lt;rights clause&gt;</replaceable>]                        
-AS
-BEGIN
-  [<replaceable>&lt;package_item&gt;</replaceable> ...]
-END
-
-{CREATE | RECREATE} PACKAGE BODY <replaceable>package_name</replaceable>  
-AS
-BEGIN
-  [<replaceable>&lt;package_item&gt;</replaceable> ...]
-  [<replaceable>&lt;package_body_item&gt;</replaceable> ...]                                                        
-END
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER} 
-
-<replaceable>&lt;package_item&gt;</replaceable> ::=
-    <replaceable>&lt;function_decl&gt;</replaceable>; 
-  | <replaceable>&lt;procedure_decl&gt;</replaceable>;
-                            
-<replaceable>&lt;function_decl&gt;</replaceable> ::=
-  FUNCTION <replaceable>func_name</replaceable> [(<replaceable>&lt;in_params&gt;</replaceable>)] 
-  RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>] 
-  [DETERMINISTIC]    
-                            
-<replaceable>&lt;procedure_decl&gt;</replaceable> ::=
-  PROCEDURE <replaceable>proc_name</replaceable> [(<replaceable>&lt;in_params&gt;</replaceable>)] 
-  [RETURNS (<replaceable>&lt;out_params&gt;</replaceable>)]                           
-
-<replaceable>&lt;package_body_item&gt;</replaceable> ::=
-    <replaceable>&lt;function_impl&gt;</replaceable> 
-  | <replaceable>&lt;procedure_impl&gt;</replaceable>
-
-<replaceable>&lt;function_impl&gt;</replaceable> ::=
-  FUNCTION <replaceable>func_name</replaceable> [(<replaceable>&lt;in_impl_params&gt;</replaceable>)] 
-  RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>] 
-  [DETERMINISTIC] 
-  <replaceable>&lt;routine body&gt;</replaceable> 
-      
-<replaceable>&lt;procedure_impl&gt;</replaceable> ::=
-  PROCEDURE <replaceable>proc_name</replaceable> [(<replaceable>&lt;in_impl_params&gt;</replaceable>)] 
-  [RETURNS (<replaceable>&lt;out_params&gt;</replaceable>)]                             
-  <replaceable>&lt;routine body&gt;</replaceable>          
-
-<replaceable>&lt;routine body&gt;</replaceable> ::= <replaceable>&lt;sql routine body&gt;</replaceable> | <replaceable>&lt;external body reference&gt;</replaceable>                   
-    
-<replaceable>&lt;sql routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                    
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME <replaceable>&lt;extname&gt;</replaceable> ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'  
-                      
-                                                    </programlisting>
-                </para>
-            </formalpara>
-
-            <para>Сначала необходимо создать заголовок пакета (CREATE PACKAGE), а затем — его тело
-                (CREATE PACKAGE BODY). В теле пакеты должны быть реализованы все подпрограммы, с той
-                же сигнатурой, что и объявленные в заголовке и в начале тела пакета. Значения по
-                умолчанию для параметров подпрограмм не могут быть переопределены. Это означает, что
-                они могут быть определены в теле пакета только для частных подпрограмм, которые не
-                были объявлены.</para>
-
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Простой пакет</title>
-                        <para><programlisting language="sql">
-SET TERM ^;
--- заголовок пакета, только объявления подпрограмм
-CREATE OR ALTER PACKAGE TEST
-AS
-BEGIN
-  PROCEDURE P1(I INT) RETURNS (O INT); -- публичная процедура
-END^
-
--- package body, implementation
-RECREATE PACKAGE BODY TEST
-AS
-BEGIN
-  FUNCTION F1(I INT) RETURNS INT; -- частная функция
-
-  PROCEDURE P1(I INT) RETURNS (O INT)
-  AS
-  BEGIN
-  END
-
-  FUNCTION F1(I INT) RETURNS INT
-  AS
-  BEGIN
-    RETURN 0;
-  END
-END^  
-                </programlisting></para>
-                    </example>
-                    <example>
-                        <title>Пакет для работы с сессионными переменными</title>
-                        <para><programlisting language="sql">
-SET TERM ^;
-
-CREATE PACKAGE APP_VAR
-AS
-BEGIN
-  -- Возвращает дату начала периода
-  -- Функция помечена как детерминированная, что позволяет
-  -- рассматривать её как инвариант в запросах
-  FUNCTION GetDateBegin() RETURNS DATE DETERMINISTIC;
-
-  -- Возвращает дату окончания периода
-  -- Функция помечена как детерминированная, что позволяет
-  -- рассматривать её как инвариант в запросах
-  FUNCTION GetDateEnd() RETURNS DATE DETERMINISTIC;
-
-  -- Устанавливает диапазон дат рабочего периода
-  PROCEDURE SetDateRange(ADateBegin DATE, ADateEnd DATE);
-END^
-
-CREATE PACKAGE BODY APP_VAR
-AS
-BEGIN
-  -- Возвращает дату начала периода
-  FUNCTION GetDateBegin() RETURNS DATE
-  AS
-  BEGIN
-    RETURN RDB$GET_CONTEXT('USER_SESSION', 'DATEBEGIN');
-  END
-
-  -- Возвращает дату окончания периода
-  FUNCTION GetDateEnd() RETURNS DATE
-  AS
-  BEGIN
-    RETURN RDB$GET_CONTEXT('USER_SESSION', 'DATEEND');
-  END
-
-  -- Устанавливает диапазон дат рабочего периода
-  PROCEDURE SetDateRange(ADateBegin DATE, ADateEnd DATE)
-  AS
-  BEGIN
-    RDB$SET_CONTEXT('USER_SESSION', 'DATEBEGIN', ADateBegin);
-    RDB$SET_CONTEXT('USER_SESSION', 'DATEEND', ADateEnd);
-  END
-END^
-
-SET TERM ;^   
-                </programlisting>
-                            Использование:
-                            <programlisting language="sql">
--- Установка рабочего периода
-EXECUTE PROCEDURE APP_VAR.SetDateRange(
-  date '01.01.2000', date '31.12.2000');
-
--- Использование в запросах
-SELECT *
-FROM SALES_ORDER
-WHERE bydate BETWEEN APP_VAR.GetDateBegin() 
-                 AND APP_VAR.GetDateEnd();                    
-                </programlisting>
-                        </para>
-                    </example>
-                    <example>
-                        <title>Пакет объединяющий внешние подпрограммы</title>
-                        <para><programlisting language="sql">
-SET TERM ^;
-
-CREATE OR ALTER PACKAGE REGEXP
-AS
-BEGIN
-  PROCEDURE preg_match(
-      APattern VARCHAR(8192), ASubject VARCHAR(8192))
-    RETURNS (Matches VARCHAR(8192));
-
-  FUNCTION preg_is_match(
-      APattern VARCHAR(8192), ASubject VARCHAR(8192))
-    RETURNS BOOLEAN;
-
-  FUNCTION preg_replace(
-      APattern VARCHAR(8192), 
-      AReplacement VARCHAR(8192),
-      ASubject VARCHAR(8192)) 
-    RETURNS VARCHAR(8192);
-
-  PROCEDURE preg_split(
-      APattern VARCHAR(8192), 
-      ASubject VARCHAR(8192))
-    RETURNS (Lines VARCHAR(8192));
-
-  FUNCTION preg_quote(
-      AStr VARCHAR(8192), 
-      ADelimiter CHAR(10) DEFAULT NULL)
-    RETURNS VARCHAR(8192);
-END^
-
-RECREATE PACKAGE BODY REGEXP
-AS
-BEGIN
-  PROCEDURE preg_match(
-      APattern VARCHAR(8192), 
-      ASubject VARCHAR(8192))
-    RETURNS (Matches VARCHAR(8192))
-    EXTERNAL NAME 'PCRE!preg_match' ENGINE UDR;
-
-  FUNCTION preg_is_match(
-      APattern VARCHAR(8192), 
-      ASubject VARCHAR(8192))
-    RETURNS BOOLEAN
-  AS
-  BEGIN
-    RETURN EXISTS(
-      SELECT * FROM preg_match(:APattern, :ASubject));
-  END
-
-  FUNCTION preg_replace(
-      APattern VARCHAR(8192), 
-      AReplacement VARCHAR(8192),
-      ASubject VARCHAR(8192)) 
-    RETURNS VARCHAR(8192)
-    EXTERNAL NAME 'PCRE!preg_replace' ENGINE UDR;
-
-  PROCEDURE preg_split(
-      APattern VARCHAR(8192), 
-      ASubject VARCHAR(8192))
-    RETURNS (Lines VARCHAR(8192))
-    EXTERNAL NAME 'PCRE!preg_split' ENGINE UDR;
-
-  FUNCTION preg_quote(
-      AStr VARCHAR(8192), 
-      ADelimiter CHAR(10))
-    RETURNS VARCHAR(8192)
-    EXTERNAL NAME 'PCRE!preg_quote' ENGINE UDR;
-END^
-
-SET TERM ;^   
-                </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="ddl-package-create">CREATE PACKAGE</link>, <link
-                        linkend="ddl-package-body-create">CREATE PACKAGE BODY</link>. </para>
-            </formalpara>
+            <para>Для получения информации о создании пакетов см. <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-package-create">CREATE
+                    PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="ddl-package-body-create">CREATE PACKAGE BODY</link>. </para>
         </section>
         <section xml:id="psql-package-alter">
             <title>Модификация пакета</title>
 
-            <formalpara>
-                <title>Синтаксис:</title>
+            <para>Для получения информации об изменении существующего заголовка или тела пакета см.
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-package-alter"
+                    >ALTER PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="ddl-package-createoralter">CREATE OR ALTER PACKAGE</link>, <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-package-recreate"
+                    >RECREATE PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>. </para>
 
-                <para>
-                    <programlisting>
-ALTER PACKAGE <replaceable>package_name</replaceable> 
-[<replaceable>&lt;rights clause&gt;</replaceable>]                         
-AS
-BEGIN
-  [<replaceable>&lt;package_item&gt;</replaceable> ...]
-END
-
-RECREATE PACKAGE BODY <replaceable>package_name</replaceable>  
-AS
-BEGIN
-  [<replaceable>&lt;package_item&gt;</replaceable> ...]
-  [<replaceable>&lt;package_body_item&gt;</replaceable> ...]                                                        
-END
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER} 
-
-<replaceable>&lt;package_item&gt;</replaceable> ::=
-    <replaceable>&lt;function_decl&gt;</replaceable>; 
-  | <replaceable>&lt;procedure_decl&gt;</replaceable>;
-                            
-<replaceable>&lt;function_decl&gt;</replaceable> ::=
-  FUNCTION <replaceable>func_name</replaceable> [(<replaceable>&lt;in_params&gt;</replaceable>)] 
-  RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>] 
-  [DETERMINISTIC]    
-                            
-<replaceable>&lt;procedure_decl&gt;</replaceable> ::=
-  PROCEDURE <replaceable>proc_name</replaceable> [(<replaceable>&lt;in_params&gt;</replaceable>)] 
-  [RETURNS (<replaceable>&lt;out_params&gt;</replaceable>)]                           
-
-<replaceable>&lt;package_body_item&gt;</replaceable> ::=
-    <replaceable>&lt;function_impl&gt;</replaceable> 
-  | <replaceable>&lt;procedure_impl&gt;</replaceable>
-
-<replaceable>&lt;function_impl&gt;</replaceable> ::=
-  FUNCTION <replaceable>func_name</replaceable> [(<replaceable>&lt;in_impl_params&gt;</replaceable>)] 
-  RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>] 
-  [DETERMINISTIC] 
-  <replaceable>&lt;routine body&gt;</replaceable> 
-      
-<replaceable>&lt;procedure_impl&gt;</replaceable> ::=
-  PROCEDURE <replaceable>proc_name</replaceable> [(<replaceable>&lt;in_impl_params&gt;</replaceable>)] 
-  [RETURNS (<replaceable>&lt;out_params&gt;</replaceable>)]                             
-  <replaceable>&lt;routine body&gt;</replaceable>          
-
-<replaceable>&lt;routine body&gt;</replaceable> ::= <replaceable>&lt;sql routine body&gt;</replaceable> | <replaceable>&lt;external body reference&gt;</replaceable>                   
-    
-<replaceable>&lt;sql routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                    
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
-                            
-                </programlisting>
-                </para>
-            </formalpara>
-
-            <para>После модификации/пересоздания заголовка пакета, исходный код тела пакета
-                сохраняется. При этом код тела пакета может стать невалидным. Столбец
-                RDB$PACKAGES.RDB$VALID_BODY_FLAG отображает состояние тела пакета.</para>
-
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="ddl-package-alter">ALTER PACKAGE</link>, <link
-                        linkend="ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.</para>
-            </formalpara>
         </section>
 
         <section xml:id="psql-package-drop">
             <title>Удаление пакета</title>
 
-            <formalpara>
-                <title>Синтаксис:</title>
+            <para>Для получения информации об удалении пакета см. <link linkend="ddl-package-drop"
+                    >DROP PACKAGE</link>, <link linkend="ddl-package-body-drop">DROP PACKAGE
+                    BODY</link>. </para>
 
-                <para>
-                    <programlisting>
-DROP PACKAGE <replaceable>package_name</replaceable> 
-
-DROP PACKAGE BODY <replaceable>package_name</replaceable>  
-                </programlisting>
-                </para>
-            </formalpara>
-
-            <para>Перед удалением заголовка пакета необходимо удалить тело пакета.</para>
-
-            <formalpara>
-                <title>См. также:</title>
-
-                <para>
-                    <link linkend="ddl-package-drop">DROP PACKAGE</link>, <link
-                        linkend="ddl-package-body-drop">DROP PACKAGE BODY</link>.</para>
-            </formalpara>
         </section>
     </section>
 
@@ -1382,235 +935,34 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
         <section xml:id="psql-triggers-create">
             <title>Создание триггера</title>
 
-            <formalpara>
-                <title>Синтаксис (не полный):</title>
+            <para>Для получения информации о создании триггеров см. <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-trigger-create">CREATE
+                    TRIGGER</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>, <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-trigger-recreate">
+                    RECREATE TRIGGER</link> в главе <quote>Операторы определения данных DDL</quote>. </para>
 
-                <para><programlisting>
-{CREATE [OR ALTER] | RECREATE} TRIGGER <replaceable>trigname</replaceable> {   
-    <replaceable>&lt;relation_trigger_legacy&gt;</replaceable>
-  | <replaceable>&lt;relation_trigger_sql2003&gt;</replaceable>
-  | <replaceable>&lt;database_trigger&gt;</replaceable> 
-  | <replaceable>&lt;ddl_trigger&gt;</replaceable> }                     
-<replaceable>&lt;routine body&gt;</replaceable>
-
-<replaceable>&lt;relation_trigger_legacy&gt;</replaceable> ::= 
-  FOR {<replaceable>tablename</replaceable> | <replaceable>viewname</replaceable>}
-  [ACTIVE | INACTIVE]
-  {BEFORE | AFTER} <replaceable>&lt;mutation_list&gt;</replaceable>
-  [POSITION <replaceable>number</replaceable>]
-
-<replaceable>&lt;relation_trigger_sql2003&gt;</replaceable> ::= 
-  [ACTIVE | INACTIVE]
-  {BEFORE | AFTER} <replaceable>&lt;mutation_list&gt;</replaceable>
-  ON {<replaceable>tablename</replaceable> | <replaceable>viewname</replaceable>}
-  [POSITION <replaceable>number</replaceable>]
-
-<replaceable>&lt;database_trigger&gt;</replaceable> ::= 
-  [ACTIVE | INACTIVE] 
-  ON <replaceable>db_event</replaceable>
-  [POSITION <replaceable>number</replaceable>]
-                    
-<replaceable>&lt;ddl_trigger&gt;</replaceable> ::=  
-  [ACTIVE | INACTIVE]
-  {BEFORE | AFTER} <replaceable>&lt;ddl_events&gt;</replaceable>
-  [POSITION <replaceable>number</replaceable>]                    
-
-<replaceable>&lt;mutation_list&gt;</replaceable> ::= <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable>]]
-
-<replaceable>&lt;mutation&gt;</replaceable> ::= { INSERT | UPDATE | DELETE }
-
-<replaceable>&lt;db_event&gt;</replaceable> ::= { 
-    CONNECT 
-  | DISCONNECT 
-  | TRANSACTION START 
-  | TRANSACTION COMMIT 
-  | TRANSACTION ROLLBACK 
-}
-
-<replaceable>&lt;ddl_events&gt;</replaceable> ::= {
-    ANY DDL STATEMENT
-  | <replaceable>&lt;ddl_event_item&gt;</replaceable> [{OR <replaceable>&lt;ddl_event_item&gt;</replaceable>} ...]
-}
-
-<replaceable>&lt;ddl_event_item&gt;</replaceable> ::=
-    CREATE TABLE | ALTER TABLE | DROP TABLE
-  | CREATE PROCEDURE | ALTER PROCEDURE | DROP PROCEDURE
-  | CREATE FUNCTION | ALTER FUNCTION | DROP FUNCTION
-  | CREATE TRIGGER | ALTER TRIGGER | DROP TRIGGER
-  | CREATE EXCEPTION | ALTER EXCEPTION | DROP EXCEPTION
-  | CREATE VIEW | ALTER VIEW | DROP VIEW
-  | CREATE DOMAIN | ALTER DOMAIN | DROP DOMAIN
-  | CREATE ROLE | ALTER ROLE | DROP ROLE
-  | CREATE SEQUENCE | ALTER SEQUENCE | DROP SEQUENCE
-  | CREATE USER | ALTER USER | DROP USER
-  | CREATE INDEX | ALTER INDEX | DROP INDEX
-  | CREATE COLLATION | DROP COLLATION
-  | ALTER CHARACTER SET
-  | CREATE PACKAGE | ALTER PACKAGE | DROP PACKAGE
-  | CREATE PACKAGE BODY | DROP PACKAGE BODY
-  | CREATE MAPPING | ALTER MAPPING | DROP MAPPING  
-  
-<replaceable>&lt;routine body&gt;</replaceable> ::=
-    <replaceable>&lt;SQL routine spec&gt;</replaceable>
-  | <replaceable>&lt;external body reference&gt;</replaceable>
-                    
-<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
-  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
-
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
-
-     
-<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                      
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
-                    
-                       </programlisting></para>
-            </formalpara>
-
-            <para>Заголовок триггера обязательно содержит имя триггера, которое должно быть
-                уникальным среди имён триггеров, и событие при котором срабатывает триггер. Если
-                триггер создаётся для события таблицы, то необходимо также указать фазу события и
-                имя таблицы.</para>
-
-            <para>Тело триггера может содержать объявление локальных переменных и курсоров. Оно
-                также содержит блок операторов PSQL, который может быть пустым.</para>
-
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-trigger-create">CREATE TRIGGER</link>).</para>
         </section>
 
         <section xml:id="psql-triggers-alter">
             <title>Изменение триггера</title>
 
-            <para>В существующих триггерах можно изменить состояние активности, фазу события и
-                событие (события) таблицы (представления), позицию триггера и его тело. Триггеры на
-                событие (события) таблицы (представления) не могут быть изменены в триггеры на
-                событие базы данных и наоборот. Если какой-либо элемент не указан, то он остаётся
-                без изменений.</para>
-            <formalpara>
-                <title>Синтаксис (не полный):</title>
-
-                <para><programlisting>
-ALTER TRIGGER <replaceable>trigname</replaceable> 
-[ACTIVE | INACTIVE]
-[
-    {{BEFORE | AFTER} {<replaceable>&lt;mutation_list&gt;</replaceable> | <replaceable>&lt;ddl_events&gt;</replaceable>}}
-  | ON <replaceable>db_event</replaceable>                 
-]
-[POSITION <replaceable>number</replaceable>]                      
-[<replaceable>&lt;routine body&gt;</replaceable>]
-                  
-<replaceable>&lt;mutation_list&gt;</replaceable> ::= <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable>]]
-
-<replaceable>&lt;mutation&gt;</replaceable> ::= { INSERT | UPDATE | DELETE }
-
-<replaceable>&lt;db_event&gt;</replaceable> ::= { 
-    CONNECT 
-  | DISCONNECT 
-  | TRANSACTION START 
-  | TRANSACTION COMMIT 
-  | TRANSACTION ROLLBACK 
-}
-
-<replaceable>&lt;ddl_events&gt;</replaceable> ::= {
-    ANY DDL STATEMENT
-  | <replaceable>&lt;ddl_event_item&gt;</replaceable> [{OR <replaceable>&lt;ddl_event_item&gt;</replaceable>} ...]
-}
-
-<replaceable>&lt;ddl_event_item&gt;</replaceable> ::=
-    CREATE TABLE | ALTER TABLE | DROP TABLE
-  | CREATE PROCEDURE | ALTER PROCEDURE | DROP PROCEDURE
-  | CREATE FUNCTION | ALTER FUNCTION | DROP FUNCTION
-  | CREATE TRIGGER | ALTER TRIGGER | DROP TRIGGER
-  | CREATE EXCEPTION | ALTER EXCEPTION | DROP EXCEPTION
-  | CREATE VIEW | ALTER VIEW | DROP VIEW
-  | CREATE DOMAIN | ALTER DOMAIN | DROP DOMAIN
-  | CREATE ROLE | ALTER ROLE | DROP ROLE
-  | CREATE SEQUENCE | ALTER SEQUENCE | DROP SEQUENCE
-  | CREATE USER | ALTER USER | DROP USER
-  | CREATE INDEX | ALTER INDEX | DROP INDEX
-  | CREATE COLLATION | DROP COLLATION
-  | ALTER CHARACTER SET
-  | CREATE PACKAGE | ALTER PACKAGE | DROP PACKAGE
-  | CREATE PACKAGE BODY | DROP PACKAGE BODY 
-  
-<replaceable>&lt;routine body&gt;</replaceable> ::=
-    <replaceable>&lt;SQL routine spec&gt;</replaceable>
-  | <replaceable>&lt;external body reference&gt;</replaceable>
-                    
-<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
-  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
-
-
-<replaceable>&lt;rights clause&gt;</replaceable> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
-
-     
-<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
-  AS       
-    [<replaceable>&lt;declarations&gt;</replaceable>]       
-  BEGIN       
-    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
-  END                      
-
-<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
-
-<replaceable>&lt;declare_item&gt;</replaceable> ::=      
-    <replaceable>&lt;declare_var&gt;</replaceable>; 
-  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
-  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
-  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
-
-<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
-
-<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable>
-<replaceable>&lt;external body reference&gt;</replaceable> ::=
-  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
-
-<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'    
- 
-                       </programlisting></para>
-            </formalpara>
-
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-trigger-alter">ALTER TRIGGER</link>).</para>
+            <para>Для получения информации об изменении триггеров см. <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-trigger-alter">ALTER
+                    TRIGGER</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>, <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-trigger-recreate">
+                    RECREATE TRIGGER</link> в главе <quote>Операторы определения данных
+                DDL</quote>.</para>
         </section>
 
         <section xml:id="psql-triggers-drop">
             <title>Удаление триггера</title>
 
-            <para>Для удаления триггера используется оператор DROP TRIGGER.</para>
-            <formalpara>
-                <title>Синтаксис:</title>
+            <para>Для получения информации об удалении триггеров см. <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="ddl-trigger-drop"> DROP
+                    TRIGGER</link> в главе <quote>Операторы определения данных DDL</quote>. </para>
 
-                <para><programlisting>
-DROP TRIGGER <replaceable>trigname</replaceable>;
-                       </programlisting></para>
-            </formalpara>
-            <para>Более подробная информация приведена в главе Операторы DDL (<link
-                    linkend="ddl-trigger-drop">DROP TRIGGER</link>).</para>
         </section>
     </section>
 
@@ -1767,23 +1119,16 @@ DECLARE [VARIABLE] <replaceable>varname</replaceable> <replaceable>&lt;type&gt;<
 <replaceable>&lt;value&gt;</replaceable> ::= {<replaceable>literal</replaceable> | NULL | <replaceable>context_var</replaceable>}
 
 <replaceable>&lt;type&gt;</replaceable> ::= 
-    <replaceable>&lt;datatype&gt;</replaceable>
-  | [TYPE OF] <replaceable>domain</replaceable>
-  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>
+    <replaceable>&lt;non_array_datatype&gt;</replaceable>             
+  | [TYPE OF] <replaceable>domain</replaceable>             
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>  
 
-<replaceable>&lt;datatype&gt;</replaceable> ::=
-    {SMALLINT | INT[EGER] | BIGINT}
-  | BOOLEAN
-  | {FLOAT | DOUBLE PRECISION}
-  | DECFLOAT[({16 | 34})]
-  | {DATE | TIME | TIMESTAMP}
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])]
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)]
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}]
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])]
+<replaceable>&lt;non_array_datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>  
                 </programlisting></para>
             </formalpara>
 
@@ -1821,9 +1166,9 @@ DECLARE [VARIABLE] <replaceable>varname</replaceable> <replaceable>&lt;type&gt;<
                                 </entry>
                             </row>
                             <row>
-                                <entry><replaceable>datatype</replaceable></entry>
+                                <entry><replaceable>non_array_datatype</replaceable></entry>
                                 <entry>
-                                    <para>Тип данных SQL.</para>
+                                    <para>Тип данных SQL кроме массивов.</para>
                                 </entry>
                             </row>
                             <row>
@@ -1836,61 +1181,6 @@ DECLARE [VARIABLE] <replaceable>varname</replaceable> <replaceable>&lt;type&gt;<
                                 <entry><replaceable>domain</replaceable></entry>
                                 <entry>
                                     <para>Домен.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>rel</replaceable></entry>
-                                <entry>
-                                    <para>Имя таблицы или представления.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>col</replaceable></entry>
-                                <entry>
-                                    <para>Имя столбца таблицы или представления.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Точность. От 1 до 38.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Масштаб. От 0 до 38, должно быть меньше или равно
-                                            <replaceable>precision</replaceable>.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>charset</replaceable></entry>
-                                <entry>
-                                    <para>Набор символов.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB.</para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seqlen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535.</para>
                                 </entry>
                             </row>
                         </tbody>

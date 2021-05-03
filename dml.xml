@@ -1,7 +1,7 @@
 <!DOCTYPE chapter>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="dml" xml:lang="ru">
     <info>
-        <title>Операторы DML</title>
+        <title>Операторы обработки данных (DML)</title>
     </info>
 
     <section xml:id="dml-select">
@@ -6317,7 +6317,9 @@ ON <replaceable>&lt;join condition&gt;</replaceable>
 <replaceable>&lt;merge when&gt;</replaceable> [<replaceable>&lt;merge when&gt;</replaceable> ...]   
 [RETURNING {<replaceable>&lt;returning_list&gt;</replaceable> | [{OLD. | NEW.}]* } [INTO <replaceable>&lt;variable_list&gt;</replaceable>]]       
 
-<replaceable>&lt;merge when&gt;</replaceable> ::= <replaceable>&lt;merge when matched&gt;</replaceable> | <replaceable>&lt;merge when not matched&gt;</replaceable>       
+<replaceable>&lt;merge when&gt;</replaceable> ::= 
+    <replaceable>&lt;merge when matched&gt;</replaceable> 
+  | <replaceable>&lt;merge when not matched&gt;</replaceable>       
 
 <replaceable>&lt;merge when matched&gt;</replaceable> ::= 
   WHEN MATCHED [ AND <replaceable>&lt;condition&gt;</replaceable> ] 
@@ -6644,9 +6646,14 @@ INTO :OLD_QUANTITY, :NEW_QUANTITY, :DIFF_QUANTITY
 
             <para><programlisting>
 EXECUTE PROCEDURE <replaceable>procname</replaceable>
-    [<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...]] 
-  | ([<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...]])
-[RETURNING_VALUES <replaceable>&lt;outvar&gt;</replaceable> [, <replaceable>&lt;outvar&gt;</replaceable> ...]]
+   [{ <replaceable>&lt;inparam-list&gt;</replaceable> | ( <replaceable>&lt;inparam-list&gt;</replaceable> ) }]
+   [RETURNING_VALUES { <replaceable>&lt;outvar-list&gt;</replaceable> | ( <replaceable>&lt;outvar-list&gt;</replaceable> ) }]                
+                
+<replaceable>&lt;inparam-list&gt;</replaceable> ::=
+  <replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...]
+
+<replaceable>&lt;outvar-list&gt;</replaceable> ::=
+  <replaceable>&lt;outvar&gt;</replaceable> [, <replaceable>&lt;outvar&gt;</replaceable> ...]
  
 <replaceable>&lt;outvar&gt;</replaceable> ::= [:]<replaceable>varname</replaceable>                      
             </programlisting></para>
@@ -6797,23 +6804,17 @@ END    
 <replaceable>&lt;param_decl&gt;</replaceable> ::= <replaceable>paramname</replaceable> <replaceable>&lt;type&gt;</replaceable> [NOT NULL] [COLLATE <replaceable>collation</replaceable>]    
   
 <replaceable>&lt;type&gt;</replaceable> ::= 
-    <replaceable>&lt;datatype&gt;</replaceable>             
+    <replaceable>&lt;non_array_datatype&gt;</replaceable>             
   | [TYPE OF] <replaceable>domain</replaceable>             
   | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>  
 
-<replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INT[EGER] | BIGINT} 
-  | BOOLEAN 
-  | {FLOAT | DOUBLE PRECISION} 
-  | {DATE | TIME | TIMESTAMP}
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])] 
-                
+<replaceable>&lt;non_array_datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                                    
                 
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
 
@@ -6901,9 +6902,9 @@ END    
                             </entry>
                         </row>
                         <row>
-                            <entry><replaceable>datatype</replaceable></entry>
+                            <entry><replaceable>non_array_datatype</replaceable></entry>
                             <entry>
-                                <para>Тип данных SQL.</para>
+                                <para>Тип данных SQL за исключение массивов.</para>
                             </entry>
                         </row>
                         <row>
@@ -6928,49 +6929,6 @@ END    
                             <entry><replaceable>col</replaceable></entry>
                             <entry>
                                 <para>Имя столбца таблицы или представления.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>precision</replaceable></entry>
-                            <entry>
-                                <para>Точность. От 1 до 38.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>scale</replaceable></entry>
-                            <entry>
-                                <para>Масштаб. От 0 до 38, должно быть меньше или равно
-                                        <replaceable>precision</replaceable>.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>size</replaceable></entry>
-                            <entry>
-                                <para>Максимальный размер строки в символах.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>charset</replaceable></entry>
-                            <entry>
-                                <para>Набор символов. </para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>subtype_num</replaceable></entry>
-                            <entry>
-                                <para>Номер подтипа BLOB.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>subtype_name</replaceable></entry>
-                            <entry>
-                                <para>Мнемоника подтипа BLOB.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>seqlen</replaceable></entry>
-                            <entry>
-                                <para>Размер сегмента, не может превышать 65535. </para>
                             </entry>
                         </row>
                     </tbody>
