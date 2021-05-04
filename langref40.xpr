@@ -15,14 +15,10 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>DocBook PDF FBDoc</String>
-                                        <String>DocBook HTML FBDoc</String>
-                                        <String>DocBook HTML - Chunk FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
-                                        <String>XSL</String>
-                                        <String>XSL</String>
                                         <String>XSL</String>
                                     </list>
                                 </field>
@@ -359,7 +355,6 @@
         <folder path="xsl/"/>
         <file name="agg-func.xml"/>
         <file name="charset-coll.xml"/>
-        <file name="common.xml"/>
         <file name="context-var.xml"/>
         <file name="ddl.xml"/>
         <file name="dml.xml"/>
@@ -367,6 +362,7 @@
         <file name="internal-func.xml"/>
         <file name="intro.xml"/>
         <file name="keywords.xml"/>
+        <file name="langref-commons.xml"/>
         <file name="langref.xml"/>
         <file name="langstruct.xml"/>
         <file name="license.xml"/>

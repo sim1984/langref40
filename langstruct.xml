@@ -303,7 +303,7 @@ FullName
                 </literallayout>
             </para>
         </formalpara>
-        <para>Подробнее об операторах см. <link linkend="common-expr"
+        <para>Подробнее об операторах см. <link linkend="langref-commons-expressions"
             >Выражения</link>.</para>
     </section>
     <section xml:id="langstruct-comments">

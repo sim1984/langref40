@@ -2123,7 +2123,7 @@ C = CASE
 
                 <para>
                     <link linkend="psql-statements-while">WHILE ... DO</link>, <link
-                        linkend="common-expr-cond-case">CASE</link>.</para>
+                        linkend="langref-commons-conditional-case">CASE</link>.</para>
             </formalpara>
         </section>
         <section xml:id="psql-statements-while">

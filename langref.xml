@@ -6,7 +6,7 @@
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0</subtitle>
-        <edition>3 мая 2021 — v.0001-1</edition>
+        <edition>4 мая 2021 — v.0001-1</edition>
 
         <authorgroup>
             <author>
@@ -51,7 +51,7 @@
     <xi:include href="intro.xml" xpointer="element(/1)"/>
     <xi:include href="langstruct.xml" xpointer="element(/1)"/>
     <xi:include href="types.xml" xpointer="element(/1)"/>
-    <xi:include href="common.xml" xpointer="element(/1)"/>
+    <xi:include href="langref-commons.xml" xpointer="element(/1)"/>
     <xi:include href="ddl.xml" xpointer="element(/1)"/>
     <xi:include href="dml.xml" xpointer="element(/1)"/>
     <xi:include href="psql.xml" xpointer="element(/1)"/>

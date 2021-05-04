@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="common" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-commons" xml:lang="ru">
     <info>
         <title>Общие элементы языка</title>
     </info>
@@ -8,7 +8,7 @@
         SQL — выражения, которые используются для извлечения и работают на утверждениях о данных, и
         предикатов, которые проверяют истинность этих утверждений.</para>
 
-    <section xml:id="common-expr">
+    <section xml:id="langref-commons-expressions">
         <info>
             <title>Выражения</title>
         </info>
@@ -18,7 +18,7 @@
             константы, литералы, различные операторы и предикаты, а так же другие выражения. Полный
             список допустимых символов (tokens) в выражениях описан ниже.</para>
         <para>
-            <table xml:id="common-tbl-elem" frame="all">
+            <table xml:id="langref-commons-tbl-elem" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание элементов языка</title>
                 <tgroup cols="2">
@@ -78,7 +78,7 @@
                                 ANY, SOME могут быть использованы только с подзапросами.</entry>
                         </row>
                         <row>
-                            <entry>Константы</entry>
+                            <entry>Константы и литералы</entry>
                             <entry>Числа, заключённые в апострофы строковые литералы, логические
                                 значения TRUE, FALSE и UNKNOWN, псевдозначение NULL.</entry>
                         </row>
@@ -166,17 +166,18 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                 </tgroup>
             </table>
         </para>
-        <section xml:id="common-expr-constants">
+        <section xml:id="langref-commons-constants">
             <info>
-                <title>Константы</title>
+                <title>Литералы (константы)</title>
             </info>
-            <para>Константа это значение, подставляемое непосредственно в SQL оператор, которое не
-                получено из выражения, параметра, ссылки на столбец или переменной. Константой может
-                быть строка или число.</para>
+            <para>Литерал или константа — это значение, подставляемое непосредственно в SQL
+                оператор, которое не получено из выражения, параметра, ссылки на столбец или
+                переменной. </para>
 
-            <section xml:id="common-expr-string-constants">
-                <title>Строковые константы (литералы)</title>
-                <para>Строковая константа это последовательность символов, заключенных между парой
+            <section xml:id="langref-commons-string-constant">
+                <title>Строковые литералы (константы)</title>
+
+                <para>Строковый литерал это последовательность символов, заключенных между парой
                     апострофов (<quote>одинарных кавычек</quote>). Максимальная длина строковой
                     константы составляет 65535 байт; максимальная количество символов будет
                     определяться количеством байт, используемых для кодирования каждого
@@ -212,13 +213,15 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                     <para>Предполагается, что набор символов строковой константы совпадает с набором
                         символов столбца предназначенного для её сохранения. </para>
                 </note>
-                <section xml:id="common-expr-string-constants-hexstrings">
+
+                <section xml:id="langref-commons-hexstrings">
                     <title>Строковые константы в шестнадцатеричной нотации</title>
+
                     <para>Начиная с Firebird 2.5 строковые константы могут быть записаны в
                         шестнадцатеричной нотации, так называемые <quote>двоичные строки</quote>.
                         Каждая пара шестнадцатеричных цифр определяет один байт в строке. Строки
                         введённые таким образом будут иметь кодировку OCTETS по умолчанию, но <link
-                            linkend="common-expr-string-constants-introducer">вводный синтаксис
+                            linkend="langref-commons-introducer-syntax">вводный синтаксис
                             (introducer syntax)</link> может быть использован для принудительной
                         интерпретации строки в другом наборе символов. </para>
                     <formalpara>
@@ -264,8 +267,72 @@ SELECT _utf8 x'53C3A46765' FROM rdb$database
                             в любой позиции в строке. </para>
                     </note>
                 </section>
-                <section xml:id="common-expr-string-constants-introducer">
+
+                <section xml:id="langref-commons-qstrings">
+                    <title>Альтернативы для апострофов в строковых литералах</title>
+
+                    <indexterm><primary>Q</primary></indexterm>
+                    <para>Вместо двойного (экранированного) апострофа вы можете использовать другой
+                        символ или пару символов.</para>
+                    <para>Ключевое слово q или Q предшествующее строке в кавычках сообщает парсеру,
+                        что некоторые левые и правые пары одинаковых символов являются разделителями
+                        для встроенного строкового литерала.</para>
+                    <formalpara>
+                        <title>Синтаксис:</title>
+
+                        <para><literallayout class="monospaced">
+<replaceable>&lt;alternate string literal&gt;</replaceable> ::=
+  { q | Q } <replaceable>&lt;quote&gt;</replaceable> <replaceable>&lt;alternate start char&gt;</replaceable> 
+  [ { <replaceable>&lt;char&gt;</replaceable> }... ] 
+  <replaceable>&lt;alternate end char&gt;</replaceable> <replaceable>&lt;quote&gt;</replaceable>
+            </literallayout></para>
+                    </formalpara>
+                    <para><emphasis>Правила использования:</emphasis></para>
+                    <para>Когда <replaceable>&lt;alternate start char&gt;</replaceable> является
+                        одним из символов '(', '{', '[' или '&lt;', то <replaceable>&lt;alternate
+                            end char&gt;</replaceable> должен быть использован в паре с
+                        соответствующим &quot;партнёром&quot;, а именно ')', '}', ']' или '&gt;'. В
+                        других случаях <replaceable>&lt;alternate end char&gt;</replaceable>
+                        совпадает с <replaceable>&lt;alternate start char&gt;</replaceable>. </para>
+                    <para>Внутри строки, т.е. <replaceable>&lt;char&gt;</replaceable> элементах,
+                        одиночные (не экранированные) кавычки могут быть использованы. Каждая
+                        кавычка будет частью результирующей строки. </para>
+                    <para><emphasis>Примеры:</emphasis></para>
+                    <example>
+                        <title>Использование альтернативных апострофов в строковых литералах</title>
+                        <para>
+                            <programlisting>
+-- result: abc{def}ghi
+<emphasis role="bold">SELECT</emphasis> Q'{abc{def}ghi}' <emphasis role="bold">FROM</emphasis> rdb$database; 
+
+-- result: That's a string
+<emphasis role="bold">SELECT</emphasis> Q'!That's a string!' <emphasis role="bold">FROM</emphasis> rdb$database;                         
+                    </programlisting>
+                            Динамическая сборка запроса использующего строковые литералы.
+                            <programlisting language="sql">
+EXECUTE BLOCK
+RETURNS (
+  RDB$TRIGGER_NAME CHAR(64)
+)
+AS
+  DECLARE VARIABLE S VARCHAR(8191);
+BEGIN
+  S = 'SELECT RDB$TRIGGER_NAME FROM RDB$TRIGGERS WHERE RDB$RELATION_NAME IN ';
+  S = S || Q'! ('SALES_ORDER', 'SALES_ORDER_LINE')!';
+  FOR
+    EXECUTE STATEMENT :S
+    INTO :RDB$TRIGGER_NAME
+  DO
+    SUSPEND;
+END                        
+                    </programlisting>
+                        </para>
+                    </example>
+                </section>
+
+                <section xml:id="langref-commons-introducer-syntax">
                     <title>Вводный синтаксис для строковых литералов</title>
+
                     <para>При необходимости, строковому литералу может предшествовать имя набор
                         символов, который начинается с префикса подчеркивания <quote>_</quote>. Это
                         известно как вводный синтаксис (Introducer syntax). Его цель заключается в
@@ -285,8 +352,10 @@ VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
                     </formalpara>
                 </section>
             </section>
-            <section xml:id="common-expr-number-constants">
+
+            <section xml:id="langref-commons-number-constant">
                 <title>Числовые константы</title>
+
                 <para>Числовая константа — это любое правильное число в одной из поддерживаемых
                     нотаций: <itemizedlist>
                         <listitem>
@@ -304,8 +373,63 @@ VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
                         </listitem>
                     </itemizedlist>
                 </para>
-                <section xml:id="common-expr-number-constants-hex">
+                <para>Далее показаны форматы числовых литералов и их типы. Где
+                        <code>&lt;d&gt;</code> - десятичная цифра, <code>&lt;h&gt;</code> -
+                    шестнадцатеричная цифра.</para>
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Формат числовых констант</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.5*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Формат</entry>
+                                    <entry align="center">Тип</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><code>&lt;d&gt;[&lt;d&gt; ...]</code></entry>
+                                    <entry>
+                                        <para><code>INTEGER</code> или <code>BIGINT</code>.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><code>0{x|X} &lt;h&gt;&lt;h&gt;[&lt;h&gt;&lt;h&gt;
+                                            ...​]</code></entry>
+                                    <entry>
+                                        <para><code>INTEGER</code> для 1-8
+                                                <code>&lt;h&gt;&lt;h&gt;</code> пар или
+                                                <code>BIGINT</code> для 9-16 пар.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><code>&lt;d&gt;[&lt;d&gt; ...].[&lt;d&gt;
+                                        ...]</code></entry>
+                                    <entry>
+                                        <para><code>NUMERIC(18, <emphasis role="italic"
+                                                >n</emphasis>)</code> где <emphasis role="italic"
+                                                >n</emphasis> зависит от количества цифр после
+                                            десятичной точки.</para>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><code>&lt;d&gt;[&lt;d&gt; ...][.[&lt;d&gt;
+                                            ...]]E&lt;d&gt;[&lt;d&gt; ...]</code></entry>
+                                    <entry>
+                                        <para><code>DOUBLE PRECISION</code>.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <section xml:id="langref-commons-hexnumbers">
                     <title>Шестнадцатеричная нотация чисел</title>
+
                     <para>Начиная с Firebird 2.5 целочисленные значения могут быть записаны в
                         шестнадцатеричной системе счисления. Числа состоящие из 1-8
                         шестнадцатеричных цифр будут интерпретированы как INTEGER, состоящие из 9-16
@@ -339,7 +463,8 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                         </para>
                     </formalpara>
                 </section>
-                <section xml:id="common-expr-number-constants-hex-valrange">
+
+                <section xml:id="langref-commons-hexranges">
                     <title>Диапазон значений шестнадцатеричных чисел</title>
                     <para><itemizedlist>
                             <listitem>
@@ -398,17 +523,24 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                         </itemizedlist></para>
                 </section>
             </section>
+
+            <section xml:id="langref-commons-boolean-literal">
+                <title>Логические литералы</title>
+
+                <para>Логический литерал может быть одним из следующих значений: <code>TRUE</code>,
+                        <code>FALSE</code> или <code>UNKNOWN</code>. </para>
+            </section>
         </section>
-        <section xml:id="common-expr-operators">
+        <section xml:id="langref-commons-sqloperators">
             <info>
                 <title>Операторы SQL</title>
             </info>
             <para>SQL операторы включают в себя операторы для сравнения, вычисления, оценки и
                 конкатенации значений.</para>
-            <section xml:id="common-expr-operators-prioritet">
-                <info>
-                    <title>Приоритет операторов</title>
-                </info>
+
+            <section xml:id="langref-commons-operpreced">
+                <title>Приоритет операторов</title>
+
                 <para>Приоритет определяет порядок, в котором операторы и получаемые с помощью них
                     значения вычисляются в выражении. </para>
                 <para>Все операторы разбиты на 4 типа. Каждый тип оператора имеет свой приоритет.
@@ -418,7 +550,7 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                     направо. Для изменения порядка вычислений операции могут быть сгруппированы с
                     помощью круглых скобок. </para>
                 <para>
-                    <table xml:id="common-tbl-operpreced" frame="all">
+                    <table xml:id="langref-commons-tbl-operpreced" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Приоритеты типов операторов</title>
                         <tgroup cols="3">
@@ -464,13 +596,13 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                     </table>
                 </para>
             </section>
-            <section xml:id="common-expr-operators-concat">
-                <info>
-                    <title>Оператор конкатенации</title>
-                </info>
-                <para>Оператор конкатенации <command>||</command> соединяет две символьные строки и создаёт одну
-                    строку. Символьные стоки могут быть константами или значениями, полученными из
-                    столбцов или других выражений. </para>
+
+            <section xml:id="langref-commons-concat">
+                <title>Оператор конкатенации</title>
+
+                <para>Оператор конкатенации <command>||</command> соединяет две символьные строки и
+                    создаёт одну строку. Символьные стоки могут быть константами или значениями,
+                    полученными из столбцов или других выражений. </para>
 
                 <formalpara>
                     <title>Пример:</title>
@@ -484,12 +616,12 @@ FROM EMPLOYEE
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="common-expr-operators-arith">
-                <info>
-                    <title>Арифметические операторы</title>
-                </info>
+
+            <section xml:id="langref-commons-arith">
+                <title>Арифметические операторы</title>
+
                 <para>
-                    <table xml:id="common-tbl-arithpreced" frame="all">
+                    <table xml:id="langref-commons-tbl-arithpreced" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Приоритет арифметических операторов</title>
                         <tgroup cols="3">
@@ -551,12 +683,12 @@ SET A = 4 + 1/(B-C)*D
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="common-expr-operators-comp">
-                <info>
-                    <title>Операторы сравнения</title>
-                </info>
+
+            <section xml:id="langref-commons-compar">
+                <title>Операторы сравнения</title>
+
                 <para>
-                    <table xml:id="common-tbl-compar" frame="all">
+                    <table xml:id="langref-commons-tbl-compar" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Операторы сравнения</title>
                         <tgroup cols="3">
@@ -577,7 +709,7 @@ SET A = 4 + 1/(B-C)*D
                                         значением NULL или соответствует логическому значению в
                                         правой части.</entry>
                                     <entry>1</entry>
-                                </row>                                
+                                </row>
                                 <row valign="middle">
                                     <entry><command>=</command></entry>
                                     <entry>Равно, идентично</entry>
@@ -623,12 +755,12 @@ SET A = 4 + 1/(B-C)*D
                     </table>
                 </para>
                 <para>В эту же группу входят предикаты сравнения <link
-                        linkend="common-predicats-othercompare-distinct">IS DISTINCT FROM</link>,
-                        <link linkend="common-predicats-othercompare-between">BETWEEN</link>, <link
-                        linkend="common-predicats-existence-in">IN</link>, <link
-                        linkend="common-predicats-othercompare-like">LIKE</link>, <link
-                        linkend="common-predicats-othercompare-containing">CONTAINING</link>, <link
-                        linkend="common-predicats-othercompare-starting">SIMILAR TO</link> и другие. </para>
+                        linkend="langref-commons-isnotdistinct">IS DISTINCT FROM</link>, <link
+                        linkend="langref-commons-predbetween">BETWEEN</link>, <link
+                        linkend="langref-commons-in">IN</link>, <link
+                        linkend="langref-commons-predlike">LIKE</link>, <link
+                        linkend="langref-commons-predcontaining">CONTAINING</link>, <link
+                        linkend="langref-commons-predstartwith">SIMILAR TO</link> и другие. </para>
                 <formalpara>
                     <title>Пример:</title>
                     <para>
@@ -644,12 +776,13 @@ IF (SALARY &gt; 1400) THEN
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="common-predicats-othercompare">Другие предикаты
+                        <link linkend="langref-commons-othercomppreds">Другие предикаты
                             сравнения</link>. </para>
 
                 </formalpara>
             </section>
-            <section xml:id="common-expr-operators-logic">
+
+            <section xml:id="langref-commons-logical">
                 <info>
                     <title>Логические операторы</title>
                     <keywordset>
@@ -662,7 +795,7 @@ IF (SALARY &gt; 1400) THEN
                 <indexterm><primary>AND</primary></indexterm>
                 <indexterm><primary>OR</primary></indexterm>
                 <para>
-                    <table xml:id="common-tbl-logical" frame="all">
+                    <table xml:id="langref-commons-tbl-logical" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Приоритет логических операторов</title>
                         <tgroup cols="3">
@@ -713,8 +846,8 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
                 </formalpara>
             </section>
         </section>
-        
-        <section xml:id="icommon-expr-attimezone">
+
+        <section xml:id="langref-commons-at">
             <info>
                 <title>AT</title>
                 <keywordset>
@@ -724,7 +857,7 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
             <indexterm><primary>AT</primary></indexterm>
             <formalpara>
                 <title>Доступно в:</title>
-                
+
                 <para>DSQL, PSQL.</para>
             </formalpara>
             <formalpara>
@@ -742,11 +875,10 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
                         </programlisting>
                 </para>
             </formalpara>
-            
-            <para>Преобразует время или временную метку в указанный часовой пояс. Если
-                используется ключевое слово LOCAL, то преобразование происходит в часовой пояс
-                сессии.</para>
-            
+
+            <para>Преобразует время или временную метку в указанный часовой пояс. Если используется
+                ключевое слово LOCAL, то преобразование происходит в часовой пояс сессии.</para>
+
             <formalpara>
                 <title>Примеры:</title>
                 <para>
@@ -766,9 +898,9 @@ select timestamp '2018-01-01 12:00 GMT' at local
                     </example>
                 </para>
             </formalpara>
-        </section>        
-        
-        <section xml:id="common-expr-nextvalue">
+        </section>
+
+        <section xml:id="langref-commons-conditional-nxtvlufor">
             <info>
                 <title>NEXT VALUE FOR</title>
                 <keywordset>
@@ -816,7 +948,8 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                         linkend="internalfunc-func-gen-gen_id">GEN_ID</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="common-expr-cond">
+
+        <section xml:id="langref-commons-conditional">
             <info>
                 <title>Условные выражения</title>
             </info>
@@ -825,7 +958,8 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                 лишь одно условное выражение CASE. Остальные условные выражения являются
                 производными встроенными функциями и описаны в разделе <link
                     linkend="internalfunc-func-case">Условные функции</link>.</para>
-            <section xml:id="common-expr-cond-case">
+
+            <section xml:id="langref-commons-conditional-case">
                 <info>
                     <title>CASE</title>
                     <keywordset>
@@ -852,7 +986,8 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                         </listitem>
                     </itemizedlist>
                 </para>
-                <simplesect xml:id="common-expr-cond-case-simple">
+
+                <simplesect xml:id="langref-commons-conditional-case-simple">
                     <title>Простой CASE</title>
                     <formalpara>
                         <title>Синтаксис:</title>
@@ -902,7 +1037,8 @@ FROM PEOPLE
                     <para>Сокращённый вид простого оператора CASE используется в функции <link
                             linkend="internalfunc-func-case-decode">DECODE</link>. </para>
                 </simplesect>
-                <simplesect xml:id="common-expr-cond-case-search">
+
+                <simplesect xml:id="langref-commons-conditional-case-srched">
                     <title>Поисковый CASE</title>
                     <formalpara>
                         <title>Синтаксис:</title>
@@ -943,7 +1079,8 @@ END;
                 </simplesect>
             </section>
         </section>
-        <section xml:id="common-expr-null">
+
+        <section xml:id="langref-commons-null-in-expr">
             <info>
                 <title>NULL в выражениях</title>
                 <keywordset>
@@ -951,6 +1088,7 @@ END;
                 </keywordset>
             </info>
             <indexterm><primary>NULL</primary></indexterm>
+
             <para>В SQL NULL не является значением — это состояние, указывающее, что значение
                 элемента неизвестно или не существует. Это не ноль, не пустота, не <quote>пустая
                     строка</quote>, и оно не ведёт себя как какое-то из этих значений. </para>
@@ -963,7 +1101,8 @@ END;
                 <para>Неопределённый логический результат (UNKNOWN) тоже представлен
                     псевдо-значением NULL. </para>
             </important>
-            <section xml:id="common-expr-null-expr">
+
+            <section xml:id="langref-commons-returningnull">
                 <info>
                     <title>Выражения возвращающие NULL</title>
                 </info>
@@ -979,7 +1118,8 @@ not (NULL)
                     Если вам трудно понять, почему, вспомните, что NULL — значит
                         <quote>неизвестно</quote>.</para>
             </section>
-            <section xml:id="common-expr-null-logicexpr" status="Переписать">
+
+            <section xml:id="langref-commons-nullinlogical">
                 <info>
                     <title>NULL в логических выражениях</title>
                 </info>
@@ -1000,12 +1140,20 @@ NULL and NULL = NULL
                     <para>
                         <informalexample>
                             <para><programlisting language="sql"> 
-  (1 = NULL) OR (1 &lt;&gt; 1) -- возвратит NULL   
-  (1 = NULL) OR (1 = 1) -- возвратит TRUE   
-  (1 = NULL) OR (1 = NULL) -- возвратит NULL   
-  (1 = NULL) AND (1 &lt;&gt; 1) -- возвратит FALSE   
-  (1 = NULL) AND (1 = 1) -- возвратит NULL   
-  (1 = NULL) AND (1 = NULL) -- возвратит NULL    
+<![CDATA[                                
+(1 = NULL) or (1 <> 1)    -- returns NULL
+(1 = NULL) or FALSE       -- returns NULL
+(1 = NULL) or (1 = 1)     -- returns TRUE
+(1 = NULL) or TRUE        -- returns TRUE
+(1 = NULL) or (1 = NULL)  -- returns NULL
+(1 = NULL) or UNKNOWN     -- returns NULL
+(1 = NULL) and (1 <> 1)   -- returns FALSE
+(1 = NULL) and FALSE      -- returns FALSE
+(1 = NULL) and (1 = 1)    -- returns NULL
+(1 = NULL) and TRUE       -- returns NULL
+(1 = NULL) and (1 = NULL) -- returns NULL
+(1 = NULL) and UNKNOWN    -- returns NULL  
+]]>
                 </programlisting></para>
                         </informalexample>
                     </para>
@@ -1013,7 +1161,8 @@ NULL and NULL = NULL
             </section>
         </section>
     </section>
-    <section xml:id="common-subquery">
+
+    <section xml:id="langref-commons-subqueries">
         <title>Подзапросы</title>
 
         <para> Подзапрос — это специальный вид выражения, которое фактически является запросом
@@ -1029,8 +1178,9 @@ NULL and NULL = NULL
                     HAVING).</para>
             </listitem>
         </itemizedlist>
-        <section xml:id="common-subquery-corr">
+        <section xml:id="langref-commons-correlatedsq">
             <title>Коррелированные подзапросы</title>
+
             <para>Подзапрос может быть коррелированным (соотнесённым). Запрос называется
                 соотнесённым, когда оба, и внутренний, и внешний, запросы взаимозависимы. Это
                 означает, что для обработки каждой записи внутреннего запроса, должна быть получена
@@ -1058,8 +1208,10 @@ WHERE EXISTS
             <para> При использовании подзапросов для получения значений выходного столбца в списке
                 выбора SELECT, подзапрос должен возвращать скалярный результат. </para>
         </section>
-        <section xml:id="common-subquery-scalar">
+
+        <section xml:id="langref-commons-scalarsq">
             <title>Подзапросы возвращающие скалярный результат (Singletons)</title>
+
             <para><emphasis>Подзапросы</emphasis>, используемые в предикатах поиска, кроме
                 предикатов существования и количественных предикатов, должны возвращать скалярный
                 результат, то есть не более чем один столбец из одной отобранной строки или одно
@@ -1114,7 +1266,8 @@ WHERE
             </formalpara>
         </section>
     </section>
-    <section xml:id="common-predicats">
+
+    <section xml:id="langref-commons-predicates">
         <info>
             <title>Предикаты</title>
         </info>
@@ -1126,8 +1279,10 @@ WHERE
             условии соединения во фразе ON для предложений JOIN, а также в предложении HAVING. В
             PSQL операторы управления потоком выполнения проверяют предикаты в предложениях IF,
             WHILE и WHEN.</para>
-        <section xml:id="common-predicats-assetions">
+
+        <section xml:id="langref-commons-condition">
             <title>Утверждения</title>
+
             <para>Проверяемые условия не всегда являются простыми предикатами. Они могут быть
                 группой предикатов, каждый из которых при вычислении делает вклад в вычислении общей
                 истинности. Такие сложные условия называются утверждениями. Утверждения могут
@@ -1139,7 +1294,8 @@ WHERE
                 порядке приоритета, до тех пор, пока невозможно будет получить окончательное
                 утверждение.</para>
         </section>
-        <section xml:id="common-predicats-compare">
+
+        <section xml:id="langref-commons-comppreds">
             <title>Предикаты сравнения</title>
 
             <para>Предикат сравнения представляет собой два выражения, соединяемых оператором
@@ -1147,7 +1303,7 @@ WHERE
                 <literallayout>
 <command>=</command>, <command>&gt;</command>, <command>&lt;</command>, <command>&gt;=</command>, <command>&lt;=</command>, <command>&lt;&gt;</command>
         </literallayout>
-                (Полный список операторов сравнения см. <link linkend="common-expr-operators-comp"
+                (Полный список операторов сравнения см. <link linkend="langref-commons-compar"
                     >Операторы сравнения</link>).</para>
             <para>Если в одной из частей (левой или правой) предиката сравнения встречается NULL, то
                 значение предиката будет неопределённым (UNKNOWN). </para>
@@ -1192,17 +1348,20 @@ WHERE type = NULL AND price &lt; 300;
                     </informalexample>
                 </para>
             </formalpara>
-			<note>
+            <note>
                 <title>Замечание о сравнении строк</title>
                 <para>При сравнении на равенство полей типов <database>CHAR</database> и
                         <database>VARCHAR</database> завершающий пробелы игнорируются во всех
                     случаях.</para>
             </note>
         </section>
-        <section xml:id="common-predicats-othercompare">
+
+        <section xml:id="langref-commons-othercomppreds">
             <title>Другие предикаты сравнения</title>
+
             <para>Другие предикаты сравнения состоят из ключевых слов.</para>
-            <section xml:id="common-predicats-othercompare-between">
+
+            <section xml:id="langref-commons-predbetween">
                 <info>
                     <title>BETWEEN</title>
                     <keywordset>
@@ -1247,7 +1406,8 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                     </para>
                 </informalexample>
             </section>
-            <section xml:id="common-predicats-othercompare-like">
+
+            <section xml:id="langref-commons-predlike">
                 <info>
                     <title>LIKE</title>
                     <keywordset>
@@ -1314,8 +1474,10 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                     сравнения в запросе должна вернуть все строки, содержащие строки LIKE 'абв ' (с
                     символом пробела на конце), то строка, содержащая 'абв' (без пробела), не будет
                     возвращена.</para>
-                <section xml:id="common-predicats-othercompare-like-wilcards">
+
+                <section xml:id="langref-commons-wildcards">
                     <title>Трафаретные символы</title>
+
                     <para>В шаблоне, разрешается использование двух трафаретных символов: </para>
                     <itemizedlist spacing="compact">
                         <listitem>
@@ -1331,7 +1493,8 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                     <para>Если проверяемое значение соответствует образцу с учётом трафаретных
                         символов, то предикат истинен.</para>
                 </section>
-                <section xml:id="common-predicats-othercompare-like-escape">
+
+                <section xml:id="langref-commons-escapechar">
                     <info>
                         <title>Использование управляющего символа в предложении ESCAPE</title>
                         <keywordset>
@@ -1366,8 +1529,7 @@ WHERE DEPT_NAME LIKE 'Software%';
                             предикат STARTING WITH, который будет использовать индекс. Если вам
                             необходимо выполнить поиск с начала строки, то вместо предиката LIKE
                             рекомендуется использовать предикат <link
-                                linkend="common-predicats-othercompare-starting">STARTING
-                                WITH</link>.</para>
+                                linkend="langref-commons-predstartwith">STARTING WITH</link>.</para>
                     </note>
                     <informalexample>
                         <para>Поиск сотрудников, имена которых состоят из 5 букв, начинающихся с
@@ -1398,8 +1560,7 @@ WHERE ADDRESS LIKE '%Ростов%'
                     <tip>
                         <para>Если вам необходимо выполнить поиск внутри строки, то вместо предиката
                             LIKE рекомендуется использовать предикат <link
-                                linkend="common-predicats-othercompare-containing"
-                            >CONTAINING</link>.</para>
+                                linkend="langref-commons-predcontaining">CONTAINING</link>.</para>
                     </tip>
                     <informalexample>
                         <para>Поиск таблиц, содержащих в имени знак подчёркивания. В данном случае в
@@ -1417,16 +1578,15 @@ WHERE RDB$RELATION_NAME LIKE '%#_%' ESCAPE '#'
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="common-predicats-othercompare-starting">STARTING
-                                WITH</link>, <link
-                                linkend="common-predicats-othercompare-containing"
-                            >CONTAINING</link>, <link
-                                linkend="common-predicats-othercompare-similar">SIMILAR TO</link>.
+                            <link linkend="langref-commons-predstartwith">STARTING WITH</link>,
+                                <link linkend="langref-commons-predcontaining">CONTAINING</link>,
+                                <link linkend="langref-commons-predsimilarto">SIMILAR TO</link>.
                         </para>
                     </formalpara>
                 </section>
             </section>
-            <section xml:id="common-predicats-othercompare-starting">
+
+            <section xml:id="langref-commons-predstartwith">
                 <info>
                     <title>STARTING WITH</title>
                     <keywordset>
@@ -1467,10 +1627,11 @@ WHERE LAST_NAME STARTING WITH 'Jo'
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="common-predicats-othercompare-like">LIKE</link>. </para>
+                        <link linkend="langref-commons-predlike">LIKE</link>. </para>
                 </formalpara>
             </section>
-            <section xml:id="common-predicats-othercompare-containing">
+
+            <section xml:id="langref-commons-predcontaining">
                 <info>
                     <title>CONTAINING</title>
                     <keywordset>
@@ -1532,10 +1693,11 @@ WHERE CHANGE_DATE CONTAINING 84;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="common-predicats-othercompare-like">LIKE</link>. </para>
+                        <link linkend="langref-commons-predlike">LIKE</link>. </para>
                 </formalpara>
             </section>
-            <section xml:id="common-predicats-othercompare-similar">
+
+            <section xml:id="langref-commons-predsimilarto">
                 <info>
                     <title>SIMILAR TO</title>
                     <keywordset>
@@ -1597,14 +1759,17 @@ WHERE CHANGE_DATE CONTAINING 84;
                     успешного выполнения шаблон должен соответствовать всей строке — соответствие
                     подстроки не достаточно. Если один из операндов имеет значение NULL, то и
                     результат будет NULL. В противном случае результат является TRUE или FALSE. </para>
-                <section xml:id="common-predicats-othercompare-similar-regexsyn">
+
+                <section xml:id="langref-commons-syntaxregex">
                     <title>Синтаксис регулярных выражений SQL</title>
+
                     <para>Следующий синтаксис определяет формат регулярного выражения SQL. Это
                         полное и корректное его определение. Он является весьма формальным и
                         довольно длинным и, вероятно, озадачивает тех, кто не имеет опыта работы с
                         регулярными выражениями. Не стесняйтесь пропустить его и начать читать
-                        следующий раздел, <link linkend="common-regexp">Создание регулярных
-                            выражений</link>, использующий подход от простого к сложному.</para>
+                        следующий раздел, <link linkend="langref-commons-buildregex">Создание
+                            регулярных выражений</link>, использующий подход от простого к
+                        сложному.</para>
                     <para><programlisting>
 <replaceable>&lt;regular expression&gt;</replaceable> ::= <replaceable>&lt;regular term&gt;</replaceable> ['|' <replaceable>&lt;regular term&gt;</replaceable> ...]       
 
@@ -1652,11 +1817,11 @@ WHERE CHANGE_DATE CONTAINING 84;
                          |  ALNUM  |  SPACE  |  WHITESPACE                                             
                 </programlisting></para>
                 </section>
-                <section xml:id="common-regexp">
-                    <info>
-                        <title>Создание регулярных выражений </title>
-                    </info>
-                    <simplesect xml:id="common-regexp-symbols">
+
+                <section xml:id="langref-commons-buildregex">
+                    <title>Создание регулярных выражений </title>
+
+                    <simplesect xml:id="langref-commons-regexchar">
                         <title>Символы</title>
 
                         <para>В регулярных выражениях большинство символов представляет сами себя,
@@ -1676,7 +1841,8 @@ WHERE CHANGE_DATE CONTAINING 84;
 'APPLE' SIMILAR TO 'Apple' -- в зависимости от сортировки                            
                         </programlisting></para>
                     </simplesect>
-                    <simplesect xml:id="common-regexp-patterns">
+
+                    <simplesect xml:id="langref-commons-regexwildcards">
                         <title>Шаблоны</title>
 
                         <para>Известным SQL шаблонам _ и % соответствует любой единственный символ и
@@ -1691,7 +1857,8 @@ WHERE CHANGE_DATE CONTAINING 84;
                         <para>Обратите внимание, что шаблон % также соответствует пустой
                             строке.</para>
                     </simplesect>
-                    <simplesect xml:id="common-regexp-classes">
+
+                    <simplesect xml:id="langref-commons-regexcharclass">
                         <title>Классы символов</title>
 
                         <para>Набор символов, заключённый в квадратные скобки определяют класс
@@ -1780,7 +1947,8 @@ WHERE CHANGE_DATE CONTAINING 84;
                                     <quote><command>_</command></quote> является собственным классом
                             символов, соответствуя любому единственному символу.</para>
                     </simplesect>
-                    <simplesect xml:id="common-regexp-quantors">
+
+                    <simplesect xml:id="langref-commons-regexquantifiers">
                         <title>Кванторы</title>
 
                         <para>Вопросительный знак сразу после символа или класса указывает на то,
@@ -1841,7 +2009,8 @@ WHERE CHANGE_DATE CONTAINING 84;
                         <para>Кванторы ?, * и + сокращение для {0,1}, {0,} и {1,},
                             соответственно.</para>
                     </simplesect>
-                    <simplesect xml:id="common-regexp-or">
+
+                    <simplesect xml:id="langref-commons-regexoring">
                         <title>Термин ИЛИ</title>
 
                         <para>В условиях регулярных выражений можно использовать оператор ИЛИ (|).
@@ -1853,7 +2022,8 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Nektarin' SIMILAR TO 'M_+|N_+|P_+' – TRUE                                
                         </programlisting></para>
                     </simplesect>
-                    <simplesect xml:id="common-regexp-subexpr">
+
+                    <simplesect xml:id="langref-commons-regexsubexpr">
                         <title>Подвыражения</title>
 
                         <para>Одна или более частей регулярного выражения могут быть сгруппированы в
@@ -1866,7 +2036,8 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Orange' SIMILAR TO 'O(r(an|in)g|rong)?e' – TRUE                               
                         </programlisting></para>
                     </simplesect>
-                    <simplesect xml:id="common-regexp-escape">
+
+                    <simplesect xml:id="langref-commons-regexescap">
                         <title>Экранирование специальных символов</title>
 
                         <para>Для исключения из процесса сопоставления специальных символов (которые
@@ -1882,7 +2053,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                     </simplesect>
                 </section>
             </section>
-            <section xml:id="common-predicats-othercompare-distinct">
+            <section xml:id="langref-commons-isnotdistinct">
                 <info>
                     <title>IS DISTINCT FROM</title>
                     <keywordset>
@@ -1987,18 +2158,30 @@ THEN POST_EVENT 'JOB_CHANGED';
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="common-predicats-othercompare-is">IS</link>. </para>
+                        <link linkend="langref-commons-isnotboolean">IS</link>. </para>
 
                 </formalpara>
             </section>
-            <section xml:id="common-predicats-othercompare-is">
+
+            <section xml:id="langref-commons-isnotboolean">
                 <info>
-                    <title>IS</title>
+                    <title>Логический IS [NOT]</title>
                     <keywordset>
-                        <keyword>IS</keyword>
+                        <keyword>IS [NOT]</keyword>
                     </keywordset>
                 </info>
-                <indexterm><primary>IS</primary></indexterm>
+                <indexterm>
+                    <primary>IS [NOT]</primary>
+                    <secondary>TRUE</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>IS [NOT]</primary>
+                    <secondary>FALSE</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>IS [NOT]</primary>
+                    <secondary>UNKNOWN</secondary>
+                </indexterm>
                 <formalpara>
                     <title>Доступно в:</title>
 
@@ -2008,31 +2191,22 @@ THEN POST_EVENT 'JOB_CHANGED';
                     <title>Синтаксис:</title>
 
                     <para><programlisting> 
-<replaceable>&lt;value&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN | NULL}                                          
+<replaceable>&lt;value&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}                                          
                 </programlisting></para>
                 </formalpara>
 
-                <para>Оператор IS проверяет, что выражение в левой части является псевдо значением
-                    NULL или соответствует логическому значению в правой части. Если в правой части
-                    предиката использованы литерал TRUE, FALSE или UNKNOWN, то выражение в левой
-                    части должно быть логического типа, иначе будет выдана ошибка.</para>
+                <para>Оператор IS проверяет, что выражение в левой части соответствует логическому
+                    значению в правой части. Выражение в левой части должно быть логического
+                    типа, иначе будет выдана ошибка.</para>
+                
+                <para>Для логического типа данных предикат <code>IS [NOT] UNKNOWN</code> эквивалентен <code>IS [NOT] NULL</code>.</para>
+                
                 <note>
                     <title>Замечание:</title>
                     <para> В правой части предиката могут быть использованы только литералы TRUE,
-                        FALSE, UNKNOWN и NULL, но не выражения.</para>
+                        FALSE, UNKNOWN, но не выражения.</para>
                 </note>
-                <example>
-                    <title>Предикат IS NULL</title>
 
-                    <para>Поиск записей о продажах, для которых не установлена дата отгрузки:</para>
-                    <para>
-                        <programlisting language="sql">  
-SELECT *
-FROM SALES
-WHERE SHIP_DATE IS NULL;
-</programlisting>
-                    </para>
-                </example>
                 <example>
                     <title>Использование оператора IS с логическим типом данных</title>
                     <para>
@@ -2057,16 +2231,56 @@ ID           BVAL
                     </para>
                 </example>
             </section>
+
+            <section xml:id="langref-commons-isnotnull">
+                <info>
+                    <title>IS [NOT] NULL</title>
+                    <keywordset>
+                        <keyword>IS [NOT] NULL</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>IS [NOT] NULL</primary></indexterm>
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL, PSQL.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para><programlisting> 
+<replaceable>&lt;value&gt;</replaceable> IS [NOT] NULL                                        
+                </programlisting></para>
+                </formalpara>
+
+                <para>Поскольку NULL не является значением, эти операторы не являются операторами
+                    сравнения. Оператор <code>IS [NOT] NULL</code> проверяет, что выражение слева
+                    имеет значение (<emphasis>IS NOT NULL</emphasis>) или не имеет значения
+                        (<emphasis>IS NULL</emphasis>) </para>
+
+                <example>
+                    <title>Предикат IS NULL</title>
+
+                    <para>Поиск записей о продажах, для которых не установлена дата отгрузки:</para>
+                    <para>
+                        <programlisting language="sql">  
+SELECT *
+FROM SALES
+WHERE SHIP_DATE IS NULL;
+</programlisting>
+                    </para>
+                </example>
+            </section>
         </section>
-        <section xml:id="common-predicats-existence">
-            <info>
+
+        <section xml:id="langref-commons-existential">
                 <title>Предикаты существования</title>
-            </info>
+          
             <para>В эту группу предикатов включены предикаты, которые используют подзапросы и
                 передают значения для всех видов утверждений в условиях поиска. Предикаты
                 существования называются так потому, что они различными способами проверяют
                 существование или отсутствие результатов подзапросов.</para>
-            <section xml:id="common-predicats-existence-exists">
+            <section xml:id="langref-commons-exists">
                 <info>
                     <title>EXISTS</title>
                     <keywordset>
@@ -2135,7 +2349,8 @@ WHERE NOT EXISTS (SELECT *
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="common-predicats-existence-in">
+            
+            <section xml:id="langref-commons-in">
                 <info>
                     <title>IN</title>
                     <keywordset>
@@ -2283,11 +2498,12 @@ WHERE
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="common-predicats-existence-exists">EXISTS</link>. </para>
+                        <link linkend="langref-commons-exists">EXISTS</link>. </para>
 
                 </formalpara>
             </section>
-            <section xml:id="common-predicats-existence-singular">
+            
+            <section xml:id="langref-commons-singular">
                 <info>
                     <title>SINGULAR</title>
                     <keywordset>
@@ -2331,7 +2547,8 @@ WHERE SINGULAR (SELECT *
                 </example>
             </section>
         </section>
-        <section xml:id="common-predicats-quantifier">
+        
+        <section xml:id="langref-commons-quantifiedsq">
             <info>
                 <title>Количественные предикаты подзапросов</title>
             </info>
@@ -2358,7 +2575,7 @@ WHERE SINGULAR (SELECT *
 <replaceable>&lt;value expression&gt;</replaceable> <replaceable>&lt;comp op&gt;</replaceable> <replaceable>&lt;quantifier&gt;</replaceable> <replaceable>&lt;subquery&gt;</replaceable>
 </programlisting>
             </para>
-            <section xml:id="common-predicats-quantifier-all">
+            <section xml:id="langref-commons-quant-all">
                 <info>
                     <title>ALL</title>
                     <keywordset>
@@ -2411,7 +2628,7 @@ WHERE rating &gt; ALL
                         множестве.</para>
                 </important>
             </section>
-            <section xml:id="common-predicats-quantifier-any">
+            <section xml:id="langref-commons-quant-anysome">
                 <info>
                     <title>ANY и SOME</title>
                     <keywordset>

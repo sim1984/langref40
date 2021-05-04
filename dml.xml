@@ -576,8 +576,8 @@ SELECT rdb$character_set_name FROM rdb$database
                         <link linkend="internalfunc-agg">Агрегатные функции</link>, <link
                             linkend="window-func">Оконные (аналитические) функции</link>,
                             <link linkend="context-var">Контекстные переменные</link>,
-                            <link linkend="common-expr-cond-case">CASE</link>, <link
-                            linkend="common-subquery">Подзапросы</link>. </para>
+                            <link linkend="langref-commons-conditional-case">CASE</link>, <link
+                            linkend="langref-commons-subqueries">Подзапросы</link>. </para>
 
                 </formalpara>
             </simplesect>
@@ -5031,7 +5031,7 @@ INSERT INTO <replaceable>target</replaceable>
                 вычисляемые столбцы).</para>
 
             <note>
-                <para><link linkend="common-expr-string-constants-introducer">Вводный
+                <para><link linkend="langref-commons-introducer-syntax">Вводный
                         синтаксис</link> даёт возможность определить набор символов для значений
                     строковых констант (литералов). Вводный синтаксис работаёт только с литералами
                     строк: он не может быть применён к строковым переменным, параметрам, ссылкам на

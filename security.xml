@@ -135,6 +135,374 @@
             </section>
         </section>
 
+          
+            <section xml:id="security-sysroles-rdbadmin">
+                <info>
+                    <title>Роль RDB$ADMIN</title>
+                    <keywordset>
+                        <keyword>RDB$ADMIN</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>RDB$ADMIN</primary></indexterm>
+                <para>Системная роль RDB$ADMIN, присутствует в каждой базе данных. Предоставление
+                    пользователю роли RDB$ADMIN в базе данных даёт ему права SYSDBA, но только в
+                    текущей базе данных.</para>
+                <para>Привилегии вступают в силу сразу после входа в обычную базу данных с указанием
+                    роли RDB$ADMIN, после чего пользователь получает полный контроль над всеми
+                    объектами базы данных. </para>
+                <para>Роль RDB$ADMIN может быть предоставлена с использованием ключевого слова
+                    DEFAULT. В этом случае пользователь автоматически будет получать
+                    административные привилегии даже если он не указал роль RDB$ADMIN при
+                    входе.</para>
+                <para>Предоставление в базе данных безопасности даёт возможность создавать, изменять
+                    и удалять учётные записи пользователей.</para>
+                <para>В обоих случаях пользователь с правами RDB$ADMIN роли может всегда передавать
+                    эту роль другим. Другими словами, <quote>WITH ADMIN OPTION</quote> уже встроен в
+                    эту роль и эту опцию можно не указывать.</para>
+                <section xml:id="security-sysroles-rdbadmin-grantindb">
+                    <info>
+                        <title>Предоставление роли RDB$ADMIN в обычной базе данных</title>
+                    </info>
+
+                    <para>Для предоставления и удаления роли RDB$ADMIN в обычной базе данных
+                        используются операторы GRANT и REVOKE, как и для назначения и отмены
+                        остальных ролей.</para>
+                    <formalpara>
+                        <title>Синтаксис:</title>
+
+                        <para><programlisting>
+GRANT [DEFAULT] RDB$ADMIN TO <replaceable>username</replaceable>
+ 
+REVOKE [DEFAULT] RDB$ADMIN FROM <replaceable>username</replaceable>
+                       </programlisting></para>
+                    </formalpara>
+                    <para>
+                        <table frame="all">
+                            <title>Параметры операторов установки и отмены роли RDB$ADMIN</title>
+                            <?dbfo keep-together='auto'?>
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
+                                <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
+                                <thead>
+                                    <row>
+                                        <entry align="center">Параметр</entry>
+                                        <entry align="center">Описание</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry><replaceable>username</replaceable></entry>
+                                        <entry>
+                                            <para>Имя пользователя, которому назначается роль
+                                                RDB$ADMIN или у которого она отбирается.</para>
+                                        </entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </para>
+
+                    <para>Если в операторе GRANT присутствует ключевое слово DEFAULT, то
+                        пользователь автоматически будет получать административные привилегии даже
+                        если он не указал роль RDB$ADMIN при входе. Привилегии на роль RDB$ADMIN
+                        могут давать только <link linkend="security-administrators"
+                            >администраторы</link>. </para>
+                    <formalpara>
+                        <title>См. также:</title>
+
+                        <para>
+                            <link linkend="security-priv-grant">GRANT</link>, <link
+                                linkend="security-priv-revoke">REVOKE</link>. </para>
+                    </formalpara>
+
+                    <section xml:id="security-sysroles-rdbadmin-useindb">
+                        <title>Использование роли RDB$ADMIN в обычной базе данных</title>
+
+                        <para>Для использования прав роли RDB$ADMIN пользователь просто указывает её
+                            при соединении с базой данных, или же роль RDB$ADMIN выдали пользователю
+                            с использованием ключевого слова DEFAULT. Он также может указать её
+                            позднее с помощью оператора SET ROLE.</para>
+                    </section>
+                </section>
+
+                <section xml:id="security-sysroles-rdbadmin-grantinsecuritydb">
+                    <title>Предоставление роли RDB$ADMIN в базе данных пользователей</title>
+
+                    <para>Так как никто не может соединиться с базой данных пользователей, то
+                        операторы GRANT и REVOKE здесь не могут использоваться. Вместо этого роль
+                        RDB$ADMIN предоставляют и удаляют SQL командами управления пользователями:
+                        CREATE USER и ALTER USER, в которых указываются специальные опции GRANT
+                        ADMIN ROLE и REVOKE ADMIN ROLE. </para>
+                    <formalpara>
+                        <info>
+                            <title>Синтаксис (неполный):</title>
+                        </info>
+
+                        <para><programlisting>
+CREATE USER <replaceable>newuser</replaceable> 
+PASSWORD '<replaceable>password</replaceable>' 
+GRANT ADMIN ROLE
+ 
+ALTER USER <replaceable>existinguser</replaceable> 
+GRANT ADMIN ROLE
+ 
+ALTER USER <replaceable>existinguser</replaceable> 
+REVOKE ADMIN ROLE
+                       </programlisting></para>
+                    </formalpara>
+                    <para>
+                        <table frame="all">
+                            <title>Параметры операторов установки и отмены роли RDB$ADMIN</title>
+                            <?dbfo keep-together='auto'?>
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
+                                <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
+                                <thead>
+                                    <row>
+                                        <entry align="center">Параметр</entry>
+                                        <entry align="center">Описание</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry><replaceable>newuser</replaceable></entry>
+                                        <entry>
+                                            <para>Имя вновь создаваемого пользователя. Максимальная
+                                                длина 63 символа.</para>
+                                        </entry>
+                                    </row>
+                                    <row>
+                                        <entry><replaceable>existinguser</replaceable></entry>
+                                        <entry>
+                                            <para>Имя существующего пользователя.</para>
+                                        </entry>
+                                    </row>
+                                    <row>
+                                        <entry><replaceable>password</replaceable></entry>
+                                        <entry>
+                                            <para>Пароль пользователя. Чувствительно к
+                                                регистру.</para>
+                                        </entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </para>
+
+                    <important>
+                        <para>Пожалуйста, помните, что GRANT ADMIN ROLE и REVOKE ADMIN ROLE это не
+                            операторы GRANT и REVOKE. Это параметры для CREATE USER и ALTER
+                            USER.</para>
+                    </important>
+                    <para>Привилегии на роль RDB$ADMIN могут давать только <link
+                            linkend="security-administrators">администраторы</link>. </para>
+                    <formalpara>
+                        <title>См. также:</title>
+
+                        <para>
+                            <link linkend="security-priv-grant">GRANT</link>, <link
+                                linkend="security-priv-revoke">REVOKE</link>. </para>
+                    </formalpara>
+
+                    <section xml:id="security-rdbadmin-grantinsecuritydb-gsec">
+                        <title>Выполнение той же задачи используя утилиту
+                                <application>gsec</application></title>
+
+                        <para>То же самое можно сделать используя утилиту
+                                <application>gsec</application> указав параметр
+                                <parameter>-admin</parameter> для сохранения атрибута
+                                <database>RDB$ADMIN</database> учётной записи пользователя: <blockquote>
+                                <literallayout class="monospaced">
+gsec -add new_user -pw password -admin yes
+gsec -mo existing_user -admin yes
+gsec -mo existing_user -admin no
+            </literallayout>
+                            </blockquote>
+                        </para>
+                        <note>
+                            <para>В зависимости от административного статуса текущего пользователя
+                                для утилиты <application>gsec</application> может потребоваться
+                                больше параметров, таких как <parameter>-user</parameter> и
+                                    <parameter>-pass</parameter>, или
+                                    <parameter>-trusted</parameter>.</para>
+                        </note>
+
+                    </section>
+
+                    <section xml:id="security-sysroles-rdbadmin-useinsecuritydb">
+                        <title>Использование роли RDB$ADMIN в базе данных пользователей</title>
+
+                        <para>Для управления учётными записями пользователей через SQL пользователь,
+                            имеющий права на роль RDB$ADMIN, должен подключиться к базе данных с
+                            этой ролью. Так как к базе данных пользователей не имеет права
+                            соединяться никто, то пользователь должен подключиться к обычной базе
+                            данных, где он также имеет права на роль RDB$ADMIN. Он определяет роль
+                            при соединении с обычной базой данных и может в ней выполнить любой SQL
+                            запрос. Это не самое элегантное решение, но это единственный способ
+                            управлять пользователями через SQL запросы. </para>
+                        <para>Если нет обычной базы данных, где у пользователя есть права на роль
+                            RDB$ADMIN, то управление учётными записями посредством SQL запросов
+                            недоступно.</para>
+                    </section>
+
+                    <section xml:id="security-sysroles-rdbadmin-useingsec">
+                        <title>Использование роли RDB$ADMIN в
+                            <application>gsec</application></title>
+
+                        <para>Для управления пользователями через утилиту
+                                <application>gsec</application> роль RDB$ADMIN должна быть указана в
+                            переключателе <parameter>-role</parameter>.</para>
+                    </section>
+                </section>
+
+                <section xml:id="security-autoadminmapping">
+                    <info>
+                        <title>AUTO ADMIN MAPPING</title>
+                        <keywordset>
+                            <keyword>AUTO ADMIN MAPPING</keyword>
+                        </keywordset>
+                    </info>
+                    <formalpara>
+                        <title>Операционная система:</title>
+
+                        <para>только Windows.</para>
+                    </formalpara>
+                    <para>Администраторы операционной системы Windows автоматически не получают
+                        права SYSDBA при подключении к базе данных (если, конечно, разрешена
+                        доверенная авторизация). Имеют ли администраторы автоматические права SYSDBA
+                        зависит от установки значения флага AUTO ADMIN MAPPING. Это флаг в каждой из
+                        баз данных, который по умолчанию выключен. Если флаг AUTO ADMIN MAPPING
+                        включен, то он действует, когда администратор Windows: <orderedlist
+                            numeration="loweralpha" spacing="compact">
+                            <listitem>
+                                <para>подключается с помощью доверенной аутентификации</para>
+                            </listitem>
+                            <listitem>
+                                <para>не определяет никакой роли при подключении.</para>
+                            </listitem>
+                        </orderedlist></para>
+                    <para>После успешного “auto admin” подключения текущей ролью будет являться
+                        RDB$ADMIN. </para>
+                    <section xml:id="security-autoadminmapping01">
+                        <info>
+                            <title>Включение и выключение AUTO ADMIN MAPPING в обычной базе
+                                данных</title>
+
+                            <keywordset>
+                                <keyword>AUTO ADMIN MAPPING</keyword>
+                            </keywordset>
+                        </info>
+
+                        <indexterm><primary>ALTER ROLE RDB$ADMIN SET AUTO ADMIN
+                            MAPPING</primary></indexterm>
+                        <indexterm><primary>ALTER ROLE RDB$ADMIN DROP AUTO ADMIN
+                            MAPPING</primary></indexterm>
+
+                        <para>Включение и выключение флага AUTO ADMIN MAPPING в обычной базе данных
+                            осуществляется следующим образом:
+                            <programlisting language="sql">
+ALTER ROLE RDB$ADMIN SET AUTO ADMIN MAPPING -- включение
+ 
+ALTER ROLE RDB$ADMIN DROP AUTO ADMIN MAPPING -- выключение                   
+                </programlisting>
+                        </para>
+                        <para>Эти операторы могут быть выполнены пользователями с достаточными
+                            правами, а именно: <itemizedlist spacing="compact">
+                                <listitem>
+                                    <para>владелец базы данных;</para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        <link linkend="security-administrators"
+                                            >администраторы</link>. </para>
+                                </listitem>
+                            </itemizedlist>
+                        </para>
+
+                        <note>
+                            <para>Оператор
+                                <programlisting language="sql">
+ALTER ROLE RDB$ADMIN SET AUTO ADMIN MAPPING
+                    </programlisting>
+                                является упрощённым видом оператора создания отображения
+                                предопределённой группы DOMAIN_ANY_RID_ADMINS на роль RDB$ADMIN.
+                                <programlisting language="sql">
+CREATE MAPPING WIN_ADMINS
+USING PLUGIN WIN_SSPI
+FROM Predefined_Group
+DOMAIN_ANY_RID_ADMINS
+TO ROLE RDB$ADMIN;                        
+                    </programlisting>
+                                Соответственно оператор
+                                <programlisting language="sql">
+ALTER ROLE RDB$ADMIN DROP AUTO ADMIN MAPPING
+                    </programlisting>
+                                эквивалентен оператору
+                                <programlisting language="sql">
+DROP MAPPING WIN_ADMINS;
+                    </programlisting>
+                            </para>
+                            <para>Подробней см. <link linkend="security-mapping">Отображение
+                                    объектов безопасности</link>.</para>
+                        </note>
+
+                        <para>В обычных базах данных статус AUTO ADMIN MAPPING проверяется только во
+                            время подключения. Если Администратор имеет роль RDB$ADMIN потому, что
+                            произошло автоматическое отображение во время входа, то он будет
+                            удерживать эту роль на протяжении всей сессии, даже если он или кто-то
+                            другой в это же время выключает автоматическое отображение.</para>
+
+                        <para>Точно также, включение AUTO ADMIN MAPPING не изменит текущую роль в
+                            RDB$ADMIN для Администраторов, которые уже подключились.</para>
+
+                    </section>
+                    <section xml:id="security-autoadminmapping02">
+                        <info>
+                            <title>Включение и выключение AUTO ADMIN MAPPING в базе данных
+                                безопасности</title>
+                        </info>
+
+                        <para>Оператором ALTER ROLE RDB$ADMIN невозможно включить или выключить флаг
+                            AUTO ADMIN MAPPING в базе данных пользователей. Однако вы можете создать
+                            глобальное отображение предопределённой группы DOMAIN_ANY_RID_ADMINS на
+                            роль RDB$ADMIN следующим образом:
+                            <programlisting language="sql">
+CREATE GLOBAL MAPPING WIN_ADMINS
+USING PLUGIN WIN_SSPI
+FROM Predefined_Group
+DOMAIN_ANY_RID_ADMINS
+TO ROLE RDB$ADMIN;                        
+                    </programlisting>
+                        </para>
+                        <para>Кроме того для включения AUTO ADMIN MAPPING в базе данных
+                            пользователей можно использовать утилиту командной строки
+                                <application>gsec</application>:
+                            <screen>
+gsec -mapping set
+ 
+gsec -mapping drop                
+            </screen>
+                        </para>
+                        <note>
+                            <para>В зависимости от административного статуса текущего пользователя
+                                для утилиты <application>gsec</application> может потребоваться
+                                больше параметров, таких как <parameter>-user</parameter> и
+                                    <parameter>-pass</parameter>, или
+                                    <parameter>-trusted</parameter>.</para>
+                        </note>
+
+                        <para>Только SYSDBA может включить AUTO ADMIN MAPPING, если он выключен, но
+                            любой администратор может выключить его.</para>
+
+                        <para>При выключении AUTO ADMIN MAPPING пользователь отключает сам механизм,
+                            который предоставлял ему доступ и, таким образом, он не сможет обратно
+                            включить AUTO ADMIN MAPPING. Даже в интерактивном
+                                <application>gsec</application> сеансе новая установка флага сразу
+                            вступает в силу.</para>
+                    </section>
+                </section>
+            </section>      
+
         <section xml:id="security-administrators">
             <info>
                 <title>Администраторы</title>
@@ -2529,377 +2897,6 @@ DROP ROLE SELLERS;
                             linkend="security-priv-revoke">REVOKE</link>. </para>
 
                 </formalpara>
-            </section>
-        </section>
-        <section xml:id="security-sysroles">
-            <info>
-                <title>Системные роли</title>
-            </info>
-            <section xml:id="security-sysroles-rdbadmin">
-                <info>
-                    <title>RDB$ADMIN</title>
-                    <keywordset>
-                        <keyword>RDB$ADMIN</keyword>
-                    </keywordset>
-                </info>
-                <indexterm><primary>RDB$ADMIN</primary></indexterm>
-                <para>Системная роль RDB$ADMIN, присутствует в каждой базе данных. Предоставление
-                    пользователю роли RDB$ADMIN в базе данных даёт ему права SYSDBA, но только в
-                    текущей базе данных.</para>
-                <para>Привилегии вступают в силу сразу после входа в обычную базу данных с указанием
-                    роли RDB$ADMIN, после чего пользователь получает полный контроль над всеми
-                    объектами базы данных. </para>
-                <para>Роль RDB$ADMIN может быть предоставлена с использованием ключевого слова
-                    DEFAULT. В этом случае пользователь автоматически будет получать
-                    административные привилегии даже если он не указал роль RDB$ADMIN при
-                    входе.</para>
-                <para>Предоставление в базе данных безопасности даёт возможность создавать, изменять
-                    и удалять учётные записи пользователей.</para>
-                <para>В обоих случаях пользователь с правами RDB$ADMIN роли может всегда передавать
-                    эту роль другим. Другими словами, <quote>WITH ADMIN OPTION</quote> уже встроен в
-                    эту роль и эту опцию можно не указывать.</para>
-                <section xml:id="security-sysroles-rdbadmin-grantindb">
-                    <info>
-                        <title>Предоставление роли RDB$ADMIN в обычной базе данных</title>
-                    </info>
-
-                    <para>Для предоставления и удаления роли RDB$ADMIN в обычной базе данных
-                        используются операторы GRANT и REVOKE, как и для назначения и отмены
-                        остальных ролей.</para>
-                    <formalpara>
-                        <title>Синтаксис:</title>
-
-                        <para><programlisting>
-GRANT [DEFAULT] RDB$ADMIN TO <replaceable>username</replaceable>
- 
-REVOKE [DEFAULT] RDB$ADMIN FROM <replaceable>username</replaceable>
-                       </programlisting></para>
-                    </formalpara>
-                    <para>
-                        <table frame="all">
-                            <title>Параметры операторов установки и отмены роли RDB$ADMIN</title>
-                            <?dbfo keep-together='auto'?>
-                            <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
-                                <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
-                                <thead>
-                                    <row>
-                                        <entry align="center">Параметр</entry>
-                                        <entry align="center">Описание</entry>
-                                    </row>
-                                </thead>
-                                <tbody>
-                                    <row>
-                                        <entry><replaceable>username</replaceable></entry>
-                                        <entry>
-                                            <para>Имя пользователя, которому назначается роль
-                                                RDB$ADMIN или у которого она отбирается.</para>
-                                        </entry>
-                                    </row>
-                                </tbody>
-                            </tgroup>
-                        </table>
-                    </para>
-
-                    <para>Если в операторе GRANT присутствует ключевое слово DEFAULT, то
-                        пользователь автоматически будет получать административные привилегии даже
-                        если он не указал роль RDB$ADMIN при входе. Привилегии на роль RDB$ADMIN
-                        могут давать только <link linkend="security-administrators"
-                            >администраторы</link>. </para>
-                    <formalpara>
-                        <title>См. также:</title>
-
-                        <para>
-                            <link linkend="security-priv-grant">GRANT</link>, <link
-                                linkend="security-priv-revoke">REVOKE</link>. </para>
-                    </formalpara>
-
-                    <section xml:id="security-sysroles-rdbadmin-useindb">
-                        <title>Использование роли RDB$ADMIN в обычной базе данных</title>
-
-                        <para>Для использования прав роли RDB$ADMIN пользователь просто указывает её
-                            при соединении с базой данных, или же роль RDB$ADMIN выдали пользователю
-                            с использованием ключевого слова DEFAULT. Он также может указать её
-                            позднее с помощью оператора SET ROLE.</para>
-                    </section>
-                </section>
-
-                <section xml:id="security-sysroles-rdbadmin-grantinsecuritydb">
-                    <title>Предоставление роли RDB$ADMIN в базе данных пользователей</title>
-
-                    <para>Так как никто не может соединиться с базой данных пользователей, то
-                        операторы GRANT и REVOKE здесь не могут использоваться. Вместо этого роль
-                        RDB$ADMIN предоставляют и удаляют SQL командами управления пользователями:
-                        CREATE USER и ALTER USER, в которых указываются специальные опции GRANT
-                        ADMIN ROLE и REVOKE ADMIN ROLE. </para>
-                    <formalpara>
-                        <info>
-                            <title>Синтаксис (неполный):</title>
-                        </info>
-
-                        <para><programlisting>
-CREATE USER <replaceable>newuser</replaceable> 
-PASSWORD '<replaceable>password</replaceable>' 
-GRANT ADMIN ROLE
- 
-ALTER USER <replaceable>existinguser</replaceable> 
-GRANT ADMIN ROLE
- 
-ALTER USER <replaceable>existinguser</replaceable> 
-REVOKE ADMIN ROLE
-                       </programlisting></para>
-                    </formalpara>
-                    <para>
-                        <table frame="all">
-                            <title>Параметры операторов установки и отмены роли RDB$ADMIN</title>
-                            <?dbfo keep-together='auto'?>
-                            <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
-                                <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
-                                <thead>
-                                    <row>
-                                        <entry align="center">Параметр</entry>
-                                        <entry align="center">Описание</entry>
-                                    </row>
-                                </thead>
-                                <tbody>
-                                    <row>
-                                        <entry><replaceable>newuser</replaceable></entry>
-                                        <entry>
-                                            <para>Имя вновь создаваемого пользователя. Максимальная
-                                                длина 63 символа.</para>
-                                        </entry>
-                                    </row>
-                                    <row>
-                                        <entry><replaceable>existinguser</replaceable></entry>
-                                        <entry>
-                                            <para>Имя существующего пользователя.</para>
-                                        </entry>
-                                    </row>
-                                    <row>
-                                        <entry><replaceable>password</replaceable></entry>
-                                        <entry>
-                                            <para>Пароль пользователя. Чувствительно к
-                                                регистру.</para>
-                                        </entry>
-                                    </row>
-                                </tbody>
-                            </tgroup>
-                        </table>
-                    </para>
-
-                    <important>
-                        <para>Пожалуйста, помните, что GRANT ADMIN ROLE и REVOKE ADMIN ROLE это не
-                            операторы GRANT и REVOKE. Это параметры для CREATE USER и ALTER
-                            USER.</para>
-                    </important>
-                    <para>Привилегии на роль RDB$ADMIN могут давать только <link
-                            linkend="security-administrators">администраторы</link>. </para>
-                    <formalpara>
-                        <title>См. также:</title>
-
-                        <para>
-                            <link linkend="security-priv-grant">GRANT</link>, <link
-                                linkend="security-priv-revoke">REVOKE</link>. </para>
-                    </formalpara>
-
-                    <section xml:id="security-rdbadmin-grantinsecuritydb-gsec">
-                        <title>Выполнение той же задачи используя утилиту
-                                <application>gsec</application></title>
-
-                        <para>То же самое можно сделать используя утилиту
-                                <application>gsec</application> указав параметр
-                                <parameter>-admin</parameter> для сохранения атрибута
-                                <database>RDB$ADMIN</database> учётной записи пользователя: <blockquote>
-                                <literallayout class="monospaced">
-gsec -add new_user -pw password -admin yes
-gsec -mo existing_user -admin yes
-gsec -mo existing_user -admin no
-            </literallayout>
-                            </blockquote>
-                        </para>
-                        <note>
-                            <para>В зависимости от административного статуса текущего пользователя
-                                для утилиты <application>gsec</application> может потребоваться
-                                больше параметров, таких как <parameter>-user</parameter> и
-                                    <parameter>-pass</parameter>, или
-                                    <parameter>-trusted</parameter>.</para>
-                        </note>
-
-                    </section>
-
-                    <section xml:id="security-sysroles-rdbadmin-useinsecuritydb">
-                        <title>Использование роли RDB$ADMIN в базе данных пользователей</title>
-
-                        <para>Для управления учётными записями пользователей через SQL пользователь,
-                            имеющий права на роль RDB$ADMIN, должен подключиться к базе данных с
-                            этой ролью. Так как к базе данных пользователей не имеет права
-                            соединяться никто, то пользователь должен подключиться к обычной базе
-                            данных, где он также имеет права на роль RDB$ADMIN. Он определяет роль
-                            при соединении с обычной базой данных и может в ней выполнить любой SQL
-                            запрос. Это не самое элегантное решение, но это единственный способ
-                            управлять пользователями через SQL запросы. </para>
-                        <para>Если нет обычной базы данных, где у пользователя есть права на роль
-                            RDB$ADMIN, то управление учётными записями посредством SQL запросов
-                            недоступно.</para>
-                    </section>
-
-                    <section xml:id="security-sysroles-rdbadmin-useingsec">
-                        <title>Использование роли RDB$ADMIN в
-                            <application>gsec</application></title>
-
-                        <para>Для управления пользователями через утилиту
-                                <application>gsec</application> роль RDB$ADMIN должна быть указана в
-                            переключателе <parameter>-role</parameter>.</para>
-                    </section>
-                </section>
-
-                <section xml:id="security-autoadminmapping">
-                    <info>
-                        <title>AUTO ADMIN MAPPING</title>
-                        <keywordset>
-                            <keyword>AUTO ADMIN MAPPING</keyword>
-                        </keywordset>
-                    </info>
-                    <formalpara>
-                        <title>Операционная система:</title>
-
-                        <para>только Windows.</para>
-                    </formalpara>
-                    <para>Администраторы операционной системы Windows автоматически не получают
-                        права SYSDBA при подключении к базе данных (если, конечно, разрешена
-                        доверенная авторизация). Имеют ли администраторы автоматические права SYSDBA
-                        зависит от установки значения флага AUTO ADMIN MAPPING. Это флаг в каждой из
-                        баз данных, который по умолчанию выключен. Если флаг AUTO ADMIN MAPPING
-                        включен, то он действует, когда администратор Windows: <orderedlist
-                            numeration="loweralpha" spacing="compact">
-                            <listitem>
-                                <para>подключается с помощью доверенной аутентификации</para>
-                            </listitem>
-                            <listitem>
-                                <para>не определяет никакой роли при подключении.</para>
-                            </listitem>
-                        </orderedlist></para>
-                    <para>После успешного “auto admin” подключения текущей ролью будет являться
-                        RDB$ADMIN. </para>
-                    <section xml:id="security-autoadminmapping01">
-                        <info>
-                            <title>Включение и выключение AUTO ADMIN MAPPING в обычной базе
-                                данных</title>
-
-                            <keywordset>
-                                <keyword>AUTO ADMIN MAPPING</keyword>
-                            </keywordset>
-                        </info>
-
-                        <indexterm><primary>ALTER ROLE RDB$ADMIN SET AUTO ADMIN
-                            MAPPING</primary></indexterm>
-                        <indexterm><primary>ALTER ROLE RDB$ADMIN DROP AUTO ADMIN
-                            MAPPING</primary></indexterm>
-
-                        <para>Включение и выключение флага AUTO ADMIN MAPPING в обычной базе данных
-                            осуществляется следующим образом:
-                            <programlisting language="sql">
-ALTER ROLE RDB$ADMIN SET AUTO ADMIN MAPPING -- включение
- 
-ALTER ROLE RDB$ADMIN DROP AUTO ADMIN MAPPING -- выключение                   
-                </programlisting>
-                        </para>
-                        <para>Эти операторы могут быть выполнены пользователями с достаточными
-                            правами, а именно: <itemizedlist spacing="compact">
-                                <listitem>
-                                    <para>владелец базы данных;</para>
-                                </listitem>
-                                <listitem>
-                                    <para>
-                                        <link linkend="security-administrators"
-                                            >администраторы</link>. </para>
-                                </listitem>
-                            </itemizedlist>
-                        </para>
-
-                        <note>
-                            <para>Оператор
-                                <programlisting language="sql">
-ALTER ROLE RDB$ADMIN SET AUTO ADMIN MAPPING
-                    </programlisting>
-                                является упрощённым видом оператора создания отображения
-                                предопределённой группы DOMAIN_ANY_RID_ADMINS на роль RDB$ADMIN.
-                                <programlisting language="sql">
-CREATE MAPPING WIN_ADMINS
-USING PLUGIN WIN_SSPI
-FROM Predefined_Group
-DOMAIN_ANY_RID_ADMINS
-TO ROLE RDB$ADMIN;                        
-                    </programlisting>
-                                Соответственно оператор
-                                <programlisting language="sql">
-ALTER ROLE RDB$ADMIN DROP AUTO ADMIN MAPPING
-                    </programlisting>
-                                эквивалентен оператору
-                                <programlisting language="sql">
-DROP MAPPING WIN_ADMINS;
-                    </programlisting>
-                            </para>
-                            <para>Подробней см. <link linkend="security-mapping">Отображение
-                                    объектов безопасности</link>.</para>
-                        </note>
-
-                        <para>В обычных базах данных статус AUTO ADMIN MAPPING проверяется только во
-                            время подключения. Если Администратор имеет роль RDB$ADMIN потому, что
-                            произошло автоматическое отображение во время входа, то он будет
-                            удерживать эту роль на протяжении всей сессии, даже если он или кто-то
-                            другой в это же время выключает автоматическое отображение.</para>
-
-                        <para>Точно также, включение AUTO ADMIN MAPPING не изменит текущую роль в
-                            RDB$ADMIN для Администраторов, которые уже подключились.</para>
-
-                    </section>
-                    <section xml:id="security-autoadminmapping02">
-                        <info>
-                            <title>Включение и выключение AUTO ADMIN MAPPING в базе данных
-                                безопасности</title>
-                        </info>
-
-                        <para>Оператором ALTER ROLE RDB$ADMIN невозможно включить или выключить флаг
-                            AUTO ADMIN MAPPING в базе данных пользователей. Однако вы можете создать
-                            глобальное отображение предопределённой группы DOMAIN_ANY_RID_ADMINS на
-                            роль RDB$ADMIN следующим образом:
-                            <programlisting language="sql">
-CREATE GLOBAL MAPPING WIN_ADMINS
-USING PLUGIN WIN_SSPI
-FROM Predefined_Group
-DOMAIN_ANY_RID_ADMINS
-TO ROLE RDB$ADMIN;                        
-                    </programlisting>
-                        </para>
-                        <para>Кроме того для включения AUTO ADMIN MAPPING в базе данных
-                            пользователей можно использовать утилиту командной строки
-                                <application>gsec</application>:
-                            <screen>
-gsec -mapping set
- 
-gsec -mapping drop                
-            </screen>
-                        </para>
-                        <note>
-                            <para>В зависимости от административного статуса текущего пользователя
-                                для утилиты <application>gsec</application> может потребоваться
-                                больше параметров, таких как <parameter>-user</parameter> и
-                                    <parameter>-pass</parameter>, или
-                                    <parameter>-trusted</parameter>.</para>
-                        </note>
-
-                        <para>Только SYSDBA может включить AUTO ADMIN MAPPING, если он выключен, но
-                            любой администратор может выключить его.</para>
-
-                        <para>При выключении AUTO ADMIN MAPPING пользователь отключает сам механизм,
-                            который предоставлял ему доступ и, таким образом, он не сможет обратно
-                            включить AUTO ADMIN MAPPING. Даже в интерактивном
-                                <application>gsec</application> сеансе новая установка флага сразу
-                            вступает в силу.</para>
-                    </section>
-                </section>
             </section>
         </section>
     </section>

@@ -4520,7 +4520,7 @@ SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- &lt;null&gt;
                         linkend="internalfunc-func-string-left">LEFT</link>, <link
                         linkend="internalfunc-func-string-right">RIGHT</link>, <link
                         linkend="internalfunc-func-string-char_length">CHAR_LENGTH</link>, <link
-                        linkend="common-predicats-othercompare-similar">SIMILAR TO</link>. </para>
+                        linkend="langref-commons-predsimilarto">SIMILAR TO</link>. </para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-func-string-trim">
@@ -8080,7 +8080,7 @@ NEW.ID = GEN_ID (GEN_TABLE_ID, 1);
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="common-expr-nextvalue">NEXT VALUE FOR</link>, <link
+                    <link linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
                         linkend="ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
                         linkend="ddl-sequence-alter">ALTER SEQUENCE</link>, <link
                         linkend="ddl-sequence-setgen">SET GENERATOR</link>. </para>
@@ -8190,7 +8190,7 @@ WHERE ...
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="common-expr-cond-case">CASE</link>. </para>
+                    <link linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-func-case-decode">
@@ -8286,7 +8286,7 @@ END
             </formalpara>
 
             <para>Данная функция эквивалентна конструкции <link
-                    linkend="common-expr-cond-case-simple">Простой CASE</link>, в которой заданное
+                    linkend="langref-commons-conditional-case-simple">Простой CASE</link>, в которой заданное
                 выражение сравнивается с другими выражениями до нахождения совпадения. Результатом
                 является значение, указанное после выражения, с которым найдено совпадение. Если
                 совпадений не найдено, то возвращается значение по умолчанию (если оно, конечно,
@@ -8322,7 +8322,7 @@ FROM people
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="common-expr-cond-case">CASE</link>. </para>
+                    <link linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-func-case-iif">
@@ -8420,7 +8420,7 @@ SELECT IIF(SEX = 'M', 'Sir', 'Madam') FROM CUSTOMERS
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="common-expr-cond-case">CASE</link>. </para>
+                    <link linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
         <section xml:id="internalfunc-func-case-maxvalue">
@@ -8661,7 +8661,7 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
 
                 <para>
                     <link linkend="internalfunc-func-case-coalesce">COALESCE</link>, <link
-                        linkend="common-expr-cond-case">CASE</link>. </para>
+                        linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
     </section>

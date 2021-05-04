@@ -429,6 +429,7 @@ END
         </section>
         <section xml:id="types-integer-hex">
             <title>Шестнадцатеричный формат для целых чисел</title>
+            
             <para>Начиная с Firebird 2.5, константы трех целочисленных типов можно указать в
                 шестнадцатеричном формате с помощью 9-16 шестнадцатеричных цифр для BIGINT или 1 до
                 8 цифр для INTEGER. Запись SMALLINT в шестнадцатеричном представлении не
@@ -437,7 +438,7 @@ END
                 попадает в допустимый диапазон положительных и отрицательных значений для
                 SMALLINT.</para>
             <para>Использование и диапазоны значений чисел шестнадцатеричной нотации более подробно
-                описаны в ходе обсуждения <link linkend="common-expr-number-constants">целочисленных
+                описаны в ходе обсуждения <link linkend="langref-commons-number-constant">числовых
                     констант</link> в главе под названием <citetitle>Общие элементы
                     языка</citetitle>.</para>
             <formalpara>
@@ -2323,7 +2324,7 @@ ORDER BY NAME COLLATE PXW_CYRL
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="common-predicats-othercompare-containing">CONTAINING</link>.
+                        <link linkend="langref-commons-predcontaining">CONTAINING</link>.
                     </para>
                 </formalpara>
             </section>
@@ -2559,6 +2560,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
 'Mrs. Hunt''s husband'                
                      </programlisting>
             </para>
+            
             <section xml:id="types-char-literals-altquotes">
                 <info>
                     <title>Альтернативы для апострофов в строковых литералах</title>
@@ -2621,6 +2623,7 @@ END
                     </para>
                 </example>
             </section>
+        
         </section>
     </section>
     <section xml:id="types-boolean">
@@ -2638,7 +2641,7 @@ END
             неявных значениях истинности. Например, <emphasis role="bold">field1 OR
                 field2</emphasis> или <emphasis role="bold">NOT field1</emphasis> являются
             допустимыми выражениями. </para>
-        <para>Предикаты могут использовать оператор <link linkend="common-predicats-othercompare-is"
+        <para>Предикаты могут использовать оператор <link linkend="langref-commons-isnotboolean"
                 >IS [NOT]</link> для проверки соответствия. Например, <emphasis role="bold">field1
                 IS FALSE</emphasis> или <emphasis role="bold">field1 IS NOT TRUE</emphasis>. </para>
         <note>

@@ -12352,7 +12352,7 @@ CREATE SEQUENCE EMP_NO_GEN START WITH 5 INCREMENT BY 10;
                         <link linkend="ddl-sequence-alter">ALTER SEQUENCE</link>, <link
                             linkend="ddl-sequence-setgen">SET GENERATOR</link>, <link
                             linkend="ddl-sequence-drop">DROP SEQUENCE</link>, <link
-                            linkend="common-expr-nextvalue">NEXT VALUE FOR</link>, <link
+                            linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
                             linkend="ddl-sequence-drop">GEN_ID</link>. </para>
                 </formalpara>
             </section>
@@ -12502,7 +12502,7 @@ ALTER SEQUENCE EMP_NO_GEN INCREMENT BY 10;
                         <link linkend="ddl-sequence-setgen">SET GENERATOR</link>, <link
                             linkend="ddl-sequence-create">CREATE SEQUENCE</link>, <link
                             linkend="ddl-sequence-drop">DROP SEQUENCE</link>, <link
-                            linkend="common-expr-nextvalue">NEXT VALUE FOR</link>, <link
+                            linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
                             linkend="ddl-sequence-drop">GEN_ID</link>. </para>
                 </formalpara>
             </section>
@@ -12898,7 +12898,7 @@ ALTER SEQUENCE EMP_NO_GEN RESTART WITH 145;
 
                     <para>
                         <link linkend="ddl-sequence-alter">ALTER SEQUENCE</link>, <link
-                            linkend="common-expr-nextvalue">NEXT VALUE FOR</link>, <link
+                            linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
                             linkend="ddl-sequence-drop">GEN_ID</link>. </para>
                 </formalpara>
             </section>
