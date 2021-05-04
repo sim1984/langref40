@@ -92,7 +92,7 @@
                         </row>
                         <row>
                             <entry>Контекстные переменные</entry>
-                            <entry>Встроенные <link linkend="context-var">контекстные
+                            <entry>Встроенные <link linkend="langref-contextvars">контекстные
                                     переменные</link>.</entry>
                         </row>
                         <row>
@@ -944,8 +944,8 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
-                        linkend="internalfunc-func-gen-gen_id">GEN_ID</link>. </para>
+                    <link linkend="langref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
+                        linkend="langref-functions-func-gen-gen_id">GEN_ID</link>. </para>
             </formalpara>
         </section>
 
@@ -957,7 +957,7 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                 зависимости от истинности некоторого условия или условий. В данном разделе описано
                 лишь одно условное выражение CASE. Остальные условные выражения являются
                 производными встроенными функциями и описаны в разделе <link
-                    linkend="internalfunc-func-case">Условные функции</link>.</para>
+                    linkend="langref-functions-func-case">Условные функции</link>.</para>
 
             <section xml:id="langref-commons-conditional-case">
                 <info>
@@ -1035,7 +1035,7 @@ FROM PEOPLE
                         </para>
                     </formalpara>
                     <para>Сокращённый вид простого оператора CASE используется в функции <link
-                            linkend="internalfunc-func-case-decode">DECODE</link>. </para>
+                            linkend="langref-functions-func-case-decode">DECODE</link>. </para>
                 </simplesect>
 
                 <simplesect xml:id="langref-commons-conditional-case-srched">

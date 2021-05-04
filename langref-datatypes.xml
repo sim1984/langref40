@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="types" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-datatypes" xml:lang="ru">
     <info>
         <title>Типы данных</title>
     </info>
@@ -312,14 +312,14 @@
             реальных исторических фактов и так, как будто бы во всем этом диапазоне ВСЕГДА
             действовал только Григорианский календарь. </para>
     </note>
-    <section xml:id="types-integer">
+    <section xml:id="langref-datatypes-integer">
         <info>
             <title>Целочисленные типы данных</title>
         </info>
 
         <para>Для целых чисел используют целочисленные типы данных SMALLINT, INTEGER и BIGINT (в 3
             диалекте), INT128. Firebird не поддерживает беззнаковый целочисленный тип данных. </para>
-        <section xml:id="types-integer-smallint">
+        <section xml:id="langref-datatypes-integer-smallint">
             <info>
                 <title>SMALLINT</title>
             </info>
@@ -341,7 +341,7 @@ CREATE DOMAIN RGB_VALUE AS SMALLINT;
                 </para>
             </formalpara>
         </section>
-        <section xml:id="types-integer-int">
+        <section xml:id="langref-datatypes-integer-int">
             <info>
                 <title>INTEGER</title>
             </info>
@@ -367,7 +367,7 @@ CREATE TABLE CUSTOMER (
                 </para>
             </formalpara>
         </section>
-        <section xml:id="types-integer-bigint">
+        <section xml:id="langref-datatypes-integer-bigint">
             <info>
                 <title>BIGINT</title>
             </info>
@@ -400,7 +400,7 @@ CREATE TABLE WHOLELOTTARECORDS (
                 </para>
             </formalpara>
         </section>
-        <section xml:id="types-integer-int128">
+        <section xml:id="langref-datatypes-integer-int128">
             <info>
                 <title>INT128</title>
             </info>
@@ -427,9 +427,9 @@ END
                 </para>
             </formalpara>
         </section>
-        <section xml:id="types-integer-hex">
+        <section xml:id="langref-datatypes-integer-hex">
             <title>Шестнадцатеричный формат для целых чисел</title>
-            
+
             <para>Начиная с Firebird 2.5, константы трех целочисленных типов можно указать в
                 шестнадцатеричном формате с помощью 9-16 шестнадцатеричных цифр для BIGINT или 1 до
                 8 цифр для INTEGER. Запись SMALLINT в шестнадцатеричном представлении не
@@ -474,7 +474,7 @@ INSERT INTO MYBIGINTS VALUES (
                 BIGINT. </para>
         </section>
     </section>
-    <section xml:id="types-float">
+    <section xml:id="langref-datatypes-float">
         <info>
             <title>Типы данных с плавающей точкой</title>
         </info>
@@ -490,7 +490,7 @@ INSERT INTO MYBIGINTS VALUES (
                 </listitem>
             </itemizedlist></para>
 
-        <section xml:id="types-float-approximate">
+        <section xml:id="langref-datatypes-float-approximate">
 
             <info>
                 <title>Приблизительные числовые типы</title>
@@ -549,7 +549,7 @@ INSERT INTO MYBIGINTS VALUES (
             <para>При использовании таких типов данных в выражениях рекомендуется крайне внимательно
                 и серьёзно подойти к вопросу округления результатов расчётов.</para>
 
-            <section xml:id="types-float-float">
+            <section xml:id="langref-datatypes-float-float">
                 <info>
                     <title>FLOAT</title>
                 </info>
@@ -585,7 +585,7 @@ INSERT INTO MYBIGINTS VALUES (
                     </table>
                 </para>
 
-                <section xml:id="types-float-float-precision">
+                <section xml:id="langref-datatypes-float-float-precision">
                     <info>
                         <title>FLOAT с указанием точности</title>
                     </info>
@@ -620,7 +620,7 @@ FLOAT(<replaceable>p</replaceable>)
                     </note>
                 </section>
             </section>
-            <section xml:id="types-float-real">
+            <section xml:id="langref-datatypes-float-real">
                 <info>
                     <title>REAL</title>
                 </info>
@@ -628,7 +628,7 @@ FLOAT(<replaceable>p</replaceable>)
 
                 <para>Тип REAL является синонимом типа FLOAT.</para>
             </section>
-            <section xml:id="types-float-double">
+            <section xml:id="langref-datatypes-float-double">
                 <info>
                     <title>DOUBLE PRECISION</title>
                 </info>
@@ -663,7 +663,7 @@ FLOAT(<replaceable>p</replaceable>)
                     </table>
                 </para>
             </section>
-            <section xml:id="types-float-long_float">
+            <section xml:id="langref-datatypes-float-long_float">
                 <info>
                     <title>LONG FLOAT</title>
                 </info>
@@ -700,13 +700,13 @@ LONG FLOAT[(<replaceable>&lt;precision&gt;</replaceable>)]
             </section>
         </section>
 
-        <section xml:id="types-float-dec">
+        <section xml:id="langref-datatypes-float-dec">
             <title>Десятичные типы с плавающей точкой</title>
 
             <para>Начиная с Firebird 4.0 поддерживаются типы десятичных чисел с плавающей
                 запятой.</para>
 
-            <section xml:id="types-float-decfloat">
+            <section xml:id="langref-datatypes-float-decfloat">
                 <info>
                     <title>DECFLOAT</title>
                 </info>
@@ -809,14 +809,14 @@ DECLARE VARIABLE v DECFLOAT(34);
                     данными типа DECFLOAT.</para>
 
                 <para>Firebird поддерживает 4 функции, которые созданы специально для поддержки типа
-                    DECFLOAT: <link linkend="internalfunc-func-decfloat-compare_decfloat"
+                    DECFLOAT: <link linkend="langref-functions-func-decfloat-compare_decfloat"
                         >COMPARE_DECFLOAT</link>, <link
-                        linkend="internalfunc-func-decfloat-normalize_decfloat"
+                        linkend="langref-functions-func-decfloat-normalize_decfloat"
                         >NORMALIZE_DECFLOAT</link>, <link
-                        linkend="internalfunc-func-decfloat-quantize">QUANTIZE</link>, <link
-                        linkend="internalfunc-func-decfloat-totalorder">TOTALORDER</link>.</para>
+                        linkend="langref-functions-func-decfloat-quantize">QUANTIZE</link>, <link
+                        linkend="langref-functions-func-decfloat-totalorder">TOTALORDER</link>.</para>
 
-                <section xml:id="types-float-decfloat-round-mode">
+                <section xml:id="langref-datatypes-float-decfloat-round-mode">
                     <info>
                         <title>Режимы округления</title>
                     </info>
@@ -1052,7 +1052,7 @@ SET DECFLOAT ROUND HALF_DOWN;
                             разрешено в том числе и PSQL коде.</para>
                     </note>
                 </section>
-                <section xml:id="types-float-decfloat-comparation">
+                <section xml:id="langref-datatypes-float-decfloat-comparation">
                     <info>
                         <title>Семантика сравнения</title>
                     </info>
@@ -1125,7 +1125,7 @@ select * from stockPrice order by stock;
                         </important>
 
                         <para>Запросить сравнение TotalOrder в предикатах можно при помощи
-                            встроенной функции <link linkend="internalfunc-func-decfloat-totalorder"
+                            встроенной функции <link linkend="langref-functions-func-decfloat-totalorder"
                                 >TOTALORDER()</link>.</para>
                         <para>
                             <example>
@@ -1170,7 +1170,7 @@ select * from stockPrice where TOTALORDER(stock, 4.20) = 1;
                     </section>
                 </section>
 
-                <section xml:id="types-float-decfloat-trap">
+                <section xml:id="langref-datatypes-float-decfloat-trap">
                     <info>
                         <title>Обработка ошибок</title>
                     </info>
@@ -1215,7 +1215,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
                     </note>
                 </section>
 
-                <section xml:id="types-float-decfloat-bind">
+                <section xml:id="langref-datatypes-float-decfloat-bind">
                     <info>
                         <title>Поддержка в клиентских приложениях</title>
                     </info>
@@ -1224,7 +1224,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
                         DECFLOAT. Для того чтобы старые приложения умели работать с типом DECFLOAT
                         вы можете настроить отображение значений DECFLOAT на другие доступные типы
                         данных c помощью оператора <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                            linkend="session-set_bind">SET BIND OF</link>.</para>
+                            linkend="langref-session-set_bind">SET BIND OF</link>.</para>
                     <formalpara>
                         <title>Примеры:</title>
                         <para>
@@ -1260,7 +1260,7 @@ SET BIND OF DECFLOAT TO NATIVE;
                         универсальному GUI-клиенту, выбор привязки к CHAR подходит в большинстве
                         случаев.</para>
                 </section>
-                <section xml:id="types-float-decfloat-literals">
+                <section xml:id="langref-datatypes-float-decfloat-literals">
                     <info>
                         <title>Литералы констант DECFLOAT</title>
                     </info>
@@ -1276,7 +1276,7 @@ SET BIND OF DECFLOAT TO NATIVE;
             </section>
         </section>
     </section>
-    <section xml:id="types-fixed">
+    <section xml:id="langref-datatypes-fixed">
         <info>
             <title>Типы данных с фиксированной точкой</title>
         </info>
@@ -1366,7 +1366,7 @@ SET BIND OF DECFLOAT TO NATIVE;
         </para>
 
 
-        <section xml:id="types-fixed-numeric">
+        <section xml:id="langref-datatypes-fixed-numeric">
             <info>
                 <title>NUMERIC</title>
             </info>
@@ -1420,7 +1420,7 @@ NUMERIC(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                     ограничение. </para>
             </caution>
         </section>
-        <section xml:id="types-fixed-decimal">
+        <section xml:id="langref-datatypes-fixed-decimal">
             <info>
                 <title>DECIMAL</title>
             </info>
@@ -1464,7 +1464,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 </informaltable>
             </para>
         </section>
-        <section xml:id="types-arithmetic-precision">
+        <section xml:id="langref-datatypes-arithmetic-precision">
             <title>Точность арифметических операций</title>
 
             <para>Функции MIN, MAX, SUM, AVG работают со всеми точными числовыми типами. SUM и AVG
@@ -1512,7 +1512,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 Firebird.)</para>
         </section>
     </section>
-    <section xml:id="types-datetime">
+    <section xml:id="langref-datatypes-datetime">
         <info>
             <title>Типы данных для работы с датой и временем</title>
         </info>
@@ -1572,7 +1572,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
         </note>
 
-        <section xml:id="types-datetime-timezone">
+        <section xml:id="langref-datatypes-datetime-timezone">
             <title>Часовой пояс</title>
 
             <para>Типы <code>TIMESTAMP</code> и <code>TIME</code> могут содержать или не содержать
@@ -1592,7 +1592,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 используется операционной системой в которой запущен процесс Firebird.</para>
 
             <para>Часовой пояс сеанса может быть изменён с помощью оператора <link
-                    linkend="session-timezone-settimezone">SET TIME ZONE</link> или сброшен в
+                    linkend="langref-session-timezone-settimezone">SET TIME ZONE</link> или сброшен в
                 исходное значение с помощью <code>SET TIME ZONE LOCAL</code>.</para>
 
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
@@ -1609,15 +1609,45 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                 эквивалентны <code>time '12:00 GMT'</code>. Это также справедливо в контексте
                 ограничения UNIQUE и для сортировки.</para>
 
-            <para><code>EXTENDED {TIME | TIMESTAMP} WITH TIME ZONE</code> предназначены для
-                использования только при общении с клиентами, они решают проблему представления
-                правильного времени на клиентах, у которых отсутствует библиотека ICU. Нельзя
-                использовать расширенные типы данных в таблицах, процедурах и т. д. Единственный
-                способ использовать эти типы данных — это приведение типов данных, включая
-                инструкцию SET BIND (дополнительную информацию смотри в <link
-                    linkend="session-set_bind">SET BIND OF</link>).</para>
+            <note>
+                <para><code>EXTENDED {TIME | TIMESTAMP} WITH TIME ZONE</code> предназначены для
+                    использования только при общении с клиентами, они решают проблему представления
+                    правильного времени на клиентах, у которых отсутствует библиотека ICU. Нельзя
+                    использовать расширенные типы данных в таблицах, процедурах и т. д. Единственный
+                    способ использовать эти типы данных — это приведение типов данных, включая
+                    инструкцию SET BIND (дополнительную информацию смотри в <link
+                        linkend="langref-session-set_bind">SET BIND OF</link>).</para>
+            </note>
 
-            <section xml:id="types-datetime-timezone-time_rb_semantics">
+            <section xml:id="langref-datatypes-datetime-timezone-get_timezone">
+                <title>Получение часового пояса сеанса</title>
+                
+                <para>Получить текущий часовой пояс сеанса можно с использованием функции <code>RDB$GET_CONTEXT</code> с аргументами
+                    'SYSTEM' для пространства имён и 'SESSION_TIMEZONE' в качестве имени переменной.</para>
+                
+                <formalpara>
+                    <title>Пример:</title>
+                    
+                    <para>
+                        <example>
+                            <title>Получение часового пояса сеанса</title>
+                            
+                            <para><programlisting language="sql"> 
+set time zone '-02:00';
+select rdb$get_context('SYSTEM', 'SESSION_TIMEZONE') from rdb$database;
+-- returns -02:00
+
+set time zone 'America/Sao_Paulo';
+select rdb$get_context('SYSTEM', 'SESSION_TIMEZONE') from rdb$database;
+-- returns America/Sao_Paulo
+                </programlisting>
+                            </para>
+                        </example>
+                    </para>
+                </formalpara>
+            </section>
+
+            <section xml:id="langref-datatypes-datetime-timezone-time_rb_semantics">
                 <title>Региональная семантика TIME WITH TIME ZONE</title>
 
                 <para>По определению региональные часовые пояса зависят от момента (дата и время —
@@ -1657,7 +1687,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
                         America/Los_Angeles</literal>.</para>
             </section>
 
-            <section xml:id="types-datetime-timezone-storage">
+            <section xml:id="langref-datatypes-datetime-timezone-storage">
                 <title>Хранение</title>
 
                 <para><code>{TIME | TIMESTAMP} WITH TIME ZONE</code> хранится так же как <code>{TIME
@@ -1674,7 +1704,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
 
         </section>
 
-        <section xml:id="types-datetime-date">
+        <section xml:id="langref-datatypes-datetime-date">
             <info>
                 <title>DATE</title>
             </info>
@@ -1712,11 +1742,11 @@ BEGIN
                     </programlisting>
                 </para>
             </example>
-            <para>См. также <link linkend="internalfunc-func-datetime-extract">EXTRACT</link>, <link
-                    linkend="internalfunc-contextvar-current_date">CURRENT_DATE</link>, <link
-                    linkend="types-cast-dateliteral">Литералы дат</link>. </para>
+            <para>См. также <link linkend="langref-functions-func-datetime-extract">EXTRACT</link>, <link
+                    linkend="langref-contextvars-current_date">CURRENT_DATE</link>, <link
+                    linkend="langref-datatypes-cast-dateliteral">Литералы дат</link>. </para>
         </section>
-        <section xml:id="types-datetime-time">
+        <section xml:id="langref-datatypes-datetime-time">
             <info>
                 <title>TIME</title>
             </info>
@@ -1744,7 +1774,7 @@ EXTENDED TIME WITH TIME ZONE
                     времени на клиентах, у которых отсутствует библиотека ICU. Нельзя использовать
                     расширенные типы данных в таблицах, процедурах и т. д. Единственный способ
                     использовать эти типы данных — это приведение типов данных, включая инструкцию
-                    SET BIND (дополнительную информацию смотри в <link linkend="session-set_bind"
+                    SET BIND (дополнительную информацию смотри в <link linkend="langref-session-set_bind"
                         >SET BIND OF</link>).</para>
             </important>
 
@@ -1774,13 +1804,13 @@ BEGIN
                     </programlisting>
                 </para>
             </example>
-            <para>См. также <link linkend="internalfunc-func-datetime-extract">EXTRACT</link>, <link
-                    linkend="internalfunc-func-datetime-attimezone">AT</link>, <link
-                    linkend="internalfunc-contextvar-localtime">LOCALTIME</link>, <link
-                    linkend="internalfunc-contextvar-current_time">CURRENT_TIME</link>, <link
-                    linkend="types-cast-dateliteral">Литералы времени</link>. </para>
+            <para>См. также <link linkend="langref-functions-func-datetime-extract">EXTRACT</link>, <link
+                    linkend="langref-functions-func-datetime-attimezone">AT</link>, <link
+                    linkend="langref-contextvars-localtime">LOCALTIME</link>, <link
+                    linkend="langref-contextvars-current_time">CURRENT_TIME</link>, <link
+                    linkend="langref-datatypes-cast-dateliteral">Литералы времени</link>. </para>
         </section>
-        <section xml:id="types-datetime-timestamp">
+        <section xml:id="langref-datatypes-datetime-timestamp">
             <info>
                 <title>TIMESTAMP</title>
             </info>
@@ -1808,7 +1838,7 @@ EXTENDED TIMESTAMP WITH TIME ZONE
                     времени на клиентах, у которых отсутствует библиотека ICU. Нельзя использовать
                     расширенные типы данных в таблицах, процедурах и т. д. Единственный способ
                     использовать эти типы данных — это приведение типов данных, включая инструкцию
-                    SET BIND (дополнительную информацию смотри в <link linkend="session-set_bind"
+                    SET BIND (дополнительную информацию смотри в <link linkend="langref-session-set_bind"
                         >SET BIND OF</link>).</para>
             </important>
 
@@ -1838,13 +1868,13 @@ BEGIN
                     </programlisting>
                 </para>
             </example>
-            <para>См. также <link linkend="internalfunc-func-datetime-extract">EXTRACT</link>, <link
-                    linkend="internalfunc-func-datetime-attimezone">AT</link>, <link
-                    linkend="internalfunc-contextvar-localtimestamp">LOCALTIMESTAMP</link>, <link
-                    linkend="internalfunc-contextvar-current_timestamp">CURRENT_TIMESTAMP</link>,
-                    <link linkend="types-cast-dateliteral">Литералы временных меток</link>. </para>
+            <para>См. также <link linkend="langref-functions-func-datetime-extract">EXTRACT</link>, <link
+                    linkend="langref-functions-func-datetime-attimezone">AT</link>, <link
+                    linkend="langref-contextvars-localtimestamp">LOCALTIMESTAMP</link>, <link
+                    linkend="langref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
+                    <link linkend="langref-datatypes-cast-dateliteral">Литералы временных меток</link>. </para>
         </section>
-        <section xml:id="types-datetime-literals">
+        <section xml:id="langref-datatypes-datetime-literals">
 
             <title>Литералы даты и времени</title>
 
@@ -1885,7 +1915,7 @@ BEGIN
                 </para>
             </formalpara>
             <para>
-                <table xml:id="types-tbl-keydesc" frame="all">
+                <table xml:id="langref-datatypes-tbl-keydesc" frame="all">
                     <?dbfo keep-together='auto'?>
                     <title>Описание формата даты и времени</title>
                     <tgroup cols="2">
@@ -2068,11 +2098,11 @@ FROM rdb$database
 
                 <para>
                     <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                        linkend="types-cast-dateliteral">Преобразование строк в дату и время</link>.
+                        linkend="langref-datatypes-cast-dateliteral">Преобразование строк в дату и время</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="types-datetime-operation">
+        <section xml:id="langref-datatypes-datetime-operation">
             <info>
                 <title>Операции, использующие значения даты и времени</title>
             </info>
@@ -2081,7 +2111,7 @@ FROM rdb$database
                 количеством дней с &quot;нулевой даты&quot; – 17 ноября 1858 г. Время представлено
                 количеством секунд (с учётом десятитысячных долей), прошедших с полуночи. </para>
             <para>
-                <table xml:id="types-datetime-tbl-operation" frame="all">
+                <table xml:id="langref-datatypes-datetime-tbl-operation" frame="all">
                     <?dbfo keep-together='auto'?>
                     <title>Арифметические операции для типов данных даты и времени</title>
                     <tgroup cols="4">
@@ -2215,12 +2245,12 @@ FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-datetime-dateadd">DATEADD</link>, <link
-                        linkend="internalfunc-func-datetime-datediff">DATEDIFF</link>. </para>
+                    <link linkend="langref-functions-func-datetime-dateadd">DATEADD</link>, <link
+                        linkend="langref-functions-func-datetime-datediff">DATEDIFF</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="types-char">
+    <section xml:id="langref-datatypes-char">
         <info>
             <title>Символьные типы данных</title>
         </info>
@@ -2240,7 +2270,7 @@ FROM rdb$database
             расходуется 1 байт, соответственно максимальный размер текстовых полей для данной
             кодировки будет 32767 символов. Для стандартных операций сортировки при работе с WIN1251
             не требуется задавать порядок сортировки (COLLATE). </para>
-        <section xml:id="types-char-unicode">
+        <section xml:id="langref-datatypes-char-unicode">
             <title>UNICODE</title>
             <para>В настоящее время все современные средства разработки поддерживают Unicode. При
                 возникновении необходимости использования восточноевропейских текстов в строковых
@@ -2255,7 +2285,7 @@ FROM rdb$database
                 символ, поэтому для интернациональных баз рекомендуется использовать именно эту
                 реализацию поддержки Unicode в Firebird. </para>
         </section>
-        <section xml:id="types-char-clientcharset">
+        <section xml:id="langref-datatypes-char-clientcharset">
             <title>Набор символов клиента</title>
             <para>При работе со строками необходимо помнить и о параметре соединения клиентской
                 программы к базе данных. В нём также задаётся набор символов. В случае различия
@@ -2265,7 +2295,7 @@ FROM rdb$database
                 ситуация, когда база создана в кодировке WIN1251, а в настройках клиента в
                 параметрах соединения стоит KOI8R или UTF8. </para>
         </section>
-        <section xml:id="types-char-specialcharset">
+        <section xml:id="langref-datatypes-char-specialcharset">
             <title>Специальные наборы символов</title>
             <para>Набор символов NONE относится к специальным наборам символов. Его можно
                 охарактеризовать тем, что каждый байт является частью строки, но в системе хранится
@@ -2281,7 +2311,7 @@ FROM rdb$database
                 возможно возникновение исключения при работе кода, когда идёт попытка отображения
                 бинарных данных в желаемой кодировке. </para>
         </section>
-        <section xml:id="types-char-collate">
+        <section xml:id="langref-datatypes-char-collate">
             <title>Последовательность сортировки</title>
             <para>Каждый текстовый набор символов (CHARACTER SET) имеет последовательность
                 сортировки (COLLATE) по умолчанию, задающий порядок сортировки и способы сравнения.
@@ -2292,7 +2322,7 @@ FROM rdb$database
                 меньше, в секции ORDER BY при сортировке по символьному полю, а также при операциях
                 группировки для указания специальной последовательности сортировки при выводе в
                 предложении GROUP BY. </para>
-            <section xml:id="types-char-collate-search-casein">
+            <section xml:id="langref-datatypes-char-collate-search-casein">
                 <title>Регистронезависимый поиск</title>
                 <para>Для регистронезависимого поиска можно воспользоваться функцией UPPER: </para>
                 <para>
@@ -2324,11 +2354,10 @@ ORDER BY NAME COLLATE PXW_CYRL
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-commons-predcontaining">CONTAINING</link>.
-                    </para>
+                        <link linkend="langref-commons-predcontaining">CONTAINING</link>. </para>
                 </formalpara>
             </section>
-            <section xml:id="types-char-collate-utf8">
+            <section xml:id="langref-datatypes-char-collate-utf8">
                 <title>Последовательности сортировки для UTF-8</title>
                 <para>Ниже приведена таблица возможных последовательностей сортировки для набора
                     символов UTF8. </para>
@@ -2384,7 +2413,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 </para>
             </section>
         </section>
-        <section xml:id="types-char-index">
+        <section xml:id="langref-datatypes-char-index">
             <title>Индексирование символьных типов</title>
             <para>При построении индекса по строковым полям необходимо учитывать ограничение на
                 длину ключа индекса. Максимальная используемая длина ключа индекса равна 1/4 размера
@@ -2398,7 +2427,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
             </para>
             <para>где <replaceable>N</replaceable> — число байтов на представление символа. </para>
             <para>
-                <table xml:id="types-tbl-charindxsz" frame="all">
+                <table xml:id="langref-datatypes-tbl-charindxsz" frame="all">
                     <?dbfo keep-together='auto'?>
                     <title>Длина индексируемой строки и набор символов</title>
                     <tgroup cols="6">
@@ -2469,7 +2498,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 порядков сортировки доступен в приложении <link linkend="charset-coll">Наборы
                     символов и порядки сортировки</link>.</para>
         </section>
-        <section xml:id="types-char-char">
+        <section xml:id="langref-datatypes-char-char">
             <info>
                 <title>CHAR</title>
             </info>
@@ -2496,7 +2525,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 длина которых стандартна и определённой <quote>ширины</quote>. Примером такого может
                 служить почтовый индекс в России – 6 символов. </para>
         </section>
-        <section xml:id="types-char-varchar">
+        <section xml:id="langref-datatypes-char-varchar">
             <info>
                 <title>VARCHAR</title>
             </info>
@@ -2519,7 +2548,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                 </para>
             </formalpara>
         </section>
-        <section xml:id="types-char-nchar">
+        <section xml:id="langref-datatypes-char-nchar">
             <info>
                 <title>NCHAR</title>
             </info>
@@ -2539,7 +2568,7 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
             <para>Аналогичный тип данных доступен для строкового типа переменной длины: NATIONAL
                 CHARACTER VARYING. </para>
         </section>
-        <section xml:id="types-char-literals">
+        <section xml:id="langref-datatypes-char-literals">
             <info>
                 <title>Строковые литералы</title>
             </info>
@@ -2560,8 +2589,8 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
 'Mrs. Hunt''s husband'                
                      </programlisting>
             </para>
-            
-            <section xml:id="types-char-literals-altquotes">
+
+            <section xml:id="langref-datatypes-char-literals-altquotes">
                 <info>
                     <title>Альтернативы для апострофов в строковых литералах</title>
                 </info>
@@ -2623,10 +2652,10 @@ END
                     </para>
                 </example>
             </section>
-        
+
         </section>
     </section>
-    <section xml:id="types-boolean">
+    <section xml:id="langref-datatypes-boolean">
         <info>
             <title>BOOLEAN</title>
         </info>
@@ -2641,9 +2670,9 @@ END
             неявных значениях истинности. Например, <emphasis role="bold">field1 OR
                 field2</emphasis> или <emphasis role="bold">NOT field1</emphasis> являются
             допустимыми выражениями. </para>
-        <para>Предикаты могут использовать оператор <link linkend="langref-commons-isnotboolean"
-                >IS [NOT]</link> для проверки соответствия. Например, <emphasis role="bold">field1
-                IS FALSE</emphasis> или <emphasis role="bold">field1 IS NOT TRUE</emphasis>. </para>
+        <para>Предикаты могут использовать оператор <link linkend="langref-commons-isnotboolean">IS
+                [NOT]</link> для проверки соответствия. Например, <emphasis role="bold">field1 IS
+                FALSE</emphasis> или <emphasis role="bold">field1 IS NOT TRUE</emphasis>. </para>
         <note>
             <para>
                 <itemizedlist spacing="compact">
@@ -2738,11 +2767,11 @@ SELECT * FROM TBOOL WHERE BVAL &lt;&gt; UNKNOWN
             </programlisting></para>
         </example>
     </section>
-    <section xml:id="types-binary">
+    <section xml:id="langref-datatypes-binary">
         <info>
             <title>Бинарные типы данных</title>
         </info>
-        <section xml:id="types-binary-binary">
+        <section xml:id="langref-datatypes-binary-binary">
             <info>
                 <title>BINARY</title>
             </info>
@@ -2767,18 +2796,18 @@ BINARY [(<replaceable>&lt;length&gt;</replaceable>)]
             </note>
             <tip>
                 <para>Данный тип хорошо подходит для хранения уникального идентификатора полученного
-                    с помощью функции <link linkend="internalfunc-func-uuid-gen_uuid"
+                    с помощью функции <link linkend="langref-functions-func-uuid-gen_uuid"
                         >GEN_UUID</link>.</para>
             </tip>
             <formalpara>
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="types-char-char">CHAR</link>, <link
-                        linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
+                    <link linkend="langref-datatypes-char-char">CHAR</link>, <link
+                        linkend="langref-datatypes-char-specialcharset">CHARATER SET OCTETS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="types-binary-varbinary">
+        <section xml:id="langref-datatypes-binary-varbinary">
             <info>
                 <title>VARBINARY</title>
             </info>
@@ -2825,11 +2854,11 @@ CREATE TABLE INFO (
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="types-char-varchar">VARCHAR</link>, <link
-                        linkend="types-char-specialcharset">CHARATER SET OCTETS</link>. </para>
+                    <link linkend="langref-datatypes-char-varchar">VARCHAR</link>, <link
+                        linkend="langref-datatypes-char-specialcharset">CHARATER SET OCTETS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="types-binary-blob">
+        <section xml:id="langref-datatypes-binary-blob">
             <info>
                 <title>BLOB</title>
             </info>
@@ -2868,7 +2897,7 @@ BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)
                     определяется клиентской частью, причём размер сегмента может превышать размер
                     страницы данных. </para>
             </formalpara>
-            <section xml:id="types-binary-blob-subtype">
+            <section xml:id="langref-datatypes-binary-blob-subtype">
                 <title>Подтипы BLOB</title>
                 <para>Подтип BLOB отражает природу данных, записанную в столбце. Firebird
                     предоставляет два предопределённых подтипа для сохранения пользовательских
@@ -2901,7 +2930,7 @@ BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)
                     подтипы с положительными числами не поддерживаются, поскольку Firebird
                     использует числа больше 2 для внутренних подтипов метаданных.</para>
             </section>
-            <section xml:id="types-binary-blob-specifics">
+            <section xml:id="langref-datatypes-binary-blob-specifics">
                 <title>Особенности BLOB</title>
                 <para>Максимальный размер поля BLOB ограничен 4Гб и не зависит от варианта сервера,
                     32 битный или 64 битный (во внутренних структурах, связанных с BLOB присутствуют
@@ -2978,12 +3007,12 @@ BLOB (, <replaceable>&lt;subtype&gt;</replaceable>)
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="ddl-filter">FILTER</link>, <link linkend="ddl-filter-declare"
+                        <link linkend="langref-ddl-filter">FILTER</link>, <link linkend="langref-ddl-filter-declare"
                             >DECLARE FILTER</link>. </para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="types-array">
+        <section xml:id="langref-datatypes-array">
             <info>
                 <title>Массивы</title>
             </info>
@@ -3072,12 +3101,12 @@ END
             </section>
         </section>
     </section>
-    <section xml:id="types-special">
+    <section xml:id="langref-datatypes-special">
         <info>
             <title>Специальные типы данных</title>
         </info>
 
-        <section xml:id="types-special-null">
+        <section xml:id="langref-datatypes-special-null">
             <info>
                 <title>Тип данных SQL_NULL</title>
             </info>
@@ -3157,7 +3186,7 @@ WHERE (SH.SIZE = ? OR ? IS NULL)
                 передаётся как NULL. </para>
         </section>
     </section>
-    <section xml:id="types-cast">
+    <section xml:id="langref-datatypes-cast">
         <info>
             <title>Преобразование типов данных</title>
         </info>
@@ -3168,7 +3197,7 @@ WHERE (SH.SIZE = ? OR ? IS NULL)
             потом выполнять операции. </para>
         <para>При рассмотрении вопроса преобразования типов в Firebird большое внимание стоит
             уделить тому, в каком диалекте база данных. </para>
-        <section xml:id="types-cast-explicit">
+        <section xml:id="langref-datatypes-cast-explicit">
             <info>
                 <title>Явное преобразование типов данных</title>
             </info>
@@ -3192,7 +3221,7 @@ CAST (<replaceable>&lt;expression></replaceable> | NULL AS <replaceable>&lt;data
                    </literallayout>
                 </para>
             </formalpara>
-            <section xml:id="types-cast-to-domain">
+            <section xml:id="langref-datatypes-cast-to-domain">
                 <title>Преобразование к домену</title>
                 <para>При преобразовании к домену учитываются объявленные для него ограничения,
                     например, NOT NULL или описанные в CHECK и если
@@ -3202,7 +3231,7 @@ CAST (<replaceable>&lt;expression></replaceable> | NULL AS <replaceable>&lt;data
                     ограничения домена. При использовании TYPE OF с типом (VAR)CHAR набор символов и
                     сортировка сохраняются. </para>
             </section>
-            <section xml:id="types-cast-to-column">
+            <section xml:id="langref-datatypes-cast-to-column">
                 <title>Преобразование к типу столбца</title>
                 <para>При преобразовании к типу столбца допускается использовать указание столбца
                     таблицы или представления. Используется только сам тип столбца; в случае
@@ -3225,7 +3254,7 @@ FROM RDB$DATABASE;
                     </para>
                 </informalexample>
             </section>
-            <section xml:id="types-cast-enable">
+            <section xml:id="langref-datatypes-cast-enable">
                 <title>Допустимые преобразования для функции CAST</title>
                 <para>
                     <table xml:id="table-cast-enable">
@@ -3310,7 +3339,7 @@ FROM RDB$DATABASE;
                         данных, например, при преобразовании типа данных TIMESTAMP в DATE. </para>
                 </important>
             </section>
-            <section xml:id="types-cast-dateliteral">
+            <section xml:id="langref-datatypes-cast-dateliteral">
                 <title>Преобразование строк в дату и время</title>
 
                 <para>Для преобразования строковых типов данных в типы DATE, TIME или TIMESTAMP
@@ -3445,7 +3474,7 @@ FROM RDB$DATABASE;
                         <primary>CAST</primary>
                         <secondary>'YESTERDAY'</secondary>
                     </indexterm>
-                    <table xml:id="types-tbl-dateliteral">
+                    <table xml:id="langref-datatypes-tbl-dateliteral">
                         <?dbfo keep-together='auto'?>
                         <title>Литералы с предопределёнными значениями даты и времени</title>
 
@@ -3619,12 +3648,12 @@ END
                     <title>См. также:</title>
 
                     <para><link xmlns:xlink="http://www.w3.org/1999/xlink"
-                            linkend="types-datetime-literals">Литералы даты и времени</link>, <link
-                            linkend="internalfunc-func-cast-cast">CAST</link>. </para>
+                            linkend="langref-datatypes-datetime-literals">Литералы даты и времени</link>, <link
+                            linkend="langref-functions-func-cast-cast">CAST</link>. </para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="types-cast-implicit">
+        <section xml:id="langref-datatypes-cast-implicit">
             <info>
                 <title>Неявное преобразование типов данных</title>
             </info>
@@ -3672,7 +3701,7 @@ CONCAT$
             </simplesect>
         </section>
     </section>
-    <section xml:id="types-domain">
+    <section xml:id="langref-datatypes-domain">
         <info>
             <title>Пользовательские типы данных — домены</title>
         </info>
@@ -3684,7 +3713,7 @@ CONCAT$
             данных. Домены могут использоваться помимо описания полей таблиц и представлений (VIEW)
             и при объявлении входных и выходных параметров, а также при объявлении переменных в коде
             PSQL. </para>
-        <section xml:id="types-domain-attr">
+        <section xml:id="langref-datatypes-domain-attr">
             <title>Атрибуты домена</title>
             <para>Определение домена содержит обязательные и необязательные атрибуты. К
                 обязательному атрибуту относится тип данных. К необязательным относятся: </para>
@@ -3724,20 +3753,20 @@ CREATE DOMAIN BOOL3 AS SMALLINT
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="types-cast-explicit">Явное преобразование типов данных</link>,
+                    <link linkend="langref-datatypes-cast-explicit">Явное преобразование типов данных</link>,
                     где описаны отличия работы механизма преобразования данных при указании доменов
                     для опций TYPE OF и TYPE OF COLUMN. </para>
 
             </formalpara>
 
         </section>
-        <section xml:id="types-domain-override">
+        <section xml:id="langref-datatypes-domain-override">
             <title>Переопределение свойств доменов</title>
             <para>При описании таблиц базы данных некоторые свойства столбцов, базирующихся на
                 доменах, могут быть переопределены. Возможности переопределения атрибутов столбцов
                 на базе доменов приведены в таблице.</para>
             <para>
-                <table xml:id="types-domain-tbl-override" frame="all">
+                <table xml:id="langref-datatypes-domain-tbl-override" frame="all">
                     <?dbfo keep-together='auto'?>
                     <title>Возможности переопределения атрибутов столбцов на базе доменов</title>
                     <tgroup cols="3">
@@ -3792,7 +3821,7 @@ CREATE DOMAIN BOOL3 AS SMALLINT
                 </table>
             </para>
         </section>
-        <section xml:id="types-domain-create">
+        <section xml:id="langref-datatypes-domain-create">
             <title>Создание доменов</title>
 
             <para>Создание домена производится оператором CREATE DOMAIN.</para>
@@ -3812,10 +3841,10 @@ CREATE DOMAIN <replaceable>&lt;name&gt;</replaceable> [AS] <replaceable>&lt;type
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="ddl-domain-create">CREATE DOMAIN</link>. </para>
+                    <link linkend="langref-ddl-domain-create">CREATE DOMAIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="types-domain-alter">
+        <section xml:id="langref-datatypes-domain-alter">
             <title>Изменение доменов</title>
 
             <para>Для редактирования свойств домена используют оператор ALTER DOMAIN языка
@@ -3889,10 +3918,10 @@ ALTER DOMAIN STORE_GRP SET DEFAULT -1;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="ddl-domain-alter">ALTER DOMAIN</link>. </para>
+                    <link linkend="langref-ddl-domain-alter">ALTER DOMAIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="types-domain-drop">
+        <section xml:id="langref-datatypes-domain-drop">
             <title>Удаление доменов</title>
 
             <para>Оператор DROP DOMAIN удаляет из базы данных домена при условии, что он не
@@ -3919,12 +3948,12 @@ DROP DOMAIN Test_Domain;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="ddl-domain-drop">DROP DOMAIN</link>. </para>
+                    <link linkend="langref-ddl-domain-drop">DROP DOMAIN</link>. </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="types-declare">
+    <section xml:id="langref-datatypes-declare">
         <title>Синтаксис объявления типа данных</title>
 
         <para>В этом разделе описывается синтаксис объявления типов данных. Объявление типа данных
@@ -3932,12 +3961,12 @@ DROP DOMAIN Test_Domain;
 
         <para>На приведенный ниже синтаксис есть ссылки из других частей этого руководства. </para>
 
-        <section xml:id="types-declare-scalar">
+        <section xml:id="langref-datatypes-declare-scalar">
             <title>Синтаксис скалярных типов данных</title>
 
             <para>Скалярные типы данных — это простые типы данных, которые содержат одно значение.
                 Синтаксис типов BLOB рассматривается отдельно в секции <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-blob"
                     >Синтаксисе типов данных BLOB</link>. </para>
 
             <formalpara>
@@ -4094,12 +4123,12 @@ DROP DOMAIN Test_Domain;
             </section>
         </section>
 
-        <section xml:id="types-declare-blob">
+        <section xml:id="langref-datatypes-declare-blob">
             <title>Синтаксис типов данных BLOB</title>
 
             <para>Типы данных BLOB содержат данные в двоичном, символьном или пользовательском
                 формате неопределенного размера. Для получения дополнительной информации см. <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-binary-blob"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-binary-blob"
                     >BLOB</link>. </para>
 
             <formalpara>
@@ -4152,7 +4181,9 @@ DROP DOMAIN Test_Domain;
                                 <entry>
                                     <para>Мнемоническое имя подтипа BLOB; это может быть TEXT,
                                         BINARY или одно из (других) стандартных или настраиваемых
-                                        имен, определенных в <code>RDB$TYPES</code> для <code>RDB$FIELD_NAME = 'RDB$FIELD_SUB_TYPE'</code>. </para>
+                                        имен, определенных в <code>RDB$TYPES</code> для
+                                            <code>RDB$FIELD_NAME = 'RDB$FIELD_SUB_TYPE'</code>.
+                                    </para>
                                 </entry>
                             </row>
                             <row>
@@ -4171,14 +4202,14 @@ DROP DOMAIN Test_Domain;
                 </table>
             </para>
         </section>
-        <section xml:id="types-declare-array">
+        <section xml:id="langref-datatypes-declare-array">
             <title>Синтаксис массивов</title>
-            
+
             <para>Тип данных массив содержит несколько скалярных значений в одном или многомерном
                 массиве. Для получения дополнительной информации см. <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-array">Тип
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-array">Тип
                     массив</link>. </para>
-            
+
             <formalpara>
                 <title>Синтаксис:</title>
                 <para>
@@ -4202,7 +4233,7 @@ DROP DOMAIN Test_Domain;
                     </programlisting>
                 </para>
             </formalpara>
-            
+
             <para>
                 <table frame="all">
                     <title>Параметры декларации массивов</title>
@@ -4263,7 +4294,8 @@ DROP DOMAIN Test_Domain;
                                     <replaceable>m</replaceable>, <replaceable>n</replaceable>
                                 </entry>
                                 <entry>
-                                    <para>Целые числа, определяющие диапазон индекса измерения массива.</para>
+                                    <para>Целые числа, определяющие диапазон индекса измерения
+                                        массива.</para>
                                 </entry>
                             </row>
                         </tbody>

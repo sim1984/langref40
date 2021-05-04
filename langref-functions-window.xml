@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="window-func" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-windowfuncs" xml:lang="ru">
     <info>
         <title>Оконные (аналитические) функции</title>
         <keywordset>
@@ -180,7 +180,7 @@
         </table>
     </para>
 
-    <section xml:id="internalfunc-window-agg">
+    <section xml:id="langref-windowfuncs-aggfuncs">
         <info>
             <title>Агрегатные функции</title>
         </info>
@@ -229,7 +229,7 @@ order by id;
         <para>Здесь <emphasis role="bold">sum(salary) OVER ()</emphasis> вычисляет сумму всех
             зарплат из запроса (таблицы сотрудников). </para>
     </section>
-    <section xml:id="internalfunc-window-partition">
+    <section xml:id="langref-windowfuncs-partition">
         <info>
             <title>Секционирование</title>
             <keywordset>
@@ -282,7 +282,7 @@ id department salary percentage
             </para>
         </formalpara>
     </section>
-    <section xml:id="internalfunc-window-order">
+    <section xml:id="langref-windowfuncs-order-by">
         <info>
             <title>Сортировка</title>
             <keywordset>
@@ -334,7 +334,7 @@ id salary cumul_salary
             ORDER BY состоит из всех строк от начала раздела до текущей строки и строк, равных
             текущей по значению выражения ORDER BY (т.е. RANGE BETWEEN UNBOUNDED PRECEDING AND
             CURRENT ROW). Без ORDER BY рамка по умолчанию состоит из всех строк раздела. Подробней о
-                <link linkend="internalfunc-window-framing">рамке окна</link> (кадрах окна) будет
+                <link linkend="langref-windowfuncs-framing">рамке окна</link> (кадрах окна) будет
             рассказано далее.</para>
         <para>Вы можете использовать несколько окон с различными сортировками, и дополнять
             предложение ORDER BY опциями ASC/DESC и NULLS FIRST/LAST.</para>
@@ -383,7 +383,7 @@ ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
             </para>
         </formalpara>
     </section>
-    <section xml:id="internalfunc-window-framing">
+    <section xml:id="langref-windowfuncs-framing">
         <info>
             <title>Рамка окна</title>
             <keywordset>
@@ -486,7 +486,7 @@ ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
                         агрегат. В этом случае размер окна фиксирован, а само окно скользит.</para>
                 </listitem>
             </itemizedlist></para>
-        <section xml:id="internalfunc-window-framing-range">
+        <section xml:id="langref-windowfuncs-framing-range">
             <title>Окна диапазона</title>
             <para>Окна диапазона объединяют строки в соответствии с заданным порядком. Например,
                 если рамка окна задана выражением RANGE 5 PRECEDING, то будет сгенерировано
@@ -532,12 +532,13 @@ ID  SALARY     S1      S2      S3      S4      S5      S6      S7      S8
                 </para>
             </formalpara>
             <para>Для того чтобы понять, какие значения будут входить в диапазон, можно использовать
-                функции <link linkend="internalfunc-window-nav-first_value">FIRST_VALUE</link> и
-                    <link linkend="internalfunc-window-nav-last_value">LAST_VALUE</link>. Это
+                функции <link linkend="langref-windowfuncs-first-value">FIRST_VALUE</link> и
+                    <link linkend="langref-windowfuncs-last-value">LAST_VALUE</link>. Это
                 помогает увидеть диапазоны окна и проверить, корректно ли установлены
                 параметры.</para>
         </section>
-        <section xml:id="internalfunc-window-framing-rows">
+        
+        <section xml:id="langref-windowfuncs-framing-rows">
             <title>Окна строк</title>
             <para>Окна срок задаются в физических единицах, строках. Например, если рамка окна
                 задана выражением ROWS 5 PRECEDING, то окно будет включать в себя до 6 строк:
@@ -583,7 +584,8 @@ ID SALARY      S1      S2      S3      S4      S5      S6      S7      S8
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-window-naming">
+    
+    <section xml:id="langref-windowfuncs-naming">
         <title>Именованные окна</title>
         <para>Для того чтобы не писать каждый раз сложные выражения для задания окна, имя окна можно
             задать в предложении WINDOW. Имя окна может быть использовано в предложении OVER для
@@ -620,7 +622,8 @@ ORDER BY department, salary;
             </para>
         </formalpara>
     </section>
-    <section xml:id="internalfunc-window-rank">
+    
+    <section xml:id="langref-windowfuncs-rankfuncs">
         <info>
             <title>Ранжирующие функции</title>
         </info>
@@ -661,7 +664,7 @@ id salary dense_rank rank      percent_rank         cume_dist ntile row_number s
                 </screen>
             </para>
         </formalpara>
-        <section xml:id="internalfunc-window-rank-dense_rank">
+        <section xml:id="langref-windowfuncs-dense-rank">
             <info>
                 <title>DENSE_RANK</title>
                 <keywordset>
@@ -722,14 +725,14 @@ id salary dense_rank
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
-                        linkend="internalfunc-window-rank-row_number">ROW_NUMBER</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-rank">RANK</link>, <link
+                        linkend="langref-windowfuncs-row-number">ROW_NUMBER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-rank-rank">
+        <section xml:id="langref-windowfuncs-rank">
             <info>
                 <title>RANK</title>
                 <keywordset>
@@ -788,14 +791,14 @@ id salary rank
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-rank-dense_rank">DENSE_RANK</link>, <link
-                        linkend="internalfunc-window-rank-row_number">ROW_NUMBER</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-dense-rank">DENSE_RANK</link>, <link
+                        linkend="langref-windowfuncs-row-number">ROW_NUMBER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-rank-percent_rank">
+        <section xml:id="langref-windowfuncs-percent-rank">
             <info>
                 <title>PERCENT_RANK</title>
                 <keywordset>
@@ -864,14 +867,14 @@ id salary percent_rank
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
-                        linkend="internalfunc-window-rank-cume_dist">CUME_DIST</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-rank">RANK</link>, <link
+                        linkend="langref-windowfuncs-cume-dist">CUME_DIST</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-rank-cume_dist">
+        <section xml:id="langref-windowfuncs-cume-dist">
             <info>
                 <title>CUME_DIST</title>
                 <keywordset>
@@ -932,14 +935,14 @@ id salary    cume_dist
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
-                        linkend="internalfunc-window-rank-percent_rank">PERCENT_RANK</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-rank">RANK</link>, <link
+                        linkend="langref-windowfuncs-percent-rank">PERCENT_RANK</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-rank-ntile">
+        <section xml:id="langref-windowfuncs-ntile">
             <info>
                 <title>NTILE</title>
                 <keywordset>
@@ -1029,12 +1032,12 @@ id salary        ntile
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-rank-row_number">
+        <section xml:id="langref-windowfuncs-row-number">
             <info>
                 <title>ROW_NUMBER</title>
                 <keywordset>
@@ -1090,15 +1093,15 @@ id salary row_number
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-rank-rank">RANK</link>, <link
-                        linkend="internalfunc-window-rank-dense_rank">DENSE_RANK</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-rank">RANK</link>, <link
+                        linkend="langref-windowfuncs-dense-rank">DENSE_RANK</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-window-nav">
+    <section xml:id="langref-windowfuncs-navfuncs">
         <info>
             <title>Навигационные функции</title>
         </info>
@@ -1180,7 +1183,7 @@ id salary first_value last_value nth_value    lag   lead
                 </screen>
             </para>
         </formalpara>
-        <section xml:id="internalfunc-window-nav-first_value">
+        <section xml:id="langref-windowfuncs-first-value">
             <info>
                 <title>FIRST_VALUE</title>
                 <keywordset>
@@ -1240,14 +1243,14 @@ FIRST_VALUE(<replaceable>&lt;expr&gt;</replaceable>) OVER {<replaceable>&lt;wind
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-nav-last_value">LAST_VALUE</link>, <link
-                        linkend="internalfunc-window-nav-nth_value">NTH_VALUE</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-last-value">LAST_VALUE</link>, <link
+                        linkend="langref-windowfuncs-nth-value">NTH_VALUE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-nav-lag">
+        <section xml:id="langref-windowfuncs-lag">
             <info>
                 <title>LAG</title>
                 <keywordset>
@@ -1368,13 +1371,13 @@ bydate        cost    change   percent_change
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-nav-lead">LEAD</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-lead">LEAD</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-nav-last_value">
+        <section xml:id="langref-windowfuncs-last-value">
             <info>
                 <title>LAST_VALUE</title>
                 <keywordset>
@@ -1434,14 +1437,14 @@ LAST_VALUE(<replaceable>&lt;expr&gt;</replaceable>) OVER {<replaceable>&lt;windo
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-nav-first_value">FIRST_VALUE</link>, <link
-                        linkend="internalfunc-window-nav-nth_value">NTH_VALUE</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-first-value">FIRST_VALUE</link>, <link
+                        linkend="langref-windowfuncs-nth-value">NTH_VALUE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-nav-lead">
+        <section xml:id="langref-windowfuncs-lead">
             <info>
                 <title>LEAD</title>
                 <keywordset>
@@ -1527,13 +1530,13 @@ LEAD(<replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;offset&gt;</rep
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-nav-lag">LAG</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-lag">LAG</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-window-nav-nth_value">
+        <section xml:id="langref-windowfuncs-nth-value">
             <info>
                 <title>NTH_VALUE</title>
                 <keywordset>
@@ -1603,15 +1606,15 @@ NTH_VALUE(<replaceable>&lt;expr&gt;</replaceable> [, <replaceable>&lt;offset&gt;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link
-                        linkend="internalfunc-window-partition">PARTITION BY</link>, <link
-                        linkend="internalfunc-window-order">ORDER BY</link>, <link
-                        linkend="internalfunc-window-nav-first_value">FIRST_VALUE</link>, <link
-                        linkend="internalfunc-window-nav-last_value">LAST_VALUE</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-windowfuncs-partition">PARTITION BY</link>, <link
+                        linkend="langref-windowfuncs-order-by">ORDER BY</link>, <link
+                        linkend="langref-windowfuncs-first-value">FIRST_VALUE</link>, <link
+                        linkend="langref-windowfuncs-last-value">LAST_VALUE</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-window-aggarg">
+    <section xml:id="langref-windowfuncs-aggfuncs-windowspec">
         <info>
             <title>Агрегатные функции внутри оконных</title>
         </info>

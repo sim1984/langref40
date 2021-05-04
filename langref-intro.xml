@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<preface xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="intro" xml:lang="ru">
+<preface xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-intro" xml:lang="ru">
     <info>
         <title>Введение</title>
     </info>
@@ -9,7 +9,7 @@
     <para>В руководстве также приводятся практические примеры использования SQL, многие из которых
         взяты из реальной практики. </para>
 
-    <simplesect xml:id="intro-what">
+    <simplesect xml:id="langref-intro-subject">
         <title>Что содержит данный документ</title>
 
         <para>Данный документ содержит описание языка SQL Firebird. Он охватывает следующие основные
@@ -68,7 +68,7 @@
         <para>Вопросы, не связанные с SQL в данном документе не рассматриваются. </para>
     </simplesect>
 
-    <simplesect xml:id="intro-authors">
+    <simplesect xml:id="langref-intro-authors">
         <title>Авторство</title>
 
         <para>В работе над руководством принимали участие:</para>
@@ -108,7 +108,7 @@
         </para>
     </simplesect>
 
-    <simplesect xml:id="intro-sponsors">
+    <simplesect xml:id="langref-intro-sponsors">
         <title>Спонсоры</title>
 
         <para>Платиновым спонсором создания <quote>Руководства по языку СУБД Firebird</quote>
@@ -127,14 +127,14 @@
             администратора для СУБД Firebird. </para>
     </simplesect>
 
-    <simplesect xml:id="intro-thanks">
+    <simplesect xml:id="langref-intro-thanks">
         <title>Благодарности</title>
 
         <para> Благодарим Влада Хорсуна, Александра Пешкова, Павла Зотова за помощь в создании этого
             документа. </para>
     </simplesect>
 
-    <simplesect xml:id="intro-updates">
+    <simplesect xml:id="langref-intro-updates">
         <title>Обновления</title>
 
         <para>Так как СУБД Firebird постоянно развивается, то изменяется и улучшается его

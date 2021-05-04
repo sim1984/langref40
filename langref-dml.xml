@@ -1,10 +1,10 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="dml" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-dml" xml:lang="ru">
     <info>
         <title>Операторы обработки данных (DML)</title>
     </info>
 
-    <section xml:id="dml-select">
+    <section xml:id="langref-dml-select">
         <info>
             <title>SELECT</title>
             <keywordset>
@@ -97,7 +97,7 @@ SELECT * FROM contacts
             UNION.</para>
         <para>В следующих секциях мы подробно рассмотрим все выражения для команды SELECT и их
             использование.</para>
-        <section xml:id="dml-select-first_skip">
+        <section xml:id="langref-dml-select-first_skip">
             <info>
                 <title>FIRST, SKIP</title>
                 <keywordset>
@@ -193,7 +193,7 @@ FROM ...
                     <replaceable>m</replaceable> записей будет возвращено в результирующем наборе
                 данных.</para>
             <para>FIRST и SKIP являются необязательными выражениями.</para>
-            <section xml:id="dml-select-first_skip01">
+            <section xml:id="langref-dml-select-first_skip01">
                 <title>Особенности использования</title>
                 <para><itemizedlist spacing="compact">
                         <listitem>
@@ -225,11 +225,11 @@ FROM ...
                         </listitem>
                     </itemizedlist></para>
             </section>
-            <simplesect xml:id="dml-select-first_skip-ex">
+            <simplesect xml:id="langref-dml-select-first_skip-ex">
                 <title>Примеры</title>
                 <informalexample>
                     <para>Следующий запрос вернёт первые 10 имён из таблицы PEOPLE (имена также
-                        будут отсортированы, см. ниже раздел <link linkend="dml-select-orderby"
+                        будут отсортированы, см. ниже раздел <link linkend="langref-dml-select-orderby"
                             >ORDER BY</link>):
                         <programlisting language="sql">
 SELECT FIRST 10 id, name 
@@ -263,14 +263,14 @@ ORDER BY name ASC
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="dml-select-fetch_offset">FETCH, OFFSET</link>, <link
-                            linkend="dml-select-rows">ROWS</link>. </para>
+                        <link linkend="langref-dml-select-fetch_offset">FETCH, OFFSET</link>, <link
+                            linkend="langref-dml-select-rows">ROWS</link>. </para>
 
                 </formalpara>
             </simplesect>
         </section>
 
-        <section xml:id="dml-select-fieldlist">
+        <section xml:id="langref-dml-select-fieldlist">
             <info>
                 <title>Список полей SELECT</title>
                 <keywordset>
@@ -573,16 +573,16 @@ SELECT rdb$character_set_name FROM rdb$database
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="internalfunc-agg">Агрегатные функции</link>, <link
-                            linkend="window-func">Оконные (аналитические) функции</link>,
-                            <link linkend="context-var">Контекстные переменные</link>,
+                        <link linkend="langref-aggfuncs">Агрегатные функции</link>, <link
+                            linkend="langref-windowfuncs">Оконные (аналитические) функции</link>,
+                            <link linkend="langref-contextvars">Контекстные переменные</link>,
                             <link linkend="langref-commons-conditional-case">CASE</link>, <link
                             linkend="langref-commons-subqueries">Подзапросы</link>. </para>
 
                 </formalpara>
             </simplesect>
         </section>
-        <section xml:id="dml-select-from">
+        <section xml:id="langref-dml-select-from">
             <info>
                 <title>FROM</title>
                 <keywordset>
@@ -719,7 +719,7 @@ FROM <replaceable>&lt;source&gt;</replaceable>
                 </table>
             </para>
 
-            <section xml:id="dml-select-from-tableorview">
+            <section xml:id="langref-dml-select-from-tableorview">
                 <info>
                     <title>Выборка из таблицы или представления</title>
                 </info>
@@ -780,7 +780,7 @@ FROM FRUIT F
                 </important>
             </section>
 
-            <section xml:id="dml-select-from-sp">
+            <section xml:id="langref-dml-select-from-sp">
                 <title>Выборка из селективной хранимой процедуры</title>
                 <para>Селективная хранимая процедура (т.е. с возможностью выборки) должна
                     удовлетворять следующим условиям:<itemizedlist spacing="compact">
@@ -857,13 +857,13 @@ FROM get_winners('#34517', 'AMS')
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="psql-procedure">Хранимые процедуры</link>, <link
-                            linkend="ddl-procedure-create">CREATE PROCEDURE</link>. </para>
+                        <link linkend="langref-psql-procedure">Хранимые процедуры</link>, <link
+                            linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link>. </para>
 
                 </formalpara>
             </section>
 
-            <section xml:id="dml-select-from-devired_table">
+            <section xml:id="langref-dml-select-from-devired_table">
 
                 <title>Выборка из производной таблицы (derived table)</title>
 
@@ -952,8 +952,8 @@ FROM (SELECT *
                                         <replaceable>&lt;table reference list&gt;</replaceable>.
                                     Подробнее смотрите в разделе <link
                                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        xlink:href="#dml-select-joins-lateral">Соединение с LATERAL
-                                        производными таблицами</link>.</para>
+                                        linkend="langref-dml-select-joins-lateral">Соединение с
+                                        LATERAL производными таблицами</link>.</para>
                             </listitem>
                         </itemizedlist>
                     </para>
@@ -1054,7 +1054,7 @@ FROM (SELECT
                         версиях сервера.</para>
                 </note>
             </section>
-            <section xml:id="dml-select-from-lateral_devired_table">
+            <section xml:id="langref-dml-select-from-lateral_devired_table">
                 <title>Латеральные производные таблицы</title>
 
                 <para>Производная таблица, определенная с помощью ключевого слова LATERAL,
@@ -1092,7 +1092,7 @@ LATERAL ( select customer_name from all_sales
                     </para>
                 </example>
             </section>
-            <section xml:id="dml-select-from-cte">
+            <section xml:id="langref-dml-select-from-cte">
 
                 <title>Выборка из общих табличных выражений (CTE)</title>
 
@@ -1102,7 +1102,7 @@ LATERAL ( select customer_name from all_sales
                     которых может иметь список алиасов полей). Основной запрос, который следует за
                     преамбулой, может обращаться к CTE так, как будто обычные таблицы. CTE доступны
                     любой части запроса ниже точки своего объявления. </para>
-                <para>Подробно CTE описываются в разделе <link linkend="dml-select-cte">Общие
+                <para>Подробно CTE описываются в разделе <link linkend="langref-dml-select-cte">Общие
                         табличные выражения CTE (WITH ... AS ... SELECT)</link>, а здесь приведены
                     лишь некоторые примеры использования.</para>
                 <para>Следующий запрос представляет наш пример с производной таблицей в варианте для
@@ -1204,14 +1204,14 @@ FROM T;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="dml-select-cte">Общие табличные выражения CTE (WITH ... AS
+                        <link linkend="langref-dml-select-cte">Общие табличные выражения CTE (WITH ... AS
                             ... SELECT)</link>. </para>
 
                 </formalpara>
             </section>
         </section>
 
-        <section xml:id="dml-select-joins">
+        <section xml:id="langref-dml-select-joins">
             <info>
                 <title>Соединения (JOINS)</title>
                 <keywordset>
@@ -1345,7 +1345,7 @@ FROM <replaceable>&lt;source&gt;</replaceable>
                 </table>
             </para>
 
-            <section xml:id="dml-select-joins-inner_and_outer">
+            <section xml:id="langref-dml-select-joins-inner_and_outer">
                 <title>Внутренние (INNER) и внешние (OUTER) соединения</title>
                 <indexterm>
                     <primary>SELECT</primary>
@@ -1657,7 +1657,7 @@ FULL JOIN B ON A.id = B.code
                     </informaltable>
                 </para>
             </section>
-            <section xml:id="dml-select-joins-qualified">
+            <section xml:id="langref-dml-select-joins-qualified">
                 <title>Обычные соединения</title>
                 <para>Явный синтаксис соединения требует указания условия соединения записей. Это
                     условие указывается явно в предложении ON или неявно при помощи предложения
@@ -1674,7 +1674,7 @@ FULL JOIN B ON A.id = B.code
                     </programlisting>
                     </para>
                 </formalpara>
-                <section xml:id="dml-select-joins-qualified-explicit_cond">
+                <section xml:id="langref-dml-select-joins-qualified-explicit_cond">
                     <info>
                         <title>Соединения с явными условиями</title>
                         <keywordset>
@@ -1736,7 +1736,7 @@ LEFT JOIN mentors m ON m.id = p.mentor
                 </programlisting>
                     </para>
                 </section>
-                <section xml:id="dml-select-joins-qualified-named_columns">
+                <section xml:id="langref-dml-select-joins-qualified-named_columns">
                     <info>
                         <title>Соединения именованными столбцами</title>
                         <keywordset>
@@ -1835,7 +1835,7 @@ PLAN JOIN (A INDEX (RDB$1), B INDEX (RDB$2))
                     </tip>
                 </section>
             </section>
-            <section xml:id="dml-select-joins-natural">
+            <section xml:id="langref-dml-select-joins-natural">
                 <info>
                     <title>Естественные соединения (Natural Joins)</title>
                     <keywordset>
@@ -1897,7 +1897,7 @@ JOIN TB USING (a, ins_date);
                         будет выполнен CROSS JOIN.</para>
                 </important>
             </section>
-            <section xml:id="dml-select-joins-implicit">
+            <section xml:id="langref-dml-select-joins-implicit">
                 <title>Неявные соединения</title>
                 <para>В стандарте SQL-89 таблицы, участвующие в соединении, задаются списком с
                     разделяющими запятыми в предложении FROM. Условия соединения задаются в
@@ -1921,7 +1921,7 @@ WHERE s.cust_id = c.id AND c.city = 'Detroit'
                         использованию.</para>
                 </important>
             </section>
-            <section xml:id="dml-select-joins-implicit-mix">
+            <section xml:id="langref-dml-select-joins-implicit-mix">
                 <title>Смешивание явного и неявного соединения</title>
                 <para>Смешивание явных и неявных соединений не рекомендуется, но позволяется.
                     Некоторые виды смешивания запрещены в Firebird.</para>
@@ -1945,7 +1945,7 @@ WHERE TA.COL2 = TB.COL2
                     </programlisting>
                 </para>
             </section>
-            <section xml:id="dml-select-joins-cross">
+            <section xml:id="langref-dml-select-joins-cross">
                 <info>
                     <title>Перекрёстное соединение (CROSS JOIN)</title>
                     <keywordset>
@@ -2005,7 +2005,7 @@ CROSS JOIN colors c
                 </para>
             </section>
 
-            <section xml:id="dml-select-joins-ambiguous">
+            <section xml:id="langref-dml-select-joins-ambiguous">
                 <title>Неоднозначные имена полей в соединениях</title>
                 <para>Firebird отвергает неполные имена полей в запросе, если эти имена полей
                     существуют в более чем одном наборе данных, участвующих в объединении. Это также
@@ -2029,7 +2029,7 @@ JOIN TB ON TA.a = TB.a
                     значение в объединённом, неполном столбце может замаскировать тот факт, что одно
                     из исходных значений отсутствует.  </para>
             </section>
-            <section xml:id="dml-select-joins-sp">
+            <section xml:id="langref-dml-select-joins-sp">
                 <title>Соединения с хранимыми процедурами</title>
 
                 <para>Если соединение происходит с хранимой процедурой, которая не коррелирована с
@@ -2049,7 +2049,7 @@ JOIN MY_TAB ON 1 = 1
                     </programlisting>
                 </para>
             </section>
-            <section xml:id="dml-select-joins-lateral">
+            <section xml:id="langref-dml-select-joins-lateral">
                 <info>
                     <title>Соединения с LATERAL производными таблицами</title>
                     <keywordset>
@@ -2133,7 +2133,7 @@ LEFT JOIN LATERAL(SELECT
                 </para>
             </section>
         </section>
-        <section xml:id="dml-select-where">
+        <section xml:id="langref-dml-select-where">
             <info>
                 <title>WHERE</title>
                 <keywordset>
@@ -2361,7 +2361,7 @@ WHERE model = :model AND size = :size AND color = :col
                 приложение должно преобразовать его в другой формат, отображая именованные параметры
                 на позиционные параметры.</para>
         </section>
-        <section xml:id="dml-select-groupby">
+        <section xml:id="langref-dml-select-groupby">
             <info>
                 <title>GROUP BY</title>
                 <keywordset>
@@ -2702,7 +2702,7 @@ GROUP BY class, sex, boarding_type
                 компромисс. Чем больше вы добавляете неагрегатных столбцов, тем больше вы
                 конкретизируете группы, и тем больше вы упускаете общую картину из виду. Конечно, вы
                 все ещё можете получить "большие" агрегаты, с помощью отдельных запросов.</para>
-            <section xml:id="dml-select-having">
+            <section xml:id="langref-dml-select-having">
                 <info>
                     <title>HAVING</title>
                     <keywordset>
@@ -2813,7 +2813,7 @@ GROUP BY class
                 </para>
             </section>
         </section>
-        <section xml:id="dml-select-window">
+        <section xml:id="langref-dml-select-window">
             <info>
                 <title>WINDOW</title>
                 <keywordset>
@@ -2827,7 +2827,7 @@ GROUP BY class
             </indexterm>
 
             <para>Предложение WINDOW предназначено для задания именованных окон, которые
-                используются <link linkend="window-func">оконными функциями</link>.
+                используются <link linkend="langref-windowfuncs">оконными функциями</link>.
                 Поскольку выражение окна может быть довольно сложным и использоваться многократно
                 такая функциональность бывает полезной.</para>
 
@@ -2925,11 +2925,11 @@ ORDER BY department, salary;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="window-func">Оконные (аналитические) функции</link>.
+                    <link linkend="langref-windowfuncs">Оконные (аналитические) функции</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-select-plan">
+        <section xml:id="langref-dml-select-plan">
             <info>
                 <title>PLAN</title>
                 <keywordset>
@@ -3416,7 +3416,7 @@ PLAN(COLOR NATURAL)
                 </para>
             </simplesect>
         </section>
-        <section xml:id="dml-select-union">
+        <section xml:id="langref-dml-select-union">
             <info>
                 <title>UNION</title>
                 <keywordset>
@@ -3556,7 +3556,7 @@ ORDER BY hourly_rate
               </programlisting>
             </para>
         </section>
-        <section xml:id="dml-select-orderby">
+        <section xml:id="langref-dml-select-orderby">
             <info>
                 <title>ORDER BY</title>
                 <keywordset>
@@ -3660,7 +3660,7 @@ ORDER BY <replaceable>&lt;ordering-item&gt;</replaceable> [, <replaceable>&lt;or
                     использование данной особенности в ваших запросах является плохой
                     практикой.</para>
             </note>
-            <section xml:id="dml-select-orderby-direction">
+            <section xml:id="langref-dml-select-orderby-direction">
                 <title>Направление сортировки</title>
                 <para>Ключевое слово ASCENDING задаёт упорядочение по возрастанию значений.
                     Допустимо сокращение ASC. Применяется по умолчанию. </para>
@@ -3669,20 +3669,20 @@ ORDER BY <replaceable>&lt;ordering-item&gt;</replaceable> [, <replaceable>&lt;or
                 <para>В одном предложении упорядочение по одному столбцу может идти по возрастанию
                     значений, а по другому — по убыванию.</para>
             </section>
-            <section xml:id="dml-select-orderby-collation">
+            <section xml:id="langref-dml-select-orderby-collation">
                 <title>Порядок сравнения</title>
                 <para>Ключевое слово COLLATE позволяет задать порядок сортировки строкового столбца,
                     если нужен порядок, отличный от того, который был установлен для этого столбца
                     (явно при описании столбца или по умолчанию, принятому для соответствующего
                     набора символов). </para>
             </section>
-            <section xml:id="dml-select-orderby-nulls">
+            <section xml:id="langref-dml-select-orderby-nulls">
                 <title>Расположение NULL</title>
                 <para>Ключевое слово NULLS определяет, где в отсортированном наборе данных будут
                     находиться значения NULL соответствующего столбца – в начале выборки (FIRST) или
                     в конце (LAST). По умолчанию принимается NULLS FIRST.</para>
             </section>
-            <section xml:id="dml-select-orderby-union">
+            <section xml:id="langref-dml-select-orderby-union">
                 <title>Сортировка частей UNION</title>
                 <para>Части выборок SELECT, участвующих в объединении UNION, не могут быть
                     отсортированы с использованием предложения ORDER BY. Однако вы можете достичь
@@ -3693,7 +3693,7 @@ ORDER BY <replaceable>&lt;ordering-item&gt;</replaceable> [, <replaceable>&lt;or
                     указывающие на позиции столбцов, необязательно сопровождаемые ASC / DESC и/или
                     NULLS FIRST / LAST директивами. </para>
             </section>
-            <simplesect xml:id="dml-select-orderby-examples">
+            <simplesect xml:id="langref-dml-select-orderby-examples">
                 <title>Примеры</title>
                 <para>В описанном ниже запросе выборка будет отсортирована по возрастанию по
                     столбцам RDB$CHARACTER_SET_ID, RDB$COLLATION_ID таблицы DB$COLLATIONS:
@@ -3797,7 +3797,7 @@ ORDER BY 2 DESC NULLS LAST, 1 ASC NULLS FIRST
                 </para>
             </simplesect>
         </section>
-        <section xml:id="dml-select-rows">
+        <section xml:id="langref-dml-select-rows">
             <info>
                 <title>ROWS</title>
                 <keywordset>
@@ -3875,7 +3875,7 @@ ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]
             </important>
             <para>Вызов ROWS <replaceable>m</replaceable> приведёт к возвращению первых
                     <replaceable>m</replaceable> записей из набора данных. </para>
-            <section xml:id="dml-select-rows-1">
+            <section xml:id="langref-dml-select-rows-1">
                 <title>Особенности при использовании ROWS с одним аргументом</title>
                 <para>
                     <itemizedlist spacing="compact">
@@ -3897,7 +3897,7 @@ ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]
                         <replaceable>m</replaceable> по <replaceable>n</replaceable> из набора
                     данных. </para>
             </section>
-            <section xml:id="dml-select-rows-2">
+            <section xml:id="langref-dml-select-rows-2">
                 <title>Особенности при использовании ROWS с двумя аргументами</title>
                 <para>
                     <itemizedlist>
@@ -3929,7 +3929,7 @@ ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]
                         </listitem>
                     </itemizedlist></para>
             </section>
-            <section xml:id="dml-select-rows-replace">
+            <section xml:id="langref-dml-select-rows-replace">
                 <title>Замена FIRST..SKIP</title>
                 <para>В сущности, ROWS заменяет собой нестандартные выражения FIRST и SKIP, за
                     исключением единственного случая, когда указывается только SKIP, т.е. когда
@@ -3939,12 +3939,12 @@ ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]
                     второй аргумент, заведомо больший, чем размер возвращаемого набора данных. Или
                     запросить число записей в возвращаемом наборе через подзапрос. </para>
             </section>
-            <section xml:id="dml-select-rows-mix">
+            <section xml:id="langref-dml-select-rows-mix">
                 <title>Совместное использование FIRST..SKIP и ROWS</title>
                 <para>Нельзя использовать ROWS вместе с FIRST/SKIP в одном и том же операторе
                     SELECT, но можно использовать разный синтаксис в разных подзапросах.</para>
             </section>
-            <section xml:id="dml-select-rows-union">
+            <section xml:id="langref-dml-select-rows-union">
                 <title>Использование ROWS в UNION</title>
                 <para>При использовании ROWS с выражением UNION, он будет применяться к
                     объединённому набору данных, и должен быть помещён после последнего  SELECT. </para>
@@ -3963,12 +3963,12 @@ ROWS <replaceable>m</replaceable> [TO <replaceable>n</replaceable>]
                         </listitem>
                     </orderedlist></para>
             </section>
-            <section xml:id="dml-select-rows-examples">
+            <section xml:id="langref-dml-select-rows-examples">
                 <title>Примеры</title>
                 <para>Ниже приведены примеры, ранее использованные для демонстрации
                     FIRST/SKIP.</para>
                 <para>Следующий запрос вернёт первые 10 имён из таблицы PEOPLE (имена также будут
-                    отсортированы, см. <link linkend="dml-select-orderby">ORDER BY</link>).
+                    отсортированы, см. <link linkend="langref-dml-select-orderby">ORDER BY</link>).
                     <programlisting language="sql">
 SELECT id, name 
 FROM People
@@ -4013,13 +4013,13 @@ ROWS 81 TO 100
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="dml-select-fetch_offset">FETCH, OFFSET</link>, <link
-                            linkend="dml-select-first_skip">FIRST, SKIP</link>. </para>
+                        <link linkend="langref-dml-select-fetch_offset">FETCH, OFFSET</link>, <link
+                            linkend="langref-dml-select-first_skip">FIRST, SKIP</link>. </para>
 
                 </formalpara>
             </section>
         </section>
-        <section xml:id="dml-select-fetch_offset">
+        <section xml:id="langref-dml-select-fetch_offset">
             <info>
                 <title>FETCH, OFFSET</title>
 
@@ -4151,13 +4151,13 @@ FETCH FIRST ROW ONLY
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select-rows">ROWS</link>, <link
-                        linkend="dml-select-first_skip">FIRST, SKIP</link>. </para>
+                    <link linkend="langref-dml-select-rows">ROWS</link>, <link
+                        linkend="langref-dml-select-first_skip">FIRST, SKIP</link>. </para>
 
             </formalpara>
         </section>
 
-        <section xml:id="dml-select-for_update">
+        <section xml:id="langref-dml-select-for_update">
             <info>
                 <title>FOR UPDATE [OF]</title>
             </info>
@@ -4192,7 +4192,7 @@ FROM <replaceable>single_table</replaceable>
             <para>Предложение OF не делает ничего вообще.</para>
         </section>
 
-        <section xml:id="dml-select-with_lock">
+        <section xml:id="langref-dml-select-with_lock">
             <info>
                 <title>WITH LOCK</title>
             </info>
@@ -4349,7 +4349,7 @@ WITH LOCK
                     </tgroup>
                 </table></para>
 
-            <section xml:id="dml-select-with_lock-for_update">
+            <section xml:id="langref-dml-select-with_lock-for_update">
                 <title>Использование предложения FOR UPDATE</title>
 
                 <para>Если предложение FOR UPDATE предшествует предложению WITH LOCK, то буферизация
@@ -4372,7 +4372,7 @@ WITH LOCK
                 </note>
             </section>
 
-            <section xml:id="dml-select-with_lock-how_work">
+            <section xml:id="langref-dml-select-with_lock-how_work">
                 <title>Как сервер работает с WITH LOCK</title>
 
                 <para>Попытка редактирования записи с помощью оператора UPDATE, заблокированной
@@ -4402,7 +4402,7 @@ WITH LOCK
                     произошёл конфликт обновления. </para>
             </section>
 
-            <section xml:id="dml-select-with_lock-caveats">
+            <section xml:id="langref-dml-select-with_lock-caveats">
                 <title>Предостережения при использовании WITH LOCK</title>
 
                 <para>
@@ -4468,7 +4468,7 @@ FOR UPDATE WITH LOCK
             </simplesect>
         </section>
 
-        <section xml:id="dml-select-into">
+        <section xml:id="langref-dml-select-into">
             <title>INTO</title>
 
             <indexterm>
@@ -4510,7 +4510,7 @@ FROM ...
             <para>Простой оператор SELECT может быть использован в PSQL, только если он возвращает
                 не более одной строки, то есть, если это запрос типа singleton (одиночка). Для
                 запросов, возвращающих несколько строк, PSQL предлагает использовать оператор <link
-                    linkend="psql-statements-forselect">FOR SELECT</link>.  </para>
+                    linkend="langref-psql-statements-forselect">FOR SELECT</link>.  </para>
 
             <important>
                 <para>В случае, когда запрос не возвращает данных (ноль строк), значения переменных
@@ -4518,7 +4518,7 @@ FROM ...
                     изменяется.</para>
             </important>
 
-            <para>Также, PSQL поддерживает оператор <link linkend="psql-statements-declare-cursor"
+            <para>Также, PSQL поддерживает оператор <link linkend="langref-psql-statements-declare-cursor"
                     >DECLARE CURSOR</link>, который связывает именованный курсор с определенной
                 командой SELECT — и этот курсор впоследствии может быть использован для навигации по
                 возвращаемому набору данных.</para>
@@ -4557,7 +4557,7 @@ INTO new.parentnames;
             </programlisting>
             </para>
         </section>
-        <section xml:id="dml-select-cte">
+        <section xml:id="langref-dml-select-cte">
             <info>
                 <title>Общие табличные выражения CTE (&quot;WITH ... AS ... SELECT&quot;)</title>
 
@@ -4724,7 +4724,7 @@ END
                         </para>
                     </listitem>
                 </itemizedlist></para>
-            <section xml:id="dml-select-cte-recursive">
+            <section xml:id="langref-dml-select-cte-recursive">
                 <title>Рекурсивные CTE</title>
 
                 <indexterm>
@@ -4896,7 +4896,7 @@ FROM
             </section>
         </section>
     </section>
-    <section xml:id="dml-insert">
+    <section xml:id="langref-dml-insert">
         <info>
             <title>INSERT</title>
             <keywordset>
@@ -5017,7 +5017,7 @@ INSERT INTO <replaceable>target</replaceable>
                     </listitem>
                 </itemizedlist></para>
         </note>
-        <section xml:id="dml-insert-values">
+        <section xml:id="langref-dml-insert-values">
             <title>INSERT ... VALUES</title>
 
             <indexterm>
@@ -5057,7 +5057,7 @@ VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
                 </para>
             </formalpara>
 
-            <section xml:id="dml-insert-values-default">
+            <section xml:id="langref-dml-insert-values-default">
                 <title>Ключевое слово DEFAULT</title>
 
                 <indexterm>
@@ -5099,7 +5099,7 @@ VALUES (DEFAULT, 1996, 'Ford Mondeo');
                 </formalpara>
             </section>
         </section>
-        <section xml:id="dml-insert-select">
+        <section xml:id="langref-dml-insert-select">
             <title>INSERT ... SELECT</title>
 
             <indexterm>
@@ -5150,7 +5150,7 @@ SELECT n FROM r
                 столбцам вставки по числу и типу. Типы не должны быть точно такими же, но они должны
                 быть совместимыми по присваиванию.</para>
         </section>
-        <section xml:id="dml-insert-defaultvalues">
+        <section xml:id="langref-dml-insert-defaultvalues">
             <title>INSERT ... DEFAULT VALUES</title>
 
             <indexterm>
@@ -5175,7 +5175,7 @@ RETURNING entry_id
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-insert-overriding">
+        <section xml:id="langref-dml-insert-overriding">
             <title>Директива OVERRIDING</title>
 
             <indexterm>
@@ -5233,11 +5233,11 @@ VALUES (12, 'Laptop');
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="ddl-table-create-column-identity">Столбцы идентификации
+                    <link linkend="langref-ddl-table-create-column-identity">Столбцы идентификации
                         (автоинкремент)</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="dml-insert-returning">
+        <section xml:id="langref-dml-insert-returning">
             <title>RETURNING</title>
 
             <indexterm>
@@ -5325,7 +5325,7 @@ INTO :id, :fname, :iq;
             </para>
         </simplesect>
     </section>
-    <section xml:id="dml-update">
+    <section xml:id="langref-dml-update">
         <info>
             <title>UPDATE</title>
             <keywordset>
@@ -5463,7 +5463,7 @@ SET <replaceable>col</replaceable> = {<replaceable>newval</replaceable> | DEFAUL
             представлении.</para>
         <para>Если вы назначаете псевдоним таблице или представлению, вы обязаны использовать
             псевдоним для уточнения столбцов таблицы.</para>
-        <section xml:id="dml-update-set">
+        <section xml:id="langref-dml-update-set">
             <title>SET</title>
 
             <para>Изменяемые столбцы указываются в предложении SET. Столбцы и их значения
@@ -5499,7 +5499,7 @@ A B
                 </para>
             </formalpara>
 
-            <section xml:id="dml-update-set-default">
+            <section xml:id="langref-dml-update-set-default">
                 <title>Ключевое слово DEFAULT</title>
 
                 <indexterm>
@@ -5538,7 +5538,7 @@ WHERE ID = 1;
                 </formalpara>
             </section>
         </section>
-        <section xml:id="dml-update-where">
+        <section xml:id="langref-dml-update-where">
             <info>
                 <title>WHERE</title>
                 <keywordset>
@@ -5588,7 +5588,7 @@ WHERE EXISTS(
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-update-plan">
+        <section xml:id="langref-dml-update-plan">
             <title>PLAN</title>
             <indexterm>
                 <primary>UPDATE</primary>
@@ -5614,7 +5614,7 @@ PLAN (C NATURAL)
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-update-orderby">
+        <section xml:id="langref-dml-update-orderby">
             <title>ORDER BY и ROWS</title>
             <para>Предложение ORDER BY позволяет задать порядок обновления записей. Это может иметь
                 значение в некоторых случаях.</para>
@@ -5680,7 +5680,7 @@ ROWS 20;
             </formalpara>
         </section>
 
-        <section xml:id="dml-update-returning">
+        <section xml:id="langref-dml-update-returning">
             <title>RETURNING</title>
             <para>Оператор UPDATE, обновляющий максимум одну строку, может включать RETURNING для
                 возврата значений из обновляемой строки. В RETURNING могут включаться любые строки,
@@ -5699,7 +5699,7 @@ ROWS 20;
                     поведение может быть изменено в последующих версиях Firebird.</para>
             </note>
 
-            <section xml:id="dml-update-returning-into">
+            <section xml:id="langref-dml-update-returning-into">
                 <title>INTO</title>
                 <para>Предложение INTO предназначено для передачи значений в локальные переменные.
                     Оно доступно только в PSQL. Если записи не было обновлены, ничего не
@@ -5751,7 +5751,7 @@ RETURNING old.*;
         </simplesect>
     </section>
 
-    <section xml:id="dml-upsert">
+    <section xml:id="langref-dml-upsert">
         <info>
             <title>UPDATE OR INSERT</title>
             <keywordset>
@@ -5879,7 +5879,7 @@ VALUES (<replaceable>&lt;value_list&gt;</replaceable>)
                 </itemizedlist>
             </para>
         </note>
-        <section xml:id="dml-upsert-default">
+        <section xml:id="langref-dml-upsert-default">
             <title>Ключевое слово DEFAULT</title>
 
             <indexterm>
@@ -5918,7 +5918,7 @@ MATCHING (name);
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-tbl-upsert-returning">
+        <section xml:id="langref-dml-tbl-upsert-returning">
             <title>RETURNING</title>
             <indexterm>
                 <primary>UPDATE OR INSERT</primary>
@@ -5956,7 +5956,7 @@ INTO :id;
             </formalpara>
         </section>
     </section>
-    <section xml:id="dml-delete">
+    <section xml:id="langref-dml-delete">
         <info>
             <title>DELETE</title>
             <keywordset>
@@ -6081,7 +6081,7 @@ FROM <replaceable>target</replaceable> [[AS] <replaceable>alias</replaceable>]
         <para>Оператор DELETE удаляет строки из таблицы или из одной и более таблиц представления. </para>
         <para>Если для таблицы указан псевдоним, то он должен использоваться для всех столбцов
             таблицы.</para>
-        <section xml:id="dml-delete-where">
+        <section xml:id="langref-dml-delete-where">
             <title>WHERE</title>
             <indexterm>
                 <primary>DELETE</primary>
@@ -6121,7 +6121,7 @@ WHERE CURRENT OF Cur_Cities; -- только в PSQL
                 </para>
             </example>
         </section>
-        <section xml:id="dml-delete-plan">
+        <section xml:id="langref-dml-delete-plan">
             <title>PLAN</title>
             <indexterm>
                 <primary>DELETE</primary>
@@ -6143,7 +6143,7 @@ PLAN (Submissions INDEX ix_subm_date)
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-delete-orderby">
+        <section xml:id="langref-dml-delete-orderby">
             <title>ORDER BY и ROWS</title>
             <indexterm>
                 <primary>DELETE</primary>
@@ -6232,7 +6232,7 @@ ROWS <replaceable>&lt;m&gt;</replaceable> [TO <replaceable>&lt;n&gt;</replaceabl
                 </para>
             </formalpara>
         </section>
-        <section xml:id="dml-delete-returning">
+        <section xml:id="langref-dml-delete-returning">
             <title>RETURNING</title>
             <indexterm>
                 <primary>DELETE</primary>
@@ -6285,7 +6285,7 @@ INTO new.qty;
             </formalpara>
         </section>
     </section>
-    <section xml:id="dml-merge">
+    <section xml:id="langref-dml-merge">
         <info>
             <title>MERGE</title>
             <keywordset>
@@ -6567,8 +6567,8 @@ WHEN MATCHED THEN
             <title>См. также:</title>
 
             <para>
-                <link linkend="dml-select">SELECT</link>, <link linkend="dml-insert">INSERT</link>,
-                    <link linkend="dml-update">UPDATE</link>, <link linkend="dml-delete"
+                <link linkend="langref-dml-select">SELECT</link>, <link linkend="langref-dml-insert">INSERT</link>,
+                    <link linkend="langref-dml-update">UPDATE</link>, <link linkend="langref-dml-delete"
                     >DELETE</link>. </para>
         </formalpara>
         <simplesect>
@@ -6622,7 +6622,7 @@ INTO :OLD_QUANTITY, :NEW_QUANTITY, :DIFF_QUANTITY
             </example>
         </simplesect>
     </section>
-    <section xml:id="dml-execproc">
+    <section xml:id="langref-dml-execproc">
         <info>
             <title>EXECUTE PROCEDURE</title>
             <keywordset>
@@ -6700,7 +6700,7 @@ EXECUTE PROCEDURE <replaceable>procname</replaceable>
         <para>Оператор EXECUTE PROCEDURE выполняет хранимую процедуру, получая список из одного или
             нескольких входных параметров, если они определены, и возвращает однострочный набор
             значений, если он определён.</para>
-        <section xml:id="dml-execproc-executable">
+        <section xml:id="langref-dml-execproc-executable">
             <title>"Выполняемые" хранимые процедуры</title>
             <para>Оператор EXECUTE PROCEDURE является наиболее часто используемым стилем вызова
                 хранимой процедуры, которая написана для модификации некоторых данных, код которой
@@ -6765,7 +6765,7 @@ RETURNING_VALUES FullName;
             </formalpara>
         </section>
     </section>
-    <section xml:id="dml-execblock">
+    <section xml:id="langref-dml-execblock">
         <info>
             <title>EXECUTE BLOCK</title>
             <keywordset>
@@ -6811,9 +6811,9 @@ END    
 <replaceable>&lt;non_array_datatype&gt;</replaceable> ::= 
     <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable>                   
                     
-<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-scalar">См. Синтаксис скалярных типов данных</link>
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
                     
-<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="types-declare-blob">См. Синтаксис типа данных BLOB</link>          
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
                                     
                 
 <replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
@@ -7015,9 +7015,9 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="psql-statements">Операторы языка PSQL</link>. </para>
+                <link linkend="langref-psql-statements">Операторы языка PSQL</link>. </para>
         </formalpara>
-        <section xml:id="dml-execblock-inoutparams">
+        <section xml:id="langref-dml-execblock-inoutparams">
             <title>Входные и выходные параметры</title>
 
             <para>Выполнение блока без входных параметров должно быть возможным с любым клиентом
@@ -7040,9 +7040,9 @@ END
                 одна строка. </para>
             <para>Для получения дополнительной информации о параметрах и объявлениях переменных,
                 [TYPE OF] <replaceable>domain</replaceable>, TYPE OF COLUMN и т.д. обратитесь к
-                главе <link linkend="psql-statements-declare-var">DECLARE VARIABLE</link>.</para>
+                главе <link linkend="langref-psql-statements-declare-var">DECLARE VARIABLE</link>.</para>
         </section>
-        <section xml:id="dml-execblock-term">
+        <section xml:id="langref-dml-execblock-term">
             <title>Терминатор оператора</title>
 
             <para>Некоторые редакторы SQL-операторов — в частности утилита
@@ -7051,7 +7051,7 @@ END
                 чтобы все операторы были завершены с точкой с запятой.</para>
             <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы не
                 знакомы с этой проблемой и ее решением, пожалуйста, изучать детали в главе PSQL в
-                разделе, озаглавленном <link linkend="psql-setterm">Изменение терминатора в
+                разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение терминатора в
                         <application>isql</application></link>.</para>
 
         </section>

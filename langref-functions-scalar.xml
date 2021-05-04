@@ -1,15 +1,15 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="internalfunc" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-functions" xml:lang="ru">
     <info>
         <title>Встроенные скалярные функции</title>
     </info>
 
-    <section xml:id="internalfunc-func-context">
+    <section xml:id="langref-functions-func-context">
         <info>
             <title>Функции для работы с контекстными переменными</title>
         </info>
         <para/>
-        <section xml:id="internalfunc-func-context-getcontext">
+        <section xml:id="langref-functions-func-context-getcontext">
             <info>
                 <title>RDB$GET_CONTEXT</title>
                 <keywordset>
@@ -253,6 +253,10 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                                     если тайм-аут не был установлен. </entry>
                             </row>
                             <row>
+                                <entry>SESSION_TIMEZONE</entry>
+                                <entry>Текущий часовой пояс, установленный в текущей сессии.</entry>
+                            </row>
+                            <row>
                                 <entry>SNAPSHOT_NUMBER</entry>
                                 <entry>Номер моментального снимка базы данных: уровеня транзакции
                                     (для транзакции SNAPSHOT или CONSISTENCY) или уровня запроса
@@ -359,11 +363,11 @@ NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-context-setcontext">RDB$SET_CONTEXT</link>.
+                    <link linkend="langref-functions-func-context-setcontext">RDB$SET_CONTEXT</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-context-setcontext">
+        <section xml:id="langref-functions-func-context-setcontext">
             <info>
                 <title>RDB$SET_CONTEXT</title>
                 <keywordset>
@@ -523,17 +527,17 @@ COMMIT;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-context-getcontext">RDB$GET_CONTEXT</link>.
+                    <link linkend="langref-functions-func-context-getcontext">RDB$GET_CONTEXT</link>.
                 </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-security">
+    <section xml:id="langref-functions-func-security">
         <info>
             <title>Функции подсистемы безопасности</title>
         </info>
         <para/>
-        <section xml:id="internalfunc-func-security-roleinuse">
+        <section xml:id="langref-functions-func-security-roleinuse">
             <info>
                 <title>RDB$ROLE_IN_USE</title>
                 <keywordset>
@@ -620,12 +624,12 @@ SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-priv-grant-role">GRANT ROLE</link>, <link
-                        linkend="session-role-setrole">SET ROLE</link>, <link
-                        linkend="internalfunc-contextvar-current_role">CURRENT_ROLE</link>. </para>
+                    <link linkend="langref-security-priv-grant-role">GRANT ROLE</link>, <link
+                        linkend="langref-session-role-setrole">SET ROLE</link>, <link
+                        linkend="langref-contextvars-current_role">CURRENT_ROLE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-security-sysprivelege">
+        <section xml:id="langref-functions-func-security-sysprivelege">
             <info>
                 <title>RDB$SYSTEM_PRIVILEGE</title>
                 <keywordset>
@@ -675,7 +679,7 @@ RDB$SYSTEM_PRIVILEGE (<replaceable>privilege</replaceable>)
                 <para>BOOLEAN.</para>
             </formalpara>
             <para>Функция RDB$SYSTEM_PRIVILEGE используется системная привилегия текущим
-                соединением. Список системных привилегий см. в <link linkend="security-roles-create"
+                соединением. Список системных привилегий см. в <link linkend="langref-security-roles-create"
                     >CREATE ROLE</link>.</para>
             <formalpara>
                 <title>Примеры:</title>
@@ -692,16 +696,16 @@ SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-roles-create">CREATE ROLE</link>. </para>
+                    <link linkend="langref-security-roles-create">CREATE ROLE</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-error">
+    <section xml:id="langref-functions-func-error">
         <info>
             <title>Функции для обработки ошибок</title>
         </info>
         <para/>
-        <section xml:id="internalfunc-func-error-rdberror">
+        <section xml:id="langref-functions-func-error-rdberror">
             <info>
                 <title>RDB$ERROR</title>
                 <keywordset>
@@ -766,20 +770,20 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="psql-statements-when">WHEN ... DO</link>, <link
-                        linkend="psql-statements-exception">EXCEPTION</link>, <link
-                        linkend="internalfunc-contextvar-gdscode">GDSCODE</link>, <link
-                        linkend="internalfunc-contextvar-sqlcode">SQLCODE</link>, <link
-                        linkend="internalfunc-contextvar-sqlstate">SQLSTATE</link>. </para>
+                    <link linkend="langref-psql-statements-when">WHEN ... DO</link>, <link
+                        linkend="langref-psql-statements-exception">EXCEPTION</link>, <link
+                        linkend="langref-contextvars-gdscode">GDSCODE</link>, <link
+                        linkend="langref-contextvars-sqlcode">SQLCODE</link>, <link
+                        linkend="langref-contextvars-sqlstate">SQLSTATE</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-transaction">
+    <section xml:id="langref-functions-func-transaction">
         <info>
             <title>Функции работы с транзакциями</title>
         </info>
         <para/>
-        <section xml:id="internalfunc-func-transaction-cn">
+        <section xml:id="langref-functions-func-transaction-cn">
             <info>
                 <title>RDB$GET_TRANSACTION_CN</title>
                 <keywordset>
@@ -885,7 +889,7 @@ select rdb$get_transaction_cn(123) from rdb$database;
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-make_dbkey">
+    <section xml:id="langref-functions-func-make_dbkey">
         <info>
             <title>MAKE_DBKEY</title>
             <keywordset>
@@ -1067,12 +1071,12 @@ where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
             </orderedlist>
         </para>
     </section>
-    <section xml:id="internalfunc-func-math">
+    <section xml:id="langref-functions-func-math">
         <info>
             <title>Математические функции</title>
         </info>
         <para/>
-        <section xml:id="internalfunc-func-math-abs">
+        <section xml:id="langref-functions-func-math-abs">
             <info>
                 <title>ABS</title>
                 <keywordset>
@@ -1126,7 +1130,7 @@ ABS (<replaceable>value</replaceable>)
 
             <para>Функция ABS возвращает абсолютное значение (модуль) аргумента. </para>
         </section>
-        <section xml:id="internalfunc-func-math-acos">
+        <section xml:id="langref-functions-func-math-acos">
             <info>
                 <title>ACOS</title>
                 <keywordset>
@@ -1185,10 +1189,10 @@ ACOS (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-cos">COS</link>. </para>
+                    <link linkend="langref-functions-func-math-cos">COS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-acosh">
+        <section xml:id="langref-functions-func-math-acosh">
             <info>
                 <title>ACOSH</title>
                 <keywordset>
@@ -1245,10 +1249,10 @@ ACOSH (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-cosh">COSH</link>. </para>
+                    <link linkend="langref-functions-func-math-cosh">COSH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-asin">
+        <section xml:id="langref-functions-func-math-asin">
             <info>
                 <title>ASIN</title>
                 <keywordset>
@@ -1307,10 +1311,10 @@ ASIN (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-sin">SIN</link>. </para>
+                    <link linkend="langref-functions-func-math-sin">SIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-asinh">
+        <section xml:id="langref-functions-func-math-asinh">
             <info>
                 <title>ASINH</title>
                 <keywordset>
@@ -1367,10 +1371,10 @@ ASINH (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-sinh">ASINH</link>. </para>
+                    <link linkend="langref-functions-func-math-sinh">ASINH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-atan">
+        <section xml:id="langref-functions-func-math-atan">
             <info>
                 <title>ATAN</title>
                 <keywordset>
@@ -1428,11 +1432,11 @@ ATAN (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-atan2">ATAN2</link>, <link
-                        linkend="internalfunc-func-math-tan">TAN</link>. </para>
+                    <link linkend="langref-functions-func-math-atan2">ATAN2</link>, <link
+                        linkend="langref-functions-func-math-tan">TAN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-atan2">
+        <section xml:id="langref-functions-func-math-atan2">
             <info>
                 <title>ATAN2</title>
                 <keywordset>
@@ -1532,12 +1536,12 @@ ATAN2 (<replaceable>y</replaceable>, <replaceable>x</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-atan">ATAN</link>, <link
-                        linkend="internalfunc-func-math-sin">SIN</link>, <link
-                        linkend="internalfunc-func-math-cos">COS</link>. </para>
+                    <link linkend="langref-functions-func-math-atan">ATAN</link>, <link
+                        linkend="langref-functions-func-math-sin">SIN</link>, <link
+                        linkend="langref-functions-func-math-cos">COS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-atanh">
+        <section xml:id="langref-functions-func-math-atanh">
             <info>
                 <title>ATANH</title>
                 <keywordset>
@@ -1594,10 +1598,10 @@ ATANH (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-tanh">TANH</link>. </para>
+                    <link linkend="langref-functions-func-math-tanh">TANH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-ceil">
+        <section xml:id="langref-functions-func-math-ceil">
             <info>
                 <title>CEIL, CEILING</title>
                 <keywordset>
@@ -1658,11 +1662,11 @@ CEIL[ING] (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-floor">FLOOR</link>, <link
-                        linkend="internalfunc-func-math-trunc">TRUNC</link>. </para>
+                    <link linkend="langref-functions-func-math-floor">FLOOR</link>, <link
+                        linkend="langref-functions-func-math-trunc">TRUNC</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-cos">
+        <section xml:id="langref-functions-func-math-cos">
             <info>
                 <title>COS</title>
                 <keywordset>
@@ -1720,10 +1724,10 @@ COS (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-acos">ACOS</link>. </para>
+                    <link linkend="langref-functions-func-math-acos">ACOS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-cosh">
+        <section xml:id="langref-functions-func-math-cosh">
             <info>
                 <title>COSH</title>
                 <keywordset>
@@ -1781,10 +1785,10 @@ COSH (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-acosh">ACOSH</link>. </para>
+                    <link linkend="langref-functions-func-math-acosh">ACOSH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-cot">
+        <section xml:id="langref-functions-func-math-cot">
             <info>
                 <title>COT</title>
                 <keywordset>
@@ -1842,10 +1846,10 @@ COT (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-tan">TAN</link>. </para>
+                    <link linkend="langref-functions-func-math-tan">TAN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-exp">
+        <section xml:id="langref-functions-func-math-exp">
             <info>
                 <title>EXP</title>
                 <keywordset>
@@ -1911,10 +1915,10 @@ EXP (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-ln">LN</link>. </para>
+                    <link linkend="langref-functions-func-math-ln">LN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-floor">
+        <section xml:id="langref-functions-func-math-floor">
             <info>
                 <title>FLOOR</title>
                 <keywordset>
@@ -1972,11 +1976,11 @@ FLOOR (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-ceil">CEIL, CEILING</link>, <link
-                        linkend="internalfunc-func-math-trunc">TRUNC</link>. </para>
+                    <link linkend="langref-functions-func-math-ceil">CEIL, CEILING</link>, <link
+                        linkend="langref-functions-func-math-trunc">TRUNC</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-ln">
+        <section xml:id="langref-functions-func-math-ln">
             <info>
                 <title>LN</title>
                 <keywordset>
@@ -2037,10 +2041,10 @@ LN (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-exp">EXP</link>. </para>
+                    <link linkend="langref-functions-func-math-exp">EXP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-log">
+        <section xml:id="langref-functions-func-math-log">
             <info>
                 <title>LOG</title>
                 <keywordset>
@@ -2120,7 +2124,7 @@ LOG (<replaceable>x</replaceable>, <replaceable>y</replaceable>)
                 </itemizedlist>
             </para>
         </section>
-        <section xml:id="internalfunc-func-math-log10">
+        <section xml:id="langref-functions-func-math-log10">
             <info>
                 <title>LOG10</title>
                 <keywordset>
@@ -2177,7 +2181,7 @@ LOG10 (<replaceable>number</replaceable>)
                 <para>Если входной аргумент отрицательный или равен 0, возникает ошибка. </para>
             </note>
         </section>
-        <section xml:id="internalfunc-func-math-mod">
+        <section xml:id="langref-functions-func-math-mod">
             <info>
                 <title>MOD</title>
                 <keywordset>
@@ -2241,7 +2245,7 @@ MOD (<replaceable>a</replaceable>, <replaceable>b</replaceable>)
                     7.5 mod 2.5 будет 2 (8 mod 3), а не 0.</para>
             </note>
         </section>
-        <section xml:id="internalfunc-func-math-pi">
+        <section xml:id="langref-functions-func-math-pi">
             <info>
                 <title>PI</title>
                 <keywordset>
@@ -2269,7 +2273,7 @@ PI ()
 
             <para>Функция PI возвращает число &#960;. </para>
         </section>
-        <section xml:id="internalfunc-func-math-power">
+        <section xml:id="langref-functions-func-math-power">
             <info>
                 <title>POWER</title>
                 <keywordset>
@@ -2333,7 +2337,7 @@ POWER (<replaceable>x</replaceable>, <replaceable>y</replaceable>)
                 <para>Если <replaceable>x</replaceable> меньше нуля, возникает ошибка.</para>
             </note>
         </section>
-        <section xml:id="internalfunc-func-math-rand">
+        <section xml:id="langref-functions-func-math-rand">
             <info>
                 <title>RAND</title>
                 <keywordset>
@@ -2361,7 +2365,7 @@ RAND ()
 
             <para>Функция RAND возвращает псевдослучайное число в интервале от 0 до 1. </para>
         </section>
-        <section xml:id="internalfunc-func-math-round">
+        <section xml:id="langref-functions-func-math-round">
             <info>
                 <title>ROUND</title>
                 <keywordset>
@@ -2460,10 +2464,10 @@ ROUND(45.1212)    -- Результат: 45
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-trunc">TRUNC</link>. </para>
+                    <link linkend="langref-functions-func-math-trunc">TRUNC</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-sign">
+        <section xml:id="langref-functions-func-math-sign">
             <info>
                 <title>SIGN</title>
                 <keywordset>
@@ -2546,7 +2550,7 @@ SIGN (<replaceable>number</replaceable>)
                 </table>
             </para>
         </section>
-        <section xml:id="internalfunc-func-math-sin">
+        <section xml:id="langref-functions-func-math-sin">
             <info>
                 <title>SIN</title>
                 <keywordset>
@@ -2604,10 +2608,10 @@ SIN (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-asin">ASIN</link>. </para>
+                    <link linkend="langref-functions-func-math-asin">ASIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-sinh">
+        <section xml:id="langref-functions-func-math-sinh">
             <info>
                 <title>SINH</title>
                 <keywordset>
@@ -2664,10 +2668,10 @@ SINH (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-asinh">ASINH</link>. </para>
+                    <link linkend="langref-functions-func-math-asinh">ASINH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-sqrt">
+        <section xml:id="langref-functions-func-math-sqrt">
             <info>
                 <title>SQRT</title>
                 <keywordset>
@@ -2721,7 +2725,7 @@ SQRT (<replaceable>number</replaceable>)
 
             <para>Функция SQRT возвращает квадратный корень аргумента.</para>
         </section>
-        <section xml:id="internalfunc-func-math-tan">
+        <section xml:id="langref-functions-func-math-tan">
             <info>
                 <title>TAN</title>
                 <keywordset>
@@ -2778,11 +2782,11 @@ TAN (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-atan">ATAN</link>, <link
-                        linkend="internalfunc-func-math-atan2">ATAN2</link>. </para>
+                    <link linkend="langref-functions-func-math-atan">ATAN</link>, <link
+                        linkend="langref-functions-func-math-atan2">ATAN2</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-tanh">
+        <section xml:id="langref-functions-func-math-tanh">
             <info>
                 <title>TANH</title>
                 <keywordset>
@@ -2840,10 +2844,10 @@ TANH (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-atanh">ATANH</link>. </para>
+                    <link linkend="langref-functions-func-math-atanh">ATANH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-math-trunc">
+        <section xml:id="langref-functions-func-math-trunc">
             <info>
                 <title>TRUNC</title>
                 <keywordset>
@@ -2942,19 +2946,19 @@ TRUNC(-163.41)      -- Результат: -163
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-math-round">ROUND</link>, <link
-                        linkend="internalfunc-func-math-ceil">CEIL, CEILING</link>, <link
-                        linkend="internalfunc-func-math-floor">FLOOR</link>. </para>
+                    <link linkend="langref-functions-func-math-round">ROUND</link>, <link
+                        linkend="langref-functions-func-math-ceil">CEIL, CEILING</link>, <link
+                        linkend="langref-functions-func-math-floor">FLOOR</link>. </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="internalfunc-func-string">
+    <section xml:id="langref-functions-func-string">
         <info>
             <title>Функции для работы со строками</title>
         </info>
 
-        <section xml:id="internalfunc-func-string-ascii_char">
+        <section xml:id="langref-functions-func-string-ascii_char">
             <info>
                 <title>ASCII_CHAR</title>
                 <keywordset>
@@ -3012,11 +3016,11 @@ ASCII_CHAR (<replaceable>code</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-ascii_val">ASCII_VAL</link>. </para>
+                    <link linkend="langref-functions-func-string-ascii_val">ASCII_VAL</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-string-ascii_val">
+        <section xml:id="langref-functions-func-string-ascii_val">
             <info>
                 <title>ASCII_VAL</title>
                 <keywordset>
@@ -3088,11 +3092,11 @@ ASCII_VAL (<replaceable>ch</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-ascii_char">ASCII_CHAR</link>. </para>
+                    <link linkend="langref-functions-func-string-ascii_char">ASCII_CHAR</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-string-bit_length">
+        <section xml:id="langref-functions-func-string-bit_length">
             <info>
                 <title>BIT_LENGTH</title>
                 <keywordset>
@@ -3185,12 +3189,12 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-char_length">CHAR_LENGTH</link>, <link
-                        linkend="internalfunc-func-string-octet_length">OCTET_LENGTH</link>. </para>
+                    <link linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>, <link
+                        linkend="langref-functions-func-string-octet_length">OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-string-char_length">
+        <section xml:id="langref-functions-func-string-char_length">
             <info>
                 <title>CHAR_LENGTH, CHARACTER_LENGTH</title>
                 <keywordset>
@@ -3259,12 +3263,12 @@ CHARACTER_LENGTH (<replaceable>str</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-bit_length">BIT_LENGTH</link>, <link
-                        linkend="internalfunc-func-string-octet_length">OCTET_LENGTH</link>. </para>
+                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>, <link
+                        linkend="langref-functions-func-string-octet_length">OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-string-left">
+        <section xml:id="langref-functions-func-string-left">
             <info>
                 <title>LEFT</title>
                 <keywordset>
@@ -3364,11 +3368,11 @@ SELECT LEFT('ABC', 2) FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-right">RIGHT</link>, <link
-                        linkend="internalfunc-func-string-substring">SUBSTRING</link>. </para>
+                    <link linkend="langref-functions-func-string-right">RIGHT</link>, <link
+                        linkend="langref-functions-func-string-substring">SUBSTRING</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-lower">
+        <section xml:id="langref-functions-func-string-lower">
             <info>
                 <title>LOWER</title>
                 <keywordset>
@@ -3439,10 +3443,10 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-upper">UPPER</link>. </para>
+                    <link linkend="langref-functions-func-string-upper">UPPER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-lpad">
+        <section xml:id="langref-functions-func-string-lpad">
             <info>
                 <title>LPAD</title>
                 <keywordset>
@@ -3557,10 +3561,10 @@ LPAD ('Hello', 2, '')             -- возвращает 'He'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-rpad">RPAD</link>. </para>
+                    <link linkend="langref-functions-func-string-rpad">RPAD</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-octet_length">
+        <section xml:id="langref-functions-func-string-octet_length">
             <info>
                 <title>OCTET_LENGTH</title>
                 <keywordset>
@@ -3653,12 +3657,12 @@ FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-bit_length">BIT_LENGTH</link>, <link
-                        linkend="internalfunc-func-string-char_length">CHAR_LENGTH</link>. </para>
+                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>, <link
+                        linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-string-overlay">
+        <section xml:id="langref-functions-func-string-overlay">
             <info>
                 <title>OVERLAY</title>
                 <keywordset>
@@ -3812,12 +3816,12 @@ OVERLAY ('' PLACING 'Hello' FROM 4 FOR 20) -- Результат: 'Hello'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-substring">SUBSTRING</link>, <link
-                        linkend="internalfunc-func-string-replace">REPLACE</link>. </para>
+                    <link linkend="langref-functions-func-string-substring">SUBSTRING</link>, <link
+                        linkend="langref-functions-func-string-replace">REPLACE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-string-position">
+        <section xml:id="langref-functions-func-string-position">
             <info>
                 <title>POSITION</title>
                 <keywordset>
@@ -3938,10 +3942,10 @@ POSITION ('be' in 'Alas, poor Yorick!') -- Результат: 0
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-substring">SUBSTRING</link>. </para>
+                    <link linkend="langref-functions-func-string-substring">SUBSTRING</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-replace">
+        <section xml:id="langref-functions-func-string-replace">
             <info>
                 <title>REPLACE</title>
                 <keywordset>
@@ -4062,10 +4066,10 @@ REPLACE ('Billy Wilder', '', 'abc')    -- возвращает 'Billy Wilder'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-overlay">OVERLAY</link>. </para>
+                    <link linkend="langref-functions-func-string-overlay">OVERLAY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-reverse">
+        <section xml:id="langref-functions-func-string-reverse">
             <info>
                 <title>REVERSE</title>
                 <keywordset>
@@ -4140,7 +4144,7 @@ WHERE REVERSE(email) STARTING WITH reverse('.br');
                 </para>
             </tip>
         </section>
-        <section xml:id="internalfunc-func-string-right">
+        <section xml:id="langref-functions-func-string-right">
             <info>
                 <title>RIGHT</title>
                 <keywordset>
@@ -4240,11 +4244,11 @@ SELECT RIGHT('ABC', 1) FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-left">LEFT</link>, <link
-                        linkend="internalfunc-func-string-substring">SUBSTRING</link>. </para>
+                    <link linkend="langref-functions-func-string-left">LEFT</link>, <link
+                        linkend="langref-functions-func-string-substring">SUBSTRING</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-rpad">
+        <section xml:id="langref-functions-func-string-rpad">
             <info>
                 <title>RPAD</title>
                 <keywordset>
@@ -4360,10 +4364,10 @@ RPAD ('Hello', 2, '')             -- возвращает 'He'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-lpad">LPAD</link>. </para>
+                    <link linkend="langref-functions-func-string-lpad">LPAD</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-substring">
+        <section xml:id="langref-functions-func-string-substring">
             <info>
                 <title>SUBSTRING</title>
                 <keywordset>
@@ -4516,14 +4520,14 @@ SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- &lt;null&gt;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-position">POSITION</link>, <link
-                        linkend="internalfunc-func-string-left">LEFT</link>, <link
-                        linkend="internalfunc-func-string-right">RIGHT</link>, <link
-                        linkend="internalfunc-func-string-char_length">CHAR_LENGTH</link>, <link
+                    <link linkend="langref-functions-func-string-position">POSITION</link>, <link
+                        linkend="langref-functions-func-string-left">LEFT</link>, <link
+                        linkend="langref-functions-func-string-right">RIGHT</link>, <link
+                        linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>, <link
                         linkend="langref-commons-predsimilarto">SIMILAR TO</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-trim">
+        <section xml:id="langref-functions-func-string-trim">
             <info>
                 <title>TRIM</title>
                 <keywordset>
@@ -4676,11 +4680,11 @@ FROM RDB$DATABASE -- Результат: ' I love you El'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-overlay">OVERLAY</link>, <link
-                        linkend="internalfunc-func-string-replace">REPLACE</link>. </para>
+                    <link linkend="langref-functions-func-string-overlay">OVERLAY</link>, <link
+                        linkend="langref-functions-func-string-replace">REPLACE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-string-upper">
+        <section xml:id="langref-functions-func-string-upper">
             <info>
                 <title>UPPER</title>
                 <keywordset>
@@ -4757,16 +4761,16 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-string-lower">LOWER</link>. </para>
+                    <link linkend="langref-functions-func-string-lower">LOWER</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-datetime">
+    <section xml:id="langref-functions-func-datetime">
         <info>
             <title>Функции для работы с датой и временем</title>
         </info>
 
-        <section xml:id="internalfunc-func-datetime-attimezone">
+        <section xml:id="langref-functions-func-datetime-attimezone">
             <info>
                 <title>AT</title>
                 <keywordset>
@@ -4819,7 +4823,7 @@ select timestamp '2018-01-01 12:00 GMT' at local
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-datetime-dateadd">
+        <section xml:id="langref-functions-func-datetime-dateadd">
             <info>
                 <title>DATEADD</title>
                 <keywordset>
@@ -4944,12 +4948,12 @@ T                             MS
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-datetime-datediff">DATEDIFF</link>, <link
-                        linkend="types-datetime-operation">Операции, использующие значения даты и
+                    <link linkend="langref-functions-func-datetime-datediff">DATEDIFF</link>, <link
+                        linkend="langref-datatypes-datetime-operation">Операции, использующие значения даты и
                         времени</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-datetime-datediff">
+        <section xml:id="langref-functions-func-datetime-datediff">
             <info>
                 <title>DATEDIFF</title>
                 <keywordset>
@@ -5088,13 +5092,13 @@ DATEDIFF (DAY FROM CURRENT_DATE TO CAST (? AS DATE))
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-datetime-dateadd">DATEADD</link>, <link
-                        linkend="types-datetime-operation">Операции, использующие значения даты и
+                    <link linkend="langref-functions-func-datetime-dateadd">DATEADD</link>, <link
+                        linkend="langref-datatypes-datetime-operation">Операции, использующие значения даты и
                         времени</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-datetime-extract">
+        <section xml:id="langref-functions-func-datetime-extract">
             <info>
                 <title>EXTRACT</title>
                 <keywordset>
@@ -5282,11 +5286,11 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="types-datetime">Типы данных для работы с датой и временем</link>.
+                    <link linkend="langref-datatypes-datetime">Типы данных для работы с датой и временем</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-datetime-firstday">
+        <section xml:id="langref-functions-func-datetime-firstday">
             <info>
                 <title>FIRST_DAY</title>
                 <keywordset>
@@ -5381,10 +5385,10 @@ SELECT FIRST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-datetime-lastday">LAST_DAY</link>. </para>
+                    <link linkend="langref-functions-func-datetime-lastday">LAST_DAY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-datetime-lastday">
+        <section xml:id="langref-functions-func-datetime-lastday">
             <info>
                 <title>LAST_DAY</title>
                 <keywordset>
@@ -5479,17 +5483,17 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-datetime-firstday">FIRST_DAY</link>. </para>
+                    <link linkend="langref-functions-func-datetime-firstday">FIRST_DAY</link>. </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="internalfunc-func-decfloat">
+    <section xml:id="langref-functions-func-decfloat">
         <info>
             <title>Функции для работы с типом DECFLOAT</title>
         </info>
 
-        <section xml:id="internalfunc-func-decfloat-compare_decfloat">
+        <section xml:id="langref-functions-func-decfloat-compare_decfloat">
             <info>
                 <title>COMPARE_DECFLOAT</title>
                 <keywordset>
@@ -5566,7 +5570,7 @@ COMPARE_DECFLOAT(2.17, 2.170)
                 вернёт 2, а не 0. </para>
         </section>
 
-        <section xml:id="internalfunc-func-decfloat-normalize_decfloat">
+        <section xml:id="langref-functions-func-decfloat-normalize_decfloat">
             <info>
                 <title>NORMALIZE_DECFLOAT</title>
                 <keywordset>
@@ -5632,7 +5636,7 @@ NORMALIZE_DECFLOAT(120) -- возвращает 1.2E+2
             </example>
         </section>
 
-        <section xml:id="internalfunc-func-decfloat-quantize">
+        <section xml:id="langref-functions-func-decfloat-quantize">
             <info>
                 <title>QUANTIZE</title>
                 <keywordset>
@@ -5731,7 +5735,7 @@ V                       PIC                   QUANTIZE
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-decfloat-totalorder">
+        <section xml:id="langref-functions-func-decfloat-totalorder">
             <info>
                 <title>TOTALORDER</title>
                 <keywordset>
@@ -5802,12 +5806,12 @@ TOTALORDER (<replaceable>value1</replaceable>, <replaceable>value2</replaceable>
         </section>
     </section>
 
-    <section xml:id="internalfunc-func-binary">
+    <section xml:id="langref-functions-func-binary">
         <info>
             <title>Кодирование и декодирование бинарных данных</title>
         </info>
 
-        <section xml:id="internalfunc-func-binary-base64_encode">
+        <section xml:id="langref-functions-func-binary-base64_encode">
             <info>
                 <title>BASE64_ENCODE</title>
                 <keywordset>
@@ -5849,12 +5853,12 @@ select base64_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-binary-base64_decode">BASE64_DECODE</link>.
+                    <link linkend="langref-functions-func-binary-base64_decode">BASE64_DECODE</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-binary-base64_decode">
+        <section xml:id="langref-functions-func-binary-base64_decode">
             <info>
                 <title>BASE64_DECODE</title>
                 <keywordset>
@@ -5885,12 +5889,12 @@ BASE64_DECODE (<replaceable>&lt;base64 data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-binary-base64_encode">BASE64_ENCODE</link>.
+                    <link linkend="langref-functions-func-binary-base64_encode">BASE64_ENCODE</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-binary-hex_encode">
+        <section xml:id="langref-functions-func-binary-hex_encode">
             <info>
                 <title>HEX_ENCODE</title>
                 <keywordset>
@@ -5932,11 +5936,11 @@ select hex_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-binary-hex_decode">HEX_DECODE</link>. </para>
+                    <link linkend="langref-functions-func-binary-hex_decode">HEX_DECODE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-binary-hex_decode">
+        <section xml:id="langref-functions-func-binary-hex_decode">
             <info>
                 <title>HEX_DECODE</title>
                 <keywordset>
@@ -5967,17 +5971,17 @@ HEX_DECODE (<replaceable>&lt;hex data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-binary-hex_encode">HEX_ENCODE</link>. </para>
+                    <link linkend="langref-functions-func-binary-hex_encode">HEX_ENCODE</link>. </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="internalfunc-func-hash">
+    <section xml:id="langref-functions-func-hash">
         <info>
             <title>Хеш функции</title>
         </info>
 
-        <section xml:id="internalfunc-func-hash-hash">
+        <section xml:id="langref-functions-func-hash-hash">
             <info>
                 <title>HASH</title>
                 <keywordset>
@@ -6063,7 +6067,7 @@ SELECT HASH(x USING CRC32) FROM MyTable;
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-hash-crypt_hash">
+        <section xml:id="langref-functions-func-hash-crypt_hash">
             <info>
                 <title>CRYPT_HASH</title>
                 <keywordset>
@@ -6143,7 +6147,7 @@ SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
         </section>
     </section>
 
-    <section xml:id="internalfunc-func-crypt">
+    <section xml:id="langref-functions-func-crypt">
         <info>
             <title>Криптографические функции</title>
         </info>
@@ -6151,7 +6155,7 @@ SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
         <para>В Firebird 4.0 поддерживается только подмножество симметричных алгоритмов шифрования
             (как блочных так и потоковых), так и RSA.</para>
 
-        <section xml:id="internalfunc-func-crypt-encrypt">
+        <section xml:id="langref-functions-func-crypt-encrypt">
             <info>
                 <title>ENCRYPT</title>
                 <keywordset>
@@ -6284,11 +6288,11 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-decrypt">DECRYPT</link>. </para>
+                    <link linkend="langref-functions-func-crypt-decrypt">DECRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-decrypt">
+        <section xml:id="langref-functions-func-crypt-decrypt">
             <info>
                 <title>DECRYPT</title>
                 <keywordset>
@@ -6426,11 +6430,11 @@ from secure_table;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-encrypt">ENCRYPT</link>. </para>
+                    <link linkend="langref-functions-func-crypt-encrypt">ENCRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-rsa_private">
+        <section xml:id="langref-functions-func-crypt-rsa_private">
             <info>
                 <title>RSA_PRIVATE</title>
                 <keywordset>
@@ -6500,11 +6504,11 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-rsa_public">
+        <section xml:id="langref-functions-func-crypt-rsa_public">
             <info>
                 <title>RSA_PUBLIC</title>
                 <keywordset>
@@ -6564,7 +6568,7 @@ RSA_PUBLIC (<replaceable>&lt;private key&gt;</replaceable>)
                         <title>Использование функции RSA_PUBLIC</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>
+                                linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>
                         </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'public_key',
@@ -6578,11 +6582,11 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-rsa_encrypt">
+        <section xml:id="langref-functions-func-crypt-rsa_encrypt">
             <info>
                 <title>RSA_ENCRYPT</title>
                 <keywordset>
@@ -6665,7 +6669,7 @@ RSA_ENCRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;public
                         <title>Использование функции RSA_ENCRYPT</title>
 
                         <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>
+                                linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>
                         </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
@@ -6679,12 +6683,12 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>, <link
-                        linkend="internalfunc-func-crypt-rsa_decrypt">RSA_DECRYPT</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>, <link
+                        linkend="langref-functions-func-crypt-rsa_decrypt">RSA_DECRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-rsa_decrypt">
+        <section xml:id="langref-functions-func-crypt-rsa_decrypt">
             <info>
                 <title>RSA_DECRYPT</title>
                 <keywordset>
@@ -6767,9 +6771,9 @@ RSA_DECRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;privat
                         <title>Использование функции RSA_DECRYPT</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                                linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>.
                             Данные для расшифровки сипользуются из примера в <link
-                                linkend="internalfunc-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>
+                                linkend="langref-functions-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>
                         </para>
                         <para><programlisting language="sql">
 select RSA_DECRYPT(rdb$get_context('USER_SESSION', 'msg')
@@ -6783,12 +6787,12 @@ from RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>, <link
-                        linkend="internalfunc-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>, <link
+                        linkend="langref-functions-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-rsa_sign">
+        <section xml:id="langref-functions-func-crypt-rsa_sign">
             <info>
                 <title>RSA_SIGN</title>
                 <keywordset>
@@ -6868,7 +6872,7 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                         <title>Использование функции RSA_SIGN</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
+                                linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
     rsa_sign(crypt_hash('Test message' using sha256)
@@ -6882,11 +6886,11 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="internalfunc-func-crypt-rsa_verify">
+        <section xml:id="langref-functions-func-crypt-rsa_verify">
             <info>
                 <title>RSA_VERIFY</title>
                 <keywordset>
@@ -6974,7 +6978,7 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
                         <title>Использование функции RSA_SIGN</title>
 
                         <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>
+                                linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>
                             Цифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
                         <para><programlisting language="sql">
 select rsa_verify(crypt_hash('Test message' using sha256) 
@@ -6989,18 +6993,18 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-crypt-rsa_sign">RSA_SIGN</link>, <link
-                        linkend="internalfunc-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_sign">RSA_SIGN</link>, <link
+                        linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
             </formalpara>
         </section>
 
     </section>
 
-    <section xml:id="internalfunc-func-cast">
+    <section xml:id="langref-functions-func-cast">
         <info>
             <title>Функции преобразования типов</title>
         </info>
-        <section xml:id="internalfunc-func-cast-cast">
+        <section xml:id="langref-functions-func-cast-cast">
             <info>
                 <title>CAST</title>
                 <keywordset>
@@ -7333,7 +7337,7 @@ SELECT CAST(zin AS TYPE OF dunl20) FROM zinnen ORDER BY 1;
                     <para>Если определение домена изменяется, то существующие преобразования к
                         домену или его типу могут стать ошибочными. Если такие преобразования
                         происходят в PSQL модулях, то их ошибки могут быть обнаружены. См. <link
-                            linkend="valid">Поле RDB$VALID_BLR</link>. </para>
+                            linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
                 </warning>
             </simplesect>
             <simplesect>
@@ -7354,25 +7358,25 @@ FROM rdb$database;
                 <warning>
                     <para>Если определение столбца изменяется, то существующие преобразования к его
                         типу могут стать ошибочными. Если такие преобразования происходят в PSQL
-                        модулях, то их ошибки могут быть обнаружены. См. <link linkend="valid">Поле
+                        модулях, то их ошибки могут быть обнаружены. См. <link linkend="langref-appx01-supp-rdb-validblr">Поле
                             RDB$VALID_BLR</link>.</para>
                 </warning>
                 <formalpara>
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="types-cast-explicit">Явное преобразование типов
+                        <link linkend="langref-datatypes-cast-explicit">Явное преобразование типов
                         данных</link>. </para>
                 </formalpara>
             </simplesect>
         </section>
     </section>
-    <section xml:id="internalfunc-func-bit">
+    <section xml:id="langref-functions-func-bit">
         <info>
             <title>Функции побитовых операций</title>
         </info>
 
-        <section xml:id="internalfunc-func-bit-bin_and">
+        <section xml:id="langref-functions-func-bit-bin_and">
             <info>
                 <title>BIN_AND</title>
                 <keywordset>
@@ -7429,11 +7433,11 @@ BIN_AND (<replaceable>number</replaceable> [, <replaceable>number</replaceable> 
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-bit-bin_or">BIN_OR</link>, <link
-                        linkend="internalfunc-func-bit-bin_xor">BIN_XOR</link>. </para>
+                    <link linkend="langref-functions-func-bit-bin_or">BIN_OR</link>, <link
+                        linkend="langref-functions-func-bit-bin_xor">BIN_XOR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-bit-bin_not">
+        <section xml:id="langref-functions-func-bit-bin_not">
             <info>
                 <title>BIN_NOT</title>
                 <keywordset>
@@ -7489,11 +7493,11 @@ BIN_NOT (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-bit-bin_or">BIN_OR</link>, <link
-                        linkend="internalfunc-func-bit-bin_and">BIN_AND</link>. </para>
+                    <link linkend="langref-functions-func-bit-bin_or">BIN_OR</link>, <link
+                        linkend="langref-functions-func-bit-bin_and">BIN_AND</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-bit-bin_or">
+        <section xml:id="langref-functions-func-bit-bin_or">
             <info>
                 <title>BIN_OR</title>
                 <keywordset>
@@ -7550,11 +7554,11 @@ BIN_OR (<replaceable>number</replaceable> [, <replaceable>number</replaceable> .
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-bit-bin_and">BIN_AND</link>, <link
-                        linkend="internalfunc-func-bit-bin_xor">BIN_XOR</link>. </para>
+                    <link linkend="langref-functions-func-bit-bin_and">BIN_AND</link>, <link
+                        linkend="langref-functions-func-bit-bin_xor">BIN_XOR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-bit-bin_shl">
+        <section xml:id="langref-functions-func-bit-bin_shl">
             <info>
                 <title>BIN_SHL</title>
                 <keywordset>
@@ -7619,10 +7623,10 @@ BIN_SHL (<replaceable>number</replaceable>, <replaceable>shift</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-bit-bin_shr">BIN_SHR</link>. </para>
+                    <link linkend="langref-functions-func-bit-bin_shr">BIN_SHR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-bit-bin_shr">
+        <section xml:id="langref-functions-func-bit-bin_shr">
             <info>
                 <title>BIN_SHR</title>
                 <keywordset>
@@ -7691,10 +7695,10 @@ BIN_SHR (<replaceable>number</replaceable>, <replaceable>shift</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-bit-bin_shl">BIN_SHL</link>. </para>
+                    <link linkend="langref-functions-func-bit-bin_shl">BIN_SHL</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-bit-bin_xor">
+        <section xml:id="langref-functions-func-bit-bin_xor">
             <info>
                 <title>BIN_XOR</title>
                 <keywordset>
@@ -7751,17 +7755,17 @@ BIN_XOR (<replaceable>number</replaceable> [, <replaceable>number</replaceable> 
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-bit-bin_and">BIN_AND</link>, <link
-                        linkend="internalfunc-func-bit-bin_or">BIN_OR</link>. </para>
+                    <link linkend="langref-functions-func-bit-bin_and">BIN_AND</link>, <link
+                        linkend="langref-functions-func-bit-bin_or">BIN_OR</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-uuid">
+    <section xml:id="langref-functions-func-uuid">
         <info>
             <title>Функции для работы с UUID</title>
         </info>
         <para/>
-        <section xml:id="internalfunc-func-uuid-char_to_uuid">
+        <section xml:id="langref-functions-func-uuid-char_to_uuid">
             <info>
                 <title>CHAR_TO_UUID</title>
                 <keywordset>
@@ -7839,11 +7843,11 @@ SELECT CHAR_TO_UUID('A0bF4E45-3029-2A44-X493-4998c9b439A3') FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-uuid-gen_uuid">GEN_UUID</link>, <link
-                        linkend="internalfunc-func-uuid-uuid_to_char">UUID_TO_CHAR</link>. </para>
+                    <link linkend="langref-functions-func-uuid-gen_uuid">GEN_UUID</link>, <link
+                        linkend="langref-functions-func-uuid-uuid_to_char">UUID_TO_CHAR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-uuid-gen_uuid">
+        <section xml:id="langref-functions-func-uuid-gen_uuid">
             <info>
                 <title>GEN_UUID</title>
                 <keywordset>
@@ -7899,11 +7903,11 @@ SELECT GEN_UUID() AS GUID FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-uuid-char_to_uuid">CHAR_TO_UUID</link>, <link
-                        linkend="internalfunc-func-uuid-uuid_to_char">UUID_TO_CHAR</link>. </para>
+                    <link linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>, <link
+                        linkend="langref-functions-func-uuid-uuid_to_char">UUID_TO_CHAR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-uuid-uuid_to_char">
+        <section xml:id="langref-functions-func-uuid-uuid_to_char">
             <info>
                 <title>UUID_TO_CHAR</title>
                 <keywordset>
@@ -7983,17 +7987,17 @@ SELECT UUID_TO_CHAR('Firebird swings!') FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-uuid-gen_uuid">GEN_UUID</link>, <link
-                        linkend="internalfunc-func-uuid-char_to_uuid">CHAR_TO_UUID</link>. </para>
+                    <link linkend="langref-functions-func-uuid-gen_uuid">GEN_UUID</link>, <link
+                        linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-gen">
+    <section xml:id="langref-functions-func-gen">
         <info>
             <title>Функции для работы с генераторами (последовательностями)</title>
         </info>
 
-        <section xml:id="internalfunc-func-gen-gen_id">
+        <section xml:id="langref-functions-func-gen-gen_id">
             <info>
                 <title>GEN_ID</title>
                 <keywordset>
@@ -8081,19 +8085,19 @@ NEW.ID = GEN_ID (GEN_TABLE_ID, 1);
 
                 <para>
                     <link linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
-                        linkend="ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
-                        linkend="ddl-sequence-alter">ALTER SEQUENCE</link>, <link
-                        linkend="ddl-sequence-setgen">SET GENERATOR</link>. </para>
+                        linkend="langref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
+                        linkend="langref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
+                        linkend="langref-ddl-sequence-setgen">SET GENERATOR</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="internalfunc-func-case">
+    <section xml:id="langref-functions-func-case">
         <info>
             <title>Условные функции</title>
         </info>
         <para/>
 
-        <section xml:id="internalfunc-func-case-coalesce">
+        <section xml:id="langref-functions-func-case-coalesce">
             <info>
                 <title>COALESCE</title>
                 <keywordset>
@@ -8193,7 +8197,7 @@ WHERE ...
                     <link linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-case-decode">
+        <section xml:id="langref-functions-func-case-decode">
             <info>
                 <title>DECODE</title>
                 <keywordset>
@@ -8325,7 +8329,7 @@ FROM people
                     <link linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-case-iif">
+        <section xml:id="langref-functions-func-case-iif">
             <info>
                 <title>IIF</title>
                 <keywordset>
@@ -8423,7 +8427,7 @@ SELECT IIF(SEX = 'M', 'Sir', 'Madam') FROM CUSTOMERS
                     <link linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-case-maxvalue">
+        <section xml:id="langref-functions-func-case-maxvalue">
             <info>
                 <title>MAXVALUE</title>
                 <keywordset>
@@ -8500,10 +8504,10 @@ FROM PRICELIST
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-case-minvalue">MINVALUE</link>. </para>
+                    <link linkend="langref-functions-func-case-minvalue">MINVALUE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-case-minvalue">
+        <section xml:id="langref-functions-func-case-minvalue">
             <info>
                 <title>MINVALUE</title>
                 <keywordset>
@@ -8580,10 +8584,10 @@ FROM PRICELIST
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-case-maxvalue">MAXVALUE</link>. </para>
+                    <link linkend="langref-functions-func-case-maxvalue">MAXVALUE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-func-case-nullif">
+        <section xml:id="langref-functions-func-case-nullif">
             <info>
                 <title>NULLIF</title>
                 <keywordset>
@@ -8660,7 +8664,7 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-func-case-coalesce">COALESCE</link>, <link
+                    <link linkend="langref-functions-func-case-coalesce">COALESCE</link>, <link
                         linkend="langref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>

@@ -1,16 +1,16 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="error" xml:lang="ru">
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-appx02-errorcodes" xml:lang="ru">
     <info>
         <title>Обработка ошибок, коды и сообщения</title>
     </info>
 
     <para>Приложение включает: <itemizedlist>
             <listitem>
-                <para><link linkend="error-sqlstate">Коды ошибок SQLSTATE и их
+                <para><link linkend="langref-appx02-sqlstates">Коды ошибок SQLSTATE и их
                         описание</link></para>
             </listitem>
             <listitem>
-                <para><link linkend="error-gdscode">Коды ошибок GDSCODE их описание, и
+                <para><link linkend="langref-appx02-gdscode">Коды ошибок GDSCODE их описание, и
                         SQLCODE</link></para>
             </listitem>
         </itemizedlist></para>
@@ -19,9 +19,9 @@
         <title>Пользовательские исключения</title>
         <para>В Firebird DDL существует простой синтаксис для создания пользовательских исключений
             для использования в PSQL, с текстами сообщений до 1021 символов. Подробности см. <link
-                linkend="ddl-exception-create">CREATE EXCEPTION</link> главы DDL.
+                linkend="langref-ddl-exception-create">CREATE EXCEPTION</link> главы DDL.
             Подробности использования пользовательских исключений см. <link
-                linkend="psql-statements-exception">EXCEPTION</link> главы PSQL.</para>
+                linkend="langref-psql-statements-exception">EXCEPTION</link> главы PSQL.</para>
     </note>
 
     <para>В большинстве случаев, коды ошибок SQLCODE не соотносятся с кодами SQLSTATE &quot;один в
@@ -29,7 +29,7 @@
         использовались много лет и в настоящий момент считаются устаревшими. В следующих версиях
         поддержка SQLCODE может полностью прекратиться.</para>
 
-    <section xml:id="error-sqlstate">
+    <section xml:id="langref-appx02-sqlstates">
         <info>
             <title>Коды ошибок SQLSTATE и их описание</title>
         </info>
@@ -1242,7 +1242,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="error-gdscode">
+    <section xml:id="langref-appx02-gdscode">
         <info>
             <title>Коды ошибок GDSCODE их описание, и SQLCODE</title>
         </info>
@@ -1250,6 +1250,7 @@
             ошибке и описание ошибки. Также приводится SQLCODE ошибки.</para>
         <para>В настоящее время SQLCODE считаются устаревшим. В следующих версиях поддержка SQLCODE
             может полностью прекратиться.</para>
+        
         <para>
             <table frame="all">
                 <title>Коды ошибок GDSCODE, SQLCODE и их описание</title>

@@ -1,36 +1,38 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="agg-func" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-aggfuncs" xml:lang="ru">
     <info>
         <title>Агрегатные функции</title>
     </info>
 
-    
-    <section xml:id="internalfunc-agg">
-        <info>
-            <title>Основные агрегатные функции</title>
-        </info>
-        <para>Агрегатные функции выполняют вычисление на наборе значений и возвращают одиночное
-            значение. Агрегатные функции, за исключением COUNT, не учитывают значения NULL.
-            Агрегатные функции часто используются совместно с предложением GROUP BY.</para>
-        <para>Агрегатные функции могут быть использованы в качестве выражений только в следующих
-            случаях: <itemizedlist spacing="compact">
-                <listitem>
-                    <para>Список выбора инструкции SELECT (вложенный или внешний запрос);</para>
-                </listitem>
-                <listitem>
-                    <para>Предложение HAVING.</para>
-                </listitem>
-            </itemizedlist> Обобщённый синтаксис агрегатных функций выглядит следующим образом:
+    <para>Агрегатные функции выполняют вычисление на наборе значений и возвращают одиночное
+        значение. Агрегатные функции, за исключением COUNT, не учитывают значения NULL. Агрегатные
+        функции часто используются совместно с предложением GROUP BY.</para>
+    <para>Агрегатные функции могут быть использованы в качестве выражений только в следующих
+        случаях: <itemizedlist spacing="compact">
+            <listitem>
+                <para>Список выбора инструкции SELECT (вложенный или внешний запрос);</para>
+            </listitem>
+            <listitem>
+                <para>Предложение HAVING.</para>
+            </listitem>
+        </itemizedlist>
+    </para>
+
+    <section xml:id="langref-aggfuncs-syntax">
+        <title>Синтаксис агрегатных функций</title>
+
+        <para>Обобщённый синтаксис агрегатных функций выглядит следующим образом:
             <programlisting>
 <replaceable>&lt;agg_function&gt;</replaceable>([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
   [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
                 </programlisting>
         </para>
-        <section xml:id="internalfunc-agg-filter">
+
+        <section xml:id="langref-aggfuncs-filter">
             <info>
-                <title>FILTER</title>
+                <title>Предложение FILTER</title>
                 <keywordset>
-                    <keyword>AVG</keyword>
+                    <keyword>FILTER</keyword>
                 </keywordset>
             </info>
 
@@ -45,8 +47,8 @@
                 CASE внутри агрегатной функции: условие фильтра должно быть помещено в предложение
                 WHEN, значение, которое должно быть агрегировано в предложение THEN. Поскольку
                 агрегатные функции обычно пропускают значения NULL, неявное предложение ELSE NULL
-                достаточно, чтобы игнорировать не одходящие под условия фультрации строки. Следующие
-                два выражения эквивалентны:
+                достаточно, чтобы игнорировать не подходящие под условия фильтрации строки.
+                Следующие два выражения эквивалентны:
                 <programlisting>
 SUM(<replaceable>&lt;expression&gt;</replaceable>) FILTER(WHERE <replaceable>&lt;condition&gt;</replaceable>)               
                 </programlisting>
@@ -93,12 +95,21 @@ GROUP BY invoice_year
                 </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-window">
-            <title>Использование агрегатных функций в качестве оконных</title>
+
+        <section xml:id="langref-aggfuncs-over">
+            <title>Предложение OVER</title>
+
+
             <para>Любая агрегатная функция может быть использована в качестве оконной. Подробнее см.
-                    <link linkend="internalfunc-window-agg">OVER</link>. </para>
+                <link linkend="langref-windowfuncs-aggfuncs">Оконные (аналитические) функции</link>. </para>
         </section>
-        <section xml:id="internalfunc-agg-avg">
+    </section>
+
+    <section xml:id="langref-aggfuncs-general">
+        <title>Основные агрегатные функции</title>
+
+
+        <section xml:id="langref-aggfuncs-avg">
             <info>
                 <title>AVG</title>
                 <keywordset>
@@ -187,10 +198,10 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-count">
+        <section xml:id="langref-aggfuncs-count">
             <info>
                 <title>COUNT</title>
                 <keywordset>
@@ -284,10 +295,10 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-list">
+        <section xml:id="langref-aggfuncs-list">
             <info>
                 <title>LIST</title>
                 <keywordset>
@@ -392,10 +403,11 @@ FROM (SELECT display_name
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-max">
+
+        <section xml:id="langref-aggfuncs-max">
             <info>
                 <title>MAX</title>
                 <keywordset>
@@ -480,11 +492,12 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link linkend="internalfunc-agg-min"
-                        >MIN</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-aggfuncs-min">MIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-min">
+
+        <section xml:id="langref-aggfuncs-min">
             <info>
                 <title>MIN</title>
                 <keywordset>
@@ -572,11 +585,11 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>, <link linkend="internalfunc-agg-max"
-                        >MAX</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>, <link
+                        linkend="langref-aggfuncs-max">MAX</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-sum">
+        <section xml:id="langref-functions-agg-sum">
             <info>
                 <title>SUM</title>
                 <keywordset>
@@ -661,13 +674,13 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="dml-select">SELECT</link>. </para>
+                    <link linkend="langref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
 
     </section>
 
-    <section xml:id="internalfunc-agg-stat">
+    <section xml:id="langref-aggfuncs-stats">
         <info>
             <title>Статистические функции</title>
         </info>
@@ -676,8 +689,9 @@ GROUP BY dept_no
             DISTINCT.</para>
         <para>Статистические функции часто используются совместно с предложением GROUP BY. Любую из
             статистических функций можно использовать в качестве оконной. Подробнее см. <link
-                linkend="internalfunc-window-agg">OVER</link>.</para>
-        <section xml:id="internalfunc-agg-stat-corr">
+                linkend="langref-windowfuncs-aggfuncs">OVER</link>.</para>
+
+        <section xml:id="langref-aggfuncs-corr">
             <info>
                 <title>CORR</title>
                 <keywordset>
@@ -777,11 +791,11 @@ FROM measure
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-covar_pop">COVAR_POP</link>, <link
-                        linkend="internalfunc-agg-stat-stddev_pop">STDDEV_POP</link>. </para>
+                    <link linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>, <link
+                        linkend="langref-aggfuncs-stddev-pop">STDDEV_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-covar_pop">
+        <section xml:id="langref-aggfuncs-covar-pop">
             <info>
                 <title>COVAR_POP</title>
                 <keywordset>
@@ -879,12 +893,12 @@ FROM measure
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-covar_samp">COVAR_SAMP</link>, <link
-                        linkend="internalfunc-agg-sum">SUM</link>, <link
-                        linkend="internalfunc-agg-count">COUNT</link>. </para>
+                    <link linkend="langref-aggfuncs-covar-samp">COVAR_SAMP</link>, <link
+                        linkend="langref-functions-agg-sum">SUM</link>, <link
+                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-covar_samp">
+        <section xml:id="langref-aggfuncs-covar-samp">
             <info>
                 <title>COVAR_SAMP</title>
                 <keywordset>
@@ -982,12 +996,12 @@ FROM measure
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-covar_pop">COVAR_POP</link>, <link
-                        linkend="internalfunc-agg-sum">SUM</link>, <link
-                        linkend="internalfunc-agg-count">COUNT</link>. </para>
+                    <link linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>, <link
+                        linkend="langref-functions-agg-sum">SUM</link>, <link
+                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-stddev_pop">
+        <section xml:id="langref-aggfuncs-stddev-pop">
             <info>
                 <title>STDDEV_POP</title>
                 <keywordset>
@@ -1075,11 +1089,11 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-stddev_pop">STDDEV_SAMP</link>, <link
-                        linkend="internalfunc-agg-stat-var_pop">VAR_POP</link>. </para>
+                    <link linkend="langref-aggfuncs-stddev-pop">STDDEV_SAMP</link>, <link
+                        linkend="langref-aggfuncs-var-pop">VAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-stddev_samp">
+        <section xml:id="langref-aggfuncs-stddev-samp">
             <info>
                 <title>STDDEV_SAMP</title>
                 <keywordset>
@@ -1167,11 +1181,11 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-stddev_pop">STDDEV_POP</link>, <link
-                        linkend="internalfunc-agg-stat-var_samp">VAR_SAMP</link>. </para>
+                    <link linkend="langref-aggfuncs-stddev-pop">STDDEV_POP</link>, <link
+                        linkend="langref-aggfuncs-var-samp">VAR_SAMP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-var_pop">
+        <section xml:id="langref-aggfuncs-var-pop">
             <info>
                 <title>VAR_POP</title>
                 <keywordset>
@@ -1262,12 +1276,12 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-var_samp">VAR_SAMP</link>, <link
-                        linkend="internalfunc-agg-sum">SUM</link>, <link
-                        linkend="internalfunc-agg-count">COUNT</link>. </para>
+                    <link linkend="langref-aggfuncs-var-samp">VAR_SAMP</link>, <link
+                        linkend="langref-functions-agg-sum">SUM</link>, <link
+                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-var_samp">
+        <section xml:id="langref-aggfuncs-var-samp">
             <info>
                 <title>VAR_SAMP</title>
                 <keywordset>
@@ -1358,15 +1372,15 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-var_pop">VAR_POP</link>, <link
-                        linkend="internalfunc-agg-sum">SUM</link>, <link
-                        linkend="internalfunc-agg-count">COUNT</link>. </para>
+                    <link linkend="langref-aggfuncs-var-pop">VAR_POP</link>, <link
+                        linkend="langref-functions-agg-sum">SUM</link>, <link
+                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
     </section>
 
 
-    <section xml:id="internalfunc-agg-regr">
+    <section xml:id="langref-aggfuncs-regr">
         <info>
             <title>Функции линейной регрессии</title>
         </info>
@@ -1378,9 +1392,10 @@ GROUP BY dept_no
         <para>В синтаксисе функций, <replaceable>у</replaceable> интерпретируется в качестве
             переменной, зависящей от <replaceable>х</replaceable>.</para>
         <para>Любую функции линейной регрессии из статистических функций можно использовать в
-            качестве оконной. Подробнее см. <link linkend="internalfunc-window-agg"
-            >OVER</link>.</para>
-        <section xml:id="internalfunc-agg-regr-regr_avgx">
+            качестве оконной. Подробнее см. <link linkend="langref-windowfuncs-aggfuncs"
+                >Оконные (аналитические) функции</link>.</para>
+
+        <section xml:id="langref-aggfuncs-regr-avgx">
             <info>
                 <title>REGR_AVGX</title>
                 <keywordset>
@@ -1462,11 +1477,11 @@ SUM(<replaceable>&lt;X></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-regr-regr_count">REGR_COUNT</link>, <link
-                        linkend="internalfunc-agg-regr-regr_avgy">REGR_AVGY</link>. </para>
+                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="langref-aggfuncs-regr-avgy">REGR_AVGY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_avgy">
+        <section xml:id="langref-aggfuncs-regr-avgy">
             <info>
                 <title>REGR_AVGY</title>
                 <keywordset>
@@ -1548,11 +1563,11 @@ SUM(<replaceable>&lt;Y></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-regr-regr_count">REGR_COUNT</link>, <link
-                        linkend="internalfunc-agg-regr-regr_avgx">REGR_AVGX</link>. </para>
+                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="langref-aggfuncs-regr-avgx">REGR_AVGX</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_count">
+        <section xml:id="langref-aggfuncs-regr-count">
             <info>
                 <title>REGR_COUNT</title>
                 <keywordset>
@@ -1620,7 +1635,7 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (
                 <para>BIGINT.</para>
             </formalpara>
 
-            <para>Функция REGR_COUNT возвращает количество непустых пар, используемых для создания
+            <para>Функция REGR_COUNT возвращает количество не пустых пар, используемых для создания
                 линии регрессии. </para>
             <para>Функция
                 <programlisting>REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
@@ -1630,7 +1645,7 @@ SUM(CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</repla
 </programlisting>
             </para>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_intercept">
+        <section xml:id="langref-aggfuncs-regr-intercept">
             <info>
                 <title>REGR_INTERCEPT</title>
                 <keywordset>
@@ -1755,12 +1770,12 @@ BYYEAR     TOTAL_VALUE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-regr-regr_avgy">REGR_AVGY</link>, <link
-                        linkend="internalfunc-agg-regr-regr_avgx">REGR_AVGX</link>, <link
-                        linkend="internalfunc-agg-regr-regr_slope">REGR_SLOPE</link>. </para>
+                    <link linkend="langref-aggfuncs-regr-avgy">REGR_AVGY</link>, <link
+                        linkend="langref-aggfuncs-regr-avgx">REGR_AVGX</link>, <link
+                        linkend="langref-aggfuncs-regr-slope">REGR_SLOPE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-stat-regr-regr_r2">
+        <section xml:id="langref-aggfuncs-regr-r2">
             <info>
                 <title>REGR_R2</title>
                 <keywordset>
@@ -1841,10 +1856,10 @@ POWER(CORR(<replaceable>y</replaceable>, <replaceable>x</replaceable>), 2)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-corr">CORR</link>. </para>
+                    <link linkend="langref-aggfuncs-corr">CORR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_slope">
+        <section xml:id="langref-aggfuncs-regr-slope">
             <info>
                 <title>REGR_SLOPE</title>
                 <keywordset>
@@ -1926,10 +1941,10 @@ COVAR_POP(<replaceable>y</replaceable>, <replaceable>x</replaceable>) / VAR_POP(
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-stat-covar_pop">COVAR_POP</link>. </para>
+                    <link linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_sxx">
+        <section xml:id="langref-aggfuncs-regr-sxx">
             <info>
                 <title>REGR_SXX</title>
                 <keywordset>
@@ -2009,11 +2024,11 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-regr-regr_count">REGR_COUNT</link>, <link
-                        linkend="internalfunc-agg-stat-var_pop">VAR_POP</link>. </para>
+                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="langref-aggfuncs-var-pop">VAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_sxy">
+        <section xml:id="langref-aggfuncs-regr-sxy">
             <info>
                 <title>REGR_SXY</title>
                 <keywordset>
@@ -2091,11 +2106,11 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * COVAR_P
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-regr-regr_count">REGR_COUNT</link>, <link
-                        linkend="internalfunc-agg-stat-covar_pop">COVAR_POP</link>. </para>
+                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="internalfunc-agg-regr-regr_syy">
+        <section xml:id="langref-aggfuncs-regr-syy">
             <info>
                 <title>REGR_SYY</title>
                 <keywordset>
@@ -2175,8 +2190,8 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="internalfunc-agg-regr-regr_count">REGR_COUNT</link>, <link
-                        linkend="internalfunc-agg-stat-var_pop">VAR_POP</link>. </para>
+                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="langref-aggfuncs-var-pop">VAR_POP</link>. </para>
             </formalpara>
         </section>
     </section>

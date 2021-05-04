@@ -14,11 +14,15 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
+                                        <String>DocBook HTML - Chunk FBDoc</String>
+                                        <String>DocBook HTML FBDoc</String>
                                         <String>DocBook PDF FBDoc</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
+                                        <String>XSL</String>
+                                        <String>XSL</String>
                                         <String>XSL</String>
                                     </list>
                                 </field>
@@ -353,29 +357,29 @@
     </meta>
     <projectTree name="langref40.xpr">
         <folder path="xsl/"/>
-        <file name="agg-func.xml"/>
-        <file name="charset-coll.xml"/>
-        <file name="context-var.xml"/>
-        <file name="ddl.xml"/>
-        <file name="dml.xml"/>
-        <file name="error-handlers.xml"/>
-        <file name="internal-func.xml"/>
-        <file name="intro.xml"/>
-        <file name="keywords.xml"/>
+        <file name="langref-appx01-supplement.xml"/>
+        <file name="langref-appx02-errorcodes.xml"/>
+        <file name="langref-appx03-reskeywords.xml"/>
+        <file name="langref-appx04-systable.xml"/>
+        <file name="langref-appx05-montables.xml"/>
+        <file name="langref-appx06-sectables.xml"/>
+        <file name="langref-appx07-syspackage.xml"/>
+        <file name="langref-appx08-charsets.xml"/>
+        <file name="langref-appx09-license.xml"/>
         <file name="langref-commons.xml"/>
+        <file name="langref-context-var.xml"/>
+        <file name="langref-datatypes.xml"/>
+        <file name="langref-ddl.xml"/>
+        <file name="langref-dml.xml"/>
+        <file name="langref-functions-aggregate.xml"/>
+        <file name="langref-functions-scalar.xml"/>
+        <file name="langref-functions-window.xml"/>
+        <file name="langref-intro.xml"/>
+        <file name="langref-psql.xml"/>
+        <file name="langref-security.xml"/>
+        <file name="langref-session.xml"/>
+        <file name="langref-structure.xml"/>
+        <file name="langref-transaction.xml"/>
         <file name="langref.xml"/>
-        <file name="langstruct.xml"/>
-        <file name="license.xml"/>
-        <file name="montables.xml"/>
-        <file name="psql.xml"/>
-        <file name="sectables.xml"/>
-        <file name="security.xml"/>
-        <file name="session.xml"/>
-        <file name="supplement.xml"/>
-        <file name="syspackage.xml"/>
-        <file name="systables.xml"/>
-        <file name="transaction.xml"/>
-        <file name="types.xml"/>
-        <file name="window-func.xml"/>
     </projectTree>
 </project>

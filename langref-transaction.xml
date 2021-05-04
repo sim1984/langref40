@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="transaction" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-transaction" xml:lang="ru">
     <info>
         <title>Управление транзакциями</title>
     </info>
@@ -7,34 +7,34 @@
         изолированной работы группы последовательных операций над базой данных. Изменения над
         данными остаются обратимыми до тех пор, пока клиентское приложение не выдаст серверу
         инструкцию <code>COMMIT</code>.</para>
-    <section xml:id="transaction-statements">
+    <section xml:id="langref-transaction-statements">
         <title>Операторы управления транзакциями</title>
         <para>Firebird имеет небольшое количество SQL операторов, которые могут использоваться
             клиентскими приложениями для старта, управления, подтверждения или отмены транзакций, но
             достаточное для всех задач над базой данных: <itemizedlist>
                 <listitem>
-                    <para><link linkend="transaction-set_transaction">SET TRANSACTION</link> —
+                    <para><link linkend="langref-transaction-set_transaction">SET TRANSACTION</link> —
                         задание параметров транзакции и её старт;</para>
                 </listitem>
                 <listitem>
-                    <para><link linkend="transaction-commit">COMMIT</link> — завершение транзакции и
+                    <para><link linkend="langref-transaction-commit">COMMIT</link> — завершение транзакции и
                         сохранение изменений;</para>
                 </listitem>
                 <listitem>
-                    <para><link linkend="transaction-rollback">ROLLBACK</link> — отмена изменений
+                    <para><link linkend="langref-transaction-rollback">ROLLBACK</link> — отмена изменений
                         произошедший в рамках транзакции;</para>
                 </listitem>
                 <listitem>
-                    <para><link linkend="transaction-savepoint">SAVEPOINT</link> — установка точки
+                    <para><link linkend="langref-transaction-savepoint">SAVEPOINT</link> — установка точки
                         сохранения для частичного отката изменений, если это необходимо;</para>
                 </listitem>
                 <listitem>
-                    <para><link linkend="transaction-realese_savepoint">RELEASE SAVEPOINT</link> —
+                    <para><link linkend="langref-transaction-realese_savepoint">RELEASE SAVEPOINT</link> —
                         удаление точки сохранения.</para>
                 </listitem>
             </itemizedlist></para>
 
-        <section xml:id="transaction-set_transaction">
+        <section xml:id="langref-transaction-set_transaction">
             <info>
                 <title>SET TRANSACTION</title>
                 <keywordset>
@@ -180,7 +180,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                 транзакциям последовательно присваиваются номера. Этот номер средствами SQL можно
                 получить, используя контекстную переменную <code>CURRENT_TRANSACTION</code>.</para>
 
-            <section xml:id="transaction-set_transaction-params">
+            <section xml:id="langref-transaction-set_transaction-params">
                 <title>Параметры транзакции</title>
                 <para>Основными характеристиками транзакции являются: <itemizedlist>
                         <listitem>
@@ -201,7 +201,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                     <code>RESERVING</code>).</para>
                         </listitem>
                     </itemizedlist></para>
-                <section xml:id="transaction-set_transaction-name">
+                <section xml:id="langref-transaction-set_transaction-name">
                     <title>Имя транзакции</title>
                     <para>Необязательное предложение <code>NAME</code> задаёт имя транзакции.
                         Предложение <code>NAME</code> доступно только в Embedded SQL. Если
@@ -213,7 +213,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                         динамическую спецификацию имён транзакций.</para>
                 </section>
 
-                <section xml:id="transaction-set_transaction-access_mode">
+                <section xml:id="langref-transaction-set_transaction-access_mode">
                     <title>Режим доступа</title>
                     <para>Для транзакций существует два режима доступа к данным базы данных:
                             <code>READ WRITE</code> и <code>READ ONLY</code>.</para>
@@ -247,7 +247,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                             <code>isc_tpb_read</code> — <code>READ ONLY</code>.</para>
                 </section>
 
-                <section xml:id="transaction-set_transaction-lock_resolution_mode">
+                <section xml:id="langref-transaction-set_transaction-lock_resolution_mode">
                     <title>Режим разрешения блокировок</title>
                     <para>При работе с одной и той же базой данных нескольких клиентских приложений
                         могут возникать блокировки. Блокировки могут возникать, когда одна
@@ -259,7 +259,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                     <para>Существуют два режима разрешения блокировок: <code>WAIT</code> и <code>NO
                             WAIT</code>.</para>
 
-                    <section xml:id="transaction-set_transaction-wait_mode">
+                    <section xml:id="langref-transaction-set_transaction-wait_mode">
                         <title>Режим WAIT</title>
                         <indexterm>
                             <primary>SET TRANSACTION</primary>
@@ -283,7 +283,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                         <para>В Firebird API режиму <code>WAIT</code> соответствует константа
                                 <code>isc_tpb_wait</code>.</para>
                     </section>
-                    <section xml:id="transaction-set_transaction-no_wait_mode">
+                    <section xml:id="langref-transaction-set_transaction-no_wait_mode">
                         <title>Режим NO WAIT</title>
                         <indexterm>
                             <primary>SET TRANSACTION</primary>
@@ -296,7 +296,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                                 <code>isc_tpb_nowait</code>.</para>
                     </section>
                 </section>
-                <section xml:id="transaction-set_transaction-isolation_level">
+                <section xml:id="langref-transaction-set_transaction-isolation_level">
                     <title>ISOLATION LEVEL</title>
 
                     <para>Уровень изолированности транзакций — значение, определяющее уровень, при
@@ -331,7 +331,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                             </listitem>
                         </itemizedlist>
                     </para>
-                    <section xml:id="transaction-isolation_level-snapshot">
+                    <section xml:id="langref-transaction-isolation_level-snapshot">
                         <title>Уровень изолированности SNAPSHOT</title>
                         <indexterm>
                             <primary>SET TRANSACTION</primary>
@@ -354,7 +354,7 @@ WAIT ISOLATION LEVEL SNAPSHOT;
                         </note>
                         <para>В Firebird API режиму изолированности <code>SNAPSHOT</code>
                             соответствует константа <code>isc_tpb_concurrency</code>.</para>
-                        <section xml:id="transaction-isolation_level-snapshot-atnumber">
+                        <section xml:id="langref-transaction-isolation_level-snapshot-atnumber">
                             <title>Предложение AT NUMBER</title>
                             <para>Транзакцию с уровнем изолированности <code>SNAPSHOT</code> можно
                                 запустить на основе другой транзакции, если известен номер её
@@ -391,7 +391,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                             </note>
                         </section>
                     </section>
-                    <section xml:id="transaction-isolation_level-snapshot_table_stability">
+                    <section xml:id="langref-transaction-isolation_level-snapshot_table_stability">
                         <title>Уровень изолированности SNAPSHOT TABLE STABILITY</title>
                         <indexterm>
                             <primary>SET TRANSACTION</primary>
@@ -415,7 +415,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                             то запуск транзакции с таким уровнем изоляции приведёт к ошибке базы
                             данных. </para>
                     </section>
-                    <section xml:id="transaction-isolation_level-read_commited">
+                    <section xml:id="langref-transaction-isolation_level-read_commited">
                         <title>Уровень изолированности READ COMMITTED</title>
                         <indexterm>
                             <primary>SET TRANSACTION</primary>
@@ -434,7 +434,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                         <para>В Firebird API режиму изолированности <code>READ COMMITTED</code>
                             соответствует константа <code>isc_tpb_read_committed</code>.</para>
 
-                        <section xml:id="transaction-isolation_level-read_commited-record_version">
+                        <section xml:id="langref-transaction-isolation_level-read_commited-record_version">
                             <title>RECORD_VERSION</title>
                             <para>Для этого уровня изолированности можно указать один из двух
                                 значений дополнительной характеристики в зависимости от желаемого
@@ -490,7 +490,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                                         <filename>firebird.conf</filename> может быть удалён.</para>
                             </warning>
                         </section>
-                        <section xml:id="transaction-isolation_level-read_commited-read_consistency">
+                        <section xml:id="langref-transaction-isolation_level-read_commited-read_consistency">
                             <title>READ CONSISTENCY</title>
 
                             <para>Если указана эта опция, то транзакция с режимом изолированности
@@ -630,7 +630,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                         </section>
                     </section>
                 </section>
-                <section xml:id="transaction-no_auto_undo">
+                <section xml:id="langref-transaction-no_auto_undo">
                     <title>NO AUTO UNDO</title>
 
                     <indexterm>
@@ -650,7 +650,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                     <para>Для транзакций, в рамках которых не выполняется никаких изменений, опция
                             <code>NO AUTO UNDO</code> игнорируется.</para>
                 </section>
-                <section xml:id="transaction-ignore_limbo">
+                <section xml:id="langref-transaction-ignore_limbo">
                     <title>IGNORE LIMBO</title>
 
                     <indexterm>
@@ -662,7 +662,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                         (limbo transaction). Транзакции считается &quot;потерянной&quot;, если не
                         завершён второй этап двухфазного подтверждения (two-phase commit).</para>
                 </section>
-                <section xml:id="transaction-auto_commit">
+                <section xml:id="langref-transaction-auto_commit">
                     <title>AUTO COMMIT</title>
 
                     <indexterm>
@@ -682,7 +682,7 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                             негативно отразится на производительности.</para>
                     </important>
                 </section>
-                <section xml:id="transaction-set_transaction-reserving">
+                <section xml:id="langref-transaction-set_transaction-reserving">
                     <info>
                         <title>RESERVING</title>
                     </info>
@@ -868,13 +868,13 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="transaction-commit">COMMIT</link>, <link
-                                linkend="transaction-rollback">ROLLBACK</link>. </para>
+                            <link linkend="langref-transaction-commit">COMMIT</link>, <link
+                                linkend="langref-transaction-rollback">ROLLBACK</link>. </para>
                     </formalpara>
                 </section>
             </section>
         </section>
-        <section xml:id="transaction-commit">
+        <section xml:id="langref-transaction-commit">
             <info>
                 <title>COMMIT</title>
                 <keywordset>
@@ -978,11 +978,11 @@ COMMIT [WORK] [TRANSACTION <replaceable>tr_name</replaceable>]
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="transaction-set_transaction">SET TRANSACTION</link>, <link
-                        linkend="transaction-rollback">ROLLBACK</link>. </para>
+                    <link linkend="langref-transaction-set_transaction">SET TRANSACTION</link>, <link
+                        linkend="langref-transaction-rollback">ROLLBACK</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="transaction-rollback">
+        <section xml:id="langref-transaction-rollback">
             <info>
                 <title>ROLLBACK</title>
                 <keywordset>
@@ -1076,10 +1076,10 @@ ROLLBACK [WORK] [TRANSACTION <replaceable>tr_name</replaceable>]
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="transaction-set_transaction">SET TRANSACTION</link>, <link
-                        linkend="transaction-commit">COMMIT</link>. </para>
+                    <link linkend="langref-transaction-set_transaction">SET TRANSACTION</link>, <link
+                        linkend="langref-transaction-commit">COMMIT</link>. </para>
             </formalpara>
-            <section xml:id="transaction-rollback-to_savepoint">
+            <section xml:id="langref-transaction-rollback-to_savepoint">
                 <info>
                     <title>ROLLBACK TO SAVEPOINT</title>
                     <keywordset>
@@ -1123,11 +1123,11 @@ ROLLBACK [WORK] [TRANSACTION <replaceable>tr_name</replaceable>]
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="transaction-savepoint">SAVEPOINT</link>. </para>
+                        <link linkend="langref-transaction-savepoint">SAVEPOINT</link>. </para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="transaction-savepoint">
+        <section xml:id="langref-transaction-savepoint">
             <info>
                 <title>SAVEPOINT</title>
                 <keywordset>
@@ -1190,12 +1190,12 @@ SAVEPOINT <replaceable>sp_name</replaceable>
             <para>Если имя точки сохранения уже существует в рамках транзакции, то существующая
                 точка сохранения будет удалена, и создаётся новая с тем же именем.</para>
             <para>Для отката изменений к точке сохранения используется оператор <link
-                    linkend="transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>. </para>
+                    linkend="langref-transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>. </para>
             <note>
                 <para>Внутренний механизм точек сохранения может использовать большие объёмы памяти,
                     особенно если вы обновляете одни и те же записи многократно в одной транзакции.
                     Если точка сохранения уже не нужна, но вы ещё не готовы закончить транзакцию, то
-                    можно ее удалить оператором <link linkend="transaction-realese_savepoint"
+                    можно ее удалить оператором <link linkend="langref-transaction-realese_savepoint"
                         >RELEASE SAVEPOINT</link>, тем самым освобождая ресурсы.</para>
             </note>
             <para><emphasis>Примеры:</emphasis></para>
@@ -1220,12 +1220,12 @@ SELECT * FROM TEST; -- возвращает одну строку
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>,
-                        <link linkend="transaction-realese_savepoint">RELEASE SAVEPOINT</link>.
+                    <link linkend="langref-transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>,
+                        <link linkend="langref-transaction-realese_savepoint">RELEASE SAVEPOINT</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="transaction-realese_savepoint">
+        <section xml:id="langref-transaction-realese_savepoint">
             <info>
                 <title>RELEASE SAVEPOINT</title>
                 <keywordset>
@@ -1287,10 +1287,10 @@ RELEASE SAVEPOINT <replaceable>sp_name</replaceable> [ONLY]
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="transaction-savepoint">SAVEPOINT</link>. </para>
+                    <link linkend="langref-transaction-savepoint">SAVEPOINT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="transaction-savepoint-inner">
+        <section xml:id="langref-transaction-savepoint-inner">
             <info>
                 <title>Внутренние точки сохранения</title>
             </info>
@@ -1310,7 +1310,7 @@ RELEASE SAVEPOINT <replaceable>sp_name</replaceable> [ONLY]
                     создание системной точки сохранения уровня транзакции.</para>
             </tip>
         </section>
-        <section xml:id="transaction-savepoint-psql">
+        <section xml:id="langref-transaction-savepoint-psql">
             <info>
                 <title>Точки сохранения и PSQL</title>
             </info>

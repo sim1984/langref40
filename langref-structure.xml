@@ -1,16 +1,13 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langstruct"
-    xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-structure" xml:lang="ru">
     <info>
         <title>Структура языка</title>
     </info>
 
-    <section xml:id="langstruct-background">
-        <info>
-            <title>Общие сведения</title>
-        </info>
+    <section xml:id="langref-background">
+        <title>Общие сведения</title>
 
-        <section xml:id="langstruct-background-flavors">
+        <section xml:id="langref-structure-flavours">
             <info>
                 <title>Подмножества SQL</title>
                 <keywordset>
@@ -62,10 +59,9 @@
                 руководстве. Из набора инструментария ни ESQL, ни ISQL не описаны здесь отдельно, за
                 исключением тех мест, где это указано явно. </para>
         </section>
-        <section xml:id="langstruct-background-dialects">
-            <info>
-                <title>Диалекты SQL</title>
-            </info>
+
+        <section xml:id="langref-structure-dialects">
+            <title>Диалекты SQL</title>
 
             <para>SQL диалект — это термин, определяющий специфические особенности языка SQL,
                 которые доступны во время доступа с его помощью к базе данных. SQL диалект может
@@ -118,10 +114,9 @@
                     только в тексте явно не указывается диалект. </para>
             </note>
         </section>
-        <section xml:id="langstruct-background-errors">
-            <info>
-                <title>Действия при ошибках</title>
-            </info>
+
+        <section xml:id="langref-structure-errors">
+            <title>Действия при ошибках</title>
 
             <para>Обработка любого оператора либо успешно завершается, либо прерывается из-за
                 вызванной определёнными условиями ошибки. Обработку ошибок можно производить, как в
@@ -129,10 +124,9 @@
         </section>
     </section>
 
-    <section xml:id="langstruct-common">
-        <info>
-            <title>Основные сведения: операторы, предложения, ключевые слова </title>
-        </info>
+    <section xml:id="langref-structure-basics">
+        <title>Основные сведения: операторы, предложения, ключевые слова </title>
+
 
         <para>Основная конструкция SQL — оператор (statement). Оператор описывает, что должна
             выполнить система управления базами данных с конкретным объектом данных или метаданных,
@@ -164,20 +158,21 @@ CREATE TABLE T (ADD INT NOT NULL);
         <para>Список зарезервированных и ключевых слов представлен в приложении <link
                 linkend="keywords">Зарезервированные и ключевые слова</link>. </para>
     </section>
-    <section xml:id="langstruct-ids">
-        <info>
-            <title>Идентификаторы</title>
-        </info>
+
+    <section xml:id="langref-structure-identifiers">
+        <title>Идентификаторы</title>
 
         <para>Все объекты базы данных имеют имена, которые иногда называют идентификаторами.
             Максимальная длина идентификатора составляет 63 символа. Существует два типа имён —
             имена, похожие по форме на имена переменных в обычных языках программирования, и имена с
             разделителями (delimited name), которые являются отличительной особенностью языка SQL. </para>
+        
         <para>Обычное имя должно начинаться с буквы латинского алфавита, за которой могут следовать
             буквы (латинского алфавита), цифры, символ подчёркивания и знак доллара. Такое имя
             нечувствительно к регистру, его можно записывать как строчными, так и прописными
             буквами. В имени нельзя использовать буквы кириллицы, пробелы, другие специальные
             символы.</para>
+        
         <para>Следующие имена с точки зрения системы являются одинаковыми: </para>
         <para>
             <programlisting>
@@ -215,7 +210,7 @@ FullName
             включая буквы кириллицы, пробелы, специальные символы. В нем также могут присутствовать
             зарезервированные слова. Такое имя является чувствительным к регистру. Имена с
             разделителем доступны только в диалекте 3. Подробнее о диалектах см. <link
-                linkend="langstruct-background-dialects">Диалекты SQL</link>
+                linkend="langref-structure-dialects">Диалекты SQL</link>
         </para>
         <para>
             <literallayout class="monospaced">  
@@ -228,7 +223,8 @@ FullName
             имена с разделителями и обычные, как "FULLNAME" и FULLNAME являются одинаковыми, а
             "FullName" и FULLNAME (так же как, например, и FullName) отличаются. </para>
     </section>
-    <section xml:id="langstruct-literals">
+    
+    <section xml:id="langref-structure-literals">
         <info>
             <title>Литералы</title>
         </info>
@@ -260,10 +256,11 @@ FullName
                 </listitem>
             </itemizedlist>
         </para>
-        <para>Подробней о литералах для каждого из типов данных см. <link linkend="types"
-                >Типы и подтипы данных</link>.</para>
+        <para>Подробней о литералах для каждого из типов данных см. <link linkend="langref-datatypes">Типы и
+                подтипы данных</link>.</para>
     </section>
-    <section xml:id="langstruct-operators">
+    
+    <section xml:id="langref-structure-operators">
         <info>
             <title>Операторы и специальные символы </title>
         </info>
@@ -304,9 +301,10 @@ FullName
             </para>
         </formalpara>
         <para>Подробнее об операторах см. <link linkend="langref-commons-expressions"
-            >Выражения</link>.</para>
+                >Выражения</link>.</para>
     </section>
-    <section xml:id="langstruct-comments">
+    
+    <section xml:id="langref-structure-comments">
         <info>
             <title>Комментарии</title>
         </info>

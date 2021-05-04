@@ -9,7 +9,7 @@
         привилегии на уровне базы данных. В данной главе рассказывается, каким образом управлять
         безопасностью вашей базы данных на каждом из уровней.</para>
 
-    <section xml:id="security-auth">
+    <section xml:id="langref-security-auth">
         <title>Аутентификация пользователя</title>
 
         <para>Безопасность всей базы данных зависит от проверки подлинности идентификатора
@@ -49,10 +49,10 @@
             то без указания роли RDB$ADMIN он получает неограниченный доступ ко всем объектам
             принадлежащим этой базе данных.</para>
 
-        <section xml:id="security-auth-special">
+        <section xml:id="langref-security-auth-special">
             <title>Специальные учётные записи</title>
 
-            <section xml:id="security-auth-special-sysdba">
+            <section xml:id="langref-security-auth-special-sysdba">
                 <info>
                     <title>SYSDBA</title>
                     <keywordset>
@@ -67,14 +67,14 @@
                     сервера. </para>
             </section>
 
-            <section xml:id="security-auth-special-posix">
+            <section xml:id="langref-security-auth-special-posix">
                 <title>Особенности POSIX</title>
 
                 <para>В POSIX системах, включая MacOSX, имя пользователя POSIX будет
                     интерпретировано как имя пользователя Firebird Embedded, если имя пользователя
                     не указано явно. </para>
 
-                <section xml:id="security-auth-sysdba-posix">
+                <section xml:id="langref-security-auth-sysdba-posix">
                     <title>Пользователь <database class="user">SYSDBA</database> в POSIX</title>
 
                     <para>В POSIX системах, кроме MacOSX, пользователь <database class="user"
@@ -91,7 +91,7 @@
                             паролем может отличаться от стандартного.</para>
                     </note>
                 </section>
-                <section xml:id="security-auth-root-posix">
+                <section xml:id="langref-security-auth-root-posix">
                     <title>Пользователь <emphasis>root</emphasis> в POSIX</title>
 
                     <para>В POSIX системах пользователь <emphasis>root</emphasis> может выступать в
@@ -101,7 +101,7 @@
                         всем базам данных сервера.</para>
                 </section>
             </section>
-            <section xml:id="security-auth-special-windows">
+            <section xml:id="langref-security-auth-special-windows">
                 <title>Особенности Windows</title>
 
                 <para>В операционных системах семейства Windows NT вы также можете пользоваться
@@ -119,11 +119,11 @@
                         прошедшие проверку по умолчанию автоматически отображались в CURRENT_USER. В
                         Firebird 3 и выше отображение должно быть сделано явно для систем с
                         несколькими базами данных безопасности и включенной доверительной
-                        аутентификацией. См. <link linkend="security-mapping-create">CREATE
+                        аутентификацией. См. <link linkend="langref-security-mapping-create">CREATE
                             MAPPING</link>.</para>
                 </note>
             </section>
-            <section xml:id="security-auth-special-dbowner">
+            <section xml:id="langref-security-auth-special-dbowner">
                 <title>Владелец базы данных</title>
 
                 <para>Владелец базы данных — это либо текущий пользователь
@@ -136,7 +136,7 @@
         </section>
 
           
-            <section xml:id="security-sysroles-rdbadmin">
+            <section xml:id="langref-security-sysroles-rdbadmin">
                 <info>
                     <title>Роль RDB$ADMIN</title>
                     <keywordset>
@@ -159,7 +159,7 @@
                 <para>В обоих случаях пользователь с правами RDB$ADMIN роли может всегда передавать
                     эту роль другим. Другими словами, <quote>WITH ADMIN OPTION</quote> уже встроен в
                     эту роль и эту опцию можно не указывать.</para>
-                <section xml:id="security-sysroles-rdbadmin-grantindb">
+                <section xml:id="langref-security-sysroles-rdbadmin-grantindb">
                     <info>
                         <title>Предоставление роли RDB$ADMIN в обычной базе данных</title>
                     </info>
@@ -205,17 +205,17 @@ REVOKE [DEFAULT] RDB$ADMIN FROM <replaceable>username</replaceable>
                     <para>Если в операторе GRANT присутствует ключевое слово DEFAULT, то
                         пользователь автоматически будет получать административные привилегии даже
                         если он не указал роль RDB$ADMIN при входе. Привилегии на роль RDB$ADMIN
-                        могут давать только <link linkend="security-administrators"
+                        могут давать только <link linkend="langref-security-administrators"
                             >администраторы</link>. </para>
                     <formalpara>
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="security-priv-grant">GRANT</link>, <link
-                                linkend="security-priv-revoke">REVOKE</link>. </para>
+                            <link linkend="langref-security-priv-grant">GRANT</link>, <link
+                                linkend="langref-security-priv-revoke">REVOKE</link>. </para>
                     </formalpara>
 
-                    <section xml:id="security-sysroles-rdbadmin-useindb">
+                    <section xml:id="langref-security-sysroles-rdbadmin-useindb">
                         <title>Использование роли RDB$ADMIN в обычной базе данных</title>
 
                         <para>Для использования прав роли RDB$ADMIN пользователь просто указывает её
@@ -225,7 +225,7 @@ REVOKE [DEFAULT] RDB$ADMIN FROM <replaceable>username</replaceable>
                     </section>
                 </section>
 
-                <section xml:id="security-sysroles-rdbadmin-grantinsecuritydb">
+                <section xml:id="langref-security-sysroles-rdbadmin-grantinsecuritydb">
                     <title>Предоставление роли RDB$ADMIN в базе данных пользователей</title>
 
                     <para>Так как никто не может соединиться с базой данных пользователей, то
@@ -295,16 +295,16 @@ REVOKE ADMIN ROLE
                             USER.</para>
                     </important>
                     <para>Привилегии на роль RDB$ADMIN могут давать только <link
-                            linkend="security-administrators">администраторы</link>. </para>
+                            linkend="langref-security-administrators">администраторы</link>. </para>
                     <formalpara>
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="security-priv-grant">GRANT</link>, <link
-                                linkend="security-priv-revoke">REVOKE</link>. </para>
+                            <link linkend="langref-security-priv-grant">GRANT</link>, <link
+                                linkend="langref-security-priv-revoke">REVOKE</link>. </para>
                     </formalpara>
 
-                    <section xml:id="security-rdbadmin-grantinsecuritydb-gsec">
+                    <section xml:id="langref-security-rdbadmin-grantinsecuritydb-gsec">
                         <title>Выполнение той же задачи используя утилиту
                                 <application>gsec</application></title>
 
@@ -329,7 +329,7 @@ gsec -mo existing_user -admin no
 
                     </section>
 
-                    <section xml:id="security-sysroles-rdbadmin-useinsecuritydb">
+                    <section xml:id="langref-security-sysroles-rdbadmin-useinsecuritydb">
                         <title>Использование роли RDB$ADMIN в базе данных пользователей</title>
 
                         <para>Для управления учётными записями пользователей через SQL пользователь,
@@ -345,7 +345,7 @@ gsec -mo existing_user -admin no
                             недоступно.</para>
                     </section>
 
-                    <section xml:id="security-sysroles-rdbadmin-useingsec">
+                    <section xml:id="langref-security-sysroles-rdbadmin-useingsec">
                         <title>Использование роли RDB$ADMIN в
                             <application>gsec</application></title>
 
@@ -355,7 +355,7 @@ gsec -mo existing_user -admin no
                     </section>
                 </section>
 
-                <section xml:id="security-autoadminmapping">
+                <section xml:id="langref-security-autoadminmapping">
                     <info>
                         <title>AUTO ADMIN MAPPING</title>
                         <keywordset>
@@ -383,7 +383,7 @@ gsec -mo existing_user -admin no
                         </orderedlist></para>
                     <para>После успешного “auto admin” подключения текущей ролью будет являться
                         RDB$ADMIN. </para>
-                    <section xml:id="security-autoadminmapping01">
+                    <section xml:id="langref-security-autoadminmapping01">
                         <info>
                             <title>Включение и выключение AUTO ADMIN MAPPING в обычной базе
                                 данных</title>
@@ -413,7 +413,7 @@ ALTER ROLE RDB$ADMIN DROP AUTO ADMIN MAPPING -- выключение
                                 </listitem>
                                 <listitem>
                                     <para>
-                                        <link linkend="security-administrators"
+                                        <link linkend="langref-security-administrators"
                                             >администраторы</link>. </para>
                                 </listitem>
                             </itemizedlist>
@@ -442,7 +442,7 @@ ALTER ROLE RDB$ADMIN DROP AUTO ADMIN MAPPING
 DROP MAPPING WIN_ADMINS;
                     </programlisting>
                             </para>
-                            <para>Подробней см. <link linkend="security-mapping">Отображение
+                            <para>Подробней см. <link linkend="langref-security-mapping">Отображение
                                     объектов безопасности</link>.</para>
                         </note>
 
@@ -456,7 +456,7 @@ DROP MAPPING WIN_ADMINS;
                             RDB$ADMIN для Администраторов, которые уже подключились.</para>
 
                     </section>
-                    <section xml:id="security-autoadminmapping02">
+                    <section xml:id="langref-security-autoadminmapping02">
                         <info>
                             <title>Включение и выключение AUTO ADMIN MAPPING в базе данных
                                 безопасности</title>
@@ -503,7 +503,7 @@ gsec -mapping drop
                 </section>
             </section>      
 
-        <section xml:id="security-administrators">
+        <section xml:id="langref-security-administrators">
             <info>
                 <title>Администраторы</title>
             </info>
@@ -514,7 +514,7 @@ gsec -mapping drop
                 контекстах безопасности Firebird.</para>
 
             <para>
-                <table xml:id="security-tbl-administrators" frame="all">
+                <table xml:id="langref-security-tbl-administrators" frame="all">
                     <?dbfo keep-together='auto'?>
                     <title>Администраторы</title>
                     <tgroup cols="3">
@@ -615,7 +615,7 @@ gsec -mapping drop
             </para>
         </section>
 
-        <section xml:id="security-mapping">
+        <section xml:id="langref-security-mapping">
             <info>
                 <title>Отображение объектов безопасности</title>
             </info>
@@ -653,7 +653,7 @@ gsec -mapping drop
                     отображается в любую базу данных один к одному. Это безопасное правило: для базы
                     данных безопасности не имеет смысла не доверять себе.</para>
             </note>
-            <section xml:id="security-mapping-create">
+            <section xml:id="langref-security-mapping-create">
                 <info>
                     <title>CREATE MAPPING</title>
                     <keywordset>
@@ -951,12 +951,12 @@ TO USER GUEST;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-mapping-alter">ALTER MAPPING</link>, <link
-                            linkend="security-mapping-createoralter">CREATE OR ALTER MAPPING</link>,
-                            <link linkend="security-mapping-drop">DROP MAPPING</link>. </para>
+                        <link linkend="langref-security-mapping-alter">ALTER MAPPING</link>, <link
+                            linkend="langref-security-mapping-createoralter">CREATE OR ALTER MAPPING</link>,
+                            <link linkend="langref-security-mapping-drop">DROP MAPPING</link>. </para>
                 </formalpara>
             </section>
-            <section xml:id="security-mapping-alter">
+            <section xml:id="langref-security-mapping-alter">
                 <info>
                     <title>ALTER MAPPING</title>
                     <keywordset>
@@ -1090,12 +1090,12 @@ FROM USER U1 TO USER U3;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-mapping-create">CREATE MAPPING</link>, <link
-                            linkend="security-mapping-createoralter">CREATE OR ALTER MAPPING</link>,
-                            <link linkend="security-mapping-drop">DROP MAPPING</link>. </para>
+                        <link linkend="langref-security-mapping-create">CREATE MAPPING</link>, <link
+                            linkend="langref-security-mapping-createoralter">CREATE OR ALTER MAPPING</link>,
+                            <link linkend="langref-security-mapping-drop">DROP MAPPING</link>. </para>
                 </formalpara>
             </section>
-            <section xml:id="security-mapping-createoralter">
+            <section xml:id="langref-security-mapping-createoralter">
                 <info>
                     <title>CREATE OR ALTER MAPPING</title>
                     <keywordset>
@@ -1215,12 +1215,12 @@ FROM USER U1 TO USER U4;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-mapping-create">CREATE MAPPING</link>, <link
-                            linkend="security-mapping-alter">ALTER MAPPING</link>, <link
-                            linkend="security-mapping-drop">DROP MAPPING</link>. </para>
+                        <link linkend="langref-security-mapping-create">CREATE MAPPING</link>, <link
+                            linkend="langref-security-mapping-alter">ALTER MAPPING</link>, <link
+                            linkend="langref-security-mapping-drop">DROP MAPPING</link>. </para>
                 </formalpara>
             </section>
-            <section xml:id="security-mapping-drop">
+            <section xml:id="langref-security-mapping-drop">
                 <info>
                     <title>DROP MAPPING</title>
                     <keywordset>
@@ -1312,14 +1312,14 @@ DROP MAPPING FROM_RT;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-mapping-create">CREATE MAPPING</link>. </para>
+                        <link linkend="langref-security-mapping-create">CREATE MAPPING</link>. </para>
                 </formalpara>
             </section>
         </section>
 
     </section>
 
-    <section xml:id="security-user">
+    <section xml:id="langref-security-user">
         <info>
             <title>Управление пользователями</title>
         </info>
@@ -1354,7 +1354,7 @@ DROP MAPPING FROM_RT;
         </para>
         <para>Непривилегированные пользователи могут использовать только оператор ALTER USER для
             изменения собственной учётной записи. </para>
-        <section xml:id="security-user-create">
+        <section xml:id="langref-security-user-create">
             <info>
                 <title>CREATE USER</title>
                 <keywordset>
@@ -1636,12 +1636,12 @@ GRANT ADMIN ROLE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-user-alter">ALTER USER</link>, <link
-                        linkend="security-user-createoralter">CREATE OR ALTER USER</link>, <link
-                        linkend="security-user-drop">DROP USER</link>. </para>
+                    <link linkend="langref-security-user-alter">ALTER USER</link>, <link
+                        linkend="langref-security-user-createoralter">CREATE OR ALTER USER</link>, <link
+                        linkend="langref-security-user-drop">DROP USER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="security-user-alter">
+        <section xml:id="langref-security-user-alter">
             <info>
                 <title>ALTER USER</title>
                 <keywordset>
@@ -1915,12 +1915,12 @@ TAGS (BIRTHYEAR = '1971', DROP CITY);
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-user-create">CREATE USER</link>, <link
-                        linkend="security-user-createoralter">CREATE OR ALTER USER</link>, <link
-                        linkend="security-user-drop">DROP USER</link>. </para>
+                    <link linkend="langref-security-user-create">CREATE USER</link>, <link
+                        linkend="langref-security-user-createoralter">CREATE OR ALTER USER</link>, <link
+                        linkend="langref-security-user-drop">DROP USER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="security-user-createoralter">
+        <section xml:id="langref-security-user-createoralter">
             <info>
                 <title>CREATE OR ALTER USER</title>
                 <keywordset>
@@ -2062,11 +2062,11 @@ INACTIVE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-user-create">CREATE USER</link>, <link
-                        linkend="security-user-alter">ALTER USER</link>. </para>
+                    <link linkend="langref-security-user-create">CREATE USER</link>, <link
+                        linkend="langref-security-user-alter">ALTER USER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="security-user-drop">
+        <section xml:id="langref-security-user-drop">
             <info>
                 <title>DROP USER</title>
                 <keywordset>
@@ -2181,11 +2181,11 @@ DROP USER Godzilla USING PLUGIN Legacy_UserManager;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-user-create">CREATE USER</link>, <link
-                        linkend="security-user-alter">ALTER USER</link>. </para>
+                    <link linkend="langref-security-user-create">CREATE USER</link>, <link
+                        linkend="langref-security-user-alter">ALTER USER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="security-user-recreate">
+        <section xml:id="langref-security-user-recreate">
             <info>
                 <title>RECREATE USER</title>
                 <keywordset>
@@ -2324,11 +2324,11 @@ INACTIVE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="security-user-create">CREATE USER</link>, <link
-                        linkend="security-user-drop">DROP USER</link>. </para>
+                    <link linkend="langref-security-user-create">CREATE USER</link>, <link
+                        linkend="langref-security-user-drop">DROP USER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="security-user-list">
+        <section xml:id="langref-security-user-list">
             <title>Получение списка пользователей</title>
             <para>Для получения списка пользователей и их атрибутов вы можете воспользоваться псевдо
                 таблицами <database>SEC$USERS</database> и
@@ -2365,7 +2365,7 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
         </section>
     </section>
 
-    <section xml:id="security-roles">
+    <section xml:id="langref-security-roles">
         <info>
             <title>Роли</title>
             <keywordset>
@@ -2383,16 +2383,16 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
             ключевого слова DEFAULT. Любые другие привилегии, предоставленные пользователю, не будут
             затронуты при его входе в систему с указанной ролью. Вход в систему с несколькими ролями
             не поддерживается, однако вы можете права нескольких ролей назначенных по умолчанию. Вы
-            можете изменить текущую роль с помощью оператора <link linkend="session-role">SET
+            можете изменить текущую роль с помощью оператора <link linkend="langref-session-role">SET
                 ROLE</link>.</para>
         <para>Роли могут быть грантованы другие роли. При входе с этой ролью пользователь
             автоматически получит права всех ролей выданных с использованием ключевого слова
             DEFAULT.</para>
 
-        <section xml:id="security-roles-managment">
+        <section xml:id="langref-security-roles-managment">
             <title>Операторы управления ролями</title>
             <para>В данном разделе рассматриваются вопросы создания и удаления ролей.</para>
-            <section xml:id="security-roles-create">
+            <section xml:id="langref-security-roles-create">
                 <info>
                     <title>CREATE ROLE</title>
                     <keywordset>
@@ -2667,13 +2667,13 @@ CREATE ROLE <replaceable>rolename</replaceable> [SET SYSTEM PRIVILEGES TO <repla
 
                 <para>Для проверки имеет ли текущее подключение заданную системную привилегию можно
                     воспользоваться встроенной функцией <link
-                        linkend="internalfunc-func-security-sysprivelege"
+                        linkend="langref-functions-func-security-sysprivelege"
                         >RDB$SYSTEM_PRIVILEGE</link>.</para>
 
                 <para>Выполнить оператор <database>CREATE ROLE</database> могут: <itemizedlist
                         spacing="compact">
                         <listitem>
-                            <para><link linkend="security-administrators"
+                            <para><link linkend="langref-security-administrators"
                                 >Администраторы</link></para>
                         </listitem>
                         <listitem>
@@ -2709,16 +2709,16 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-roles-drop">DROP ROLE</link>, <link
-                            linkend="security-priv-grant">GRANT</link>, <link
-                            linkend="security-priv-revoke">REVOKE</link>, <link
-                            linkend="session-role-setrole">SET ROLE</link>, <link
-                            linkend="internalfunc-func-security-sysprivelege"
+                        <link linkend="langref-security-roles-drop">DROP ROLE</link>, <link
+                            linkend="langref-security-priv-grant">GRANT</link>, <link
+                            linkend="langref-security-priv-revoke">REVOKE</link>, <link
+                            linkend="langref-session-role-setrole">SET ROLE</link>, <link
+                            linkend="langref-functions-func-security-sysprivelege"
                             >RDB$SYSTEM_PRIVILEGE</link>. </para>
 
                 </formalpara>
             </section>
-            <section xml:id="security-roles-alter">
+            <section xml:id="langref-security-roles-alter">
                 <info>
                     <title>ALTER ROLE</title>
                 </info>
@@ -2795,17 +2795,17 @@ ALTER ROLE RDB$ADMIN {SET | DROP} AUTO ADMIN MAPPING
 
                 <para>Оператор ALTER ROLE RDB$ADMIN для включения и отключения возможности
                     администраторам Windows автоматически получать привилегии <link
-                        linkend="security-administrators">администраторов</link> при входе.</para>
+                        linkend="langref-security-administrators">администраторов</link> при входе.</para>
 
                 <para>Эта возможность существует только для одной роли, а именно системной роли
                     RDB$ADMIN, которая существует в любой базе данных с ODS 11.2 и выше. Подробности
-                    см. в <link linkend="security-autoadminmapping">AUTO ADMIN MAPPING</link>. В
+                    см. в <link linkend="langref-security-autoadminmapping">AUTO ADMIN MAPPING</link>. В
                     настоящее время является устаревшим и поддерживается для обратной совместимости,
                     вместо него рекомендуется использовать операторы <link
-                        linkend="security-mapping">{CREATE | ALTER | DROP} MAPPING</link>.</para>
+                        linkend="langref-security-mapping">{CREATE | ALTER | DROP} MAPPING</link>.</para>
 
             </section>
-            <section xml:id="security-roles-drop">
+            <section xml:id="langref-security-roles-drop">
                 <info>
                     <title>DROP ROLE</title>
                     <keywordset>
@@ -2862,7 +2862,7 @@ DROP ROLE <replaceable>rolename</replaceable>;
                 <para>Выполнить оператор <database>DROP ROLE</database> могут: <itemizedlist
                         spacing="compact">
                         <listitem>
-                            <para><link linkend="security-administrators"
+                            <para><link linkend="langref-security-administrators"
                                 >Администраторы</link></para>
                         </listitem>
                         <listitem>
@@ -2892,16 +2892,16 @@ DROP ROLE SELLERS;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-roles-create">CREATE ROLE</link>, <link
-                            linkend="security-priv-grant">GRANT</link>, <link
-                            linkend="security-priv-revoke">REVOKE</link>. </para>
+                        <link linkend="langref-security-roles-create">CREATE ROLE</link>, <link
+                            linkend="langref-security-priv-grant">GRANT</link>, <link
+                            linkend="langref-security-priv-revoke">REVOKE</link>. </para>
 
                 </formalpara>
             </section>
         </section>
     </section>
 
-    <section xml:id="security-priv">
+    <section xml:id="langref-security-priv">
         <info>
             <title>SQL привилегии</title>
         </info>
@@ -2912,7 +2912,7 @@ DROP ROLE SELLERS;
             создавший объект (его владелец) и администраторы имеют доступ к нему. Пользователю
             необходимы привилегии на каждый объект, к которому он должен получить доступ. Как
             правило, привилегии должны быть предоставлены явно пользователю владельцем объекта или
-                <link linkend="security-administrators">администратором</link> базы данных.</para>
+                <link linkend="langref-security-administrators">администратором</link> базы данных.</para>
         <para>Привилегия включает тип DML доступа (SELECT, INSERT, UPDATE, DELETE, EXECUTE и
             REFERENCES), имя объекта базы данных для которого предоставляется привилегия (таблица,
             представление, процедура или роль) и имя объекта которому предоставляется привилегия
@@ -2923,11 +2923,11 @@ DROP ROLE SELLERS;
         <para>Все привилегии по доступу к объектам базы данных хранятся в самой базе, и не могут
             быть применены к любой другой базе данных. </para>
 
-        <section xml:id="security-owner">
+        <section xml:id="langref-security-owner">
             <title>Владелец объекта базы данных</title>
 
             <para>Пользователь, создавший объект базы данных, становится его владельцем. Только
-                владелец объекта и пользователи с правами <link linkend="security-administrators"
+                владелец объекта и пользователи с правами <link linkend="langref-security-administrators"
                     >администратора</link> в базе данных могут изменить или удалить объект базы
                 данных. Владелец базы данных, то есть пользователь, который создал её, имеет все
                 права на объекты, которые были созданы другими пользователями.</para>
@@ -2935,10 +2935,10 @@ DROP ROLE SELLERS;
             <para>Администраторы или владелец объекта могут выдавать привилегии другим
                 пользователям, в том числе и привилегии на право выдачи привилегий другим
                 пользователям. Собственно сам процесс раздачи и отзыва привилегий на уровне SQL
-                реализуется двумя операторами: <link linkend="security-priv-grant">GRANT</link>,
-                    <link linkend="security-priv-revoke">REVOKE</link>.</para>
+                реализуется двумя операторами: <link linkend="langref-security-priv-grant">GRANT</link>,
+                    <link linkend="langref-security-priv-revoke">REVOKE</link>.</para>
         </section>
-        <section xml:id="security-priv-grant">
+        <section xml:id="langref-security-priv-grant">
             <info>
                 <title>GRANT</title>
                 <keywordset>
@@ -3220,7 +3220,7 @@ DROP ROLE SELLERS;
             <para>Для различных типов объектов метаданных существует различный набор привилегий. Эти
                 привилегии будут описаны далее отдельно для каждого из типов объектов
                 метаданных.</para>
-            <section xml:id="security-priv-grant-to_clause">
+            <section xml:id="langref-security-priv-grant-to_clause">
                 <title>Предложение TO</title>
                 <para>В предложении TO указывается список пользователей, ролей и объектов базы
                     данных (процедур, функций, пакетов, триггеров и представлений) для которых будут
@@ -3237,7 +3237,7 @@ DROP ROLE SELLERS;
                         использовать их, чтобы избежать путаницы. </para>
                 </tip>
             </section>
-            <section xml:id="security-priv-grant-public_user">
+            <section xml:id="langref-security-priv-grant-public_user">
                 <title>Пользователь PUBLIC</title>
                 <para>В SQL существует специальный пользователь PUBLIC, представляющий всех
                     пользователей. Если какая-то операция разрешена пользователю PUBLIC, значит,
@@ -3248,7 +3248,7 @@ DROP ROLE SELLERS;
                         быть у пользователя PUBLIC.</para>
                 </important>
             </section>
-            <section xml:id="security-priv-grant-grant_option">
+            <section xml:id="langref-security-priv-grant-grant_option">
                 <title>WITH GRANT OPTION</title>
                 <indexterm>
                     <primary>GRANT</primary>
@@ -3258,7 +3258,7 @@ DROP ROLE SELLERS;
                     указанным в списке пользователей, передавать другим пользователям привилегии
                     указанные в списке привилегий.</para>
             </section>
-            <section xml:id="security-priv-grant-granted_by">
+            <section xml:id="langref-security-priv-grant-granted_by">
                 <title>GRANTED BY</title>
                 <indexterm>
                     <primary>GRANT</primary>
@@ -3293,7 +3293,7 @@ DROP ROLE SELLERS;
                     вышеупомянутом списке.</para>
             </section>
 
-            <section xml:id="security-priv-grant-table">
+            <section xml:id="langref-security-priv-grant-table">
                 <info>
                     <title>Табличные привилегии</title>
                     <keywordset>
@@ -3437,7 +3437,7 @@ TO PROCEDURE ADD_EMP_PROJ;
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="security-priv-grant-execute">
+            <section xml:id="langref-security-priv-grant-execute">
                 <info>
                     <title>Привилегия EXECUTE</title>
                     <keywordset>
@@ -3487,7 +3487,7 @@ TO PACKAGE APP_VAR;
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="security-priv-grant-usage">
+            <section xml:id="langref-security-priv-grant-usage">
                 <info>
                     <title>Привилегия USAGE</title>
                     <keywordset>
@@ -3550,7 +3550,7 @@ TO PACKAGE PKG_BILL;
                 </formalpara>
             </section>
 
-            <section xml:id="security-priv-grant-ddl">
+            <section xml:id="langref-security-priv-grant-ddl">
                 <info>
                     <title>DDL привилегии</title>
                     <keywordset>
@@ -3560,7 +3560,7 @@ TO PACKAGE PKG_BILL;
                     </keywordset>
                 </info>
                 <para>По умолчанию создавать новые объекты метаданных могут только <link
-                        linkend="security-administrators">Администраторы</link>, а изменять и
+                        linkend="langref-security-administrators">Администраторы</link>, а изменять и
                     удалять — администраторы и владельцы этих объектов. Выдача привилегий на
                     создание, изменение или удаление объектов конкретного типа позволяет расширить
                     этот список.</para>
@@ -3649,7 +3649,7 @@ GRANT ALTER ANY PROCEDURE TO Joe;
                     </para>
                 </formalpara>
 
-                <section xml:id="security-priv-grant-ddl-database">
+                <section xml:id="langref-security-priv-grant-ddl-database">
                     <info>
                         <title>DDL привилегии на базу данных</title>
                         <keywordset>
@@ -3723,13 +3723,13 @@ GRANT ALTER ANY PROCEDURE TO Joe;
                         сохраняется в базе данных безопасности. Список пользователей имеющих
                         привилегию CREATE DATABASE можно посмотреть в виртуальной таблице
                         SEC$DB_CREATORS. Привилегию на создание новой базы данных могут выдавать
-                        только <link linkend="security-administrators">Администраторы</link> в базе
+                        только <link linkend="langref-security-administrators">Администраторы</link> в базе
                         данных безопасности.</para>
                     <para>Привилегии ALTER DATABASE и DROP DATABASE относятся только к текущей базе
                         данных, тогда как DDL привилегии ALTER ANY и DROP ANY на другие объекты
                         метаданных относятся ко всем объектам указанного типа внутри текущей базы
                         данных. Привилегии на изменение и удаление текущей базы данных могут
-                        выдавать только <link linkend="security-administrators"
+                        выдавать только <link linkend="langref-security-administrators"
                             >Администраторы</link>.</para>
 
                     <formalpara>
@@ -3755,7 +3755,7 @@ GRANT DROP DATABASE TO USER Fedor;
                     </formalpara>
                 </section>
             </section>
-            <section xml:id="security-priv-grant-sys_priv">
+            <section xml:id="langref-security-priv-grant-sys_priv">
                 <info>
                     <title>Выдача прав системным привилегиям</title>
                     <keywordset>
@@ -3787,9 +3787,9 @@ GRANT ALL ON PLG$SRP_VIEW TO SYSTEM PRIVILEGE USER_MANAGEMENT
                     </para>
                 </formalpara>
                 <para>Описание системных привилегий вы можете посмотреть в <link
-                        linkend="security-roles-create">CREATE ROLE</link></para>
+                        linkend="langref-security-roles-create">CREATE ROLE</link></para>
             </section>
-            <section xml:id="security-priv-grant-role">
+            <section xml:id="langref-security-priv-grant-role">
                 <title>Назначение ролей</title>
                 <indexterm>
                     <primary>GRANT</primary>
@@ -3892,11 +3892,11 @@ GRANT DEFAULT ROLE DIRECTOR TO USER PETROV;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-priv-revoke">REVOKE</link>. </para>
+                        <link linkend="langref-security-priv-revoke">REVOKE</link>. </para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="security-priv-revoke">
+        <section xml:id="langref-security-priv-revoke">
             <info>
                 <title>REVOKE</title>
                 <keywordset>
@@ -4179,8 +4179,8 @@ GRANT DEFAULT ROLE DIRECTOR TO USER PETROV;
             <para>Оператор REVOKE отменяет привилегии для пользователей, ролей, хранимых процедур,
                 хранимых функций, пакетов, триггеров и представлений выданные оператором GRANT.
                 Подробное описание различных типов привилегий см. в <link
-                    linkend="security-priv-grant">GRANT</link>. </para>
-            <section xml:id="security-priv-revoke-from_clause">
+                    linkend="langref-security-priv-grant">GRANT</link>. </para>
+            <section xml:id="langref-security-priv-revoke-from_clause">
                 <title>Предложение FROM</title>
                 <para>В предложении FROM указывается список пользователей, ролей и объектов базы
                     данных (процедур, функций, пакетов, триггеров и представлений) у которых будут
@@ -4292,7 +4292,7 @@ REVOKE ALL ON PLG$SRP_VIEW FROM SYSTEM PRIVILEGE USER_MANAGEMENT;
                 </formalpara>
 
             </section>
-            <section xml:id="security-priv-revoke-grant_option">
+            <section xml:id="langref-security-priv-revoke-grant_option">
                 <title>GRANT OPTION FOR</title>
                 <indexterm>
                     <primary>REVOKE</primary>
@@ -4327,7 +4327,7 @@ FROM ROLE MANAGER;
                 </formalpara>
 
             </section>
-            <section xml:id="security-priv-revoke-roles">
+            <section xml:id="langref-security-priv-revoke-roles">
                 <title>Отмена назначенных ролей</title>
                 <indexterm>
                     <primary>REVOKE</primary>
@@ -4369,7 +4369,7 @@ REVOKE ADMIN OPTION FOR MANAGER FROM USER ALEX;
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="security-priv-revoke-granted_by">
+            <section xml:id="langref-security-priv-revoke-granted_by">
                 <title>GRANTED BY</title>
                 <indexterm>
                     <primary>REVOKE</primary>
@@ -4420,7 +4420,7 @@ FROM USER IVAN GRANTED BY ALEX;
                     </para>
                 </formalpara>
             </section>
-            <section xml:id="security-priv-revoke-all_on_all">
+            <section xml:id="langref-security-priv-revoke-all_on_all">
                 <title>REVOKE ALL ON ALL</title>
                 <indexterm>
                     <primary>REVOKE</primary>
@@ -4475,12 +4475,12 @@ REVOKE ALL ON ALL FROM IVAN;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="security-priv-grant">GRANT</link>. </para>
+                        <link linkend="langref-security-priv-grant">GRANT</link>. </para>
                 </formalpara>
             </section>
         </section>
 
-        <section xml:id="security-sql_security">
+        <section xml:id="langref-security-sql_security">
             <title>Привилегии выполнения SQL кода</title>
             <indexterm>
                 <primary>SQL SECURITY</primary>
@@ -4572,7 +4572,7 @@ select RDB$GET_CONTEXT('SYSTEM', 'EFFECTIVE_USER') from RDB$DATABASE;
                     SYSDBA.</para>
             </note>
 
-            <section xml:id="security-priv-context-examples">
+            <section xml:id="langref-security-priv-context-examples">
                 <title>Примеры</title>
                 <example>
                     <title>Создание таблицы с привилегиями определяющего пользователя</title>
@@ -4811,7 +4811,7 @@ ALTER DATABASE SET DEFAULT SQL SECURITY DEFINER;
 
     </section>
 
-    <section xml:id="security-crypt">
+    <section xml:id="langref-security-crypt">
         <info>
             <title>Шифрование базы данных</title>
             <keywordset>
