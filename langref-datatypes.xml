@@ -1598,7 +1598,7 @@ DECIMAL(<replaceable>p</replaceable>, <replaceable>s</replaceable>)
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
                 America/Sao_Paulo), или в виде смещения часов:минут относительно GMT (например,
                 -03:00). Список региональных часовых поясов и их идентификаторов можно посмотреть в
-                таблице <link linkend="systables-timezones">RDB$TIME_ZONES</link>. Правила
+                таблице <link linkend="langref-systables-timezones">RDB$TIME_ZONES</link>. Правила
                 преобразования региональных часовых поясов в смещение в минутах можно получить с
                 помощью процедуры <link linkend="syspackage-timezoneutil-transitions"
                     >RDB$TIME_ZONE_UTIL.TRANSITIONS</link>.</para>
@@ -2417,10 +2417,11 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
             <title>Индексирование символьных типов</title>
             <para>При построении индекса по строковым полям необходимо учитывать ограничение на
                 длину ключа индекса. Максимальная используемая длина ключа индекса равна 1/4 размера
-                страницы, т.е. от 1024 до 4096 байтов. Максимальная длина индексируемой строки на 9
-                байтов меньше, чем максимальная длина ключа. В таблице приведены данные для
-                максимальной длины индексируемой строки (в символах) в зависимости от размера
-                страницы и набора символов, её можно вычислить по следующей формуле:
+                страницы, то есть от 1024 (для страницы размером 4096) до 8192 байтов (для страницы
+                размером 32768). Максимальная длина индексируемой строки на 9 байтов меньше, чем
+                максимальная длина ключа. В таблице приведены данные для максимальной длины
+                индексируемой строки (в символах) в зависимости от размера страницы и набора
+                символов, её можно вычислить по следующей формуле:
                 <literallayout class="monospaced">  
 <replaceable>max_char_length</replaceable> = FLOOR((<replaceable>page_size</replaceable> / 4 – 9) / <replaceable>N</replaceable>),                
             </literallayout>
@@ -2474,15 +2475,15 @@ ORDER BY NAME COLLATE UNICODE_CI_AI
                                 <entry>2043</entry>
                                 <entry>1362</entry>
                                 <entry>1021</entry>
-                                <entry>682</entry>
+                                <entry>681</entry>
                             </row>
                             <row>
                                 <entry>32768</entry>
-                                <entry>9183</entry>
-                                <entry>4087</entry>
-                                <entry>2721</entry>
-                                <entry>2039</entry>
-                                <entry>1356</entry>
+                                <entry>8183</entry>
+                                <entry>4091</entry>
+                                <entry>2727</entry>
+                                <entry>2045</entry>
+                                <entry>1363</entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -3217,7 +3218,16 @@ CAST (<replaceable>&lt;expression></replaceable> | NULL AS <replaceable>&lt;data
 <replaceable>&lt;data_type&gt;</replaceable> ::= 
      <replaceable>sql_datatype</replaceable>
   | [TYPE OF] <replaceable>domain</replaceable>
-  | TYPE OF COLUMN <replaceable>relname.colname</replaceable>                
+  | TYPE OF COLUMN <replaceable>relname.colname</replaceable> 
+
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-array">См. Синтаксис массивов</link>                 
                    </literallayout>
                 </para>
             </formalpara>

@@ -1,5 +1,6 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-functions" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-functions"
+    xml:lang="ru">
     <info>
         <title>Встроенные скалярные функции</title>
     </info>
@@ -363,8 +364,8 @@ NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-context-setcontext">RDB$SET_CONTEXT</link>.
-                </para>
+                    <link linkend="langref-functions-func-context-setcontext"
+                    >RDB$SET_CONTEXT</link>. </para>
             </formalpara>
         </section>
         <section xml:id="langref-functions-func-context-setcontext">
@@ -527,8 +528,8 @@ COMMIT;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-context-getcontext">RDB$GET_CONTEXT</link>.
-                </para>
+                    <link linkend="langref-functions-func-context-getcontext"
+                    >RDB$GET_CONTEXT</link>. </para>
             </formalpara>
         </section>
     </section>
@@ -679,8 +680,8 @@ RDB$SYSTEM_PRIVILEGE (<replaceable>privilege</replaceable>)
                 <para>BOOLEAN.</para>
             </formalpara>
             <para>Функция RDB$SYSTEM_PRIVILEGE используется системная привилегия текущим
-                соединением. Список системных привилегий см. в <link linkend="langref-security-roles-create"
-                    >CREATE ROLE</link>.</para>
+                соединением. Список системных привилегий см. в <link
+                    linkend="langref-security-roles-create">CREATE ROLE</link>.</para>
             <formalpara>
                 <title>Примеры:</title>
                 <para>
@@ -3016,7 +3017,8 @@ ASCII_CHAR (<replaceable>code</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-ascii_val">ASCII_VAL</link>. </para>
+                    <link linkend="langref-functions-func-string-ascii_val">ASCII_VAL</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -3092,7 +3094,8 @@ ASCII_VAL (<replaceable>ch</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-ascii_char">ASCII_CHAR</link>. </para>
+                    <link linkend="langref-functions-func-string-ascii_char">ASCII_CHAR</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -3189,8 +3192,9 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>, <link
-                        linkend="langref-functions-func-string-octet_length">OCTET_LENGTH</link>. </para>
+                    <link linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>,
+                        <link linkend="langref-functions-func-string-octet_length"
+                        >OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
@@ -3263,8 +3267,9 @@ CHARACTER_LENGTH (<replaceable>str</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>, <link
-                        linkend="langref-functions-func-string-octet_length">OCTET_LENGTH</link>. </para>
+                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>,
+                        <link linkend="langref-functions-func-string-octet_length"
+                        >OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
@@ -3657,8 +3662,9 @@ FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>, <link
-                        linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>. </para>
+                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>,
+                        <link linkend="langref-functions-func-string-char_length"
+                    >CHAR_LENGTH</link>. </para>
             </formalpara>
         </section>
 
@@ -3942,7 +3948,8 @@ POSITION ('be' in 'Alas, poor Yorick!') -- Результат: 0
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-substring">SUBSTRING</link>. </para>
+                    <link linkend="langref-functions-func-string-substring">SUBSTRING</link>.
+                </para>
             </formalpara>
         </section>
         <section xml:id="langref-functions-func-string-replace">
@@ -4454,38 +4461,10 @@ SUBSTRING (<replaceable>&lt;args&gt;</replaceable>)
                 <title>Тип возвращаемого результата:</title>
                 <para>VARCHAR(N) или BLOB.</para>
             </formalpara>
+            <para>Функция SUBSTRING возвращает подстроку из строки, начиная с заданной позиции до
+                конца строки или до указанной длины, либо извлекает подстроку с использованием
+                шаблона регулярного выражения SQL. </para>
 
-            <para>Функция SUBSTRING возвращает подстроку строки <replaceable>str</replaceable>,
-                начиная с позиции <replaceable>startpos</replaceable> (позиция начинается с 1) до
-                конца строки или указанной длины. Без предложения FOR возвращаются все оставшиеся
-                символы в строке. С предложением FOR возвращается <replaceable>length</replaceable>
-                символов или остаток строки, в зависимости от того что короче.</para>
-            <para>Функция полностью поддерживает двоичные и текстовые BLOB любой длины и с любым
-                набором символов. Если параметр <replaceable>str</replaceable> имеет тип BLOB, то и
-                результат будет иметь тип BLOB. Для любых других типов результатом будет тип
-                VARCHAR(n). Для входного параметра <replaceable>str</replaceable>, не являющегося
-                BLOB, длина результата функции всегда будет равна длине строки
-                    <replaceable>str</replaceable>, независимо от значений параметров
-                    <replaceable>startpos</replaceable> и <replaceable>length</replaceable>. </para>
-            <para>Функция SUBSTRING с регулярным выражением возвращает часть строки соответствующей
-                шаблону в предложении SIMILAR. Если соответствия не найдено, то возвращается NULL. </para>
-            <para>Особенности использования функции SUBSTRING с регулярным выражением: <itemizedlist
-                    spacing="compact">
-                    <listitem>
-                        <para>Если любая из частей (R1, R2 или R3) регулярного выражения не является
-                            пустой строкой и не соответствует формату
-                                <replaceable>&lt;similar_pattern&gt;</replaceable>, будет возбуждено
-                            исключение;</para>
-                    </listitem>
-                    <listitem>
-                        <para>Возвращаемое значение соответствует части R2 регулярного выражения.
-                            Для этого значения истинно выражение
-                            <programlisting>
-<replaceable>str</replaceable> SIMILAR TO R1 || R2 || R3 ESCAPE <replaceable>&lt;escape&gt;</replaceable>                            
-                                    </programlisting></para>
-                    </listitem>
-                </itemizedlist>
-            </para>
             <para>Если любой из входных параметров имеет значение NULL, то и результат тоже будет
                 иметь значение NULL.</para>
             <warning>
@@ -4494,38 +4473,105 @@ SUBSTRING (<replaceable>&lt;args&gt;</replaceable>)
                     производительности. </para>
             </warning>
 
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <example>
-                        <title>Использование функции SUBSTRING</title>
-                        <para><programlisting language="sql">
+            <section>
+                <title>Позиционный SUBSTRING</title>
+
+                <para>В простой позиционной форме (с FROM) эта функция возвращает подстроку,
+                    начинающуюся с позиции символа <replaceable>startpos</replaceable> (первая
+                    позиция равна 1). Без аргумента FOR он возвращает все оставшиеся символы в
+                    строке. С использованием FOR возвращается <replaceable>length</replaceable>
+                    символов или остаток строки, в зависимости от того что короче. </para>
+
+                <para>Функция полностью поддерживает двоичные и текстовые BLOB любой длины и с любым
+                    набором символов. Если параметр <replaceable>str</replaceable> имеет тип BLOB,
+                    то и результат будет иметь тип BLOB. Для любых других типов результатом будет
+                    тип VARCHAR(n).</para>
+
+                <para>Для входного параметра <replaceable>str</replaceable>, не являющегося BLOB,
+                    длина результата функции всегда будет равна длине строки
+                        <replaceable>str</replaceable>, независимо от значений параметров
+                        <replaceable>startpos</replaceable> и <replaceable>length</replaceable>. </para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции SUBSTRING</title>
+                            <para><programlisting language="sql">
 SUBSTRING('Привет!' FROM 4 FOR 3)  -- вернёт подстроку 'вет'
                 </programlisting></para>
-                    </example>
-                    <example>
-                        <title>Использование функции SUBSTRING с регулярными выражениями</title>
-                        <para><programlisting language="sql">
+                        </example>
+                    </para>
+                </formalpara>
+            </section>
+            <section>
+                <title>SUBSTRING по регулярному выражению</title>
+
+                <para>Функция SUBSTRING с регулярным выражением (с SIMILAR) возвращает часть строки
+                    соответствующей шаблону регулярного выражения SQL. Если соответствия не найдено,
+                    то возвращается NULL. </para>
+
+                <para>Шаблон SIMILAR формируется из трех шаблонов регулярных выражений SQL: R1, R2 и
+                    R3. Полностью шаблон имеет форму <code>R1 ||
+                            '<replaceable>&lt;escape&gt;</replaceable>"' || R2 ||
+                            '<replaceable>&lt;escape&gt;</replaceable>"' || R3</code> , где
+                        <replaceable>&lt;escape&gt;</replaceable> — это escape-символ, определенный
+                    в предложении ESCAPE. R2 — это шаблон, который соответствует подстроке для
+                    извлечения и заключен в экранированные двойные кавычки
+                        (<replaceable>&lt;;escape&gt;</replaceable>", например, <quote>#"</quote> с
+                    escape-символом <quote>#</quote>). R1 соответствует префиксу строки, а R3 —
+                    суффиксу строки. И R1, и R3 необязательны (они могут быть пустыми), но шаблон
+                    должен соответствовать всей строке. Другими словами, недостаточно указать
+                    шаблон, который находит только подстроку для извлечения. </para>
+                <tip>
+                    <para>Экранированные двойные кавычки вокруг R2 можно сравнить с определением
+                        одной группы захвата в более распространенном синтаксисе регулярных
+                        выражений, таком как PCRE. То есть полный шаблон эквивалентен
+                            <code>R1(R2)R3</code>, который должен соответствовать всей входной
+                        строке, а группа захвата — это возвращаемая подстрока. </para>
+                    <para>Возвращаемое значение соответствует части R2 регулярного выражения. Для
+                        этого значения истинно выражение
+                        <programlisting>
+<replaceable>str</replaceable> SIMILAR TO R1 || R2 || R3 ESCAPE <replaceable>&lt;escape&gt;</replaceable>                            
+                                    </programlisting></para>
+                </tip>
+                <note>
+                    <para>Если любая часть шаблона из R1, R2 или R3 не является пустой строкой и не
+                        имеет формата регулярного выражения SQL, возникает исключение. </para>
+                </note>
+
+                <para>Полный формат регулярных выражений SQL описан в <link
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        linkend="langref-commons-syntaxregex">Синтаксис регулярных выражений
+                        SQL</link>. </para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>Использование функции SUBSTRING с регулярными выражениями</title>
+                            <para><programlisting language="sql">
 SUBSTRING('abcabc' SIMILAR 'a#"bcab#"c' ESCAPE '#')  -- bcab
 SUBSTRING('abcabc' SIMILAR 'a#"%#"c' ESCAPE '#')     -- bcab
 SUBSTRING('abcabc' SIMILAR '_#"%#"_' ESCAPE '#')     -- bcab
 SUBSTRING('abcabc' SIMILAR '#"(abc)*#"' ESCAPE '#')  -- abcabc
 SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- &lt;null&gt;
                 </programlisting></para>
-                    </example>
-                </para>
-            </formalpara>
+                        </example>
+                    </para>
+                </formalpara>
 
-            <formalpara>
-                <title>См. также:</title>
+                <formalpara>
+                    <title>См. также:</title>
 
-                <para>
-                    <link linkend="langref-functions-func-string-position">POSITION</link>, <link
-                        linkend="langref-functions-func-string-left">LEFT</link>, <link
-                        linkend="langref-functions-func-string-right">RIGHT</link>, <link
-                        linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>, <link
-                        linkend="langref-commons-predsimilarto">SIMILAR TO</link>. </para>
-            </formalpara>
+                    <para>
+                        <link linkend="langref-functions-func-string-position">POSITION</link>,
+                            <link linkend="langref-functions-func-string-left">LEFT</link>, <link
+                            linkend="langref-functions-func-string-right">RIGHT</link>, <link
+                            linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>,
+                            <link linkend="langref-commons-predsimilarto">SIMILAR TO</link>. </para>
+                </formalpara>
+            </section>
         </section>
         <section xml:id="langref-functions-func-string-trim">
             <info>
@@ -4923,7 +4969,7 @@ DATEADD (28 DAY TO CURRENT_DATE)
 DATEADD (-6 HOUR TO CURRENT_TIME)
 DATEADD (MONTH, 9, DATEOFCONCEPTION)
 DATEADD (-38 WEEK TO DATEOFBIRTH)
-DATEADD (MINUTE, 90, TIME 'NOW')
+DATEADD (MINUTE, 90, CAST('NOW' AS TIME))
 DATEADD (? YEAR TO DATE '11-SEP-1973')
 
 SELECT 
@@ -4949,8 +4995,8 @@ T                             MS
 
                 <para>
                     <link linkend="langref-functions-func-datetime-datediff">DATEDIFF</link>, <link
-                        linkend="langref-datatypes-datetime-operation">Операции, использующие значения даты и
-                        времени</link>. </para>
+                        linkend="langref-datatypes-datetime-operation">Операции, использующие
+                        значения даты и времени</link>. </para>
             </formalpara>
         </section>
         <section xml:id="langref-functions-func-datetime-datediff">
@@ -5093,8 +5139,8 @@ DATEDIFF (DAY FROM CURRENT_DATE TO CAST (? AS DATE))
 
                 <para>
                     <link linkend="langref-functions-func-datetime-dateadd">DATEADD</link>, <link
-                        linkend="langref-datatypes-datetime-operation">Операции, использующие значения даты и
-                        времени</link>. </para>
+                        linkend="langref-datatypes-datetime-operation">Операции, использующие
+                        значения даты и времени</link>. </para>
             </formalpara>
         </section>
 
@@ -5286,8 +5332,8 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-datatypes-datetime">Типы данных для работы с датой и временем</link>.
-                </para>
+                    <link linkend="langref-datatypes-datetime">Типы данных для работы с датой и
+                        временем</link>. </para>
             </formalpara>
         </section>
         <section xml:id="langref-functions-func-datetime-firstday">
@@ -5483,7 +5529,8 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-datetime-firstday">FIRST_DAY</link>. </para>
+                    <link linkend="langref-functions-func-datetime-firstday">FIRST_DAY</link>.
+                </para>
             </formalpara>
         </section>
     </section>
@@ -5853,8 +5900,8 @@ select base64_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-base64_decode">BASE64_DECODE</link>.
-                </para>
+                    <link linkend="langref-functions-func-binary-base64_decode"
+                    >BASE64_DECODE</link>. </para>
             </formalpara>
         </section>
 
@@ -5889,8 +5936,8 @@ BASE64_DECODE (<replaceable>&lt;base64 data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-base64_encode">BASE64_ENCODE</link>.
-                </para>
+                    <link linkend="langref-functions-func-binary-base64_encode"
+                    >BASE64_ENCODE</link>. </para>
             </formalpara>
         </section>
 
@@ -5936,7 +5983,8 @@ select hex_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-hex_decode">HEX_DECODE</link>. </para>
+                    <link linkend="langref-functions-func-binary-hex_decode">HEX_DECODE</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -5971,7 +6019,8 @@ HEX_DECODE (<replaceable>&lt;hex data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-hex_encode">HEX_ENCODE</link>. </para>
+                    <link linkend="langref-functions-func-binary-hex_encode">HEX_ENCODE</link>.
+                </para>
             </formalpara>
         </section>
     </section>
@@ -6504,7 +6553,8 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -6568,7 +6618,8 @@ RSA_PUBLIC (<replaceable>&lt;private key&gt;</replaceable>)
                         <title>Использование функции RSA_PUBLIC</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>
+                                linkend="langref-functions-func-crypt-rsa_private"
+                                >RSA_PRIVATE</link>
                         </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'public_key',
@@ -6582,7 +6633,8 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -6684,7 +6736,8 @@ from rdb$database;
 
                 <para>
                     <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>, <link
-                        linkend="langref-functions-func-crypt-rsa_decrypt">RSA_DECRYPT</link>. </para>
+                        linkend="langref-functions-func-crypt-rsa_decrypt">RSA_DECRYPT</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -6771,9 +6824,10 @@ RSA_DECRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;privat
                         <title>Использование функции RSA_DECRYPT</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>.
-                            Данные для расшифровки сипользуются из примера в <link
-                                linkend="langref-functions-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>
+                                linkend="langref-functions-func-crypt-rsa_private"
+                                >RSA_PRIVATE</link>. Данные для расшифровки сипользуются из примера
+                            в <link linkend="langref-functions-func-crypt-rsa_encrypt"
+                                >RSA_ENCRYPT</link>
                         </para>
                         <para><programlisting language="sql">
 select RSA_DECRYPT(rdb$get_context('USER_SESSION', 'msg')
@@ -6787,8 +6841,9 @@ from RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>, <link
-                        linkend="langref-functions-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>,
+                        <link linkend="langref-functions-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -6872,7 +6927,8 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                         <title>Использование функции RSA_SIGN</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
+                                linkend="langref-functions-func-crypt-rsa_private"
+                                >RSA_PRIVATE</link>. </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
     rsa_sign(crypt_hash('Test message' using sha256)
@@ -6886,7 +6942,8 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>. </para>
+                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -7029,27 +7086,14 @@ CAST(<replaceable>value</replaceable> | NULL AS <replaceable>&lt;type&gt;</repla
   | TYPE OF COLUMN <replaceable>relname</replaceable>.<replaceable>colname</replaceable>
 
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
-    {SMALLINT | INTEGER | BIGINT} 
-  | {FLOAT | DOUBLE PRECISION} 
-  | {DATE | TIME | TIMESTAMP}
-  | BOOLEAN
-  | {DECIMAL | NUMERIC} [(<replaceable>precision</replaceable> [, <replaceable>scale</replaceable>])] 
-  | {CHAR | CHARACTER | CHARACTER VARYING | VARCHAR} [(<replaceable>size</replaceable>)]
-    [CHARACTER SET <replaceable>charset</replaceable>]
-  | {NCHAR | NATIONAL CHARACTER | NATIONAL CHAR} [VARYING] [(<replaceable>size</replaceable>)] 
-  | BLOB [SUB_TYPE {<replaceable>subtype_num</replaceable> | <replaceable>subtype_name</replaceable>}] 
-    [SEGMENT SIZE <replaceable>seglen</replaceable>] [CHARACTER SET <replaceable>charset</replaceable>]
-  | BLOB [(<replaceable>seglen</replaceable> [, <replaceable>subtype_num</replaceable>])]   
-                        </programlisting>
-                </para>
-            </formalpara>
-            <formalpara>
-                <title>Сокращённый синтаксис:</title>
-                <para>
-                    <programlisting>
-<replaceable>&lt;datatype&gt;</replaceable> '<replaceable>date/timestring</replaceable>'  
-                            
-<replaceable>&lt;datatype&gt;</replaceable> ::= DATE | TIME | TIMESTAMP                            
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-array">См. Синтаксис массивов</link>    
+  
                         </programlisting>
                 </para>
             </formalpara>
@@ -7098,49 +7142,6 @@ CAST(<replaceable>value</replaceable> | NULL AS <replaceable>&lt;type&gt;</repla
                                     <para>Имя столбца таблицы или представления. </para>
                                 </entry>
                             </row>
-                            <row>
-                                <entry><replaceable>precision</replaceable></entry>
-                                <entry>
-                                    <para>Точность. От 1 до 34. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>scale</replaceable></entry>
-                                <entry>
-                                    <para>Масштаб. От 0 до 34, должно быть меньше или равно
-                                            <replaceable>precision</replaceable>. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>size</replaceable></entry>
-                                <entry>
-                                    <para>Максимальный размер строки в символах. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>charset</replaceable></entry>
-                                <entry>
-                                    <para>Набор символов. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_num</replaceable></entry>
-                                <entry>
-                                    <para>Номер подтипа BLOB. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>subtype_name</replaceable></entry>
-                                <entry>
-                                    <para>Мнемоника подтипа BLOB. </para>
-                                </entry>
-                            </row>
-                            <row>
-                                <entry><replaceable>seqlen</replaceable></entry>
-                                <entry>
-                                    <para>Размер сегмента, не может превышать 65535</para>
-                                </entry>
-                            </row>
                         </tbody>
                     </tgroup>
                 </table>
@@ -7153,16 +7154,6 @@ CAST(<replaceable>value</replaceable> | NULL AS <replaceable>&lt;type&gt;</repla
 
             <para>Функция CAST служит для явного преобразования данных из одного типа данных в
                 другой тип данных или домен. Если это невозможно будет выдана ошибка.</para>
-            <para>Сокращённый синтаксис поддерживается только для литералов даты и времени. Доступен
-                только в 3 диалекте.</para>
-            <note>
-                <para>Сокращенный синтаксис вычисляется сразу во время синтаксического анализа, в
-                    результате чего значение сохраняется до тех пор пока для оператора не сделано
-                    unprepare. Для литералов даты и времени таких как '12-OCT-2012' это не имеет
-                    никакого значения. Но для псевдо-переменных 'NOW', 'YESTERDAY', 'TODAY' и
-                    'TOMORROW' вы можете получить не то, что хотите. Если вам нужно значение,
-                    которое будет вычисляться при каждом вызове, используйте CAST().</para>
-            </note>
             <para>
                 <table>
                     <title>Допустимые преобразования для функции CAST</title>
@@ -7260,40 +7251,14 @@ CAST(<replaceable>value</replaceable> | NULL AS <replaceable>&lt;type&gt;</repla
                 функции CAST, ещё не гарантирует, что преобразование будет успешным. "CAST
                 (123456789 AS SMALLINT)" безусловно приведёт к ошибке, так же как и "CAST('Judgement
                 Day' as DATE)".</para>
-            <formalpara>
-                <title>Примеры:</title>
-                <para>
-                    <programlisting/>Полный синтаксис:
-                    <programlisting language="sql">
-SELECT CAST ('12' || '-June-' || '1959' AS DATE) FROM rdb$database                        
-                    </programlisting>
-                    Сокращённый синтаксис для преобразование литералов дат/времени:
-                    <programlisting language="sql">
-UPDATE People SET AgeCat = 'Old'
-WHERE BirthDate &lt; date '1-Jan-1943'                       
-                    </programlisting>
-                    Заметьте, что вы можете не использовать даже краткий синтаксис преобразования в
-                    примере выше, т.к. Firebird поймёт из контекста (сравнение с полем типа DATE)
-                    как интерпретировать строку:
-                    <programlisting language="sql">
-UPDATE People SET AgeCat = 'Old'
-WHERE BirthDate &lt; '1-Jan-1943'                       
-                    </programlisting>
-                    Но это не всегда возможно. Преобразование в примере ниже не может быть опущено,
-                    т.к. система будет пытаться преобразовать строку к числу. что бы вычесть из неё
-                    число:
-                    <programlisting language="sql">
-SELECT date 'today' - 7 FROM rdb$database                       
-                    </programlisting>
-                </para>
-            </formalpara>
+
+
+
             <para>Вы можете применить преобразование типа к параметрам оператора:
                 <programlisting language="sql">
 CAST (? AS INTEGER)                        
-                    </programlisting>
-                Это дает вам контроль над типом полей ввода. Обратите внимание, что с параметрами
-                операторов, вы всегда должны использовать полный синтаксис преобразования,
-                сокращённый синтаксис не поддерживается. </para>
+                    </programlisting>Это
+                дает вам контроль над типом полей ввода. </para>
             <simplesect>
                 <title>Преобразование к домену или к его базовому типу</title>
                 <para>При преобразовании к домену должны быть удовлетворены любые ограничения (NOT
@@ -7337,7 +7302,8 @@ SELECT CAST(zin AS TYPE OF dunl20) FROM zinnen ORDER BY 1;
                     <para>Если определение домена изменяется, то существующие преобразования к
                         домену или его типу могут стать ошибочными. Если такие преобразования
                         происходят в PSQL модулях, то их ошибки могут быть обнаружены. См. <link
-                            linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
+                            linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>.
+                    </para>
                 </warning>
             </simplesect>
             <simplesect>
@@ -7358,16 +7324,40 @@ FROM rdb$database;
                 <warning>
                     <para>Если определение столбца изменяется, то существующие преобразования к его
                         типу могут стать ошибочными. Если такие преобразования происходят в PSQL
-                        модулях, то их ошибки могут быть обнаружены. См. <link linkend="langref-appx01-supp-rdb-validblr">Поле
-                            RDB$VALID_BLR</link>.</para>
+                        модулях, то их ошибки могут быть обнаружены. См. <link
+                            linkend="langref-appx01-supp-rdb-validblr">Поле
+                        RDB$VALID_BLR</link>.</para>
                 </warning>
                 <formalpara>
                     <title>См. также:</title>
 
                     <para>
                         <link linkend="langref-datatypes-cast-explicit">Явное преобразование типов
-                        данных</link>. </para>
+                            данных</link>. </para>
                 </formalpara>
+            </simplesect>
+            <simplesect>
+                <title>Примеры приведения типов</title>
+                <para>
+                    <programlisting language="sql">
+SELECT CAST ('12' || '-June-' || '1959' AS DATE) FROM rdb$database                        
+                    </programlisting>
+                </para>
+                <para> Заметьте, что в некоторых случаях вы можете не использовать синтаксис
+                    преобразования как в примере выше, так как Firebird поймёт из контекста
+                    (сравнение с полем типа DATE) как интерпретировать строку:
+                    <programlisting language="sql">
+UPDATE People SET AgeCat = 'Old'
+WHERE BirthDate &lt; '1-Jan-1943'                       
+                    </programlisting>
+                </para>
+                <para>Но это не всегда возможно. Преобразование в примере ниже не может быть
+                    опущено, так как система будет пытаться преобразовать строку к числу чтобы
+                    вычесть из неё число:
+                    <programlisting language="sql">
+SELECT CAST('TODAY' AS DATE) - 7 FROM rdb$database                       
+                    </programlisting>
+                </para>
             </simplesect>
         </section>
     </section>
@@ -7844,7 +7834,8 @@ SELECT CHAR_TO_UUID('A0bF4E45-3029-2A44-X493-4998c9b439A3') FROM rdb$database
 
                 <para>
                     <link linkend="langref-functions-func-uuid-gen_uuid">GEN_UUID</link>, <link
-                        linkend="langref-functions-func-uuid-uuid_to_char">UUID_TO_CHAR</link>. </para>
+                        linkend="langref-functions-func-uuid-uuid_to_char">UUID_TO_CHAR</link>.
+                </para>
             </formalpara>
         </section>
         <section xml:id="langref-functions-func-uuid-gen_uuid">
@@ -7903,8 +7894,9 @@ SELECT GEN_UUID() AS GUID FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>, <link
-                        linkend="langref-functions-func-uuid-uuid_to_char">UUID_TO_CHAR</link>. </para>
+                    <link linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>,
+                        <link linkend="langref-functions-func-uuid-uuid_to_char"
+                    >UUID_TO_CHAR</link>. </para>
             </formalpara>
         </section>
         <section xml:id="langref-functions-func-uuid-uuid_to_char">
@@ -7988,7 +7980,8 @@ SELECT UUID_TO_CHAR('Firebird swings!') FROM RDB$DATABASE;
 
                 <para>
                     <link linkend="langref-functions-func-uuid-gen_uuid">GEN_UUID</link>, <link
-                        linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>. </para>
+                        linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>.
+                </para>
             </formalpara>
         </section>
     </section>
@@ -8084,7 +8077,7 @@ NEW.ID = GEN_ID (GEN_TABLE_ID, 1);
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
+                    <link linkend="langref-commons-nxtvlufor">NEXT VALUE FOR</link>, <link
                         linkend="langref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
                         linkend="langref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
                         linkend="langref-ddl-sequence-setgen">SET GENERATOR</link>. </para>
@@ -8290,11 +8283,11 @@ END
             </formalpara>
 
             <para>Данная функция эквивалентна конструкции <link
-                    linkend="langref-commons-conditional-case-simple">Простой CASE</link>, в которой заданное
-                выражение сравнивается с другими выражениями до нахождения совпадения. Результатом
-                является значение, указанное после выражения, с которым найдено совпадение. Если
-                совпадений не найдено, то возвращается значение по умолчанию (если оно, конечно,
-                задано – в противном случае возвращается NULL).</para>
+                    linkend="langref-commons-conditional-case-simple">Простой CASE</link>, в которой
+                заданное выражение сравнивается с другими выражениями до нахождения совпадения.
+                Результатом является значение, указанное после выражения, с которым найдено
+                совпадение. Если совпадений не найдено, то возвращается значение по умолчанию (если
+                оно, конечно, задано – в противном случае возвращается NULL).</para>
             <caution>
                 <para>Совпадение эквивалентно оператору &quot;=&quot;, т.е. если
                         <replaceable>testexpr</replaceable> имеет значение NULL, то он не

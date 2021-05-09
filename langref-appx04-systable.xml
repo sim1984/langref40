@@ -1,5 +1,6 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="systables" xml:lang="ru">
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-systables"
+    xml:lang="ru">
     <info>
         <title>Описания системных таблиц</title>
     </info>
@@ -9,7 +10,7 @@
         данных. Системные таблицы содержат префикс RDB$ в имени. </para>
 
     <para>
-        <table xml:id="systables-tbl-systables" frame="all">
+        <table xml:id="langref-systables-tbl-systables" frame="all">
             <?dbfo keep-together='auto'?>
             <title>Системные таблицы</title>
             <tgroup cols="2">
@@ -23,193 +24,204 @@
                 </thead>
                 <tbody>
                     <row valign="middle">
-                        <entry><link linkend="systables-auth_mapping"
-                            >RDB$AUTH_MAPPING</link></entry>
+                        <entry><link linkend="langref-systables-auth_mapping"
+                                >RDB$AUTH_MAPPING</link></entry>
                         <entry>Сведения об отображении объектов безопасности.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-backup_history"
-                            >RDB$BACKUP_HISTORY</link></entry>
+                        <entry><link linkend="langref-systables-backup_history"
+                                >RDB$BACKUP_HISTORY</link></entry>
                         <entry>Хранит историю копирования базы данных с помощью nbackup.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-character_sets"
-                            >RDB$CHARACTER_SETS</link></entry>
+                        <entry><link linkend="langref-systables-character_sets"
+                                >RDB$CHARACTER_SETS</link></entry>
                         <entry>Описание доступных наборов символов в базе данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-check_constraints"
+                        <entry><link linkend="langref-systables-check_constraints"
                                 >RDB$CHECK_CONSTRAINTS</link></entry>
                         <entry>Соответствие имён триггеров именам ограничений, связанных с
                             характеристиками NOT NULL, ограничениями CHECK и предложениями ON UPDATE
                             и ON DELETE в ограничениях внешнего ключа.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-collations">RDB$COLLATIONS</link></entry>
+                        <entry><link linkend="langref-systables-collations"
+                            >RDB$COLLATIONS</link></entry>
                         <entry>Порядки сортировки для всех наборов символов.</entry>
                     </row>
                     <row>
-                        <entry><link linkend="systables-config">RDB$CONFIG</link></entry>
+                        <entry><link linkend="langref-systables-config">RDB$CONFIG</link></entry>
                         <entry>Виртуальная таблица, отображающая актуальные параметры конфигурации,
                             заданные в <filename>firebird.conf</filename>,
                                 <filename>databases.conf</filename> или через передаваемые через
                             DPB.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-database">RDB$DATABASE</link></entry>
+                        <entry><link linkend="langref-systables-database"
+                            >RDB$DATABASE</link></entry>
                         <entry>Основные данные о базе данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-db_creators">RDB$DB_CREATORS</link></entry>
+                        <entry><link linkend="langref-systables-db_creators"
+                            >RDB$DB_CREATORS</link></entry>
                         <entry>Содержит сведения о пользователях имеющих права на создание базы
                             данных. Используется только в том случае, если текущая база данных
                             назначена как база данных безопасности.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-dependencies"
-                            >RDB$DEPENDENCIES</link></entry>
+                        <entry><link linkend="langref-systables-dependencies"
+                                >RDB$DEPENDENCIES</link></entry>
                         <entry>Сведения о зависимостях между объектами базы данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-exceptions">RDB$EXCEPTIONS</link></entry>
+                        <entry><link linkend="langref-systables-exceptions"
+                            >RDB$EXCEPTIONS</link></entry>
                         <entry>Пользовательские исключения базы данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-field_dimensions"
+                        <entry><link linkend="langref-systables-field_dimensions"
                                 >RDB$FIELD_DIMENSIONS</link></entry>
                         <entry>Размерности столбцов, являющихся массивами.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-fields">RDB$FIELDS</link></entry>
+                        <entry><link linkend="langref-systables-fields">RDB$FIELDS</link></entry>
                         <entry>Характеристики столбцов и доменов, как системных, так и созданных
                             пользователем.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-files">RDB$FILES</link></entry>
+                        <entry><link linkend="langref-systables-files">RDB$FILES</link></entry>
                         <entry>Сведения о вторичных файлах и файлах теневых копий.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-filters">RDB$FILTERS</link></entry>
+                        <entry><link linkend="langref-systables-filters">RDB$FILTERS</link></entry>
                         <entry>Данные о BLOB-фильтрах.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-formats">RDB$FORMATS</link></entry>
+                        <entry><link linkend="langref-systables-formats">RDB$FORMATS</link></entry>
                         <entry>Данные об изменениях таблиц.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-function_arguments"
+                        <entry><link linkend="langref-systables-function_arguments"
                                 >RDB$FUNCTION_ARGUMENTS</link></entry>
                         <entry>Параметры хранимых или внешних функций.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-functions">RDB$FUNCTIONS</link></entry>
+                        <entry><link linkend="langref-systables-functions"
+                            >RDB$FUNCTIONS</link></entry>
                         <entry>Описание хранимых или внешних функций.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-generators">RDB$GENERATORS</link></entry>
+                        <entry><link linkend="langref-systables-generators"
+                            >RDB$GENERATORS</link></entry>
                         <entry>Сведения о генераторах (последовательностях).</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-index_segments"
-                            >RDB$INDEX_SEGMENTS</link></entry>
+                        <entry><link linkend="langref-systables-index_segments"
+                                >RDB$INDEX_SEGMENTS</link></entry>
                         <entry>Сегменты индексов.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-indices">RDB$INDICES</link></entry>
+                        <entry><link linkend="langref-systables-indices">RDB$INDICES</link></entry>
                         <entry>Определение индексов базы данных (созданных пользователем или
                             системой).</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-log_files">RDB$LOG_FILES</link></entry>
+                        <entry><link linkend="langref-systables-log_files"
+                            >RDB$LOG_FILES</link></entry>
                         <entry>В настоящей версии не используется.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-packages">RDB$PACKAGES</link></entry>
+                        <entry><link linkend="langref-systables-packages"
+                            >RDB$PACKAGES</link></entry>
                         <entry>Сведения о PSQL пакетах.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-pages">RDB$PAGES</link></entry>
+                        <entry><link linkend="langref-systables-pages">RDB$PAGES</link></entry>
                         <entry>Сведения о страницах базы данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-procedure_parameters"
+                        <entry><link linkend="langref-systables-procedure_parameters"
                                 >RDB$PROCEDURE_PARAMETERS</link></entry>
                         <entry>Параметры хранимых процедур.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-procedures">RDB$PROCEDURES</link></entry>
+                        <entry><link linkend="langref-systables-procedures"
+                            >RDB$PROCEDURES</link></entry>
                         <entry>Описания хранимых процедур.</entry>
                     </row>
                     <row>
-                        <entry><link xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:href="#systables-publication_tables"
+                        <entry><link linkend="langref-systables-publication_tables"
                                 >RDB$PUBLICATION_TABLES</link></entry>
                         <entry>Таблицы включенные в публикацию.</entry>
                     </row>
                     <row>
-                        <entry><link xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:href="#systables-publications">RDB$PUBLICATIONS</link></entry>
+                        <entry><link linkend="langref-systables-publications"
+                                >RDB$PUBLICATIONS</link></entry>
                         <entry>Публикации. Публикация — набор таблиц для репликации.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-ref_constraints"
-                            >RDB$REF_CONSTRAINTS</link></entry>
+                        <entry><link linkend="langref-systables-ref_constraints"
+                                >RDB$REF_CONSTRAINTS</link></entry>
                         <entry>Описания именованных ограничений базы данных (внешних
                             ключей).</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-relation_constraints"
+                        <entry><link linkend="langref-systables-relation_constraints"
                                 >RDB$RELATION_CONSTRAINTS</link></entry>
                         <entry>Описание всех ограничений на уровне таблиц.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-relation_fields"
-                            >RDB$RELATION_FIELDS</link></entry>
+                        <entry><link linkend="langref-systables-relation_fields"
+                                >RDB$RELATION_FIELDS</link></entry>
                         <entry>Характеристики столбцов таблиц.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-relations">RDB$RELATIONS</link></entry>
+                        <entry><link linkend="langref-systables-relations"
+                            >RDB$RELATIONS</link></entry>
                         <entry>Заголовки таблиц и представлений.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-roles">RDB$ROLES</link></entry>
+                        <entry><link linkend="langref-systables-roles">RDB$ROLES</link></entry>
                         <entry>Определение ролей.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-security_classes"
+                        <entry><link linkend="langref-systables-security_classes"
                                 >RDB$SECURITY_CLASSES</link></entry>
                         <entry>Списки управления доступом.</entry>
                     </row>
                     <row>
-                        <entry><link linkend="systables-timezones">RDB$TIME_ZONES</link></entry>
+                        <entry><link linkend="langref-systables-timezones"
+                            >RDB$TIME_ZONES</link></entry>
                         <entry>Список часовых поясов поддерживаемых сервером.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-transactions"
-                            >RDB$TRANSACTIONS</link></entry>
+                        <entry><link linkend="langref-systables-transactions"
+                                >RDB$TRANSACTIONS</link></entry>
                         <entry>Состояние транзакций при обращении к нескольким базам данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-trigger_messages"
+                        <entry><link linkend="langref-systables-trigger_messages"
                                 >RDB$TRIGGER_MESSAGES</link></entry>
                         <entry>Сообщения триггеров.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-triggers">RDB$TRIGGERS</link></entry>
+                        <entry><link linkend="langref-systables-triggers"
+                            >RDB$TRIGGERS</link></entry>
                         <entry>Описания триггеров.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-types">RDB$TYPES</link></entry>
+                        <entry><link linkend="langref-systables-types">RDB$TYPES</link></entry>
                         <entry>Описание перечислимых типов данных.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-user_privileges"
-                            >RDB$USER_PRIVILEGES</link></entry>
+                        <entry><link linkend="langref-systables-user_privileges"
+                                >RDB$USER_PRIVILEGES</link></entry>
                         <entry>Полномочия пользователей системы.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="systables-view_relations"
-                            >RDB$VIEW_RELATIONS</link></entry>
+                        <entry><link linkend="langref-systables-view_relations"
+                                >RDB$VIEW_RELATIONS</link></entry>
                         <entry>Описывает представления. Содержит имена таблиц используемые при
                             определении представления.</entry>
                     </row>
@@ -217,7 +229,7 @@
             </tgroup>
         </table>
     </para>
-    <section xml:id="systables-auth_mapping">
+    <section xml:id="langref-systables-auth_mapping">
         <info>
             <title>RDB$AUTH_MAPPING</title>
             <keywordset>
@@ -227,7 +239,7 @@
         <indexterm><primary>RDB$AUTH_MAPPING</primary></indexterm>
         <para>Сведения о локальных отображениях объектов безопасности.</para>
         <para>
-            <table xml:id="systables-tbl-auth_mapping" frame="all">
+            <table xml:id="langref-systables-tbl-auth_mapping" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$AUTH_MAPPING</title>
                 <tgroup cols="3">
@@ -313,7 +325,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-backup_history">
+    <section xml:id="langref-systables-backup_history">
         <info>
             <title>RDB$BACKUP_HISTORY</title>
             <keywordset>
@@ -323,7 +335,7 @@
         <indexterm><primary>RDB$BACKUP_HISTORY</primary></indexterm>
         <para>Таблица хранит историю копирования базы данных при помощи утилиты nbackup.</para>
         <para>
-            <table xml:id="systables-tbl-backup_history" frame="all">
+            <table xml:id="langref-systables-tbl-backup_history" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$BACKUP_HISTORY</title>
                 <tgroup cols="3">
@@ -373,7 +385,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-character_sets">
+    <section xml:id="langref-systables-character_sets">
         <info>
             <title>RDB$CHARACTER_SETS</title>
             <keywordset>
@@ -385,7 +397,7 @@
         </indexterm>
         <para>Содержит наборы символов, доступные в базе данных.</para>
         <para>
-            <table xml:id="systables-tbl-character_sets" frame="all">
+            <table xml:id="langref-systables-tbl-character_sets" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$CHARACTER_SETS</title>
                 <tgroup cols="3">
@@ -467,7 +479,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-check_constraints">
+    <section xml:id="langref-systables-check_constraints">
         <info>
             <title>RDB$CHECK_CONSTRAINTS</title>
             <keywordset>
@@ -481,7 +493,7 @@
             NOT NULL, ограничениями CHECK и предложениями ON UPDATE, ON DELETE в ограничениях
             внешнего ключа.</para>
         <para>
-            <table xml:id="systables-tbl-check_constraints" frame="all">
+            <table xml:id="langref-systables-tbl-check_constraints" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$CHECK_CONSTRAINTS</title>
                 <tgroup cols="3">
@@ -516,7 +528,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-collations">
+    <section xml:id="langref-systables-collations">
         <info>
             <title>RDB$COLLATIONS</title>
             <keywordset>
@@ -528,7 +540,7 @@
         </indexterm>
         <para>Порядки сортировки для наборов символов.</para>
         <para>
-            <table xml:id="systables-tbl-collations" frame="all">
+            <table xml:id="langref-systables-tbl-collations" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$COLLATIONS</title>
                 <tgroup cols="3">
@@ -618,7 +630,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-config">
+    <section xml:id="langref-systables-config">
         <info>
             <title>RDB$CONFIG</title>
             <keywordset>
@@ -636,7 +648,7 @@
             SYSDBA и владельцу базы данных. Непривилегированный пользователь видит пустое
             содержимое, ошибка не возникает.</para>
         <para>
-            <table xml:id="systables-tbl-config" frame="all">
+            <table xml:id="langref-systables-tbl-config" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$CONFIG</title>
                 <tgroup cols="3">
@@ -697,7 +709,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-database">
+    <section xml:id="langref-systables-database">
         <info>
             <title>RDB$DATABASE</title>
             <keywordset>
@@ -709,7 +721,7 @@
         </indexterm>
         <para>Основные данные о базе данных. Содержит только одну запись.</para>
         <para>
-            <table xml:id="systables-tbl-database" frame="all">
+            <table xml:id="langref-systables-tbl-database" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$DATABASE</title>
                 <tgroup cols="3">
@@ -755,12 +767,34 @@
                                 (в SuperServer). Если задержка не установлена, то содержит
                                 NULL.</entry>
                         </row>
+                        <row>
+                            <entry>RDB$SQL_SECURITY</entry>
+                            <entry>BOOLEAN</entry>
+                            <entry><para>Режим SQL SECURITY по умолчанию (DEFINER или INVOKER) для
+                                    вновь создаваемым объектам:<itemizedlist>
+                                        <listitem>
+                                            <para>NULL — режим по умолчанию (INVOKER);</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>FALSE — INVOKER. Вновь создаваемые объекты
+                                                выполняются с правами вызывающего
+                                                пользователя;</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>TRUE — DEFINER. Вновь создаваемые объекты
+                                                выполняются с правами определяющего
+                                                пользователя.</para>
+                                        </listitem>
+                                    </itemizedlist>
+                                </para>
+                            </entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
         </para>
     </section>
-    <section xml:id="systables-db_creators">
+    <section xml:id="langref-systables-db_creators">
         <info>
             <title>RDB$DB_CREATORS</title>
             <keywordset>
@@ -774,7 +808,7 @@
             только в том случае, если текущая база данных назначена как база данных
             безопасности.</para>
         <para>
-            <table xml:id="systables-tbl-db_creators" frame="all">
+            <table xml:id="langref-systables-tbl-db_creators" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$DB_CREATORS</title>
                 <tgroup cols="3">
@@ -815,7 +849,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-dependencies">
+    <section xml:id="langref-systables-dependencies">
         <info>
             <title>RDB$DEPENDENCIES</title>
             <keywordset>
@@ -827,7 +861,7 @@
         </indexterm>
         <para>Сведения о зависимостях между объектами базы данных.</para>
         <para>
-            <table xml:id="systables-tbl-dependencies" frame="all">
+            <table xml:id="langref-systables-tbl-dependencies" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$DEPENDENCIES</title>
                 <tgroup cols="3">
@@ -972,7 +1006,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-exceptions">
+    <section xml:id="langref-systables-exceptions">
         <info>
             <title>RDB$EXCEPTIONS</title>
             <keywordset>
@@ -984,7 +1018,7 @@
         </indexterm>
         <para>Пользовательские исключения базы данных.</para>
         <para>
-            <table xml:id="systables-tbl-exceptions" frame="all">
+            <table xml:id="langref-systables-tbl-exceptions" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$EXCEPTIONS</title>
                 <tgroup cols="3">
@@ -1042,7 +1076,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-field_dimensions">
+    <section xml:id="langref-systables-field_dimensions">
         <info>
             <title>RDB$FIELD_DIMENSIONS</title>
             <keywordset>
@@ -1054,7 +1088,7 @@
         </indexterm>
         <para>Размерности столбцов, являющихся массивами.</para>
         <para>
-            <table xml:id="systables-tbl-field_dimensions" frame="all">
+            <table xml:id="langref-systables-tbl-field_dimensions" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FIELD_DIMENSIONS</title>
                 <tgroup cols="3">
@@ -1096,7 +1130,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-fields">
+    <section xml:id="langref-systables-fields">
         <info>
             <title>RDB$FIELDS</title>
             <keywordset>
@@ -1114,7 +1148,7 @@
             </para>
         </note>
         <para>
-            <table xml:id="systables-tbl-fields" frame="all">
+            <table xml:id="langref-systables-tbl-fields" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FIELDS</title>
                 <tgroup cols="3">
@@ -1475,7 +1509,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-files">
+    <section xml:id="langref-systables-files">
         <info>
             <title>RDB$FILES</title>
             <keywordset>
@@ -1487,7 +1521,7 @@
         </indexterm>
         <para>Сведения о вторичных файлах и файлах оперативных копий.</para>
         <para>
-            <table xml:id="systables-tbl-files" frame="all">
+            <table xml:id="langref-systables-tbl-files" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FILES</title>
                 <tgroup cols="3">
@@ -1541,7 +1575,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-filters">
+    <section xml:id="langref-systables-filters">
         <info>
             <title>RDB$FILTERS</title>
             <keywordset>
@@ -1553,7 +1587,7 @@
         </indexterm>
         <para>Содержит данные о BLOB-фильтрах.</para>
         <para>
-            <table xml:id="systables-tbl-filters" frame="all">
+            <table xml:id="langref-systables-tbl-filters" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FILTERS</title>
                 <tgroup cols="3">
@@ -1624,7 +1658,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-formats">
+    <section xml:id="langref-systables-formats">
         <info>
             <title>RDB$FORMATS</title>
             <keywordset>
@@ -1634,13 +1668,14 @@
         <indexterm>
             <primary>RDB$FORMATS</primary>
         </indexterm>
-        <para>Данные об изменениях таблиц. Каждый раз, когда таблица изменяется, таблица получает
-            новый номер формата. Когда номер формата любой таблицы достигает 255, вся база данных
-            становится недоступной для работы с ней. В этом случае необходимо выполнить резервное
-            копирование с помощью утилиты <application>gbak</application>, после чего восстановить
-            эту копию и продолжить работу с заново созданной базой данных.</para>
+        <para>Таблица RDB$FORMATS хранит данные об изменениях метаданных таблиц. Каждый раз, когда
+            метаданные таблицы изменяются, таблица получает новый номер формата. Когда номер формата
+            любой таблицы достигает 255 (или 32000 для представлений), вся база данных становится
+            недоступной для работы с ней. В этом случае необходимо выполнить резервное копирование с
+            помощью утилиты <application>gbak</application>, после чего восстановить эту копию и
+            продолжить работу с заново созданной базой данных.</para>
         <para>
-            <table xml:id="systables-tbl-formats" frame="all">
+            <table xml:id="langref-systables-tbl-formats" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FORMATS</title>
                 <tgroup cols="3">
@@ -1663,8 +1698,8 @@
                         <row>
                             <entry>RDB$FORMAT</entry>
                             <entry>SMALLINT</entry>
-                            <entry>Идентификатор формата таблицы. Форматов может быть до
-                                255.</entry>
+                            <entry>Идентификатор формата таблицы. Форматов может быть 255 для таблиц
+                                и 32000 для представлений.</entry>
                         </row>
                         <row>
                             <entry>RDB$DESCRIPTOR</entry>
@@ -1677,7 +1712,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-function_arguments">
+    <section xml:id="langref-systables-function_arguments">
         <info>
             <title>RDB$FUNCTION_ARGUMENTS</title>
             <keywordset>
@@ -1689,7 +1724,7 @@
         </indexterm>
         <para>Параметры хранимых или внешних функций.</para>
         <para>
-            <table xml:id="systables-tbl-function_arguments" frame="all">
+            <table xml:id="langref-systables-tbl-function_arguments" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FUNCTION_ARGUMENTS</title>
                 <tgroup cols="3">
@@ -1961,7 +1996,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-functions">
+    <section xml:id="langref-systables-functions">
         <info>
             <title>RDB$FUNCTIONS</title>
             <keywordset>
@@ -1973,7 +2008,7 @@
         </indexterm>
         <para>Описание хранимых или внешних функций.</para>
         <para>
-            <table xml:id="systables-tbl-functions" frame="all">
+            <table xml:id="langref-systables-tbl-functions" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$FUNCTIONS</title>
                 <tgroup cols="3">
@@ -2117,7 +2152,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-generators">
+    <section xml:id="langref-systables-generators">
         <info>
             <title>RDB$GENERATORS</title>
             <keywordset>
@@ -2129,7 +2164,7 @@
         </indexterm>
         <para>Сведения о генераторах (последовательностях).</para>
         <para>
-            <table xml:id="systables-tbl-generators" frame="all">
+            <table xml:id="langref-systables-tbl-generators" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$GENERATORS</title>
                 <tgroup cols="3">
@@ -2196,7 +2231,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-index_segments">
+    <section xml:id="langref-systables-index_segments">
         <info>
             <title>RDB$INDEX_SEGMENTS</title>
             <keywordset>
@@ -2210,7 +2245,7 @@
             конкретного индекса. Для каждого столбца индекса создаётся отдельная строка в данной
             таблице.</para>
         <para>
-            <table xml:id="systables-tbl-index_segments" frame="all">
+            <table xml:id="langref-systables-tbl-index_segments" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$INDEX_SEGMENTS</title>
                 <tgroup cols="3">
@@ -2255,7 +2290,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-indices">
+    <section xml:id="langref-systables-indices">
         <info>
             <title>RDB$INDICES</title>
             <keywordset>
@@ -2270,7 +2305,7 @@
             входящего в состав индекса, присутствует строка системной таблицы RDB$INDEX_SEGMENTS,
             где описываются характеристики столбца индекса.</para>
         <para>
-            <table xml:id="systables-tbl-indices" frame="all">
+            <table xml:id="langref-systables-tbl-indices" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$INDICES</title>
                 <tgroup cols="3">
@@ -2399,7 +2434,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-log_files">
+    <section xml:id="langref-systables-log_files">
         <info>
             <title>RDB$LOG_FILES</title>
             <keywordset>
@@ -2411,7 +2446,7 @@
         </indexterm>
         <para>В настоящей версии не используется.</para>
         <para>
-            <table xml:id="systables-tbl-log_files" frame="all">
+            <table xml:id="langref-systables-tbl-log_files" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$LOG_FILES</title>
                 <tgroup cols="3">
@@ -2461,7 +2496,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-packages">
+    <section xml:id="langref-systables-packages">
         <info>
             <title>RDB$PACKAGES</title>
             <keywordset>
@@ -2473,7 +2508,7 @@
         </indexterm>
         <para>Сведения о PSQL пакетах.</para>
         <para>
-            <table xml:id="systables-tbl-packages" frame="all">
+            <table xml:id="langref-systables-tbl-packages" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$PACKAGES</title>
                 <tgroup cols="3">
@@ -2544,7 +2579,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-pages">
+    <section xml:id="langref-systables-pages">
         <info>
             <title>RDB$PAGES</title>
             <keywordset>
@@ -2556,7 +2591,7 @@
         </indexterm>
         <para>Сведения о страницах базы данных.</para>
         <para>
-            <table xml:id="systables-tbl-pages" frame="all">
+            <table xml:id="langref-systables-tbl-pages" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$PAGES</title>
                 <tgroup cols="3">
@@ -2598,7 +2633,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-procedure_parameters">
+    <section xml:id="langref-systables-procedure_parameters">
         <info>
             <title>RDB$PROCEDURE_PARAMETERS</title>
             <keywordset>
@@ -2610,7 +2645,7 @@
         </indexterm>
         <para>Описывает параметры хранимых процедур.</para>
         <para>
-            <table xml:id="systables-tbl-procedure_parameters" frame="all">
+            <table xml:id="langref-systables-tbl-procedure_parameters" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$PROCEDURE_PARAMETERS</title>
                 <tgroup cols="3">
@@ -2730,7 +2765,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-procedures">
+    <section xml:id="langref-systables-procedures">
         <info>
             <title>RDB$PROCEDURES</title>
             <keywordset>
@@ -2742,7 +2777,7 @@
         </indexterm>
         <para>Описывает хранимые процедуры.</para>
         <para>
-            <table xml:id="systables-tbl-procedures" frame="all">
+            <table xml:id="langref-systables-tbl-procedures" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$PROCEDURES</title>
                 <tgroup cols="3">
@@ -2885,7 +2920,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-publication_tables">
+    <section xml:id="langref-systables-publication_tables">
         <info>
             <title>RDB$PUBLICATION_TABLES</title>
             <keywordset>
@@ -2897,7 +2932,7 @@
         </indexterm>
         <para>Таблицы включенные в набор репликации (публикацию).</para>
         <para>
-            <table xml:id="systables-tbl-publication_tables" frame="all">
+            <table xml:id="langref-systables-tbl-publication_tables" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$PUBLICATION_TABLES</title>
                 <tgroup cols="3">
@@ -2927,7 +2962,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-publications">
+    <section xml:id="langref-systables-publications">
         <info>
             <title>RDB$PUBLICATIONS</title>
             <keywordset>
@@ -2939,7 +2974,7 @@
         </indexterm>
         <para>Публикации. Публикация — набор таблиц для репликации.</para>
         <para>
-            <table xml:id="systables-tbl-publications" frame="all">
+            <table xml:id="langref-systables-tbl-publications" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$PUBLICATIONS</title>
                 <tgroup cols="3">
@@ -2993,7 +3028,7 @@
                 создавать несколько пользовательских публикаций.</para>
         </note>
     </section>
-    <section xml:id="systables-ref_constraints">
+    <section xml:id="langref-systables-ref_constraints">
         <info>
             <title>RDB$REF_CONSTRAINTS</title>
             <keywordset>
@@ -3005,7 +3040,7 @@
         </indexterm>
         <para>Описания именованных ограничений базы данных (внешних ключей).</para>
         <para>
-            <table xml:id="systables-tbl-ref_constraints" frame="all">
+            <table xml:id="langref-systables-tbl-ref_constraints" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$REF_CONSTRAINTS</title>
                 <tgroup cols="3">
@@ -3059,7 +3094,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-relation_constraints">
+    <section xml:id="langref-systables-relation_constraints">
         <info>
             <title>RDB$RELATION_CONSTRAINTS</title>
             <keywordset>
@@ -3072,7 +3107,7 @@
         <para>Описание всех ограничений на уровне таблиц: первичного, уникального, внешнего ключей,
             ограничений CHECK, NOT NULL.</para>
         <para>
-            <table xml:id="systables-tbl-relation_constraints" frame="all">
+            <table xml:id="langref-systables-tbl-relation_constraints" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$RELATION_CONSTRAINTS</title>
                 <tgroup cols="3">
@@ -3125,7 +3160,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-relation_fields">
+    <section xml:id="langref-systables-relation_fields">
         <info>
             <title>RDB$RELATION_FIELDS</title>
             <keywordset>
@@ -3137,7 +3172,7 @@
         </indexterm>
         <para>Характеристики столбцов таблиц и представлений.</para>
         <para>
-            <table xml:id="systables-tbl-relation_fields" frame="all">
+            <table xml:id="langref-systables-tbl-relation_fields" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$RELATION_FIELDS</title>
                 <tgroup cols="3">
@@ -3279,7 +3314,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-relations">
+    <section xml:id="langref-systables-relations">
         <info>
             <title>RDB$RELATIONS</title>
             <keywordset>
@@ -3291,7 +3326,7 @@
         </indexterm>
         <para>Хранит некоторые характеристики таблиц и представлений.</para>
         <para>
-            <table xml:id="systables-tbl-relations" frame="all">
+            <table xml:id="langref-systables-tbl-relations" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$RELATIONS</title>
                 <tgroup cols="3">
@@ -3442,7 +3477,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-roles">
+    <section xml:id="langref-systables-roles">
         <info>
             <title>RDB$ROLES</title>
             <keywordset>
@@ -3454,7 +3489,7 @@
         </indexterm>
         <para>Определение ролей.</para>
         <para>
-            <table xml:id="systables-tbl-roles" frame="all">
+            <table xml:id="langref-systables-tbl-roles" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$ROLES</title>
                 <tgroup cols="3">
@@ -3498,15 +3533,124 @@
                         </row>
                         <row>
                             <entry>RDB$SYSTEM_PRIVILEGES</entry>
-                            <entry>CHAR(8) OCTETS</entry>
-                            <entry>Флаги системных привилегий</entry>
+                            <entry>BINARY(8)</entry>
+                            <entry><para>Битовый набор с системными привилегиями, предоставленными
+                                    роли, со следующими битами: <itemizedlist>
+                                        <listitem>
+                                            <para> 0 - не используется </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 1 - <code>USER_MANAGEMENT</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 2 - <code>READ_RAW_PAGES</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 3 - <code>CREATE_USER_TYPES</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 4 - <code>USE_NBACKUP_UTILITY</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 5 - <code>CHANGE_SHUTDOWN_MODE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 6 - <code>TRACE_ANY_ATTACHMENT</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 7 - <code>MONITOR_ANY_ATTACHMENT</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 8 - <code>ACCESS_SHUTDOWN_DATABASE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 9 - <code>CREATE_DATABASE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 10 - <code>DROP_DATABASE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 11 - <code>USE_GBAK_UTILITY</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 12 - <code>USE_GSTAT_UTILITY</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 13 - <code>USE_GFIX_UTILITY</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 14 - <code>IGNORE_DB_TRIGGERS</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 15 - <code>CHANGE_HEADER_SETTINGS</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 16 - <code>SELECT_ANY_OBJECT_IN_DATABASE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 17 - <code>ACCESS_ANY_OBJECT_IN_DATABASE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 18 - <code>MODIFY_ANY_OBJECT_IN_DATABASE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 19 - <code>CHANGE_MAPPING_RULES</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 20 - <code>USE_GRANTED_BY_CLAUSE</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 21 - <code>GRANT_REVOKE_ON_ANY_OBJECT</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 22 - <code>GRANT_REVOKE_ANY_DDL_RIGHT</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 23 - <code>CREATE_PRIVILEGED_ROLES</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 24 - <code>GET_DBCRYPT_INFO</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 25 - <code>MODIFY_EXT_CONN_POOL</code>
+                                            </para>
+                                        </listitem>
+                                        <listitem>
+                                            <para> 26 - <code>REPLICATE_INTO_DATABASE</code></para>
+                                        </listitem>
+                                    </itemizedlist>
+                                </para></entry>
                         </row>
                     </tbody>
                 </tgroup>
             </table>
         </para>
     </section>
-    <section xml:id="systables-security_classes">
+    <section xml:id="langref-systables-security_classes">
         <info>
             <title>RDB$SECURITY_CLASSES</title>
             <keywordset>
@@ -3518,7 +3662,7 @@
         </indexterm>
         <para>Списки управления доступом.</para>
         <para>
-            <table xml:id="systables-tbl-security_classes" frame="all">
+            <table xml:id="langref-systables-tbl-security_classes" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$SECURITY_CLASSES</title>
                 <tgroup cols="3">
@@ -3554,7 +3698,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-timezones">
+    <section xml:id="langref-systables-timezones">
         <info>
             <title>RDB$TIME_ZONES</title>
             <keywordset>
@@ -3568,7 +3712,7 @@
         <para>Виртуальная таблица со списком часовых поясов поддерживаемых сервером.</para>
 
         <para>
-            <table xml:id="systables-tbl-timezones" frame="all">
+            <table xml:id="langref-systables-tbl-timezones" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$TIME_ZONES</title>
                 <tgroup cols="3">
@@ -3598,7 +3742,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-transactions">
+    <section xml:id="langref-systables-transactions">
         <info>
             <title>RDB$TRANSACTIONS</title>
             <keywordset>
@@ -3611,7 +3755,7 @@
         <para>RDB$TRANSACTIONS хранит состояние распределённых и других транзакций, которые
             подготовлены для двухфазного подтверждения с явно подготовленным сообщением.</para>
         <para>
-            <table xml:id="systables-tbl-transactions" frame="all">
+            <table xml:id="langref-systables-tbl-transactions" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$TRANSACTIONS</title>
                 <tgroup cols="3">
@@ -3668,7 +3812,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-trigger_messages">
+    <section xml:id="langref-systables-trigger_messages">
         <info>
             <title>RDB$TRIGGER_MESSAGES</title>
             <keywordset>
@@ -3680,7 +3824,7 @@
         </indexterm>
         <para>Сообщения триггеров.</para>
         <para>
-            <table xml:id="systables-tbl-trigger_messages" frame="all">
+            <table xml:id="langref-systables-tbl-trigger_messages" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$TRIGGER_MESSAGES</title>
                 <tgroup cols="3">
@@ -3716,7 +3860,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-triggers">
+    <section xml:id="langref-systables-triggers">
         <info>
             <title>RDB$TRIGGERS</title>
             <keywordset>
@@ -3728,7 +3872,7 @@
         </indexterm>
         <para>Описания триггеров.</para>
         <para>
-            <table xml:id="systables-tbl-triggers" frame="all">
+            <table xml:id="langref-systables-tbl-triggers" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$TRIGGERS</title>
                 <tgroup cols="3">
@@ -4090,7 +4234,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-types">
+    <section xml:id="langref-systables-types">
         <info>
             <title>RDB$TYPES</title>
             <keywordset>
@@ -4102,7 +4246,7 @@
         </indexterm>
         <para>Описание перечислимых типов данных.</para>
         <para>
-            <table xml:id="systables-tbl-types" frame="all">
+            <table xml:id="langref-systables-tbl-types" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$TYPES</title>
                 <tgroup cols="3">
@@ -4172,7 +4316,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-user_privileges">
+    <section xml:id="langref-systables-user_privileges">
         <info>
             <title>RDB$USER_PRIVILEGES</title>
             <keywordset>
@@ -4184,7 +4328,7 @@
         </indexterm>
         <para>Полномочия пользователей системы.</para>
         <para>
-            <table xml:id="systables-tbl-user_privileges" frame="all">
+            <table xml:id="langref-systables-tbl-user_privileges" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$USER_PRIVILEGES</title>
                 <tgroup cols="3">
@@ -4442,7 +4586,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="systables-view_relations">
+    <section xml:id="langref-systables-view_relations">
         <info>
             <title>RDB$VIEW_RELATIONS</title>
             <keywordset>
@@ -4454,7 +4598,7 @@
         </indexterm>
         <para>Описывает представления. </para>
         <para>
-            <table xml:id="systables-tbl-view_relations" frame="all">
+            <table xml:id="langref-systables-tbl-view_relations" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы RDB$VIEW_RELATIONS</title>
                 <tgroup cols="3">

@@ -102,7 +102,7 @@
 
                 <para>Тело модуля может быть написано на языке PSQL или быть телом внешнего
                     модуля.</para>
-                
+
                 <formalpara>
                     <title>Синтаксис:</title>
                     <para><programlisting>
@@ -144,7 +144,7 @@
                     </programlisting>
                     </para>
                 </formalpara>
-                
+
                 <para>
                     <table frame="all">
                         <title>Параметры оператора CREATE PROCEDURE</title>
@@ -205,13 +205,15 @@
                                 </row>
                                 <row>
                                     <entry><replaceable>extbody</replaceable></entry>
-                                    <entry><para>Тело внешней процедуры. Строковый литерал который может
-                                        использоваться UDR для различных целей.</para></entry>
+                                    <entry><para>Тело внешней процедуры. Строковый литерал который
+                                            может использоваться UDR для различных
+                                        целей.</para></entry>
                                 </row>
                                 <row>
                                     <entry><replaceable>module name</replaceable></entry>
                                     <entry>
-                                        <para>Имя внешнего модуля, в котором расположена функция.</para>
+                                        <para>Имя внешнего модуля, в котором расположена
+                                            функция.</para>
                                     </entry>
                                 </row>
                                 <row>
@@ -423,8 +425,8 @@ SET TERM ;^
                 <para>Выполняемые хранимые процедуры, осуществляют обработку данных, находящихся в
                     базе данных. Эти процедуры могут получать входные параметры и возвращать
                     одиночный набор выходных (RETURNS) параметров. Такие процедуры выполняются с
-                    помощью оператора <link linkend="langref-dml-execproc">EXECUTE PROCEDURE</link>. См.
-                        <link linkend="langref-ddl-procedure-create-examples">пример</link> создания
+                    помощью оператора <link linkend="langref-dml-execproc">EXECUTE PROCEDURE</link>.
+                    См. <link linkend="langref-ddl-procedure-create-examples">пример</link> создания
                     выполняемой хранимой процедуры в конце раздела <link
                         linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link> главы
                         <quote>Операторы DDL</quote>.</para>
@@ -439,15 +441,16 @@ SET TERM ;^
                     SELECT запросов. Обычно такие процедуры выполняют циклический процесс извлечения
                     данных, возможно преобразуя их, прежде чем заполнить выходные переменные
                     (параметры) новыми данными на каждой итерации цикла. Оператор <link
-                        linkend="langref-psql-statements-suspend">SUSPEND</link>, обычно расположенный в
-                    конце каждой итерации, заполняет буфер и ожидает пока вызывающая сторона не
-                    выберет (fetch) строку.</para>
+                        linkend="langref-psql-statements-suspend">SUSPEND</link>, обычно
+                    расположенный в конце каждой итерации, заполняет буфер и ожидает пока вызывающая
+                    сторона не выберет (fetch) строку.</para>
                 <para>Селективные процедуры могут иметь входные параметры и выходное множество,
                     заданное в предложении RETURNS заголовка процедуры.</para>
                 <para>Обращение к селективной хранимой процедуре осуществляется при помощи оператора
-                    SELECT (см. <link linkend="langref-dml-select-from-sp">Выборка из селективной хранимой
-                        процедуры</link>). См. <link linkend="langref-ddl-procedure-create-examples">пример
-                        создания селективной хранимой процедуры</link> в конце раздела <link
+                    SELECT (см. <link linkend="langref-dml-select-from-sp">Выборка из селективной
+                        хранимой процедуры</link>). См. <link
+                        linkend="langref-ddl-procedure-create-examples">пример создания селективной
+                        хранимой процедуры</link> в конце раздела <link
                         linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link> главы
                         <quote>Операторы определения данных DDL</quote>.</para>
             </simplesect>
@@ -460,8 +463,8 @@ SET TERM ;^
                 отличается. Разница заключается в логике программного кода. </para>
 
             <para>Для получения информации о создание хранимых процедур см. <link
-                    linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link> в главе <quote>Операторы
-                    определения данных DDL</quote>.</para>
+                    linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link> в главе
+                    <quote>Операторы определения данных DDL</quote>.</para>
         </section>
 
         <section xml:id="langref-psql-procedure-alter">
@@ -472,8 +475,8 @@ SET TERM ;^
 
             <para>Для получения информации об изменении существующих хранимых процедур см. <link
                     linkend="langref-ddl-procedure-alter">ALTER PROCEDURE</link>, <link
-                    linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER PROCEDURE</link>, <link
-                    linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link> в главе
+                    linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER PROCEDURE</link>,
+                    <link linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link> в главе
                     <quote>Операторы определения данных DDL</quote>. </para>
 
         </section>
@@ -482,8 +485,8 @@ SET TERM ;^
             <title>Удаление хранимой процедуры</title>
 
             <para>Для получения информации об удалении хранимых процедур см. <link
-                    linkend="langref-ddl-procedure-drop">DROP PROCEDURE</link> в главе <quote>Операторы
-                    определения данных DDL</quote>. </para>
+                    linkend="langref-ddl-procedure-drop">DROP PROCEDURE</link> в главе
+                    <quote>Операторы определения данных DDL</quote>. </para>
         </section>
     </section>
     <section xml:id="langref-psql-function">
@@ -502,8 +505,8 @@ SET TERM ;^
             <title>Создание хранимой функции</title>
 
             <para>Для получения информации о создание хранимых функций см. <link
-                    linkend="langref-ddl-function-create">CREATE FUNCTION</link> в главе <quote>Операторы
-                    определения данных DDL</quote>.</para>
+                    linkend="langref-ddl-function-create">CREATE FUNCTION</link> в главе
+                    <quote>Операторы определения данных DDL</quote>.</para>
 
 
         </section>
@@ -513,8 +516,8 @@ SET TERM ;^
 
             <para>Для получения информации об изменении существующих хранимых функций см. <link
                     linkend="langref-ddl-function-alter">ALTER FUNCTION</link>, <link
-                    linkend="langref-ddl-function-createoralter">CREATE OR ALTER FUNCTION</link>, <link
-                    linkend="langref-ddl-function-recreate">RECREATE FUNCTION</link> в главе
+                    linkend="langref-ddl-function-createoralter">CREATE OR ALTER FUNCTION</link>,
+                    <link linkend="langref-ddl-function-recreate">RECREATE FUNCTION</link> в главе
                     <quote>Операторы определения данных DDL</quote>. </para>
         </section>
 
@@ -522,8 +525,8 @@ SET TERM ;^
             <title>Удаление хранимой функции</title>
 
             <para>Для получения информации об удалении хранимых функций см. <link
-                    linkend="langref-ddl-function-drop">DROP FUNCTION</link> в главе <quote>Операторы
-                    определения данных DDL</quote>. </para>
+                    linkend="langref-ddl-function-drop">DROP FUNCTION</link> в главе
+                    <quote>Операторы определения данных DDL</quote>. </para>
         </section>
     </section>
     <section xml:id="langref-psql-block">
@@ -678,19 +681,21 @@ END
             <title>Создание пакета</title>
 
             <para>Для получения информации о создании пакетов см. <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-package-create">CREATE
-                    PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-package-create"
+                    >CREATE PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
                     linkend="langref-ddl-package-body-create">CREATE PACKAGE BODY</link>. </para>
         </section>
         <section xml:id="langref-psql-package-alter">
             <title>Модификация пакета</title>
 
             <para>Для получения информации об изменении существующего заголовка или тела пакета см.
-                    <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-package-alter"
-                    >ALTER PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                    linkend="langref-ddl-package-createoralter">CREATE OR ALTER PACKAGE</link>, <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-package-recreate"
-                    >RECREATE PACKAGE</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-package-alter">ALTER PACKAGE</link>, <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-package-createoralter">CREATE OR ALTER PACKAGE</link>,
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-package-recreate">RECREATE PACKAGE</link>, <link
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
                     linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE BODY</link>. </para>
 
         </section>
@@ -698,9 +703,9 @@ END
         <section xml:id="langref-psql-package-drop">
             <title>Удаление пакета</title>
 
-            <para>Для получения информации об удалении пакета см. <link linkend="langref-ddl-package-drop"
-                    >DROP PACKAGE</link>, <link linkend="langref-ddl-package-body-drop">DROP PACKAGE
-                    BODY</link>. </para>
+            <para>Для получения информации об удалении пакета см. <link
+                    linkend="langref-ddl-package-drop">DROP PACKAGE</link>, <link
+                    linkend="langref-ddl-package-body-drop">DROP PACKAGE BODY</link>. </para>
 
         </section>
     </section>
@@ -742,8 +747,8 @@ END
             <section xml:id="langref-psql-triggers-dml-options">
                 <title>Варианты триггеров</title>
                 <para>Существует шесть основных вариантов соотношения событие-фаза для таблицы
-                    (представления): <informaltable xml:id="langref-psql-tbl-dmltriggers" frame="none"
-                        rowsep="1" colsep="1">
+                    (представления): <informaltable xml:id="langref-psql-tbl-dmltriggers"
+                        frame="none" rowsep="1" colsep="1">
                         <?dbfo keep-together='auto'?>
                         <tgroup cols="2">
                             <colspec colname="colEvent" colwidth="*"/>
@@ -833,8 +838,8 @@ END
             <title>Триггеры на события базы данных</title>
 
             <para>Триггер, связанный с событиями базы данных, может вызываться при следующих
-                событиях: <informaltable xml:id="langref-psql-tbl-dbtriggers" frame="none" rowsep="1"
-                    colsep="1">
+                событиях: <informaltable xml:id="langref-psql-tbl-dbtriggers" frame="none"
+                    rowsep="1" colsep="1">
                     <?dbfo keep-together='auto'?>
                     <tgroup cols="3">
                         <colspec colname="colEvent" colwidth="4*"/>
@@ -936,11 +941,12 @@ END
             <title>Создание триггера</title>
 
             <para>Для получения информации о создании триггеров см. <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-create">CREATE
-                    TRIGGER</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                    linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>, <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-recreate">
-                    RECREATE TRIGGER</link> в главе <quote>Операторы определения данных DDL</quote>. </para>
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-create"
+                    >CREATE TRIGGER</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>,
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-trigger-recreate"> RECREATE TRIGGER</link> в главе
+                    <quote>Операторы определения данных DDL</quote>. </para>
 
         </section>
 
@@ -948,20 +954,20 @@ END
             <title>Изменение триггера</title>
 
             <para>Для получения информации об изменении триггеров см. <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-alter">ALTER
-                    TRIGGER</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                    linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>, <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-recreate">
-                    RECREATE TRIGGER</link> в главе <quote>Операторы определения данных
-                DDL</quote>.</para>
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-alter"
+                    >ALTER TRIGGER</link>, <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>,
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                    linkend="langref-ddl-trigger-recreate"> RECREATE TRIGGER</link> в главе
+                    <quote>Операторы определения данных DDL</quote>.</para>
         </section>
 
         <section xml:id="langref-psql-triggers-drop">
             <title>Удаление триггера</title>
 
             <para>Для получения информации об удалении триггеров см. <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-drop"> DROP
-                    TRIGGER</link> в главе <quote>Операторы определения данных DDL</quote>. </para>
+                    xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-ddl-trigger-drop">
+                    DROP TRIGGER</link> в главе <quote>Операторы определения данных DDL</quote>. </para>
 
         </section>
     </section>
@@ -1082,7 +1088,8 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-declare-var">DECLARE VARIABLE</link>. </para>
+                    <link linkend="langref-psql-statements-declare-var">DECLARE VARIABLE</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -1261,9 +1268,9 @@ END
                 <formalpara>
                     <title>См. также:</title>
                     <para><link linkend="langref-datatypes">Типы и подтипы данных</link>, <link
-                            linkend="langref-datatypes-domain">Пользовательские типы данных — домены</link>,
-                            <link linkend="langref-ddl-domain-create"><database>CREATE
-                            DOMAIN</database></link>
+                            linkend="langref-datatypes-domain">Пользовательские типы данных —
+                            домены</link>, <link linkend="langref-ddl-domain-create"
+                                ><database>CREATE DOMAIN</database></link>
                     </para>
                 </formalpara>
             </section>
@@ -1676,8 +1683,9 @@ END!
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-declare-function">DECLARE FUNCTION</link>, <link
-                        linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link>.</para>
+                    <link linkend="langref-psql-statements-declare-function">DECLARE
+                    FUNCTION</link>, <link linkend="langref-ddl-procedure-create">CREATE
+                        PROCEDURE</link>.</para>
             </formalpara>
         </section>
         <section xml:id="langref-psql-statements-declare-function">
@@ -1858,8 +1866,9 @@ END!
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-declare-procedure">DECLARE PROCEDURE</link>,
-                        <link linkend="langref-ddl-function-create">CREATE FUNCTION</link>.</para>
+                    <link linkend="langref-psql-statements-declare-procedure">DECLARE
+                        PROCEDURE</link>, <link linkend="langref-ddl-function-create">CREATE
+                        FUNCTION</link>.</para>
             </formalpara>
         </section>
 
@@ -1909,8 +1918,8 @@ END!
             <para>После операторов BEGIN и END точка с запятой не ставится. Однако утилита командной
                 строки <application>isql</application> требует, чтобы после последнего оператора END
                 в определении PSQL модуля следовал символ терминатора, установленного командой <link
-                    linkend="langref-psql-setterm">SET TERM</link>. Терминатор не является частью синтаксиса
-                PSQL.</para>
+                    linkend="langref-psql-setterm">SET TERM</link>. Терминатор не является частью
+                синтаксиса PSQL.</para>
             <para>Последний оператор END в триггере завершает работу триггера. Последний оператор
                 END в хранимой процедуре работает в зависимости от типа процедуры: <itemizedlist
                     spacing="compact">
@@ -1989,8 +1998,8 @@ SET TERM ;^
 
                 <para>
                     <link linkend="langref-psql-statements-exit">EXIT</link>, <link
-                        linkend="langref-psql-statements-leave">LEAVE</link>, <link linkend="langref-psql-setterm"
-                        >SET TERM</link>.</para>
+                        linkend="langref-psql-statements-leave">LEAVE</link>, <link
+                        linkend="langref-psql-setterm">SET TERM</link>.</para>
             </formalpara>
         </section>
 
@@ -2232,8 +2241,8 @@ S
 
                 <para>
                     <link linkend="langref-psql-statements-forselect">FOR SELECT</link>, <link
-                        linkend="langref-psql-statements-forexec">FOR EXECUTE STATEMENT</link>, <link
-                        linkend="langref-psql-statements-leave">LEAVE</link>, <link
+                        linkend="langref-psql-statements-forexec">FOR EXECUTE STATEMENT</link>,
+                        <link linkend="langref-psql-statements-leave">LEAVE</link>, <link
                         linkend="langref-psql-statements-continue">CONTINUE</link>.</para>
             </formalpara>
         </section>
@@ -2256,24 +2265,42 @@ S
                 <title>Синтаксис:</title>
 
                 <para><programlisting>
-{FOR <replaceable>&lt;select_stmt&gt;</replaceable> | WHILE (<replaceable>&lt;condition&gt;</replaceable>)} DO
+FOR <replaceable>&lt;loop_stmt&gt;</replaceable> DO
 BEGIN
   ...
   BREAK;
   ...
 END
+
+<replaceable>&lt;loop_stmt&gt;</replaceable> ::=
+    FOR <replaceable>&lt;select_stmt&gt;</replaceable> INTO <replaceable>&lt;var_list&gt;</replaceable>  DO
+  | FOR EXECUTE STATEMENT ... INTO <replaceable>&lt;var_list&gt;</replaceable> DO
+  | WHILE (<replaceable>&lt;condition&gt;</replaceable>) DO 
                 </programlisting></para>
 
             </formalpara>
 
             <para>Оператор BREAK моментально прекращает работу внутреннего цикла операторов WHILE
-                или FOR.</para>
+                или FOR. Код продолжает выполняться с первого оператора после завершенного блока
+                цикла.</para>
+            <para>Оператор BREAK похож на LEAVE, за исключением того, что не поддерживает метку
+                перехода. </para>
 
             <note>
                 <para>Этот оператор считается устаревшим. Начиная с Firebird 1.5 рекомендуется
-                    использовать SQL-99 совместимый оператор <link linkend="langref-psql-statements-leave"
-                        >LEAVE</link>.</para>
+                    использовать SQL-99 совместимый оператор <link
+                        linkend="langref-psql-statements-leave">LEAVE</link>.</para>
             </note>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                        linkend="langref-psql-statements-leave">LEAVE</link>, <link
+                        linkend="langref-psql-statements-exit">EXIT</link>, <link
+                        linkend="langref-psql-statements-continue">CONTINUE</link>.</para>
+            </formalpara>
         </section>
         <section xml:id="langref-psql-statements-leave">
             <info>
@@ -2299,13 +2326,18 @@ END
 
                 <para><programlisting>
 [<replaceable>label</replaceable>:]
-{FOR <replaceable>&lt;select_stmt&gt;</replaceable> | WHILE (<replaceable>&lt;condition&gt;</replaceable>)} DO
+FOR <replaceable>&lt;loop_stmt&gt;</replaceable> DO
 BEGIN
   ...
   LEAVE [<replaceable>label</replaceable>];
   ...
 END
-                </programlisting></para>
+
+<replaceable>&lt;loop_stmt&gt;</replaceable> ::=
+    FOR <replaceable>&lt;select_stmt&gt;</replaceable> INTO <replaceable>&lt;var_list&gt;</replaceable>  DO
+  | FOR EXECUTE STATEMENT ... INTO <replaceable>&lt;var_list&gt;</replaceable> DO
+  | WHILE (<replaceable>&lt;condition&gt;</replaceable>) DO                
+</programlisting></para>
             </formalpara>
 
             <para>
@@ -2346,10 +2378,11 @@ END
                 </table>
             </para>
 
-            <para>Оператор LEAVE моментально прекращает работу внутреннего цикла операторов WHILE
-                или FOR. С использованием опционального параметра метки LEAVE также может выйти и из
-                внешних циклов, при этом выполнение кода продолжается с первого оператора,
-                следующего после прекращения блока внешнего цикла.</para>
+            <para>Оператор LEAVE немедленно прекращает работу внутреннего цикла операторов WHILE или
+                FOR. С использованием необязательного параметра <replaceable>label</replaceable>,
+                LEAVE также может выйти и из внешнего цикла, то есть цикла помеченного меткой
+                    <replaceable>label</replaceable>. Код продолжает выполняться с первого оператора
+                после завершенного блока цикла.</para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -2357,12 +2390,13 @@ END
                     <example>
                         <title>Использование оператора LEAVE</title>
                         <para><programlisting language="sql">
+<![CDATA[                            
 /*
  * Выход из цикла при возникновении ошибки вставки в таблицу NUMBERS. 
  * Код продолжается со строки C = 0.
  */                    
 ...
-WHILE (B &lt; 10) DO
+WHILE (B < 10) DO
 BEGIN
     INSERT INTO NUMBERS(B)
     VALUES (:B);
@@ -2376,15 +2410,17 @@ BEGIN
     END
 END
 C = 0;
-...        
+...      
+]]>
                 </programlisting></para>
                     </example>
                     <example>
                         <title>Использование оператора LEAVE с меткой</title>
                         <para><programlisting language="sql">
+<![CDATA[                            
 /*
- * &quot;LEAVE LOOPA&quot; завершает внешний цикл, а &quot;LEAVE LOOPB&quot; - внутренний. 
- * Обратите внимание: простого оператора &quot;LEAVE&quot; также было бы достаточно, 
+ * "LEAVE LOOPA" завершает внешний цикл, а "LEAVE LOOPB" — внутренний. 
+ * Обратите внимание: простого оператора "LEAVE" также было бы достаточно, 
  * чтобы завершить внутренний цикл.
  */                    
 ...
@@ -2406,7 +2442,8 @@ BEGIN
       SUSPEND;
   END
 END
-...      
+...   
+]]>
                 </programlisting></para>
                     </example>
                 </para>
@@ -2415,7 +2452,9 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-exit">EXIT</link>, <link
+                    <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                        linkend="langref-psql-statements-break">BREAK</link>, <link
+                        linkend="langref-psql-statements-exit">EXIT</link>, <link
                         linkend="langref-psql-statements-continue">CONTINUE</link>.</para>
             </formalpara>
         </section>
@@ -2446,12 +2485,17 @@ END
 
                 <para><programlisting>
 [<replaceable>label</replaceable>:]
-{FOR <replaceable>&lt;select_stmt&gt;</replaceable> | WHILE (<replaceable>&lt;condition&gt;</replaceable>)} DO
+FOR <replaceable>&lt;loop_stmt&gt;</replaceable> DO
 BEGIN
   ...
   CONTINUE [<replaceable>label</replaceable>];
   ...
 END
+
+<replaceable>&lt;loop_stmt&gt;</replaceable> ::=
+    FOR <replaceable>&lt;select_stmt&gt;</replaceable> INTO <replaceable>&lt;var_list&gt;</replaceable>  DO
+  | FOR EXECUTE STATEMENT ... INTO <replaceable>&lt;var_list&gt;</replaceable> DO
+  | WHILE (<replaceable>&lt;condition&gt;</replaceable>) DO  
                 </programlisting></para>
             </formalpara>
 
@@ -2493,9 +2537,11 @@ END
                 </table>
             </para>
 
-            <para>Оператор CONTINUE моментально начинает новую итерацию внутреннего цикла операторов
-                WHILE или FOR. С использованием опционального параметра метки CONTINUE также может
-                начинать новую итерацию для внешних циклов.</para>
+            <para>Оператор CONTINUE пропускает оставшуюся часть текущего блока цикла и запускает
+                следующую итерацию текущего цикла WHILE или FOR. С использованием необязательного
+                параметра <replaceable>label</replaceable>, CONTINUE также может начинать следующую
+                итерацию для внешнего цикла, то есть цикла, помеченного меткой
+                    <replaceable>label</replaceable>.</para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -2521,7 +2567,9 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-leave">LEAVE</link>.</para>
+                    <link linkend="langref-psql-statements-leave">LEAVE</link>, <link
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        linkend="langref-psql-statements-break">BREAK</link>.</para>
             </formalpara>
         </section>
         <section xml:id="langref-psql-statements-exit">
@@ -2554,8 +2602,9 @@ EXIT
                 </programlisting></para>
             </formalpara>
 
-            <para>Оператор EXIT позволяет из любой точки триггера или хранимой процедуры перейти на
-                последний оператор END, то есть завершить выполнение программы.</para>
+            <para>Оператор EXIT, вызванный из любой точки выполняющегося PSQL модуля, переходит на
+                последний оператор END, таким образом завершая выполнение программы.</para>
+            <para>Вызов EXIT в функции приведет к тому, что функция вернет NULL. </para>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -2590,6 +2639,10 @@ END
 
                 <para>
                     <link linkend="langref-psql-statements-leave">LEAVE</link>, <link
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        linkend="langref-psql-statements-break">BREAK</link>, <link
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        linkend="langref-psql-statements-continue">CONTINUE</link>,<link
                         linkend="langref-psql-statements-suspend">SUSPEND</link>.</para>
             </formalpara>
         </section>
@@ -2628,16 +2681,26 @@ SUSPEND
             <note>
                 <para><orderedlist>
                         <listitem>
+                            <para>Оператор SUSPEND может встречаться только в хранимых процедурах
+                                или подпроцедурах, а также в анонимных блоках EXECUTE BLOCK.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Наличие ключевого слова SUSPEND определяет хранимую процедуру как
+                                выбираемую (selectable) процедуру.</para>
+                        </listitem>
+                        <listitem>
                             <para>Приложения, использующие API интерфейсы, обычно делают выборку из
                                 хранимых процедур прозрачно.</para>
                         </listitem>
                         <listitem>
-                            <para>Если оператор SUSPEND выдаётся в исполняемой (executable) хранимой
-                                процедуре, то это равносильно выполнению оператора EXIT, в
-                                результате чего завершается работа процедуры.</para>
+                            <para>Если выбираемая (selectable) процедура выполняется с использованием EXECUTE
+                                PROCEDURE, она ведет себя как исполняемая процедура. Когда в такой
+                                хранимой процедуре выполняется инструкция SUSPEND, это то же самое,
+                                что выполнение инструкции EXIT, что приводит к немедленному
+                                завершению процедуры.</para>
                         </listitem>
                         <listitem>
-                            <para>Оператор SUSPEND &quot;разрывает&quot; атомарность блока, внутри
+                            <para>Оператор SUSPEND &quot;нарушает&quot; атомарность блока, внутри
                                 которого он находится. В случае возникновения ошибки в селективной
                                 процедуре, операторы, выполненные после последнего оператора
                                 SUSPEND, будут откачены. Операторы, выполненные до последнего
@@ -3105,8 +3168,8 @@ END
                     Если строка подключения имеет значение NULL или '' (пустая строка), предложение
                     ON EXTERNAL считается отсутствующим и оператор выполняется для текущей базы
                     данных. Строка подключения подробно описана в операторе CREATE DATABASE см.
-                        <link linkend="langref-ddl-database-create-remotely">Создание БД на удалённом
-                        сервере</link>.</para>
+                        <link linkend="langref-ddl-database-create-remotely">Создание БД на
+                        удалённом сервере</link>.</para>
                 <para>При выполнении оператора в отдельном соединении используется пул соединений и
                     пул транзакций.</para>
 
@@ -3232,7 +3295,7 @@ END
                     <para>Пулом внешних соединений, а также его параметрами можно управлять с
                         помощью специальных операторов. Подробнее см. <link
                             linkend="langref-session-extconnpool">ALTER EXTERNAL CONNECTIONS
-                        POOL</link>.</para>
+                            POOL</link>.</para>
 
                     <para>Состояние пула внешних подключений можно запросить с использованием
                         контекстных переменных в пространстве имен SYSTEM: <table frame="all">
@@ -3468,8 +3531,8 @@ END
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-psql-statements-forexec">FOR EXECUTE STATEMENT</link>.
-                    </para>
+                        <link linkend="langref-psql-statements-forexec">FOR EXECUTE
+                        STATEMENT</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -3787,9 +3850,9 @@ END
 
                     <para>
                         <link linkend="langref-dml-select">SELECT</link>, <link
-                            linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>,
-                            <link linkend="langref-psql-statements-open">OPEN</link>, <link
-                            linkend="langref-psql-statements-close">CLOSE</link>, <link
+                            linkend="langref-psql-statements-declare-cursor">DECLARE ...
+                            CURSOR</link>, <link linkend="langref-psql-statements-open">OPEN</link>,
+                            <link linkend="langref-psql-statements-close">CLOSE</link>, <link
                             linkend="langref-psql-statements-fetch">FETCH</link>.</para>
                 </formalpara>
             </section>
@@ -3894,7 +3957,8 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-execstmt">EXECUTE STATEMENT</link>. </para>
+                    <link linkend="langref-psql-statements-execstmt">EXECUTE STATEMENT</link>.
+                </para>
             </formalpara>
         </section>
         <section xml:id="langref-psql-statements-open">
@@ -3957,7 +4021,8 @@ OPEN <replaceable>cursor_name</replaceable>;
             <para>Оператор OPEN открывает ранее объявленный курсор, выполняет объявленный в нем
                 оператор SELECT и получает записи из результирующего набора данных. Оператор OPEN
                 применим только к курсорам, объявленным в операторе <link
-                    linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>.</para>
+                    linkend="langref-psql-statements-declare-cursor">DECLARE ...
+                CURSOR</link>.</para>
 
             <note>
                 <para>Если в операторе SELECT курсора имеются параметры, то они должны быть
@@ -3969,7 +4034,7 @@ OPEN <replaceable>cursor_name</replaceable>;
             <formalpara>
                 <title>Примеры:</title>
                 <para>См. примеры в операторе <link linkend="langref-psql-statements-fetch"
-                    >FETCH</link>.</para>
+                        >FETCH</link>.</para>
             </formalpara>
 
             <formalpara>
@@ -3978,7 +4043,8 @@ OPEN <replaceable>cursor_name</replaceable>;
                 <para>
                     <link linkend="langref-psql-statements-fetch">FETCH</link>, <link
                         linkend="langref-psql-statements-close">CLOSE</link>, <link
-                        linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>. </para>
+                        linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -4306,7 +4372,8 @@ END
                 <para>
                     <link linkend="langref-psql-statements-open">OPEN</link>, <link
                         linkend="langref-psql-statements-close">CLOSE</link>, <link
-                        linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>. </para>
+                        linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>.
+                </para>
             </formalpara>
         </section>
         <section xml:id="langref-psql-statements-close">
@@ -4370,12 +4437,13 @@ CLOSE <replaceable>cursor_name</replaceable>;
                 автоматически закрыты после выполнения кода триггера, хранимой процедуры, функции
                 или анонимного PSQL блока, в пределах кода которого он был открыт. Оператор CLOSE
                 применим только к курсорам, объявленным в операторе <link
-                    linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>.</para>
+                    linkend="langref-psql-statements-declare-cursor">DECLARE ...
+                CURSOR</link>.</para>
 
             <formalpara>
                 <title>Примеры:</title>
                 <para>См. примеры в операторе <link linkend="langref-psql-statements-fetch"
-                    >FETCH</link>.</para>
+                        >FETCH</link>.</para>
             </formalpara>
 
             <formalpara>
@@ -4384,7 +4452,8 @@ CLOSE <replaceable>cursor_name</replaceable>;
                 <para>
                     <link linkend="langref-psql-statements-fetch">FETCH</link>, <link
                         linkend="langref-psql-statements-open">OPEN</link>, <link
-                        linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>. </para>
+                        linkend="langref-psql-statements-declare-cursor">DECLARE ... CURSOR</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -4602,14 +4671,15 @@ SET TERM ;^
                     переведены на другие языки.</para>
 
                 <para>Полный список системных исключений вы можете найти в приложении <link
-                        linkend="langref-appx02-errorcodes">Обработка ошибок, коды и сообщения</link>: <itemizedlist>
+                        linkend="langref-appx02-errorcodes">Обработка ошибок, коды и
+                        сообщения</link>: <itemizedlist>
                         <listitem>
                             <para><link linkend="langref-appx02-sqlstates">Коды ошибок SQLSTATE и их
                                     описание</link></para>
                         </listitem>
                         <listitem>
-                            <para><link linkend="langref-appx02-gdscode">Коды ошибок GDSCODE их описание, и
-                                    SQLCODE</link></para>
+                            <para><link linkend="langref-appx02-gdscode">Коды ошибок GDSCODE их
+                                    описание, и SQLCODE</link></para>
                         </listitem>
                     </itemizedlist>
                 </para>
@@ -4622,7 +4692,7 @@ SET TERM ;^
                     объекты и вызваны из PSQL кода для сообщения об ошибке при нарушении некоторых
                     бизнес правил. Текст пользовательского исключения ограничен 1021 байтом.
                     Подробности см. <link linkend="langref-ddl-exception-create">CREATE
-                    EXCEPTION</link>.</para>
+                        EXCEPTION</link>.</para>
                 <para>В коде PSQL исключения обрабатываются при помощи оператора WHEN. Если
                     исключение будет обработано в вашем коде, то вы обеспечите исправление или обход
                     ошибки и позволите продолжить выполнение, — то клиенту не возвращается никакого
@@ -4784,11 +4854,11 @@ exception 1
                 </warning>
 
                 <para>Исключение может быть обработано в операторе <link
-                        linkend="langref-psql-statements-when">WHEN ... DO</link>. Если пользовательское
-                    исключение не было обработано в триггере или в хранимой процедуре, то действия,
-                    выполненные внутри этой хранимой процедуры (триггера) отменяются, а вызвавшая
-                    программа получает текст, заданный при создании исключения или альтернативный
-                    текст сообщения.</para>
+                        linkend="langref-psql-statements-when">WHEN ... DO</link>. Если
+                    пользовательское исключение не было обработано в триггере или в хранимой
+                    процедуре, то действия, выполненные внутри этой хранимой процедуры (триггера)
+                    отменяются, а вызвавшая программа получает текст, заданный при создании
+                    исключения или альтернативный текст сообщения.</para>
                 <para>В блоке обработки исключений (и только в нем), вы можете повторно вызвать
                     пойманное исключение или ошибку, вызывая оператор EXCEPTION без параметров. Вне
                     блока с исключением такой вызов не имеет никакого эффекта.</para>
@@ -4990,12 +5060,12 @@ DO <replaceable>&lt;compound_statement&gt;</replaceable>
                     операторе доступны контекстные переменные <link
                         linkend="langref-contextvars-gdscode">GDSCODE</link>, <link
                         linkend="langref-contextvars-sqlcode">SQLCODE</link>, <link
-                        linkend="langref-contextvars-sqlstate">SQLSTATE</link>. Для получения
-                    имени активного пользовательского исключения или текста интерпретированного
-                    сообщения об ошибке вы можете воспользоваться системной функцией <link
-                        linkend="langref-functions-func-error-rdberror">RDB$ERROR</link>. В этом же блоке
-                    доступен оператор повторного вызова ошибки или исключительной ситуации EXCEPTION
-                    (без параметров).</para>
+                        linkend="langref-contextvars-sqlstate">SQLSTATE</link>. Для получения имени
+                    активного пользовательского исключения или текста интерпретированного сообщения
+                    об ошибке вы можете воспользоваться системной функцией <link
+                        linkend="langref-functions-func-error-rdberror">RDB$ERROR</link>. В этом же
+                    блоке доступен оператор повторного вызова ошибки или исключительной ситуации
+                    EXCEPTION (без параметров).</para>
                 <important>
                     <para>После предложения WHEN GDSCODE вы должны использовать символьные имена -
                         такие, как <replaceable>grant_obj_notfound</replaceable> и т.д. Но в
@@ -5148,9 +5218,9 @@ END
 
                         <para>
                             <link linkend="langref-ddl-exception">Оператор EXCEPTION</link>, <link
-                                linkend="langref-appx02-sqlstates">Коды ошибок SQLSTATE и их описание</link>,
-                                <link linkend="langref-appx02-gdscode">Коды ошибок GDSCODE и SQLCODE и их
-                                описание</link>.</para>
+                                linkend="langref-appx02-sqlstates">Коды ошибок SQLSTATE и их
+                                описание</link>, <link linkend="langref-appx02-gdscode">Коды ошибок
+                                GDSCODE и SQLCODE и их описание</link>.</para>
                     </formalpara>
                 </section>
                 <!-- Scope of WHEN ... Do -->

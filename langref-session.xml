@@ -101,8 +101,9 @@
                     <listitem>
                         <para>На уровне соединения. Может быть установлен с использованием API (в
                             миллисекундах) или с помощью SQL оператора <link
-                                linkend="langref-session-timeout-set_statement_timeout">SET STATEMENT
-                                TIMEOUT</link>. Область действия текущее подключение.</para>
+                                linkend="langref-session-timeout-set_statement_timeout">SET
+                                STATEMENT TIMEOUT</link>. Область действия текущее
+                            подключение.</para>
                     </listitem>
                     <listitem>
                         <para>На уровне оператора. Может быть установлен с использованием API (в
@@ -282,9 +283,9 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                     <listitem>
                         <para>На уровне подключения. Может быть установлен с использованием API (в
                             секундах) или с помощью SQL оператора <link
-                                linkend="langref-session-timeout-set_session_idle_timeout">SET SESSION IDLE
-                                TIMEOUT</link>. Область действия все операторы в текущем
-                            подключении.</para>
+                                linkend="langref-session-timeout-set_session_idle_timeout">SET
+                                SESSION IDLE TIMEOUT</link>. Область действия все операторы в
+                            текущем подключении.</para>
                     </listitem>
                 </itemizedlist></para>
 
@@ -404,14 +405,14 @@ SET SESSION IDLE TIMEOUT 8 HOUR
 
         <para>Каждое внешнее соединение (созданное оператором EXECUTE STATEMENT ... ON EXTERNAL) при
             создании связывается с пулом соединений (подробнее см. <link
-                linkend="langref-psql-statements-execstmt-ext-connpool">Пул внешних подключений</link>).
-            Данная группа операторов позволяет управлять пулом внешних соединений. При его
-            подготовке они описываются как DDL операторы, но имеют немедленный эффект: то есть они
-            выполняются немедленно и полностью, не дожидаясь фиксации транзакции. Изменения
-            применяются к экземпляру пула в памяти в текущем процессе Firebird. Поэтому изменение в
-            одном классическом процессе не влияет на другие классические процессы. Изменения не
-            являются постоянными и после перезапуска Firebird будет использовать настройки пула из
-                <filename>firebird.conf</filename>.</para>
+                linkend="langref-psql-statements-execstmt-ext-connpool">Пул внешних
+                подключений</link>). Данная группа операторов позволяет управлять пулом внешних
+            соединений. При его подготовке они описываются как DDL операторы, но имеют немедленный
+            эффект: то есть они выполняются немедленно и полностью, не дожидаясь фиксации
+            транзакции. Изменения применяются к экземпляру пула в памяти в текущем процессе
+            Firebird. Поэтому изменение в одном классическом процессе не влияет на другие
+            классические процессы. Изменения не являются постоянными и после перезапуска Firebird
+            будет использовать настройки пула из <filename>firebird.conf</filename>.</para>
 
         <para>Для выполнения операторов данной группы требуется системная привилегия
             MODIFY_EXT_CONN_POOL. Подробнее о системных привилегиях см. <link
@@ -774,9 +775,19 @@ SET TIME ZONE { <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL }
             </formalpara>
 
             <para>Немедленно изменяет часовой пояс сеанса (текущего подключения).</para>
-            
-            <para>Получить текущий часовой пояс сеанса можно с использованием функции <code>RDB$GET_CONTEXT</code> с аргументами
-                'SYSTEM' для пространства имён и 'SESSION_TIMEZONE' в качестве имени переменной.</para>
+            <para>Указание LOCAL вернет к начальному часовому поясу сеанса сеанса (либо по
+                умолчанию, либо как указано в свойстве соединения
+                    <code>isc_dpb_session_time_zone</code>). </para>
+
+            <para>Получить текущий часовой пояс сеанса можно с использованием функции
+                    <code>RDB$GET_CONTEXT</code> с аргументами 'SYSTEM' для пространства имён и
+                'SESSION_TIMEZONE' в качестве имени переменной.</para>
+
+            <note>
+                <para>Выполнение <code>ALTER SESSION RESET</code> оказывает такое же влияние на часовой пояс
+                    сеанса, что и <code>SET TIME ZONE LOCAL</code>, но также сбрасывает другие свойства сеанса.
+                </para>
+            </note>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -936,7 +947,8 @@ SET DECFLOAT ROUND HALF_DOWN;
             </formalpara>
 
             <para>Подробнее о режимах округления для типа DECFLOAT см. <link
-                    linkend="langref-datatypes-float-decfloat-round-mode">Режимы округления</link>.</para>
+                    linkend="langref-datatypes-float-decfloat-round-mode">Режимы
+                округления</link>.</para>
         </section>
 
         <section xml:id="langref-session-decfloat-traps">
@@ -1276,10 +1288,10 @@ ALTER SESSION RESET  
                     <quote>Reset of user session failed. Connection is shut down</quote>.
                 Последующие операции по подключению (кроме отсоединения) завершатся ошибкой
                     <code>isc_att_shutdown</code>.</para>
-            
+
             <formalpara>
                 <title>См. также:</title>
-                
+
                 <para>
                     <link linkend="langref-contextvars-resetting">RESETTING</link>.</para>
             </formalpara>

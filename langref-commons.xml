@@ -17,6 +17,7 @@
             сравнения значений. Выражения SQL могут включать в себя столбцы таблиц, переменные,
             константы, литералы, различные операторы и предикаты, а так же другие выражения. Полный
             список допустимых символов (tokens) в выражениях описан ниже.</para>
+        
         <para>
             <table xml:id="langref-commons-tbl-elem" frame="all">
                 <?dbfo keep-together='auto'?>
@@ -36,7 +37,7 @@
                             <entry>Идентификаторы столбцов из указанных таблиц, используемые в
                                 вычислениях, или сравнениях, или в качестве условия поиска. Столбец
                                 типа массив не может быть элементом выражения, если только он не
-                                проверяется на IS [NOT] NULL.</entry>
+                                проверяется на <code>IS [NOT] NULL</code>.</entry>
                         </row>
                         <row>
                             <entry>Элементы массива</entry>
@@ -83,12 +84,19 @@
                                 значения TRUE, FALSE и UNKNOWN, псевдозначение NULL.</entry>
                         </row>
                         <row>
-                            <entry>Литералы дат</entry>
+                            <entry>Литералы дат и времени</entry>
                             <entry>Выражения, подобные строковым литералам, заключённые в
                                 апострофах, которые могут быть интерпретированы как значения даты,
                                 времени или даты-времени. Литералами дат могут быть строки из
-                                символов и чисел, такие как '25.12.2016 15:30:35', которые могут
-                                быть преобразованы в дату, время или дату с временем.</entry>
+                                символов и чисел, такие как <code>TIMESTAMP '25.12.2016
+                                    15:30:35'</code>, которые могут быть преобразованы в дату, время
+                                или дату с временем.</entry>
+                        </row>
+                        <row>
+                            <entry>Мнемоники дат и времени</entry>
+                            <entry>Строковый литерал с описанием желаемого значения даты и/или
+                                времени, которое можно привести к типу даты и/или времени. Для
+                                примера <code>'NOW'</code>, <code>'TODAY'</code>.</entry>
                         </row>
                         <row>
                             <entry>Контекстные переменные</entry>
@@ -150,17 +158,21 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                                 уровням вложенности. </entry>
                         </row>
                         <row>
-                            <entry>Предложение COLLATE</entry>
+                            <entry>Предложение <code>COLLATE</code></entry>
                             <entry>Предложение применяется к типам CHAR и VARCHAR, чтобы в указанной
                                 кодировке установить параметры сортировки, используемые при
                                 сравнении.</entry>
                         </row>
                         <row>
-                            <entry><database>NEXT VALUE FOR</database>
-                                <replaceable>sequence</replaceable></entry>
+                            <entry><code>NEXT VALUE FOR
+                                <replaceable>sequence</replaceable></code></entry>
                             <entry>Конструкция NEXT VALUE FOR позволяет получить следующее значение
                                 последовательности, то же самое делает встроенная функция GEN_ID().
                             </entry>
+                        </row>
+                        <row>
+                            <entry>Выражение <code>AT</code></entry>
+                            <entry>Выражение для изменения часового пояса даты и времени.</entry>
                         </row>
                     </tbody>
                 </tgroup>
@@ -227,13 +239,13 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                     <formalpara>
                         <title>Синтаксис:</title>
                         <para>
-                            <programlisting>  
+                            <literallayout class="monospaced">  
 {x|X}'<replaceable>&lt;hexstring&gt;</replaceable>'
 
 <replaceable>&lt;hexstring&gt;</replaceable> ::= an even number of <replaceable>&lt;hexdigit&gt;</replaceable>
                                 
 <replaceable>&lt;hexdigit&gt;</replaceable> ::= 0..9 | A..F | a..f                                
-</programlisting>
+</literallayout>
                         </para>
                     </formalpara>
                     <formalpara>
@@ -437,13 +449,13 @@ VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
                     <formalpara>
                         <title>Синтаксис:</title>
                         <para>
-                            <programlisting>  
+                            <literallayout class="monospaced">  
 {x|X}<replaceable>&lt;hexdigits&gt;</replaceable>
 
 <replaceable>&lt;hexdigits&gt;</replaceable> ::= 1-16 of <replaceable>&lt;hexdigit&gt;</replaceable>
                                 
 <replaceable>&lt;hexdigit&gt;</replaceable> ::= 0..9 | A..F | a..f                                
-</programlisting>
+</literallayout>
                         </para>
                     </formalpara>
                     <formalpara>
@@ -863,7 +875,7 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
             <formalpara>
                 <title>Синтаксис:</title>
                 <para>
-                    <programlisting>                                                           
+                    <literallayout class="monospaced">                                                           
 <replaceable>&lt;expr&gt;</replaceable> AT {TIME ZONE <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL}                       
                         
 <replaceable>&lt;time zone string&gt;</replaceable> ::=
@@ -872,7 +884,7 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
 <replaceable>&lt;time zone&gt;</replaceable> ::=
     <replaceable>&lt;time zone region&gt;</replaceable> |
     [+/-] <replaceable>&lt;hour displacement&gt;</replaceable> [: <replaceable>&lt;minute displacement&gt;</replaceable>]                         
-                        </programlisting>
+                        </literallayout>
                 </para>
             </formalpara>
 
@@ -900,7 +912,7 @@ select timestamp '2018-01-01 12:00 GMT' at local
             </formalpara>
         </section>
 
-        <section xml:id="langref-commons-conditional-nxtvlufor">
+        <section xml:id="langref-commons-nxtvlufor">
             <info>
                 <title>NEXT VALUE FOR</title>
                 <keywordset>
@@ -915,9 +927,9 @@ select timestamp '2018-01-01 12:00 GMT' at local
             </formalpara>
             <formalpara>
                 <title>Синтаксис:</title>
-                <para><programlisting>
+                <para><literallayout class="monospaced">
 NEXT VALUE FOR <replaceable>sequence-name</replaceable>
-                </programlisting></para>
+                </literallayout></para>
             </formalpara>
 
             <para>Возвращает следующее значение в последовательности (SEQUENCE). SEQUENCE является
@@ -992,13 +1004,13 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                     <formalpara>
                         <title>Синтаксис:</title>
 
-                        <para><programlisting>
+                        <para><literallayout class="monospaced">
 CASE <replaceable>&lt;test-expr&gt;</replaceable>
   WHEN <replaceable>&lt;expr&gt;</replaceable> THEN <replaceable>&lt;result&gt;</replaceable>
   [WHEN <replaceable>&lt;expr&gt;</replaceable> THEN <replaceable>&lt;result&gt;</replaceable> ...]
   [ELSE <replaceable>&lt;defaultresult&gt;</replaceable>]
 END
-                </programlisting></para>
+                </literallayout></para>
                     </formalpara>
                     <para>При использовании этого варианта
                             <replaceable>&lt;test-expr&gt;</replaceable> сравнивается с
@@ -1043,13 +1055,13 @@ FROM PEOPLE
                     <formalpara>
                         <title>Синтаксис:</title>
 
-                        <para><programlisting>
+                        <para><literallayout class="monospaced">
 CASE
   WHEN <replaceable>&lt;bool_expr&gt;</replaceable> THEN <replaceable>&lt;result&gt;</replaceable>
   [WHEN <replaceable>&lt;bool_expr&gt;</replaceable> THEN <replaceable>&lt;result&gt;</replaceable> …]
   [ELSE <replaceable>&lt;defaultresult&gt;</replaceable>]
 END
-                </programlisting></para>
+                </literallayout></para>
                     </formalpara>
                     <para>Здесь <replaceable>&lt;bool_expr&gt;</replaceable> выражение, которое даёт
                         тройной логический результат: TRUE, FALSE или NULL. Первое выражение,
@@ -1377,9 +1389,9 @@ WHERE type = NULL AND price &lt; 300;
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting> 
+                    <para><literallayout class="monospaced"> 
 <replaceable>&lt;value&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;value_1&gt;</replaceable> AND <replaceable>&lt;value_2&gt;</replaceable>                                      
-                </programlisting></para>
+                </literallayout></para>
                 </formalpara>
 
                 <para>Оператор BETWEEN проверяет, попадает (или не попадает при использовании NOT)
@@ -1423,10 +1435,10 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>
+                    <para><literallayout class="monospaced">
 <replaceable>&lt;match value&gt;</replaceable> [NOT] LIKE <replaceable>&lt;pattern&gt;</replaceable>
   [ESCAPE <replaceable>&lt;escape character&gt;</replaceable>]                                   
-                </programlisting></para>
+                </literallayout></para>
                 </formalpara>
                 <para>
                     <table frame="all">
@@ -1602,9 +1614,9 @@ WHERE RDB$RELATION_NAME LIKE '%#_%' ESCAPE '#'
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>
+                    <para><literallayout class="monospaced">
 <replaceable>&lt;value&gt;</replaceable> [NOT] STARTING WITH <replaceable>&lt;value&gt;</replaceable>                                       
-                </programlisting></para>
+                </literallayout></para>
                 </formalpara>
 
                 <para>Оператор STARTING WITH ищет строку или тип, подобный строке, которая
@@ -1647,9 +1659,9 @@ WHERE LAST_NAME STARTING WITH 'Jo'
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>
+                    <para><literallayout class="monospaced">
 <replaceable>&lt;value&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;value&gt;</replaceable>                                          
-                </programlisting></para>
+                </literallayout></para>
                 </formalpara>
 
                 <para>Оператор CONTAINING ищет строку или тип, подобный строке, отыскивая
@@ -1713,9 +1725,9 @@ WHERE CHANGE_DATE CONTAINING 84;
                 <formalpara>
                     <title>Синтаксис:</title>
 
-                    <para><programlisting>
+                    <para><literallayout class="monospaced">
 <replaceable>&lt;match value&gt;</replaceable> [NOT] SIMILAR TO <replaceable>&lt;pattern&gt;</replaceable> [ESCAPE <replaceable>&lt;escape character&gt;</replaceable>]                                           
-                </programlisting></para>
+                </literallayout></para>
                 </formalpara>
                 <para>
                     <table frame="all">
@@ -1770,7 +1782,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                         следующий раздел, <link linkend="langref-commons-buildregex">Создание
                             регулярных выражений</link>, использующий подход от простого к
                         сложному.</para>
-                    <para><programlisting>
+                    <para><literallayout class="monospaced">
 <replaceable>&lt;regular expression&gt;</replaceable> ::= <replaceable>&lt;regular term&gt;</replaceable> ['|' <replaceable>&lt;regular term&gt;</replaceable> ...]       
 
 <replaceable>&lt;regular term&gt;</replaceable> ::= <replaceable>&lt;regular factor&gt;</replaceable> ...
@@ -1815,7 +1827,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 
 <replaceable>&lt;predefined class name&gt;</replaceable> ::= ALPHA | UPPER | LOWER | DIGIT 
                          |  ALNUM  |  SPACE  |  WHITESPACE                                             
-                </programlisting></para>
+                </literallayout></para>
                 </section>
 
                 <section xml:id="langref-commons-buildregex">
@@ -1825,10 +1837,10 @@ WHERE CHANGE_DATE CONTAINING 84;
                         <title>Символы</title>
 
                         <para>В регулярных выражениях большинство символов представляет сами себя,
-                            за исключением специальных символов (special
-                            character):<programlisting>
+                            за исключением специальных символов (special character):
+                            <literallayout class="monospaced">
 [ ] ( ) | ^ - + * % _ ? { }                       
-</programlisting>
+</literallayout>
                             и управляющих символов, если они заданы.</para>
                         <para>Регулярному выражению, не содержащему специальных или управляющих
                             символов, соответствует только полностью идентичные строки (в
@@ -1881,36 +1893,72 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Datte' SIMILAR TO 'Dat[abq-uy]e' -- TRUE
 'Datte' SIMILAR TO 'Dat[bcg-km-pwz]e' -- FALSE                           
                             </programlisting></para>
-                        <para><programlisting>
-[:ALPHA:]</programlisting>Латинские буквы a...z и
-                            A...Z. Этот класс также включает символы с диакритическими знаками при
-                            нечувствительных к акцентам сортировках.</para>
-                        <para><programlisting>
-[:DIGIT:]</programlisting>Десятичные цифры
-                            0...9.</para>
-                        <para><programlisting>
-[:ALNUM:]</programlisting>Объединение [:ALPHA:] и
-                            [:DIGIT:].</para>
-                        <para><programlisting>
-[:UPPER:]</programlisting>Прописные (в верхнем
-                            регистре) латинские буквы A...Z. Также включает в себя символы в нижнем
-                            регистре при нечувствительных к регистру сортировках и символы с
-                            диакритическими знаками при нечувствительных к акцентам
-                            сортировках.</para>
-                        <para><programlisting>
-[:LOWER:]</programlisting>Строчные (в нижнем
-                            регистре) латинские буквы a...z. Также включает в себя символы в верхнем
-                            регистре при нечувствительных к регистру сортировках и символы с
-                            диакритическими знаками при нечувствительных к акцентам
-                            сортировках.</para>
-                        <para><programlisting>
-[:SPACE:]</programlisting>Символ пробела (ASCII
-                            32).</para>
-                        <para><programlisting>
-[:WHITESPACE:]</programlisting>Горизонтальная
-                            табуляция (ASCII 9), перевод строки (ASCII 10), вертикальная табуляция
-                            (ASCII 11), разрыв страницы (ASCII 12), возврат каретки (ASCII 13) и
-                            пробел (ASCII 32).</para>
+                    </simplesect>
+                    <simplesect xml:id="langref-commons-regexpredclass">
+                        <title>Предопределённые классы символов</title>
+                        
+                        <para>Следующие предопределенные классы символов также могут использоваться в определении класса:</para>
+                        
+                        <para>
+                            <variablelist>
+                                <varlistentry>
+                                    <term><code>[:ALPHA:]</code></term>
+                                    <listitem>
+                                        <para>Латинские буквы a...z и A...Z. Этот класс также
+                                            включает символы с диакритическими знаками при
+                                            нечувствительных к акцентам сортировках.</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><code>[:DIGIT:]</code></term>
+                                    <listitem>
+                                        <para>Десятичные цифры 0...9.</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><code>[:ALNUM:]</code></term>
+                                    <listitem>
+                                        <para>Объединение [:ALPHA:] и [:DIGIT:].</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><code>[:UPPER:]</code></term>
+                                    <listitem>
+                                        <para>Прописные (в верхнем регистре) латинские буквы A...Z.
+                                            Также включает в себя символы в нижнем регистре при
+                                            нечувствительных к регистру сортировках и символы с
+                                            диакритическими знаками при нечувствительных к акцентам
+                                            сортировках.</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><code>[:LOWER:]</code></term>
+                                    <listitem>
+                                        <para>Строчные (в нижнем регистре) латинские буквы a...z.
+                                            Также включает в себя символы в верхнем регистре при
+                                            нечувствительных к регистру сортировках и символы с
+                                            диакритическими знаками при нечувствительных к акцентам
+                                            сортировках.</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><code>[:SPACE:]</code></term>
+                                    <listitem>
+                                        <para>Символ пробела (ASCII 32).</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term><code>[:WHITESPACE:]</code></term>
+                                    <listitem>
+                                        <para>Горизонтальная табуляция (ASCII 9), перевод строки
+                                            (ASCII 10), вертикальная табуляция (ASCII 11), разрыв
+                                            страницы (ASCII 12), возврат каретки (ASCII 13) и пробел
+                                            (ASCII 32).</para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+
                         <para>Включение в оператор SIMILAR TO предопределённого класса имеет тот же
                             эффект, как и включение всех его элементов. Использование
                             предопределённых классов допускается только в пределах определения
@@ -2196,11 +2244,12 @@ THEN POST_EVENT 'JOB_CHANGED';
                 </formalpara>
 
                 <para>Оператор IS проверяет, что выражение в левой части соответствует логическому
-                    значению в правой части. Выражение в левой части должно быть логического
-                    типа, иначе будет выдана ошибка.</para>
-                
-                <para>Для логического типа данных предикат <code>IS [NOT] UNKNOWN</code> эквивалентен <code>IS [NOT] NULL</code>.</para>
-                
+                    значению в правой части. Выражение в левой части должно быть логического типа,
+                    иначе будет выдана ошибка.</para>
+
+                <para>Для логического типа данных предикат <code>IS [NOT] UNKNOWN</code>
+                    эквивалентен <code>IS [NOT] NULL</code>.</para>
+
                 <note>
                     <title>Замечание:</title>
                     <para> В правой части предиката могут быть использованы только литералы TRUE,
@@ -2274,8 +2323,8 @@ WHERE SHIP_DATE IS NULL;
         </section>
 
         <section xml:id="langref-commons-existential">
-                <title>Предикаты существования</title>
-          
+            <title>Предикаты существования</title>
+
             <para>В эту группу предикатов включены предикаты, которые используют подзапросы и
                 передают значения для всех видов утверждений в условиях поиска. Предикаты
                 существования называются так потому, что они различными способами проверяют
@@ -2349,7 +2398,7 @@ WHERE NOT EXISTS (SELECT *
                     </para>
                 </formalpara>
             </section>
-            
+
             <section xml:id="langref-commons-in">
                 <info>
                     <title>IN</title>
@@ -2502,7 +2551,7 @@ WHERE
 
                 </formalpara>
             </section>
-            
+
             <section xml:id="langref-commons-singular">
                 <info>
                     <title>SINGULAR</title>
@@ -2547,7 +2596,7 @@ WHERE SINGULAR (SELECT *
                 </example>
             </section>
         </section>
-        
+
         <section xml:id="langref-commons-quantifiedsq">
             <info>
                 <title>Количественные предикаты подзапросов</title>

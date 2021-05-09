@@ -336,6 +336,16 @@ CREATE {DATABASE | SCHEMA} '<replaceable>&lt;filespec&gt;</replaceable>'
                     16384 или 32768) будут изменены на ближайшее меньшее из поддерживаемых значений.
                     Если размер страницы базы данных не указан, то по умолчанию принимается значение
                     8192. </para>
+                <tip>
+                    <title>Больше не значит лучше</title>
+                    <para>Большие размеры страницы могут вместить больше записей на одной странице,
+                        иметь более широкие индексы и больше индексов, но они также будут тратить
+                        больше места для BLOB (сравните потраченное впустую пространство BLOB
+                        размером 3 КБ на странице размером 4096 и такого же BLOB на 32768: +/- 1 КБ
+                        против +/- 29 КБ). Кроме того, при большом размере страницы увеличивается
+                        конкуренция за одну и ту же страницу данных, поскольку на неё вмещается
+                        больше записей, который могли бы располагаться на разных страницах. </para>
+                </tip>
                 <indexterm>
                     <primary>CREATE DATABASE</primary>
                     <secondary>LENGTH</secondary>
@@ -398,7 +408,7 @@ CREATE {DATABASE | SCHEMA} '<replaceable>&lt;filespec&gt;</replaceable>'
                 <para>Выполнить оператор CREATE DATABASE могут: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link>;</para>
+                                    >Администраторы</link>;</para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE DATABASE</database>.
@@ -1133,7 +1143,7 @@ ALTER DATABASE EXCLUDE TABLE t1, t2 FROM PUBLICATION
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link>;</para>
+                                    >Администраторы</link>;</para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных; </para>
@@ -1197,7 +1207,7 @@ DROP DATABASE;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link>;</para>
+                                    >Администраторы</link>;</para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных; </para>
@@ -1413,7 +1423,7 @@ CREATE SHADOW <replaceable>sh_num</replaceable> [AUTO | MANUAL] [CONDITIONAL]
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link>;</para>
+                                    >Администраторы</link>;</para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных; </para>
@@ -1527,7 +1537,7 @@ DROP SHADOW <replaceable>number</replaceable> [{PRESERVE | DELETE} FILE];
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link>;</para>
+                                    >Администраторы</link>;</para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных; </para>
@@ -1836,7 +1846,7 @@ CREATE DOMAIN <replaceable>name</replaceable> [AS] <replaceable>&lt;datatype&gt;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE DOMAIN</database>.
@@ -2171,7 +2181,8 @@ ALTER DOMAIN <replaceable>name</replaceable>
             <warning>
                 <para>При изменении описания домена, существующий PSQL код, может стать
                     некорректным. Информация о том, как это обнаружить, находится в приложении <link
-                        linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
+                        linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>.
+                </para>
             </warning>
             <section xml:id="langref-ddl-domain-alter-cannot">
                 <title>Что не может изменить ALTER DOMAIN</title>
@@ -2197,7 +2208,7 @@ ALTER DOMAIN <replaceable>name</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец домена; </para>
@@ -2354,7 +2365,7 @@ DROP DOMAIN <replaceable>domain_name</replaceable>;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец домена; </para>
@@ -2859,7 +2870,8 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                     <note>
                         <para>Это поведение может быть изменено в операторе INSERT если указана
                             директива <code>OVERRIDING USER VALUE</code>. Подробнее см. <link
-                                linkend="langref-dml-insert-overriding">Директива OVERRIDING</link>. </para>
+                                linkend="langref-dml-insert-overriding">Директива OVERRIDING</link>.
+                        </para>
                     </note>
                 </para>
                 <para>Если столбец идентификации задан как GENERATED ALWAYS, то его значение будет
@@ -2881,7 +2893,8 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                 <note>
                     <para>Это поведение может быть изменено в операторе INSERT если указана
                         директива <code>OVERRIDING SYSTEM VALUE</code>. Подробнее см. <link
-                            linkend="langref-dml-insert-overriding">Директива OVERRIDING</link>. </para>
+                            linkend="langref-dml-insert-overriding">Директива OVERRIDING</link>.
+                    </para>
                 </note>
                 <para>Необязательное предложение <database>START WITH</database> позволяет указать
                     начальное значение отличное от нуля. Предложение INCREMENT [BY] устанавливает
@@ -2927,7 +2940,8 @@ INSERT INTO greetings(ch) VALUES ('bonjour');
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-dml-insert-overriding">Директива OVERRIDING</link>. </para>
+                        <link linkend="langref-dml-insert-overriding">Директива OVERRIDING</link>.
+                    </para>
                 </formalpara>
             </section>
             <section xml:id="langref-ddl-table-create-column-computed">
@@ -3406,7 +3420,7 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE TABLE</database>.
@@ -4662,8 +4676,8 @@ ALTER COLUMN ITEMID DROP NOT NULL;
                                     системой значение, при попытке переписать значение такого
                                     столбца идентификации будет выдана ошибка. Переписать значение
                                     этого столбца в операторе INSERT можно только при указании
-                                    директивы <link linkend="langref-dml-insert-overriding">OVERRIDING
-                                        SYSTEM VALUE</link>.</para>
+                                    директивы <link linkend="langref-dml-insert-overriding"
+                                        >OVERRIDING SYSTEM VALUE</link>.</para>
                             </listitem>
                         </itemizedlist></para>
                     <example>
@@ -4816,7 +4830,7 @@ ENABLE PUBLICATION;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы; </para>
@@ -4910,7 +4924,7 @@ DROP TABLE COUNTRY;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы; </para>
@@ -5199,15 +5213,15 @@ ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);
                                         <entry> 2043 </entry>
                                         <entry> 1362 </entry>
                                         <entry> 1021 </entry>
-                                        <entry> 682 </entry>
+                                        <entry> 681 </entry>
                                     </row>
                                     <row>
                                         <entry> 32768 </entry>
-                                        <entry> 9183 </entry>
-                                        <entry> 4087 </entry>
-                                        <entry> 2721 </entry>
-                                        <entry> 2039 </entry>
-                                        <entry> 1356 </entry>
+                                        <entry> 8183 </entry>
+                                        <entry> 4091 </entry>
+                                        <entry> 2727 </entry>
+                                        <entry> 2045 </entry>
+                                        <entry> 1363 </entry>
                                     </row>
                                 </tbody>
                             </tgroup>
@@ -5258,6 +5272,12 @@ ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);
                                     <entry> 584 </entry>
                                     <entry> 454 </entry>
                                 </row>
+                                <row>
+                                    <entry>32768</entry>
+                                    <entry>1637</entry>
+                                    <entry>1169</entry>
+                                    <entry>909</entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -5270,7 +5290,7 @@ ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы, для которой создаётся индекс; </para>
@@ -5452,7 +5472,7 @@ ALTER INDEX <replaceable>indexname</replaceable> {ACTIVE | INACTIVE};
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы, для которой построен индекс; </para>
@@ -5559,7 +5579,7 @@ DROP INDEX <replaceable>indexname</replaceable>;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы, для которой построен индекс; </para>
@@ -5677,7 +5697,7 @@ SET STATISTICS INDEX <replaceable>indexname</replaceable>;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы, для которой построен индекс; </para>
@@ -5948,7 +5968,7 @@ AS <replaceable>&lt;select_statement&gt;</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE VIEW</database>.
@@ -6104,8 +6124,8 @@ VALUES('007 coordinates skyfall', 'pif-paf!', 'oh! waw!');
 
                     <para>
                         <link linkend="langref-ddl-view-alter">ALTER VIEW</link>, <link
-                            linkend="langref-ddl-view-createoralter">CREATE OR ALTER VIEW</link>, <link
-                            linkend="langref-ddl-view-recreate">RECREATE VIEW</link>, <link
+                            linkend="langref-ddl-view-createoralter">CREATE OR ALTER VIEW</link>,
+                            <link linkend="langref-ddl-view-recreate">RECREATE VIEW</link>, <link
                             linkend="langref-ddl-view-drop">DROP VIEW</link>. </para>
                 </formalpara>
             </section>
@@ -6191,8 +6211,8 @@ AS <replaceable>&lt;select_statement&gt;</replaceable>
                 <para>Будьте осторожны при изменении количества столбцов представления. Существующий
                     код приложения может стать неработоспособным. Кроме того, PSQL модули,
                     использующие изменённое представление, могут стать некорректными. Информация о
-                    том, как это обнаружить, находится в приложении <link linkend="langref-appx01-supp-rdb-validblr">Поле
-                        RDB$VALID_BLR</link>.</para>
+                    том, как это обнаружить, находится в приложении <link
+                        linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>.</para>
             </warning>
             <section xml:id="langref-ddl-view-alter-who">
                 <title>Кто может изменить представление?</title>
@@ -6201,7 +6221,7 @@ AS <replaceable>&lt;select_statement&gt;</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец представления; </para>
@@ -6236,8 +6256,8 @@ FROM PRICE;
 
                     <para>
                         <link linkend="langref-ddl-view-create">CREATE VIEW</link>, <link
-                            linkend="langref-ddl-view-createoralter">CREATE OR ALTER VIEW</link>, <link
-                            linkend="langref-ddl-view-recreate">RECREATE VIEW</link>. </para>
+                            linkend="langref-ddl-view-createoralter">CREATE OR ALTER VIEW</link>,
+                            <link linkend="langref-ddl-view-recreate">RECREATE VIEW</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -6404,7 +6424,7 @@ DROP VIEW <replaceable>viewname</replaceable>;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец представления; </para>
@@ -6850,8 +6870,8 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                     которое требует, чтобы все операторы были завершены с точкой с запятой.</para>
                 <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы
                     не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе
-                    PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение терминатора
-                        в <application>isql</application></link>.</para>
+                    PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение
+                        терминатора в <application>isql</application></link>.</para>
 
             </section>
             <section xml:id="langref-ddl-trigger-create-table">
@@ -6919,11 +6939,14 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                             описаны локальные переменные триггера, именованные курсоры и
                             подпрограммы (подпроцедуры и подфункции). Подробности вы можете
                             посмотреть в главе <quote>Процедурный язык PSQL</quote> в разделах <link
-                                linkend="langref-psql-statements-declare-var">DECLARE VARIABLE</link> и
-                                <link linkend="langref-psql-statements-declare-cursor">DECLARE
-                            CURSOR</link>, <link linkend="langref-psql-statements-declare-procedure">DECLARE
-                                PROCEDURE</link>, <link linkend="langref-psql-statements-declare-function"
-                                >DECLARE FUNCTION</link>.</para>
+                                linkend="langref-psql-statements-declare-var">DECLARE
+                                VARIABLE</link> и <link
+                                linkend="langref-psql-statements-declare-cursor">DECLARE
+                                CURSOR</link>, <link
+                                linkend="langref-psql-statements-declare-procedure">DECLARE
+                                PROCEDURE</link>, <link
+                                linkend="langref-psql-statements-declare-function">DECLARE
+                                FUNCTION</link>.</para>
                         <para>После необязательной секции деклараций обязательно следует составной
                             оператор. Составной оператор состоит из одного или нескольких PSQL
                             операторов, заключенных между ключевыми словами BEGIN и END. Составной
@@ -6960,7 +6983,7 @@ CREATE TRIGGER <replaceable>trigname</replaceable> {
                     <para>DML триггеры могут создать: <itemizedlist spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец таблицы (представления); </para>
@@ -7096,7 +7119,8 @@ END
                     <para>Триггеры на события CONNECT и DISCONNECT срабатывают также при выполнении
                         оператора сброса сессионного окружения. Особенности обработки ошибок в
                         триггерах на события CONNECT и DISCONNECT смотри в секции <link
-                            linkend="langref-session-resetsession">ALTER SESSION RESET</link>.</para>
+                            linkend="langref-session-resetsession">ALTER SESSION
+                        RESET</link>.</para>
 
                     <para>Триггеры на события транзакций срабатывают при старте транзакции, её
                         подтверждении или откате. Не перехваченные исключения обрабатываются в
@@ -7171,7 +7195,7 @@ nbackup -T
                             spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец базы данных;</para>
@@ -7373,7 +7397,7 @@ nbackup -T
                             spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец базы данных;</para>
@@ -7864,7 +7888,7 @@ ALTER TRIGGER <replaceable>trigname</replaceable>
                 <para>DML триггеры могут изменить: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы (представления); </para>
@@ -7881,7 +7905,7 @@ ALTER TRIGGER <replaceable>trigname</replaceable>
                     могут изменить: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных;</para>
@@ -7958,8 +7982,9 @@ END
 
                     <para>
                         <link linkend="langref-ddl-trigger-create">CREATE TRIGGER</link>, <link
-                            linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>,
-                            <link linkend="langref-ddl-trigger-recreate">RECREATE TRIGGER</link>. </para>
+                            linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER
+                            TRIGGER</link>, <link linkend="langref-ddl-trigger-recreate">RECREATE
+                            TRIGGER</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -8083,7 +8108,7 @@ DROP TRIGGER <replaceable>trigname</replaceable>
                 <para>DML триггеры могут удалить: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец таблицы (представления); </para>
@@ -8100,7 +8125,7 @@ DROP TRIGGER <replaceable>trigname</replaceable>
                     могут удалить: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец базы данных;</para>
@@ -8186,8 +8211,8 @@ END
                     <para>
                         <link linkend="langref-ddl-trigger-create">CREATE TRIGGER</link>, <link
                             linkend="langref-ddl-trigger-drop">DROP TRIGGER</link>, <link
-                            linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER TRIGGER</link>.
-                    </para>
+                            linkend="langref-ddl-trigger-createoralter">CREATE OR ALTER
+                            TRIGGER</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -8480,8 +8505,8 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                     которое требует, чтобы все операторы были завершены с точкой с запятой.</para>
                 <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы
                     не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе
-                    PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение терминатора
-                        в <application>isql</application></link>.</para>
+                    PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение
+                        терминатора в <application>isql</application></link>.</para>
 
             </section>
             <section xml:id="langref-ddl-procedure-create-params">
@@ -8564,11 +8589,13 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         отношении спецификации типа данных локальные переменные подчиняются тем же
                         правилам, что и входные и выходные параметры процедуры. Подробности вы
                         можете посмотреть в главе <quote>Процедурный язык PSQL</quote> в разделах
-                            <link linkend="langref-psql-statements-declare-var">DECLARE VARIABLE</link> и
-                            <link linkend="langref-psql-statements-declare-cursor">DECLARE CURSOR</link>,
-                            <link linkend="langref-psql-statements-declare-procedure">DECLARE
-                            PROCEDURE</link>, <link linkend="langref-psql-statements-declare-function"
-                            >DECLARE FUNCTION</link>.</para>
+                            <link linkend="langref-psql-statements-declare-var">DECLARE
+                            VARIABLE</link> и <link linkend="langref-psql-statements-declare-cursor"
+                            >DECLARE CURSOR</link>, <link
+                            linkend="langref-psql-statements-declare-procedure">DECLARE
+                            PROCEDURE</link>, <link
+                            linkend="langref-psql-statements-declare-function">DECLARE
+                            FUNCTION</link>.</para>
                     <para>После необязательной секции деклараций обязательно следует составной
                         оператор. Составной оператор состоит из одного или нескольких PSQL
                         операторов, заключенных между ключевыми словами BEGIN и END. Составной
@@ -8605,7 +8632,7 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE PROCEDURE</database>.
@@ -8685,10 +8712,10 @@ CREATE PROCEDURE gen_rows (
 
                     <para>
                         <link linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER
-                        PROCEDURE</link>, <link linkend="langref-ddl-procedure-alter">ALTER
-                        PROCEDURE</link>, <link linkend="langref-ddl-procedure-recreate">RECREATE
-                            PROCEDURE</link>, <link linkend="langref-ddl-procedure-drop">DROP
-                            PROCEDURE</link>. </para>
+                            PROCEDURE</link>, <link linkend="langref-ddl-procedure-alter">ALTER
+                            PROCEDURE</link>, <link linkend="langref-ddl-procedure-recreate"
+                            >RECREATE PROCEDURE</link>, <link linkend="langref-ddl-procedure-drop"
+                            >DROP PROCEDURE</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -8739,7 +8766,8 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                     неработоспособным из-за того, что формат вызова процедуры несовместим с новым
                     описанием параметров. Кроме того, PSQL модули, использующие изменённую хранимую
                     процедуру, могут стать некорректными. Информация о том, как это обнаружить,
-                    находится в приложении <link linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
+                    находится в приложении <link linkend="langref-appx01-supp-rdb-validblr">Поле
+                        RDB$VALID_BLR</link>. </para>
             </warning>
             <section xml:id="langref-ddl-procedure-alter-who">
                 <title>Кто может изменить хранимую процедуру?</title>
@@ -8748,7 +8776,7 @@ RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outpara
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец хранимой процедуры; </para>
@@ -8789,9 +8817,10 @@ END
 
                     <para>
                         <link linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
-                            linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER PROCEDURE</link>,
-                            <link linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link>, <link
-                            linkend="langref-ddl-procedure-drop">DROP PROCEDURE</link>. </para>
+                            linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER
+                            PROCEDURE</link>, <link linkend="langref-ddl-procedure-recreate"
+                            >RECREATE PROCEDURE</link>, <link linkend="langref-ddl-procedure-drop"
+                            >DROP PROCEDURE</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -8865,8 +8894,9 @@ END
                     <para>
                         <link linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
                             linkend="langref-ddl-procedure-alter">ALTER PROCEDURE</link>, <link
-                            linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link>, <link
-                            linkend="langref-ddl-procedure-drop">DROP PROCEDURE</link>. </para>
+                            linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link>,
+                            <link linkend="langref-ddl-procedure-drop">DROP PROCEDURE</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
@@ -8931,7 +8961,7 @@ DROP PROCEDURE <replaceable>procname</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец хранимой процедуры; </para>
@@ -8957,7 +8987,8 @@ DROP PROCEDURE GET_EMP_PROJ;
 
                     <para>
                         <link linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
-                            linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link>. </para>
+                            linkend="langref-ddl-procedure-recreate">RECREATE PROCEDURE</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
@@ -9035,8 +9066,9 @@ END
 
                     <para>
                         <link linkend="langref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
-                            linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER PROCEDURE</link>,
-                            <link linkend="langref-ddl-procedure-drop">DROP PROCEDURE</link>. </para>
+                            linkend="langref-ddl-procedure-createoralter">CREATE OR ALTER
+                            PROCEDURE</link>, <link linkend="langref-ddl-procedure-drop">DROP
+                            PROCEDURE</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -9328,8 +9360,8 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                     которое требует, чтобы все операторы были завершены с точкой с запятой.</para>
                 <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы
                     не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе
-                    PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение терминатора
-                        в <application>isql</application></link>.</para>
+                    PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm">Изменение
+                        терминатора в <application>isql</application></link>.</para>
 
             </section>
             <section xml:id="langref-ddl-function-create-params">
@@ -9463,12 +9495,13 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         (подпроцедуры и подфункции). Локальные переменные подчиняются тем же
                         правилам что и входные параметры функции в отношении спецификации типа
                         данных. Подробности вы можете посмотреть в главе <quote>Процедурный язык
-                            PSQL</quote> в разделах <link linkend="langref-psql-statements-declare-var"
-                            >DECLARE VARIABLE</link> и <link
-                            linkend="langref-psql-statements-declare-cursor">DECLARE CURSOR</link>, <link
-                            linkend="langref-psql-statements-declare-procedure">DECLARE PROCEDURE</link>,
-                            <link linkend="langref-psql-statements-declare-function">DECLARE
-                        FUNCTION</link>.</para>
+                            PSQL</quote> в разделах <link
+                            linkend="langref-psql-statements-declare-var">DECLARE VARIABLE</link> и
+                            <link linkend="langref-psql-statements-declare-cursor">DECLARE
+                            CURSOR</link>, <link linkend="langref-psql-statements-declare-procedure"
+                            >DECLARE PROCEDURE</link>, <link
+                            linkend="langref-psql-statements-declare-function">DECLARE
+                            FUNCTION</link>.</para>
                     <para>После необязательной секции деклараций обязательно следует составной
                         оператор. Составной оператор состоит из одного или нескольких PSQL
                         операторов, заключенных между ключевыми словами BEGIN и END. Составной
@@ -9514,7 +9547,7 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE FUNCTION</database>.
@@ -9655,10 +9688,11 @@ END
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-ddl-function-createoralter">CREATE OR ALTER FUNCTION</link>,
-                            <link linkend="langref-ddl-function-alter">ALTER FUNCTION</link>, <link
-                            linkend="langref-ddl-function-recreate">RECREATE FUNCTION</link>, <link
-                            linkend="langref-ddl-function-drop">DROP FUNCTION</link>. </para>
+                        <link linkend="langref-ddl-function-createoralter">CREATE OR ALTER
+                            FUNCTION</link>, <link linkend="langref-ddl-function-alter">ALTER
+                            FUNCTION</link>, <link linkend="langref-ddl-function-recreate">RECREATE
+                            FUNCTION</link>, <link linkend="langref-ddl-function-drop">DROP
+                            FUNCTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -9711,7 +9745,8 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                     что формат вызова функции несовместим с новым описанием параметров. Кроме того,
                     PSQL модули, использующие изменённую хранимую функцию, могут стать
                     некорректными. Информация о том, как это обнаружить, находится в приложении
-                        <link linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
+                        <link linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>.
+                </para>
             </note>
             <warning>
                 <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
@@ -9727,7 +9762,7 @@ RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation<
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец хранимой функции; </para>
@@ -9758,8 +9793,9 @@ END
 
                     <para>
                         <link linkend="langref-ddl-function-create">CREATE FUNCTION</link>, <link
-                            linkend="langref-ddl-function-createoralter">CREATE OR ALTER FUNCTION</link>,
-                            <link linkend="langref-ddl-function-drop">DROP FUNCTION</link>. </para>
+                            linkend="langref-ddl-function-createoralter">CREATE OR ALTER
+                            FUNCTION</link>, <link linkend="langref-ddl-function-drop">DROP
+                            FUNCTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -9899,7 +9935,7 @@ DROP FUNCTION <replaceable>funcname</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец хранимой функции; </para>
@@ -10261,8 +10297,9 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                         запятой.</para>
                     <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах.
                         Если вы не знакомы с этой проблемой и её решением, пожалуйста, изучите
-                        детали в главе PSQL в разделе, озаглавленном <link linkend="langref-psql-setterm"
-                            >Изменение терминатора в <application>isql</application></link>.</para>
+                        детали в главе PSQL в разделе, озаглавленном <link
+                            linkend="langref-psql-setterm">Изменение терминатора в
+                                <application>isql</application></link>.</para>
 
                 </section>
                 <section xml:id="langref-ddl-package-create-params">
@@ -10346,7 +10383,7 @@ ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
                             <itemizedlist spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Пользователи с привилегией <database>CREATE
@@ -10389,9 +10426,10 @@ END
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="langref-ddl-package-body-create">CREATE PACKAGE BODY</link>,
-                                <link linkend="langref-ddl-package-alter">ALTER PACKAGE</link>, <link
-                                linkend="langref-ddl-package-drop">DROP PACKAGE</link>. </para>
+                            <link linkend="langref-ddl-package-body-create">CREATE PACKAGE
+                                BODY</link>, <link linkend="langref-ddl-package-alter">ALTER
+                                PACKAGE</link>, <link linkend="langref-ddl-package-drop">DROP
+                                PACKAGE</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -10459,7 +10497,7 @@ END
                             spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец пакета; </para>
@@ -10493,8 +10531,8 @@ END
                         <para>
                             <link linkend="langref-ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="langref-ddl-package-drop">DROP PACKAGE</link>, <link
-                                linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.
-                        </para>
+                                linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE
+                                BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -10577,8 +10615,8 @@ END
                         <para>
                             <link linkend="langref-ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="langref-ddl-package-alter">ALTER PACKAGE</link>, <link
-                                linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.
-                        </para>
+                                linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE
+                                BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -10647,7 +10685,7 @@ DROP PACKAGE <replaceable>package_name</replaceable>
                             spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец пакета; </para>
@@ -10674,7 +10712,8 @@ DROP PACKAGE APP_VAR;
                         <para>
                             <link linkend="langref-ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="langref-ddl-package-alter">ALTER PACKAGE</link>, <link
-                                linkend="langref-ddl-package-body-drop">DROP PACKAGE BODY</link>. </para>
+                                linkend="langref-ddl-package-body-drop">DROP PACKAGE BODY</link>.
+                        </para>
                     </formalpara>
                 </section>
             </section>
@@ -10758,8 +10797,8 @@ END
                         <para>
                             <link linkend="langref-ddl-package-alter">CREATE PACKAGE</link>, <link
                                 linkend="langref-ddl-package-drop">DROP PACKAGE</link>, <link
-                                linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE BODY</link>.
-                        </para>
+                                linkend="langref-ddl-package-body-recreate">RECREATE PACKAGE
+                                BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -11135,7 +11174,7 @@ END
                             <itemizedlist spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец пакета; </para>
@@ -11182,8 +11221,9 @@ END
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="langref-ddl-package-body-drop">DROP PACKAGE BODY</link>, <link
-                                linkend="langref-ddl-package-create">CREATE PACKAGE</link>. </para>
+                            <link linkend="langref-ddl-package-body-drop">DROP PACKAGE BODY</link>,
+                                <link linkend="langref-ddl-package-create">CREATE PACKAGE</link>.
+                        </para>
                     </formalpara>
                 </section>
             </section>
@@ -11246,7 +11286,7 @@ DROP PACKAGE BODY <replaceable>package_name</replaceable>
                             <itemizedlist spacing="compact">
                             <listitem>
                                 <para><link linkend="langref-security-administrators"
-                                    >Администраторы</link></para>
+                                        >Администраторы</link></para>
                             </listitem>
                             <listitem>
                                 <para>Владелец пакета; </para>
@@ -11271,8 +11311,9 @@ DROP PACKAGE BODY APP_VAR;
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="langref-ddl-package-body-create">CREATE PACKAGE BODY</link>,
-                                <link linkend="langref-ddl-package-drop">DROP PACKAGE</link>. </para>
+                            <link linkend="langref-ddl-package-body-create">CREATE PACKAGE
+                                BODY</link>, <link linkend="langref-ddl-package-drop">DROP
+                                PACKAGE</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -11341,7 +11382,8 @@ END
                     <title>Подробнее см.</title>
 
                     <para>
-                        <link linkend="langref-ddl-package-body-create">CREATE PACKAGE BODY</link>. </para>
+                        <link linkend="langref-ddl-package-body-create">CREATE PACKAGE BODY</link>.
+                    </para>
                 </formalpara>
 
                 <para>Оператор RECREATE PACKAGE BODY создаёт новое или пересоздаёт существующее тело
@@ -11383,9 +11425,9 @@ END
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="langref-ddl-package-body-create">CREATE PACKAGE BODY</link>,
-                                <link linkend="langref-ddl-package-body-drop">DROP PACKAGE BODY</link>.
-                        </para>
+                            <link linkend="langref-ddl-package-body-create">CREATE PACKAGE
+                                BODY</link>, <link linkend="langref-ddl-package-body-drop">DROP
+                                PACKAGE BODY</link>. </para>
                     </formalpara>
                 </section>
             </section>
@@ -11408,14 +11450,45 @@ END
             DECLARE EXTERNAL FUNCTON. </para>
         <para>После объявления функции, содержащая её библиотека будет загружаться при первом
             обращении к любой из функций, включённой в библиотеку.</para>
-        <note>
-            <para>Внешние функции, объявленные как DECLARE EXTERNAL FUNCTION, являются
-                унаследованными (Legacy) из предыдущих версий Firebird. В Firebird 4.0 UDF объявлены
-                устаревшими. Их возможности существенно уступают возможностям нового типа внешних
-                функций UDR (User Defined Routine). Такие функции объявляются как CREATE FUNCTION
-                ... EXTERNAL NAME. Подробнее см. <link linkend="langref-ddl-function-create">CREATE
-                    FUNCTION</link>.</para>
-        </note>
+        <important>
+            <para>Внешние функции (UDF) объявлены устаревшими в Firebird 4: <itemizedlist>
+                    <listitem>
+                        <para>По умолчанию для параметра конфигурации
+                                <parameter>UdfAccess</parameter> установлено значение
+                                <code>None</code>. Для того, чтобы запускать UDF, теперь потребуется
+                            явная конфигурация <code>UdfAccess = Restrict
+                                    <replaceable>path-list</replaceable></code>. </para>
+                    </listitem>
+                    <listitem>
+                        <para>UDF библиотеки (<filename>ib_udf</filename>,
+                                <filename>fbudf</filename>) больше не входят в состав установочных
+                            комплектов.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Большинство функций в библиотеках, ранее распространявшихся в общих
+                            (динамических) библиотеках ib_udf и fbudf, уже заменены на встроенные
+                            функции. Несколько оставшихся UDF были заменены либо аналогичными
+                            функциями в новой UDR библиотеке под названием udf_compat, либо
+                            преобразованы в сохраненные функции.</para>
+                        <para>Обратитесь к разделу <quote>Прекращение поддержки внешних функций
+                                (UDF)</quote> в главе <quote>Совместимость</quote> Firebird 4.0
+                            Release Notes для получения подробной информации и инструкций по
+                            обновлению для использования безопасных функций.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Настоятельно рекомендуется заменить UDF на UDR или сохраненные
+                            функции. См. <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                                linkend="langref-ddl-function-create">CREATE FUNCTION</link>.</para>
+                    </listitem>
+                </itemizedlist></para>
+        </important>
+        <caution>
+            <para>UDF принципиально небезопасны. Мы рекомендуем по возможности избегать их
+                использования и отключать UDF в конфигурации вашей базы данных (<code>UdfAccess =
+                    None</code> в <filename>firebird.conf</filename>, значение по умолчанию начиная
+                с Firebird 4.0). Если вам действительно нужно вызвать собственный код из вашей базы
+                данных, используйте вместо этого механизм UDR. </para>
+        </caution>
         <section xml:id="langref-ddl-extrnalfunction-declare">
             <info>
                 <title>DECLARE EXTERNAL FUNCTION</title>
@@ -11612,7 +11685,7 @@ ENTRY_POINT '<replaceable>entry_point</replaceable>' MODULE_NAME '<replaceable>l
                         <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE FUNCTION</database>.
@@ -11670,9 +11743,10 @@ ENTRY_POINT 'fbtruncate' MODULE_NAME 'fbudf';
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-ddl-extrnalfunction-alter">ALTER EXTERNAL FUNCTION</link>,
-                            <link linkend="langref-ddl-extrnalfunction-drop">DROP EXTERNAL FUNCTION</link>,
-                            <link linkend="langref-ddl-function-create">CREATE FUNCTION</link>. </para>
+                        <link linkend="langref-ddl-extrnalfunction-alter">ALTER EXTERNAL
+                            FUNCTION</link>, <link linkend="langref-ddl-extrnalfunction-drop">DROP
+                            EXTERNAL FUNCTION</link>, <link linkend="langref-ddl-function-create"
+                            >CREATE FUNCTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -11755,7 +11829,7 @@ ALTER EXTERNAL FUNCTION <replaceable>funcname</replaceable>
                         <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец внешней функции; </para>
@@ -11787,8 +11861,8 @@ ALTER EXTERNAL FUNCTION invl MODULE_NAME 'fbudf2';
 
                     <para>
                         <link linkend="langref-ddl-extrnalfunction-declare">DECLARE EXTERNAL
-                        FUNCTION</link>, <link linkend="langref-ddl-extrnalfunction-drop">DROP EXTERNAL
-                            FUNCTION</link>. </para>
+                            FUNCTION</link>, <link linkend="langref-ddl-extrnalfunction-drop">DROP
+                            EXTERNAL FUNCTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -11854,7 +11928,7 @@ DROP EXTERNAL FUNCTION <replaceable>funcname</replaceable>;
                         <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец внешней функции; </para>
@@ -11881,7 +11955,7 @@ DROP EXTERNAL FUNCTION addDay;
                     </info>
                     <para>
                         <link linkend="langref-ddl-extrnalfunction-declare">DECLARE EXTERNAL
-                        FUNCTION</link>. </para>
+                            FUNCTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -11899,8 +11973,8 @@ DROP EXTERNAL FUNCTION addDay;
             помощью подтипов BLOB. </para>
         <para>Внешние функции для преобразования BLOB типов хранятся в динамических библиотеках и
             загружаются по необходимости.</para>
-        <para>Подробнее о подтипах BLOB см. в разделе <link linkend="langref-datatypes-binary">Бинарные типы
-                данных</link>.</para>
+        <para>Подробнее о подтипах BLOB см. в разделе <link linkend="langref-datatypes-binary"
+                >Бинарные типы данных</link>.</para>
         <section xml:id="langref-ddl-filter-declare">
             <info>
                 <title>DECLARE FILTER</title>
@@ -11959,8 +12033,9 @@ ENTRY_POINT '<replaceable>function_name</replaceable>' MODULE_NAME '<replaceable
                             <row>
                                 <entry><replaceable>sub_type</replaceable></entry>
                                 <entry>
-                                    <para>Подтип BLOB. См. <link linkend="langref-datatypes-binary-blob-subtype"
-                                            >Подтипы BLOB</link>.</para>
+                                    <para>Подтип BLOB. См. <link
+                                            linkend="langref-datatypes-binary-blob-subtype">Подтипы
+                                            BLOB</link>.</para>
                                 </entry>
                             </row>
                             <row>
@@ -11968,7 +12043,7 @@ ENTRY_POINT '<replaceable>function_name</replaceable>' MODULE_NAME '<replaceable
                                 <entry>
                                     <para>Номер подтипа BLOB. См. <link
                                             linkend="langref-datatypes-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
+                                            BLOB</link>.</para>
                                 </entry>
                             </row>
                             <row>
@@ -11976,7 +12051,7 @@ ENTRY_POINT '<replaceable>function_name</replaceable>' MODULE_NAME '<replaceable
                                 <entry>
                                     <para>Мнемоника подтипа BLOB. См. <link
                                             linkend="langref-datatypes-binary-blob-subtype">Подтипы
-                                        BLOB</link>.</para>
+                                            BLOB</link>.</para>
                                 </entry>
                             </row>
                             <row>
@@ -12045,7 +12120,7 @@ VALUES ('RDB$FIELD_SUB_TYPE', -33, 'MIDI');
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE FILTER</database>.
@@ -12146,7 +12221,7 @@ DROP FILTER <replaceable>filtername</replaceable>;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец BLOB фильтра; </para>
@@ -12299,7 +12374,7 @@ CREATE {SEQUENCE | GENERATOR} <replaceable>seq_name</replaceable>
                         GENERATOR</database>) могут: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE SEQUENCE</database>
@@ -12352,8 +12427,8 @@ CREATE SEQUENCE EMP_NO_GEN START WITH 5 INCREMENT BY 10;
                         <link linkend="langref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
                             linkend="langref-ddl-sequence-setgen">SET GENERATOR</link>, <link
                             linkend="langref-ddl-sequence-drop">DROP SEQUENCE</link>, <link
-                            linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
-                            linkend="langref-ddl-sequence-drop">GEN_ID</link>. </para>
+                            linkend="langref-commons-nxtvlufor">NEXT VALUE FOR</link>,
+                            <link linkend="langref-ddl-sequence-drop">GEN_ID</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -12458,7 +12533,7 @@ ALTER {SEQUENCE | GENERATOR} <replaceable>seq_name</replaceable>
                         GENERATOR</database>) могут: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец последовательности (генератора); </para>
@@ -12502,8 +12577,8 @@ ALTER SEQUENCE EMP_NO_GEN INCREMENT BY 10;
                         <link linkend="langref-ddl-sequence-setgen">SET GENERATOR</link>, <link
                             linkend="langref-ddl-sequence-create">CREATE SEQUENCE</link>, <link
                             linkend="langref-ddl-sequence-drop">DROP SEQUENCE</link>, <link
-                            linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
-                            linkend="langref-ddl-sequence-drop">GEN_ID</link>. </para>
+                            linkend="langref-commons-nxtvlufor">NEXT VALUE FOR</link>,
+                            <link linkend="langref-ddl-sequence-drop">GEN_ID</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -12670,7 +12745,7 @@ DROP {SEQUENCE | GENERATOR} <replaceable>seq_name</replaceable>;
                         GENERATOR</database>) могут: <itemizedlist spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец последовательности (генератора); </para>
@@ -12698,7 +12773,8 @@ DROP SEQUENCE EMP_NO_GEN;
                     <para>
                         <link linkend="langref-ddl-sequence-create">CREATE SEQUENCE</link>, <link
                             linkend="langref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
-                            linkend="langref-ddl-sequence-recreate">RECREATE SEQUENCE</link>. </para>
+                            linkend="langref-ddl-sequence-recreate">RECREATE SEQUENCE</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
@@ -12863,7 +12939,7 @@ SET GENERATOR <replaceable>seq_name</replaceable> TO <replaceable>new_val</repla
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец последовательности (генератора); </para>
@@ -12898,8 +12974,8 @@ ALTER SEQUENCE EMP_NO_GEN RESTART WITH 145;
 
                     <para>
                         <link linkend="langref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
-                            linkend="langref-commons-conditional-nxtvlufor">NEXT VALUE FOR</link>, <link
-                            linkend="langref-ddl-sequence-drop">GEN_ID</link>. </para>
+                            linkend="langref-commons-nxtvlufor">NEXT VALUE FOR</link>,
+                            <link linkend="langref-ddl-sequence-drop">GEN_ID</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -13008,7 +13084,7 @@ CREATE EXCEPTION <replaceable>exception_name</replaceable> '<replaceable>&lt;mes
             </warning>
             <note>
                 <para>Пользовательские исключения хранятся в таблице <link
-                        linkend="systables-exceptions">RDB$EXCEPTION</link>.</para>
+                        linkend="langref-systables-exceptions">RDB$EXCEPTION</link>.</para>
             </note>
             <section xml:id="langref-ddl-exception-create-who">
                 <title>Кто может создать исключение?</title>
@@ -13017,7 +13093,7 @@ CREATE EXCEPTION <replaceable>exception_name</replaceable> '<replaceable>&lt;mes
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE EXCEPTION</database>.
@@ -13052,9 +13128,10 @@ CREATE EXCEPTION E_INVALID_VALUE
 
                     <para>
                         <link linkend="langref-ddl-exception-alter">ALTER EXCEPTION</link>, <link
-                            linkend="langref-ddl-exception-createoralter">CREATE OR ALTER EXCEPTION</link>,
-                            <link linkend="langref-ddl-exception-drop">DROP EXCEPTION</link>, <link
-                            linkend="langref-ddl-exception-recreate">RECREATE EXCEPTION</link>, <link
+                            linkend="langref-ddl-exception-createoralter">CREATE OR ALTER
+                            EXCEPTION</link>, <link linkend="langref-ddl-exception-drop">DROP
+                            EXCEPTION</link>, <link linkend="langref-ddl-exception-recreate"
+                            >RECREATE EXCEPTION</link>, <link
                             linkend="langref-psql-statements-exception">EXCEPTION</link>. </para>
                 </formalpara>
             </section>
@@ -13140,7 +13217,7 @@ ALTER EXCEPTION <replaceable>exception_name</replaceable> '<replaceable>&lt;mess
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец исключения; </para>
@@ -13168,9 +13245,9 @@ ALTER EXCEPTION E_LARGE_VALUE 'Значение превышает максим�
 
                     <para>
                         <link linkend="langref-ddl-exception-create">CREATE EXCEPTION</link>, <link
-                            linkend="langref-ddl-exception-createoralter">CREATE OR ALTER EXCEPTION</link>,
-                            <link linkend="langref-ddl-exception-recreate">RECREATE EXCEPTION</link>.
-                    </para>
+                            linkend="langref-ddl-exception-createoralter">CREATE OR ALTER
+                            EXCEPTION</link>, <link linkend="langref-ddl-exception-recreate"
+                            >RECREATE EXCEPTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -13266,7 +13343,8 @@ CREATE OR ALTER EXCEPTION E_LARGE_VALUE
                     <para>
                         <link linkend="langref-ddl-exception-create">CREATE EXCEPTION</link>, <link
                             linkend="langref-ddl-exception-alter">ALTER EXCEPTION</link>, <link
-                            linkend="langref-ddl-exception-recreate">RECREATE EXCEPTION</link>. </para>
+                            linkend="langref-ddl-exception-recreate">RECREATE EXCEPTION</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
@@ -13330,7 +13408,7 @@ DROP EXCEPTION <replaceable>exception_name</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец исключения; </para>
@@ -13358,7 +13436,8 @@ DROP EXCEPTION E_LARGE_VALUE;
 
                     <para>
                         <link linkend="langref-ddl-exception-create">CREATE EXCEPTION</link>, <link
-                            linkend="langref-ddl-exception-recreate">RECREATE EXCEPTION</link>. </para>
+                            linkend="langref-ddl-exception-recreate">RECREATE EXCEPTION</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
@@ -13457,8 +13536,8 @@ RECREATE EXCEPTION E_LARGE_VALUE
                     <para>
                         <link linkend="langref-ddl-exception-create">CREATE EXCEPTION</link>, <link
                             linkend="langref-ddl-exception-alter">ALTER EXCEPTION</link>, <link
-                            linkend="langref-ddl-exception-createoralter">CREATE OR ALTER EXCEPTION</link>.
-                    </para>
+                            linkend="langref-ddl-exception-createoralter">CREATE OR ALTER
+                            EXCEPTION</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -13717,7 +13796,7 @@ FOR <replaceable>charset</replaceable>
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Пользователи с привилегией <database>CREATE COLLATION</database>.
@@ -13867,7 +13946,7 @@ DROP COLLATION <replaceable>collname</replaceable>;
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец сортировки; </para>
@@ -13893,7 +13972,8 @@ DROP COLLATION ES_ES_NOPAD_CI;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-ddl-collation-create">CREATE COLLATION</link>. </para>
+                        <link linkend="langref-ddl-collation-create">CREATE COLLATION</link>.
+                    </para>
                 </formalpara>
             </section>
         </section>
@@ -14146,7 +14226,7 @@ COMMENT ON <replaceable>&lt;username&gt;</replaceable> [USING PLUGIN <replaceabl
                         spacing="compact">
                         <listitem>
                             <para><link linkend="langref-security-administrators"
-                                >Администраторы</link></para>
+                                    >Администраторы</link></para>
                         </listitem>
                         <listitem>
                             <para>Владелец объекта, для которого добавляется комментарий;</para>
@@ -14216,7 +14296,7 @@ IS 'Дата начала';
                 </example>
                 <example>
                     <title>Добавление комментария для пользователя.</title>
-                    
+
                     <para><programlisting language="sql"> 
 COMMENT ON USER BOB35 IS 'Это Боб из плагина по умолчанию';  
 

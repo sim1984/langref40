@@ -6,7 +6,7 @@
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0</subtitle>
-        <edition>4 мая 2021 — v.0001-1</edition>
+        <edition>9 мая 2021 — v.0001-1</edition>
 
         <authorgroup>
             <author>
@@ -40,7 +40,7 @@
             <holder>Firebird Project и все авторы, в соответствии с лицензией <link
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation
-                    License Version 1.0</link>. Смотри <link linkend="license">Лицензионное
+                    License Version 1.0</link>. Смотри <link linkend="langref-license">Лицензионное
                     соглашение в Приложении</link>. </holder>
         </copyright>
 
@@ -48,6 +48,7 @@
             <personname>Симонов Денис</personname>
         </editor>
     </info>
+    
     <xi:include href="langref-intro.xml" xpointer="element(/1)"/>
     <xi:include href="langref-structure.xml" xpointer="element(/1)"/>
     <xi:include href="langref-datatypes.xml" xpointer="element(/1)"/>
@@ -71,6 +72,7 @@
     <xi:include href="langref-appx07-syspackage.xml" xpointer="element(/1)"/>
     <xi:include href="langref-appx08-charsets.xml" xpointer="element(/1)"/>
     <xi:include href="langref-appx09-license.xml" xpointer="element(/1)"/> 
+
     <index xml:lang="ru">
         <info>
             <title>Алфавитный указатель</title>

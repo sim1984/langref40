@@ -12,60 +12,16 @@
     <simplesect xml:id="langref-intro-subject">
         <title>Что содержит данный документ</title>
 
-        <para>Данный документ содержит описание языка SQL Firebird. Он охватывает следующие основные
-            области: </para>
-        <para>
-            <itemizedlist spacing="compact">
-                <listitem>
-                    <para>Основные положения;</para>
-                </listitem>
-                <listitem>
-                    <para>Зарезервированные и ключевые слова;</para>
-                </listitem>
-                <listitem>
-                    <para>Типы и подтипы данных;</para>
-                </listitem>
-                <listitem>
-                    <para>Операторы DDL (Data Definition Language — язык создания данных); </para>
-                </listitem>
-                <listitem>
-                    <para>Операторы DML (Data Manipulation Language — язык обращения с данными);
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>Операторы управления транзакциями;</para>
-                </listitem>
-                <listitem>
-                    <para>Обработка исключений;</para>
-                </listitem>
-                <listitem>
-                    <para>Операторы PSQL (Procedural SQL — процедурный SQL, используется в хранимых
-                        процедурах, функциях, триггерах, пакетах и анонимных PSQL блоках); </para>
-                </listitem>
-                <listitem>
-                    <para>Безопасность и операторы управления доступом;</para>
-                </listitem>
-                <listitem>
-                    <para>Операторы и предикаты (утверждения);</para>
-                </listitem>
-                <listitem>
-                    <para>Агрегатные функции;</para>
-                </listitem>
-                <listitem>
-                    <para>Встроенные функции;</para>
-                </listitem>
-                <listitem>
-                    <para>Коды ошибок и обработка исключительных ситуаций;</para>
-                </listitem>
-                <listitem>
-                    <para>Описание системных таблиц и таблиц мониторинга;</para>
-                </listitem>
-                <listitem>
-                    <para>Наборы символов и соответствующие им порядки сортировки.</para>
-                </listitem>
-            </itemizedlist>
-        </para>
-        <para>Вопросы, не связанные с SQL в данном документе не рассматриваются. </para>
+        <para>Данный документ содержит описание языка SQL Firebird. Firebird полностью соответствует
+            международным стандартам SQL, от поддержки типов данных, структур хранения данных,
+            механизмов ссылочной целостности до возможностей управления данными и прав доступа.
+            В СУБД Firebird также реализован надежный процедурный язык — процедурный SQL (PSQL) — для
+            хранимых процедур, триггеров и динамически исполняемых блоков кода. Это те области, о
+            которых идет речь в этом руководстве.</para>
+
+        <para>В этом документе не рассматриваются вопросы конфигурация, инструменты командной
+            строки и описание API, и другое не относящееся к языку SQL.</para>
+
     </simplesect>
 
     <simplesect xml:id="langref-intro-authors">
