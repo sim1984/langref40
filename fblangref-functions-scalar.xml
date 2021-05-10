@@ -1,16 +1,16 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-functions"
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-functions"
     xml:lang="ru">
     <info>
         <title>Встроенные скалярные функции</title>
     </info>
 
-    <section xml:id="langref-functions-func-context">
+    <section xml:id="fblangref30-functions-workcontext">
         <info>
             <title>Функции для работы с контекстными переменными</title>
         </info>
         <para/>
-        <section xml:id="langref-functions-func-context-getcontext">
+        <section xml:id="fblangref-scalarfuncs-get-context">
             <info>
                 <title>RDB$GET_CONTEXT</title>
                 <keywordset>
@@ -364,11 +364,11 @@ NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-context-setcontext"
+                    <link linkend="fblangref-scalarfuncs-set-context"
                     >RDB$SET_CONTEXT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-context-setcontext">
+        <section xml:id="fblangref-scalarfuncs-set-context">
             <info>
                 <title>RDB$SET_CONTEXT</title>
                 <keywordset>
@@ -528,17 +528,17 @@ COMMIT;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-context-getcontext"
+                    <link linkend="fblangref-scalarfuncs-get-context"
                     >RDB$GET_CONTEXT</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-security">
+    <section xml:id="fblangref-functions-security">
         <info>
             <title>Функции подсистемы безопасности</title>
         </info>
         <para/>
-        <section xml:id="langref-functions-func-security-roleinuse">
+        <section xml:id="fblangref-scalarfuncs-roleinuse">
             <info>
                 <title>RDB$ROLE_IN_USE</title>
                 <keywordset>
@@ -625,12 +625,12 @@ SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-security-priv-grant-role">GRANT ROLE</link>, <link
-                        linkend="langref-session-role-setrole">SET ROLE</link>, <link
-                        linkend="langref-contextvars-current_role">CURRENT_ROLE</link>. </para>
+                    <link linkend="fblangref-security-priv-grant-role">GRANT ROLE</link>, <link
+                        linkend="fblangref-session-role-setrole">SET ROLE</link>, <link
+                        linkend="fblangref-contextvars-current_role">CURRENT_ROLE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-security-sysprivelege">
+        <section xml:id="fblangref-scalarfuncs-system-privelege">
             <info>
                 <title>RDB$SYSTEM_PRIVILEGE</title>
                 <keywordset>
@@ -681,7 +681,7 @@ RDB$SYSTEM_PRIVILEGE (<replaceable>privilege</replaceable>)
             </formalpara>
             <para>Функция RDB$SYSTEM_PRIVILEGE используется системная привилегия текущим
                 соединением. Список системных привилегий см. в <link
-                    linkend="langref-security-roles-create">CREATE ROLE</link>.</para>
+                    linkend="fblangref-security-roles-create">CREATE ROLE</link>.</para>
             <formalpara>
                 <title>Примеры:</title>
                 <para>
@@ -697,16 +697,16 @@ SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-security-roles-create">CREATE ROLE</link>. </para>
+                    <link linkend="fblangref-security-roles-create">CREATE ROLE</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-error">
+    <section xml:id="fblangref-functions-error">
         <info>
             <title>Функции для обработки ошибок</title>
         </info>
         <para/>
-        <section xml:id="langref-functions-func-error-rdberror">
+        <section xml:id="fblangref-scalarfuncs-rdberror">
             <info>
                 <title>RDB$ERROR</title>
                 <keywordset>
@@ -771,20 +771,20 @@ END
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-psql-statements-when">WHEN ... DO</link>, <link
-                        linkend="langref-psql-statements-exception">EXCEPTION</link>, <link
-                        linkend="langref-contextvars-gdscode">GDSCODE</link>, <link
-                        linkend="langref-contextvars-sqlcode">SQLCODE</link>, <link
-                        linkend="langref-contextvars-sqlstate">SQLSTATE</link>. </para>
+                    <link linkend="fblangref-psql-statements-when">WHEN ... DO</link>, <link
+                        linkend="fblangref-psql-statements-exception">EXCEPTION</link>, <link
+                        linkend="fblangref-contextvars-gdscode">GDSCODE</link>, <link
+                        linkend="fblangref-contextvars-sqlcode">SQLCODE</link>, <link
+                        linkend="fblangref-contextvars-sqlstate">SQLSTATE</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-transaction">
+    <section xml:id="fblangref-functions-transaction">
         <info>
             <title>Функции работы с транзакциями</title>
         </info>
         <para/>
-        <section xml:id="langref-functions-func-transaction-cn">
+        <section xml:id="fblangref-scalarfuncs-transaction-cn">
             <info>
                 <title>RDB$GET_TRANSACTION_CN</title>
                 <keywordset>
@@ -890,7 +890,7 @@ select rdb$get_transaction_cn(123) from rdb$database;
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-make_dbkey">
+    <section xml:id="fblangref-scalarfuncs-make-dbkey">
         <info>
             <title>MAKE_DBKEY</title>
             <keywordset>
@@ -1072,12 +1072,12 @@ where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
             </orderedlist>
         </para>
     </section>
-    <section xml:id="langref-functions-func-math">
+    <section xml:id="fblangref-functions-math">
         <info>
             <title>Математические функции</title>
         </info>
         <para/>
-        <section xml:id="langref-functions-func-math-abs">
+        <section xml:id="fblangref-scalarfuncs-abs">
             <info>
                 <title>ABS</title>
                 <keywordset>
@@ -1131,7 +1131,7 @@ ABS (<replaceable>value</replaceable>)
 
             <para>Функция ABS возвращает абсолютное значение (модуль) аргумента. </para>
         </section>
-        <section xml:id="langref-functions-func-math-acos">
+        <section xml:id="fblangref-scalarfuncs-acos">
             <info>
                 <title>ACOS</title>
                 <keywordset>
@@ -1190,10 +1190,10 @@ ACOS (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-cos">COS</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-cos">COS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-acosh">
+        <section xml:id="fblangref-scalarfuncs-acosh">
             <info>
                 <title>ACOSH</title>
                 <keywordset>
@@ -1250,10 +1250,10 @@ ACOSH (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-cosh">COSH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-cosh">COSH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-asin">
+        <section xml:id="fblangref-scalarfuncs-asin">
             <info>
                 <title>ASIN</title>
                 <keywordset>
@@ -1312,10 +1312,10 @@ ASIN (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-sin">SIN</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-sin">SIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-asinh">
+        <section xml:id="fblangref-scalarfuncs-asinh">
             <info>
                 <title>ASINH</title>
                 <keywordset>
@@ -1372,10 +1372,10 @@ ASINH (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-sinh">ASINH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-sinh">ASINH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-atan">
+        <section xml:id="fblangref-scalarfuncs-atan">
             <info>
                 <title>ATAN</title>
                 <keywordset>
@@ -1433,11 +1433,11 @@ ATAN (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-atan2">ATAN2</link>, <link
-                        linkend="langref-functions-func-math-tan">TAN</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-atan2">ATAN2</link>, <link
+                        linkend="fblangref-scalarfuncs-tan">TAN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-atan2">
+        <section xml:id="fblangref-scalarfuncs-atan2">
             <info>
                 <title>ATAN2</title>
                 <keywordset>
@@ -1537,12 +1537,12 @@ ATAN2 (<replaceable>y</replaceable>, <replaceable>x</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-atan">ATAN</link>, <link
-                        linkend="langref-functions-func-math-sin">SIN</link>, <link
-                        linkend="langref-functions-func-math-cos">COS</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-atan">ATAN</link>, <link
+                        linkend="fblangref-scalarfuncs-sin">SIN</link>, <link
+                        linkend="fblangref-scalarfuncs-cos">COS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-atanh">
+        <section xml:id="fblangref-scalarfuncs-atanh">
             <info>
                 <title>ATANH</title>
                 <keywordset>
@@ -1599,10 +1599,10 @@ ATANH (<replaceable>value</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-tanh">TANH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-tanh">TANH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-ceil">
+        <section xml:id="fblangref-scalarfuncs-ceil">
             <info>
                 <title>CEIL, CEILING</title>
                 <keywordset>
@@ -1663,11 +1663,11 @@ CEIL[ING] (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-floor">FLOOR</link>, <link
-                        linkend="langref-functions-func-math-trunc">TRUNC</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-floor">FLOOR</link>, <link
+                        linkend="fblangref-scalarfuncs-trunc">TRUNC</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-cos">
+        <section xml:id="fblangref-scalarfuncs-cos">
             <info>
                 <title>COS</title>
                 <keywordset>
@@ -1725,10 +1725,10 @@ COS (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-acos">ACOS</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-acos">ACOS</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-cosh">
+        <section xml:id="fblangref-scalarfuncs-cosh">
             <info>
                 <title>COSH</title>
                 <keywordset>
@@ -1786,10 +1786,10 @@ COSH (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-acosh">ACOSH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-acosh">ACOSH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-cot">
+        <section xml:id="fblangref-scalarfuncs-cot">
             <info>
                 <title>COT</title>
                 <keywordset>
@@ -1847,10 +1847,10 @@ COT (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-tan">TAN</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-tan">TAN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-exp">
+        <section xml:id="fblangref-scalarfuncs-exp">
             <info>
                 <title>EXP</title>
                 <keywordset>
@@ -1916,10 +1916,10 @@ EXP (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-ln">LN</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-ln">LN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-floor">
+        <section xml:id="fblangref-scalarfuncs-floor">
             <info>
                 <title>FLOOR</title>
                 <keywordset>
@@ -1977,11 +1977,11 @@ FLOOR (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-ceil">CEIL, CEILING</link>, <link
-                        linkend="langref-functions-func-math-trunc">TRUNC</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-ceil">CEIL, CEILING</link>, <link
+                        linkend="fblangref-scalarfuncs-trunc">TRUNC</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-ln">
+        <section xml:id="fblangref-scalarfuncs-ln">
             <info>
                 <title>LN</title>
                 <keywordset>
@@ -2042,10 +2042,10 @@ LN (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-exp">EXP</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-exp">EXP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-log">
+        <section xml:id="fblangref-scalarfuncs-log">
             <info>
                 <title>LOG</title>
                 <keywordset>
@@ -2125,7 +2125,7 @@ LOG (<replaceable>x</replaceable>, <replaceable>y</replaceable>)
                 </itemizedlist>
             </para>
         </section>
-        <section xml:id="langref-functions-func-math-log10">
+        <section xml:id="fblangref-scalarfuncs-log10">
             <info>
                 <title>LOG10</title>
                 <keywordset>
@@ -2182,7 +2182,7 @@ LOG10 (<replaceable>number</replaceable>)
                 <para>Если входной аргумент отрицательный или равен 0, возникает ошибка. </para>
             </note>
         </section>
-        <section xml:id="langref-functions-func-math-mod">
+        <section xml:id="fblangref-scalarfuncs-mod">
             <info>
                 <title>MOD</title>
                 <keywordset>
@@ -2246,7 +2246,7 @@ MOD (<replaceable>a</replaceable>, <replaceable>b</replaceable>)
                     7.5 mod 2.5 будет 2 (8 mod 3), а не 0.</para>
             </note>
         </section>
-        <section xml:id="langref-functions-func-math-pi">
+        <section xml:id="fblangref-scalarfuncs-pi">
             <info>
                 <title>PI</title>
                 <keywordset>
@@ -2274,7 +2274,7 @@ PI ()
 
             <para>Функция PI возвращает число &#960;. </para>
         </section>
-        <section xml:id="langref-functions-func-math-power">
+        <section xml:id="fblangref-scalarfuncs-power">
             <info>
                 <title>POWER</title>
                 <keywordset>
@@ -2338,7 +2338,7 @@ POWER (<replaceable>x</replaceable>, <replaceable>y</replaceable>)
                 <para>Если <replaceable>x</replaceable> меньше нуля, возникает ошибка.</para>
             </note>
         </section>
-        <section xml:id="langref-functions-func-math-rand">
+        <section xml:id="fblangref-scalarfuncs-rand">
             <info>
                 <title>RAND</title>
                 <keywordset>
@@ -2366,7 +2366,7 @@ RAND ()
 
             <para>Функция RAND возвращает псевдослучайное число в интервале от 0 до 1. </para>
         </section>
-        <section xml:id="langref-functions-func-math-round">
+        <section xml:id="fblangref-scalarfuncs-round">
             <info>
                 <title>ROUND</title>
                 <keywordset>
@@ -2465,10 +2465,10 @@ ROUND(45.1212)    -- Результат: 45
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-trunc">TRUNC</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-trunc">TRUNC</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-sign">
+        <section xml:id="fblangref-scalarfuncs-sign">
             <info>
                 <title>SIGN</title>
                 <keywordset>
@@ -2551,7 +2551,7 @@ SIGN (<replaceable>number</replaceable>)
                 </table>
             </para>
         </section>
-        <section xml:id="langref-functions-func-math-sin">
+        <section xml:id="fblangref-scalarfuncs-sin">
             <info>
                 <title>SIN</title>
                 <keywordset>
@@ -2609,10 +2609,10 @@ SIN (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-asin">ASIN</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-asin">ASIN</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-sinh">
+        <section xml:id="fblangref-scalarfuncs-sinh">
             <info>
                 <title>SINH</title>
                 <keywordset>
@@ -2669,10 +2669,10 @@ SINH (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-asinh">ASINH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-asinh">ASINH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-sqrt">
+        <section xml:id="fblangref-scalarfuncs-sqrt">
             <info>
                 <title>SQRT</title>
                 <keywordset>
@@ -2726,7 +2726,7 @@ SQRT (<replaceable>number</replaceable>)
 
             <para>Функция SQRT возвращает квадратный корень аргумента.</para>
         </section>
-        <section xml:id="langref-functions-func-math-tan">
+        <section xml:id="fblangref-scalarfuncs-tan">
             <info>
                 <title>TAN</title>
                 <keywordset>
@@ -2783,11 +2783,11 @@ TAN (<replaceable>angle</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-atan">ATAN</link>, <link
-                        linkend="langref-functions-func-math-atan2">ATAN2</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-atan">ATAN</link>, <link
+                        linkend="fblangref-scalarfuncs-atan2">ATAN2</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-tanh">
+        <section xml:id="fblangref-scalarfuncs-tanh">
             <info>
                 <title>TANH</title>
                 <keywordset>
@@ -2845,10 +2845,10 @@ TANH (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-atanh">ATANH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-atanh">ATANH</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-math-trunc">
+        <section xml:id="fblangref-scalarfuncs-trunc">
             <info>
                 <title>TRUNC</title>
                 <keywordset>
@@ -2947,19 +2947,19 @@ TRUNC(-163.41)      -- Результат: -163
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-math-round">ROUND</link>, <link
-                        linkend="langref-functions-func-math-ceil">CEIL, CEILING</link>, <link
-                        linkend="langref-functions-func-math-floor">FLOOR</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-round">ROUND</link>, <link
+                        linkend="fblangref-scalarfuncs-ceil">CEIL, CEILING</link>, <link
+                        linkend="fblangref-scalarfuncs-floor">FLOOR</link>. </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="langref-functions-func-string">
+    <section xml:id="fblangref-functions-string">
         <info>
             <title>Функции для работы со строками</title>
         </info>
 
-        <section xml:id="langref-functions-func-string-ascii_char">
+        <section xml:id="fblangref-scalarfuncs-ascii-char">
             <info>
                 <title>ASCII_CHAR</title>
                 <keywordset>
@@ -3017,12 +3017,12 @@ ASCII_CHAR (<replaceable>code</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-ascii_val">ASCII_VAL</link>.
+                    <link linkend="fblangref-scalarfuncs-ascii-val">ASCII_VAL</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-string-ascii_val">
+        <section xml:id="fblangref-scalarfuncs-ascii-val">
             <info>
                 <title>ASCII_VAL</title>
                 <keywordset>
@@ -3094,12 +3094,12 @@ ASCII_VAL (<replaceable>ch</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-ascii_char">ASCII_CHAR</link>.
+                    <link linkend="fblangref-scalarfuncs-ascii-char">ASCII_CHAR</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-string-bit_length">
+        <section xml:id="fblangref-scalarfuncs-bit-length">
             <info>
                 <title>BIT_LENGTH</title>
                 <keywordset>
@@ -3192,13 +3192,13 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>,
-                        <link linkend="langref-functions-func-string-octet_length"
+                    <link linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>,
+                        <link linkend="fblangref-scalarfuncs-octet-length"
                         >OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-string-char_length">
+        <section xml:id="fblangref-scalarfuncs-char-length">
             <info>
                 <title>CHAR_LENGTH, CHARACTER_LENGTH</title>
                 <keywordset>
@@ -3267,13 +3267,13 @@ CHARACTER_LENGTH (<replaceable>str</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>,
-                        <link linkend="langref-functions-func-string-octet_length"
+                    <link linkend="fblangref-scalarfuncs-bit-length">BIT_LENGTH</link>,
+                        <link linkend="fblangref-scalarfuncs-octet-length"
                         >OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-string-left">
+        <section xml:id="fblangref-scalarfuncs-left">
             <info>
                 <title>LEFT</title>
                 <keywordset>
@@ -3373,11 +3373,11 @@ SELECT LEFT('ABC', 2) FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-right">RIGHT</link>, <link
-                        linkend="langref-functions-func-string-substring">SUBSTRING</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-right">RIGHT</link>, <link
+                        linkend="fblangref-scalarfuncs-substring">SUBSTRING</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-lower">
+        <section xml:id="fblangref-scalarfuncs-lower">
             <info>
                 <title>LOWER</title>
                 <keywordset>
@@ -3448,10 +3448,10 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-upper">UPPER</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-upper">UPPER</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-lpad">
+        <section xml:id="fblangref-scalarfuncs-lpad">
             <info>
                 <title>LPAD</title>
                 <keywordset>
@@ -3566,10 +3566,10 @@ LPAD ('Hello', 2, '')             -- возвращает 'He'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-rpad">RPAD</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-rpad">RPAD</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-octet_length">
+        <section xml:id="fblangref-scalarfuncs-octet-length">
             <info>
                 <title>OCTET_LENGTH</title>
                 <keywordset>
@@ -3662,13 +3662,13 @@ FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-bit_length">BIT_LENGTH</link>,
-                        <link linkend="langref-functions-func-string-char_length"
+                    <link linkend="fblangref-scalarfuncs-bit-length">BIT_LENGTH</link>,
+                        <link linkend="fblangref-scalarfuncs-char-length"
                     >CHAR_LENGTH</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-string-overlay">
+        <section xml:id="fblangref-scalarfuncs-overlay">
             <info>
                 <title>OVERLAY</title>
                 <keywordset>
@@ -3822,12 +3822,12 @@ OVERLAY ('' PLACING 'Hello' FROM 4 FOR 20) -- Результат: 'Hello'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-substring">SUBSTRING</link>, <link
-                        linkend="langref-functions-func-string-replace">REPLACE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-substring">SUBSTRING</link>, <link
+                        linkend="fblangref-scalarfuncs-replace">REPLACE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-string-position">
+        <section xml:id="fblangref-scalarfuncs-position">
             <info>
                 <title>POSITION</title>
                 <keywordset>
@@ -3948,11 +3948,11 @@ POSITION ('be' in 'Alas, poor Yorick!') -- Результат: 0
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-substring">SUBSTRING</link>.
+                    <link linkend="fblangref-scalarfuncs-substring">SUBSTRING</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-replace">
+        <section xml:id="fblangref-scalarfuncs-replace">
             <info>
                 <title>REPLACE</title>
                 <keywordset>
@@ -4073,10 +4073,10 @@ REPLACE ('Billy Wilder', '', 'abc')    -- возвращает 'Billy Wilder'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-overlay">OVERLAY</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-overlay">OVERLAY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-reverse">
+        <section xml:id="fblangref-scalarfuncs-reverse">
             <info>
                 <title>REVERSE</title>
                 <keywordset>
@@ -4151,7 +4151,7 @@ WHERE REVERSE(email) STARTING WITH reverse('.br');
                 </para>
             </tip>
         </section>
-        <section xml:id="langref-functions-func-string-right">
+        <section xml:id="fblangref-scalarfuncs-right">
             <info>
                 <title>RIGHT</title>
                 <keywordset>
@@ -4251,11 +4251,11 @@ SELECT RIGHT('ABC', 1) FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-left">LEFT</link>, <link
-                        linkend="langref-functions-func-string-substring">SUBSTRING</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-left">LEFT</link>, <link
+                        linkend="fblangref-scalarfuncs-substring">SUBSTRING</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-rpad">
+        <section xml:id="fblangref-scalarfuncs-rpad">
             <info>
                 <title>RPAD</title>
                 <keywordset>
@@ -4371,10 +4371,10 @@ RPAD ('Hello', 2, '')             -- возвращает 'He'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-lpad">LPAD</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-lpad">LPAD</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-substring">
+        <section xml:id="fblangref-scalarfuncs-substring">
             <info>
                 <title>SUBSTRING</title>
                 <keywordset>
@@ -4542,7 +4542,7 @@ SUBSTRING('Привет!' FROM 4 FOR 3)  -- вернёт подстроку 'в�
 
                 <para>Полный формат регулярных выражений SQL описан в <link
                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                        linkend="langref-commons-syntaxregex">Синтаксис регулярных выражений
+                        linkend="fblangref-commons-syntaxregex">Синтаксис регулярных выражений
                         SQL</link>. </para>
 
                 <formalpara>
@@ -4565,15 +4565,15 @@ SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- &lt;null&gt;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-functions-func-string-position">POSITION</link>,
-                            <link linkend="langref-functions-func-string-left">LEFT</link>, <link
-                            linkend="langref-functions-func-string-right">RIGHT</link>, <link
-                            linkend="langref-functions-func-string-char_length">CHAR_LENGTH</link>,
-                            <link linkend="langref-commons-predsimilarto">SIMILAR TO</link>. </para>
+                        <link linkend="fblangref-scalarfuncs-position">POSITION</link>,
+                            <link linkend="fblangref-scalarfuncs-left">LEFT</link>, <link
+                            linkend="fblangref-scalarfuncs-right">RIGHT</link>, <link
+                            linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>,
+                            <link linkend="fblangref-commons-predsimilarto">SIMILAR TO</link>. </para>
                 </formalpara>
             </section>
         </section>
-        <section xml:id="langref-functions-func-string-trim">
+        <section xml:id="fblangref-scalarfuncs-trim">
             <info>
                 <title>TRIM</title>
                 <keywordset>
@@ -4726,11 +4726,11 @@ FROM RDB$DATABASE -- Результат: ' I love you El'
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-overlay">OVERLAY</link>, <link
-                        linkend="langref-functions-func-string-replace">REPLACE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-overlay">OVERLAY</link>, <link
+                        linkend="fblangref-scalarfuncs-replace">REPLACE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-string-upper">
+        <section xml:id="fblangref-scalarfuncs-upper">
             <info>
                 <title>UPPER</title>
                 <keywordset>
@@ -4807,16 +4807,16 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-string-lower">LOWER</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-lower">LOWER</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-datetime">
+    <section xml:id="fblangref-functions-datetime">
         <info>
             <title>Функции для работы с датой и временем</title>
         </info>
 
-        <section xml:id="langref-functions-func-datetime-attimezone">
+        <section xml:id="fblangref-scalarfuncs-at">
             <info>
                 <title>AT</title>
                 <keywordset>
@@ -4869,7 +4869,7 @@ select timestamp '2018-01-01 12:00 GMT' at local
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-datetime-dateadd">
+        <section xml:id="fblangref-scalarfuncs-dateadd">
             <info>
                 <title>DATEADD</title>
                 <keywordset>
@@ -4994,12 +4994,12 @@ T                             MS
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-datetime-datediff">DATEDIFF</link>, <link
-                        linkend="langref-datatypes-datetime-operation">Операции, использующие
+                    <link linkend="fblangref-scalarfuncs-datediff">DATEDIFF</link>, <link
+                        linkend="fblangref-datatypes-datetime-operation">Операции, использующие
                         значения даты и времени</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-datetime-datediff">
+        <section xml:id="fblangref-scalarfuncs-datediff">
             <info>
                 <title>DATEDIFF</title>
                 <keywordset>
@@ -5138,13 +5138,13 @@ DATEDIFF (DAY FROM CURRENT_DATE TO CAST (? AS DATE))
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-datetime-dateadd">DATEADD</link>, <link
-                        linkend="langref-datatypes-datetime-operation">Операции, использующие
+                    <link linkend="fblangref-scalarfuncs-dateadd">DATEADD</link>, <link
+                        linkend="fblangref-datatypes-datetime-operation">Операции, использующие
                         значения даты и времени</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-datetime-extract">
+        <section xml:id="fblangref-scalarfuncs-extract">
             <info>
                 <title>EXTRACT</title>
                 <keywordset>
@@ -5332,11 +5332,11 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-datatypes-datetime">Типы данных для работы с датой и
+                    <link linkend="fblangref-datatypes-datetime">Типы данных для работы с датой и
                         временем</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-datetime-firstday">
+        <section xml:id="fblangref-scalarfuncs-firstday">
             <info>
                 <title>FIRST_DAY</title>
                 <keywordset>
@@ -5431,10 +5431,10 @@ SELECT FIRST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-datetime-lastday">LAST_DAY</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-lastday">LAST_DAY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-datetime-lastday">
+        <section xml:id="fblangref-scalarfuncs-lastday">
             <info>
                 <title>LAST_DAY</title>
                 <keywordset>
@@ -5529,18 +5529,18 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-datetime-firstday">FIRST_DAY</link>.
+                    <link linkend="fblangref-scalarfuncs-firstday">FIRST_DAY</link>.
                 </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="langref-functions-func-decfloat">
+    <section xml:id="fblangref-functions-decfloat">
         <info>
             <title>Функции для работы с типом DECFLOAT</title>
         </info>
 
-        <section xml:id="langref-functions-func-decfloat-compare_decfloat">
+        <section xml:id="fblangref-scalarfuncs-compare-decfloat">
             <info>
                 <title>COMPARE_DECFLOAT</title>
                 <keywordset>
@@ -5617,7 +5617,7 @@ COMPARE_DECFLOAT(2.17, 2.170)
                 вернёт 2, а не 0. </para>
         </section>
 
-        <section xml:id="langref-functions-func-decfloat-normalize_decfloat">
+        <section xml:id="fblangref-scalarfuncs-normalize-decfloat">
             <info>
                 <title>NORMALIZE_DECFLOAT</title>
                 <keywordset>
@@ -5683,7 +5683,7 @@ NORMALIZE_DECFLOAT(120) -- возвращает 1.2E+2
             </example>
         </section>
 
-        <section xml:id="langref-functions-func-decfloat-quantize">
+        <section xml:id="fblangref-scalarfuncs-quantize">
             <info>
                 <title>QUANTIZE</title>
                 <keywordset>
@@ -5782,7 +5782,7 @@ V                       PIC                   QUANTIZE
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-decfloat-totalorder">
+        <section xml:id="fblangref-scalarfuncs-totalorder">
             <info>
                 <title>TOTALORDER</title>
                 <keywordset>
@@ -5853,12 +5853,12 @@ TOTALORDER (<replaceable>value1</replaceable>, <replaceable>value2</replaceable>
         </section>
     </section>
 
-    <section xml:id="langref-functions-func-binary">
+    <section xml:id="fblangref-functions-binary">
         <info>
             <title>Кодирование и декодирование бинарных данных</title>
         </info>
 
-        <section xml:id="langref-functions-func-binary-base64_encode">
+        <section xml:id="fblangref-scalarfuncs-base64-encode">
             <info>
                 <title>BASE64_ENCODE</title>
                 <keywordset>
@@ -5900,12 +5900,12 @@ select base64_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-base64_decode"
+                    <link linkend="fblangref-scalarfuncs-base64-decode"
                     >BASE64_DECODE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-binary-base64_decode">
+        <section xml:id="fblangref-scalarfuncs-base64-decode">
             <info>
                 <title>BASE64_DECODE</title>
                 <keywordset>
@@ -5936,12 +5936,12 @@ BASE64_DECODE (<replaceable>&lt;base64 data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-base64_encode"
+                    <link linkend="fblangref-scalarfuncs-base64-encode"
                     >BASE64_ENCODE</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-binary-hex_encode">
+        <section xml:id="fblangref-scalarfuncs-hex-encode">
             <info>
                 <title>HEX_ENCODE</title>
                 <keywordset>
@@ -5983,12 +5983,12 @@ select hex_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-hex_decode">HEX_DECODE</link>.
+                    <link linkend="fblangref-scalarfuncs-hex-decode">HEX_DECODE</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-binary-hex_decode">
+        <section xml:id="fblangref-scalarfuncs-hex-decode">
             <info>
                 <title>HEX_DECODE</title>
                 <keywordset>
@@ -6019,18 +6019,18 @@ HEX_DECODE (<replaceable>&lt;hex data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-binary-hex_encode">HEX_ENCODE</link>.
+                    <link linkend="fblangref-scalarfuncs-hex-encode">HEX_ENCODE</link>.
                 </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="langref-functions-func-hash">
+    <section xml:id="fblangref-functions-hash">
         <info>
             <title>Хеш функции</title>
         </info>
 
-        <section xml:id="langref-functions-func-hash-hash">
+        <section xml:id="fblangref-scalarfuncs-hash">
             <info>
                 <title>HASH</title>
                 <keywordset>
@@ -6116,7 +6116,7 @@ SELECT HASH(x USING CRC32) FROM MyTable;
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-hash-crypt_hash">
+        <section xml:id="fblangref-scalarfuncs-crypt-hash">
             <info>
                 <title>CRYPT_HASH</title>
                 <keywordset>
@@ -6196,7 +6196,7 @@ SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
         </section>
     </section>
 
-    <section xml:id="langref-functions-func-crypt">
+    <section xml:id="fblangref-functions-crypt">
         <info>
             <title>Криптографические функции</title>
         </info>
@@ -6204,7 +6204,7 @@ SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
         <para>В Firebird 4.0 поддерживается только подмножество симметричных алгоритмов шифрования
             (как блочных так и потоковых), так и RSA.</para>
 
-        <section xml:id="langref-functions-func-crypt-encrypt">
+        <section xml:id="fblangref-scalarfuncs-encrypt">
             <info>
                 <title>ENCRYPT</title>
                 <keywordset>
@@ -6337,11 +6337,11 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-decrypt">DECRYPT</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-decrypt">DECRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-decrypt">
+        <section xml:id="fblangref-scalarfuncs-decrypt">
             <info>
                 <title>DECRYPT</title>
                 <keywordset>
@@ -6479,11 +6479,11 @@ from secure_table;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-encrypt">ENCRYPT</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-encrypt">ENCRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-rsa_private">
+        <section xml:id="fblangref-scalarfuncs-rsa-private">
             <info>
                 <title>RSA_PRIVATE</title>
                 <keywordset>
@@ -6553,12 +6553,12 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>.
+                    <link linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-rsa_public">
+        <section xml:id="fblangref-scalarfuncs-rsa-public">
             <info>
                 <title>RSA_PUBLIC</title>
                 <keywordset>
@@ -6618,7 +6618,7 @@ RSA_PUBLIC (<replaceable>&lt;private key&gt;</replaceable>)
                         <title>Использование функции RSA_PUBLIC</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_private"
+                                linkend="fblangref-scalarfuncs-rsa-private"
                                 >RSA_PRIVATE</link>
                         </para>
                         <para><programlisting language="sql">
@@ -6633,12 +6633,12 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-rsa_encrypt">
+        <section xml:id="fblangref-scalarfuncs-rsa-encrypt">
             <info>
                 <title>RSA_ENCRYPT</title>
                 <keywordset>
@@ -6721,7 +6721,7 @@ RSA_ENCRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;public
                         <title>Использование функции RSA_ENCRYPT</title>
 
                         <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>
+                                linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>
                         </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
@@ -6735,13 +6735,13 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>, <link
-                        linkend="langref-functions-func-crypt-rsa_decrypt">RSA_DECRYPT</link>.
+                    <link linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>, <link
+                        linkend="fblangref-scalarfuncs-rsa-decrypt">RSA_DECRYPT</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-rsa_decrypt">
+        <section xml:id="fblangref-scalarfuncs-rsa-decrypt">
             <info>
                 <title>RSA_DECRYPT</title>
                 <keywordset>
@@ -6824,9 +6824,9 @@ RSA_DECRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;privat
                         <title>Использование функции RSA_DECRYPT</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_private"
+                                linkend="fblangref-scalarfuncs-rsa-private"
                                 >RSA_PRIVATE</link>. Данные для расшифровки сипользуются из примера
-                            в <link linkend="langref-functions-func-crypt-rsa_encrypt"
+                            в <link linkend="fblangref-scalarfuncs-rsa-encrypt"
                                 >RSA_ENCRYPT</link>
                         </para>
                         <para><programlisting language="sql">
@@ -6841,13 +6841,13 @@ from RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>,
-                        <link linkend="langref-functions-func-crypt-rsa_encrypt">RSA_ENCRYPT</link>.
+                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>,
+                        <link linkend="fblangref-scalarfuncs-rsa-encrypt">RSA_ENCRYPT</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-rsa_sign">
+        <section xml:id="fblangref-scalarfuncs-rsa-sign">
             <info>
                 <title>RSA_SIGN</title>
                 <keywordset>
@@ -6927,7 +6927,7 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                         <title>Использование функции RSA_SIGN</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_private"
+                                linkend="fblangref-scalarfuncs-rsa-private"
                                 >RSA_PRIVATE</link>. </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
@@ -6942,12 +6942,12 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_private">RSA_PRIVATE</link>.
+                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-functions-func-crypt-rsa_verify">
+        <section xml:id="fblangref-scalarfuncs-rsa-verify">
             <info>
                 <title>RSA_VERIFY</title>
                 <keywordset>
@@ -7035,7 +7035,7 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
                         <title>Использование функции RSA_SIGN</title>
 
                         <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>
+                                linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>
                             Цифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
                         <para><programlisting language="sql">
 select rsa_verify(crypt_hash('Test message' using sha256) 
@@ -7050,18 +7050,18 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-crypt-rsa_sign">RSA_SIGN</link>, <link
-                        linkend="langref-functions-func-crypt-rsa_public">RSA_PUBLIC</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-rsa-sign">RSA_SIGN</link>, <link
+                        linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>. </para>
             </formalpara>
         </section>
 
     </section>
 
-    <section xml:id="langref-functions-func-cast">
+    <section xml:id="fblangref-functions-casting">
         <info>
             <title>Функции преобразования типов</title>
         </info>
-        <section xml:id="langref-functions-func-cast-cast">
+        <section xml:id="fblangref-scalarfuncs-cast">
             <info>
                 <title>CAST</title>
                 <keywordset>
@@ -7088,11 +7088,11 @@ CAST(<replaceable>value</replaceable> | NULL AS <replaceable>&lt;type&gt;</repla
 <replaceable>&lt;datatype&gt;</replaceable> ::= 
     <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
                     
-<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
                     
-<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
                     
-<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="langref-datatypes-declare-array">См. Синтаксис массивов</link>    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-array">См. Синтаксис массивов</link>    
   
                         </programlisting>
                 </para>
@@ -7302,7 +7302,7 @@ SELECT CAST(zin AS TYPE OF dunl20) FROM zinnen ORDER BY 1;
                     <para>Если определение домена изменяется, то существующие преобразования к
                         домену или его типу могут стать ошибочными. Если такие преобразования
                         происходят в PSQL модулях, то их ошибки могут быть обнаружены. См. <link
-                            linkend="langref-appx01-supp-rdb-validblr">Поле RDB$VALID_BLR</link>.
+                            linkend="fblangref-appx-supp-rdb-validblr">Поле RDB$VALID_BLR</link>.
                     </para>
                 </warning>
             </simplesect>
@@ -7325,14 +7325,14 @@ FROM rdb$database;
                     <para>Если определение столбца изменяется, то существующие преобразования к его
                         типу могут стать ошибочными. Если такие преобразования происходят в PSQL
                         модулях, то их ошибки могут быть обнаружены. См. <link
-                            linkend="langref-appx01-supp-rdb-validblr">Поле
+                            linkend="fblangref-appx-supp-rdb-validblr">Поле
                         RDB$VALID_BLR</link>.</para>
                 </warning>
                 <formalpara>
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-datatypes-cast-explicit">Явное преобразование типов
+                        <link linkend="fblangref-datatypes-cast-explicit">Явное преобразование типов
                             данных</link>. </para>
                 </formalpara>
             </simplesect>
@@ -7361,12 +7361,12 @@ SELECT CAST('TODAY' AS DATE) - 7 FROM rdb$database
             </simplesect>
         </section>
     </section>
-    <section xml:id="langref-functions-func-bit">
+    <section xml:id="fblangref-functions-bitwise">
         <info>
             <title>Функции побитовых операций</title>
         </info>
 
-        <section xml:id="langref-functions-func-bit-bin_and">
+        <section xml:id="fblangref-scalarfuncs-bin-and">
             <info>
                 <title>BIN_AND</title>
                 <keywordset>
@@ -7423,11 +7423,11 @@ BIN_AND (<replaceable>number</replaceable> [, <replaceable>number</replaceable> 
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-bit-bin_or">BIN_OR</link>, <link
-                        linkend="langref-functions-func-bit-bin_xor">BIN_XOR</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bin-or">BIN_OR</link>, <link
+                        linkend="fblangref-scalarfuncs-bin-xor">BIN_XOR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-bit-bin_not">
+        <section xml:id="fblangref-scalarfuncs-bin-not">
             <info>
                 <title>BIN_NOT</title>
                 <keywordset>
@@ -7483,11 +7483,11 @@ BIN_NOT (<replaceable>number</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-bit-bin_or">BIN_OR</link>, <link
-                        linkend="langref-functions-func-bit-bin_and">BIN_AND</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bin-or">BIN_OR</link>, <link
+                        linkend="fblangref-scalarfuncs-bin-and">BIN_AND</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-bit-bin_or">
+        <section xml:id="fblangref-scalarfuncs-bin-or">
             <info>
                 <title>BIN_OR</title>
                 <keywordset>
@@ -7544,11 +7544,11 @@ BIN_OR (<replaceable>number</replaceable> [, <replaceable>number</replaceable> .
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-bit-bin_and">BIN_AND</link>, <link
-                        linkend="langref-functions-func-bit-bin_xor">BIN_XOR</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bin-and">BIN_AND</link>, <link
+                        linkend="fblangref-scalarfuncs-bin-xor">BIN_XOR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-bit-bin_shl">
+        <section xml:id="fblangref-scalarfuncs-bin-shl">
             <info>
                 <title>BIN_SHL</title>
                 <keywordset>
@@ -7613,10 +7613,10 @@ BIN_SHL (<replaceable>number</replaceable>, <replaceable>shift</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-bit-bin_shr">BIN_SHR</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bin-shr">BIN_SHR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-bit-bin_shr">
+        <section xml:id="fblangref-scalarfuncs-bin-shr">
             <info>
                 <title>BIN_SHR</title>
                 <keywordset>
@@ -7685,10 +7685,10 @@ BIN_SHR (<replaceable>number</replaceable>, <replaceable>shift</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-bit-bin_shl">BIN_SHL</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bin-shl">BIN_SHL</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-bit-bin_xor">
+        <section xml:id="fblangref-scalarfuncs-bin-xor">
             <info>
                 <title>BIN_XOR</title>
                 <keywordset>
@@ -7745,17 +7745,17 @@ BIN_XOR (<replaceable>number</replaceable> [, <replaceable>number</replaceable> 
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-bit-bin_and">BIN_AND</link>, <link
-                        linkend="langref-functions-func-bit-bin_or">BIN_OR</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bin-and">BIN_AND</link>, <link
+                        linkend="fblangref-scalarfuncs-bin-or">BIN_OR</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-uuid">
+    <section xml:id="fblangref-functions-uuid">
         <info>
             <title>Функции для работы с UUID</title>
         </info>
         <para/>
-        <section xml:id="langref-functions-func-uuid-char_to_uuid">
+        <section xml:id="fblangref-scalarfuncs-char-to-uuid">
             <info>
                 <title>CHAR_TO_UUID</title>
                 <keywordset>
@@ -7833,12 +7833,12 @@ SELECT CHAR_TO_UUID('A0bF4E45-3029-2A44-X493-4998c9b439A3') FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-uuid-gen_uuid">GEN_UUID</link>, <link
-                        linkend="langref-functions-func-uuid-uuid_to_char">UUID_TO_CHAR</link>.
+                    <link linkend="fblangref-scalarfuncs-gen-uuid">GEN_UUID</link>, <link
+                        linkend="fblangref-scalarfuncs-uuid-to-char">UUID_TO_CHAR</link>.
                 </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-uuid-gen_uuid">
+        <section xml:id="fblangref-scalarfuncs-gen-uuid">
             <info>
                 <title>GEN_UUID</title>
                 <keywordset>
@@ -7894,12 +7894,12 @@ SELECT GEN_UUID() AS GUID FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>,
-                        <link linkend="langref-functions-func-uuid-uuid_to_char"
+                    <link linkend="fblangref-scalarfuncs-char-to-uuid">CHAR_TO_UUID</link>,
+                        <link linkend="fblangref-scalarfuncs-uuid-to-char"
                     >UUID_TO_CHAR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-uuid-uuid_to_char">
+        <section xml:id="fblangref-scalarfuncs-uuid-to-char">
             <info>
                 <title>UUID_TO_CHAR</title>
                 <keywordset>
@@ -7979,18 +7979,18 @@ SELECT UUID_TO_CHAR('Firebird swings!') FROM RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-uuid-gen_uuid">GEN_UUID</link>, <link
-                        linkend="langref-functions-func-uuid-char_to_uuid">CHAR_TO_UUID</link>.
+                    <link linkend="fblangref-scalarfuncs-gen-uuid">GEN_UUID</link>, <link
+                        linkend="fblangref-scalarfuncs-char-to-uuid">CHAR_TO_UUID</link>.
                 </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-gen">
+    <section xml:id="fblangref-functions-generators">
         <info>
             <title>Функции для работы с генераторами (последовательностями)</title>
         </info>
 
-        <section xml:id="langref-functions-func-gen-gen_id">
+        <section xml:id="fblangref-scalarfuncs-gen-id">
             <info>
                 <title>GEN_ID</title>
                 <keywordset>
@@ -8077,20 +8077,20 @@ NEW.ID = GEN_ID (GEN_TABLE_ID, 1);
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-commons-nxtvlufor">NEXT VALUE FOR</link>, <link
-                        linkend="langref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
-                        linkend="langref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
-                        linkend="langref-ddl-sequence-setgen">SET GENERATOR</link>. </para>
+                    <link linkend="fblangref-commons-nxtvlufor">NEXT VALUE FOR</link>, <link
+                        linkend="fblangref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
+                        linkend="fblangref-ddl-sequence-alter">ALTER SEQUENCE</link>, <link
+                        linkend="fblangref-ddl-sequence-setgen">SET GENERATOR</link>. </para>
             </formalpara>
         </section>
     </section>
-    <section xml:id="langref-functions-func-case">
+    <section xml:id="fblangref-functions-conditional">
         <info>
             <title>Условные функции</title>
         </info>
         <para/>
 
-        <section xml:id="langref-functions-func-case-coalesce">
+        <section xml:id="fblangref-scalarfuncs-coalesce">
             <info>
                 <title>COALESCE</title>
                 <keywordset>
@@ -8187,10 +8187,10 @@ WHERE ...
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-commons-conditional-case">CASE</link>. </para>
+                    <link linkend="fblangref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-case-decode">
+        <section xml:id="fblangref-scalarfuncs-decode">
             <info>
                 <title>DECODE</title>
                 <keywordset>
@@ -8283,7 +8283,7 @@ END
             </formalpara>
 
             <para>Данная функция эквивалентна конструкции <link
-                    linkend="langref-commons-conditional-case-simple">Простой CASE</link>, в которой
+                    linkend="fblangref-commons-conditional-case-simple">Простой CASE</link>, в которой
                 заданное выражение сравнивается с другими выражениями до нахождения совпадения.
                 Результатом является значение, указанное после выражения, с которым найдено
                 совпадение. Если совпадений не найдено, то возвращается значение по умолчанию (если
@@ -8319,10 +8319,10 @@ FROM people
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-commons-conditional-case">CASE</link>. </para>
+                    <link linkend="fblangref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-case-iif">
+        <section xml:id="fblangref-scalarfuncs-iif">
             <info>
                 <title>IIF</title>
                 <keywordset>
@@ -8417,10 +8417,10 @@ SELECT IIF(SEX = 'M', 'Sir', 'Madam') FROM CUSTOMERS
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-commons-conditional-case">CASE</link>. </para>
+                    <link linkend="fblangref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-case-maxvalue">
+        <section xml:id="fblangref-scalarfuncs-maxvalue">
             <info>
                 <title>MAXVALUE</title>
                 <keywordset>
@@ -8497,10 +8497,10 @@ FROM PRICELIST
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-case-minvalue">MINVALUE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-minvalue">MINVALUE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-case-minvalue">
+        <section xml:id="fblangref-scalarfuncs-minvalue">
             <info>
                 <title>MINVALUE</title>
                 <keywordset>
@@ -8577,10 +8577,10 @@ FROM PRICELIST
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-case-maxvalue">MAXVALUE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-maxvalue">MAXVALUE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-func-case-nullif">
+        <section xml:id="fblangref-scalarfuncs-nullif">
             <info>
                 <title>NULLIF</title>
                 <keywordset>
@@ -8657,8 +8657,8 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-functions-func-case-coalesce">COALESCE</link>, <link
-                        linkend="langref-commons-conditional-case">CASE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-coalesce">COALESCE</link>, <link
+                        linkend="fblangref-commons-conditional-case">CASE</link>. </para>
             </formalpara>
         </section>
     </section>

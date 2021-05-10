@@ -1,5 +1,5 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="sectables" xml:lang="ru">
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-sectables" xml:lang="ru">
     <info>
         <title>Описание таблиц безопасности</title>
     </info>
@@ -29,7 +29,7 @@
             пользователями.</para>
     </important>
     <para>
-        <table xml:id="montables-tbl-sectables" frame="all">
+        <table xml:id="fblangref-sectables-tbl-sectables" frame="all">
             <?dbfo keep-together='auto'?>
             <title>Псевдотаблицы безопасности</title>
             <tgroup cols="2">
@@ -43,16 +43,16 @@
                 </thead>
                 <tbody>
                     <row valign="middle">
-                        <entry><link linkend="sectables-global_auth_mapping"
+                        <entry><link linkend="fblangref-sectables-global_auth_mapping"
                                 >SEC$GLOBAL_AUTH_MAPPING</link></entry>
                         <entry>Сведения о глобальных отображениях.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="sectables-users">SEC$USERS</link></entry>
+                        <entry><link linkend="fblangref-sectables-users">SEC$USERS</link></entry>
                         <entry>Список пользователей в текущей базе данных безопасности.</entry>
                     </row>
                     <row valign="middle">
-                        <entry><link linkend="sectables-user_attributes"
+                        <entry><link linkend="fblangref-sectables-user_attributes"
                             >SEC$USER_ATTRIBUTES</link></entry>
                         <entry>Сведения о дополнительных атрибутах пользователей.</entry>
                     </row>
@@ -60,7 +60,7 @@
             </tgroup>
         </table>
     </para>
-    <section xml:id="sectables-global_auth_mapping">
+    <section xml:id="fblangref-sectables-global_auth_mapping">
         <info>
             <title>SEC$GLOBAL_AUTH_MAPPING</title>
             <keywordset>
@@ -70,7 +70,7 @@
         <indexterm><primary>SEC$GLOBAL_AUTH_MAPPING</primary></indexterm>
         <para>Сведения о глобальных отображениях.</para>
         <para>
-            <table xml:id="sectables-tbl-global_auth_mapping" frame="all">
+            <table xml:id="fblangref-sectables-tbl-global_auth_mapping" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы SEC$GLOBAL_AUTH_MAPPING</title>
                 <tgroup cols="3">
@@ -164,7 +164,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="sectables-users">
+    <section xml:id="fblangref-sectables-users">
         <info>
             <title>SEC$USERS</title>
             <keywordset>
@@ -174,7 +174,7 @@
         <indexterm><primary>SEC$USERS</primary></indexterm>
         <para>Список пользователей в текущей базе данных безопасности.</para>
         <para>
-            <table xml:id="sectables-tbl-users" frame="all">
+            <table xml:id="fblangref-sectables-tbl-users" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы SEC$USERS</title>
                 <tgroup cols="3">
@@ -236,7 +236,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="sectables-user_attributes">
+    <section xml:id="fblangref-sectables-user_attributes">
         <info>
             <title>SEC$USER_ATTRIBUTES</title>
             <keywordset>
@@ -246,7 +246,7 @@
         <indexterm><primary>SEC$USER_ATTRIBUTES</primary></indexterm>
         <para>Сведения о дополнительных атрибутах пользователей.</para>
         <para>
-            <table xml:id="sectables-tbl-user_attributes" frame="all">
+            <table xml:id="fblangref-sectables-tbl-user_attributes" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание столбцов таблицы SEC$USER_ATTRIBUTES</title>
                 <tgroup cols="3">

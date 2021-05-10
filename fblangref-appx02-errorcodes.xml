@@ -1,16 +1,16 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-appx02-errorcodes" xml:lang="ru">
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-appx-errorcodes" xml:lang="ru">
     <info>
         <title>Обработка ошибок, коды и сообщения</title>
     </info>
 
     <para>Приложение включает: <itemizedlist>
             <listitem>
-                <para><link linkend="langref-appx02-sqlstates">Коды ошибок SQLSTATE и их
+                <para><link linkend="fblangref-appx02-sqlstates">Коды ошибок SQLSTATE и их
                         описание</link></para>
             </listitem>
             <listitem>
-                <para><link linkend="langref-appx02-gdscode">Коды ошибок GDSCODE их описание, и
+                <para><link linkend="fblangref-appx02-gdscode">Коды ошибок GDSCODE их описание, и
                         SQLCODE</link></para>
             </listitem>
         </itemizedlist></para>
@@ -19,9 +19,9 @@
         <title>Пользовательские исключения</title>
         <para>В Firebird DDL существует простой синтаксис для создания пользовательских исключений
             для использования в PSQL, с текстами сообщений до 1021 символов. Подробности см. <link
-                linkend="langref-ddl-exception-create">CREATE EXCEPTION</link> главы DDL.
+                linkend="fblangref-ddl-exception-create">CREATE EXCEPTION</link> главы DDL.
             Подробности использования пользовательских исключений см. <link
-                linkend="langref-psql-statements-exception">EXCEPTION</link> главы PSQL.</para>
+                linkend="fblangref-psql-statements-exception">EXCEPTION</link> главы PSQL.</para>
     </note>
 
     <para>В большинстве случаев, коды ошибок SQLCODE не соотносятся с кодами SQLSTATE &quot;один в
@@ -29,7 +29,7 @@
         использовались много лет и в настоящий момент считаются устаревшими. В следующих версиях
         поддержка SQLCODE может полностью прекратиться.</para>
 
-    <section xml:id="langref-appx02-sqlstates">
+    <section xml:id="fblangref-appx02-sqlstates">
         <info>
             <title>Коды ошибок SQLSTATE и их описание</title>
         </info>
@@ -1242,7 +1242,7 @@
             </table>
         </para>
     </section>
-    <section xml:id="langref-appx02-gdscode">
+    <section xml:id="fblangref-appx02-gdscode">
         <info>
             <title>Коды ошибок GDSCODE их описание, и SQLCODE</title>
         </info>

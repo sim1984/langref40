@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-structure"
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-structure"
     xml:lang="ru">
     <info>
         <title>Структура языка SQL</title>
@@ -7,13 +7,13 @@
 
     <para>В этом справочнике описан язык SQL, поддерживаемый Firebird.</para>
 
-    <section xml:id="langref-background">
+    <section xml:id="fblangref-background">
         <title>Общие сведения</title>
 
         <para>Для начала ознакомьтесь с несколькими замечаниями о некоторых характеристиках, лежащих
             в основе языковой реализации Firebird. </para>
 
-        <section xml:id="langref-structure-flavours">
+        <section xml:id="fblangref-structure-flavours">
             <info>
                 <title>Подмножества SQL</title>
                 <keywordset>
@@ -66,7 +66,7 @@
                 исключением тех мест, где это указано явно. </para>
         </section>
 
-        <section xml:id="langref-structure-dialects">
+        <section xml:id="fblangref-structure-dialects">
             <title>Диалекты SQL</title>
 
             <para>SQL диалект — это термин, определяющий специфические особенности языка SQL,
@@ -82,7 +82,7 @@
                             языковые особенности, которые отличаются от Dialect 3, используемого по
                             умолчанию для баз данных Firebird.</para>
 
-                        <itemizedlist>
+                        <itemizedlist spacing="compact">
                             <listitem>
                                 <para>Информация о дате и времени хранится в типе данных DATE.
                                     Имеется тип данных TIMESTAMP, который идентичен DATE.</para>
@@ -107,7 +107,7 @@
                                 <para>Идентификаторы нечувствительны к регистру и всегда должны
                                     соответствовать правилам для обычных идентификаторов — см.
                                     Раздел <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        linkend="langref-structure-identifiers"
+                                        linkend="fblangref-structure-identifiers"
                                         >Идентификаторы</link> ниже.</para>
                             </listitem>
                             <listitem>
@@ -126,26 +126,31 @@
                     </listitem>
                     <listitem>
                         <para>В базах данных Диалекта 3:</para>
-                        <itemizedlist>
+                        <itemizedlist spacing="compact">
                             <listitem>
                                 <para>Числа с типами данных DECIMAL и NUMERIC хранятся как длинные
                                     значения с фиксированной точкой (масштабируемые целые числа) в
                                     случае если точность числа больше 9.</para>
                             </listitem>
                             <listitem>
-                                <para>Тип данных TIME доступен и используется для хранения значения только времени.</para>
+                                <para>Тип данных TIME доступен и используется для хранения значения
+                                    только времени.</para>
                             </listitem>
                             <listitem>
                                 <para>Тип данных DATE хранит информацию только о дате.</para>
                             </listitem>
                             <listitem>
-                                <para>Тип данных BIGINT доступен в качестве целого 64-х битного типа данных.</para>
+                                <para>Тип данных BIGINT доступен в качестве целого 64-х битного типа
+                                    данных.</para>
                             </listitem>
                             <listitem>
-                                <para>Двойные кавычки могут использоваться, но только для идентификаторов, которые являются зависимыми от регистра, а не для строковых данных.</para>
+                                <para>Двойные кавычки могут использоваться, но только для
+                                    идентификаторов, которые являются зависимыми от регистра, а не
+                                    для строковых данных.</para>
                             </listitem>
                             <listitem>
-                                <para>Все строки должны быть разделены одинарными кавычками (апострофам).</para>
+                                <para>Все строки должны быть разделены одинарными кавычками
+                                    (апострофам).</para>
                             </listitem>
                             <listitem>
                                 <para>Значения генераторов возвращаются как 64-битное целое.</para>
@@ -154,10 +159,10 @@
                     </listitem>
                 </itemizedlist>
             </para>
-            <para>Для вновь разрабатываемых баз данных и приложений настоятельно
-                рекомендуется использовать 3-й диалект. Диалект при соединении с базой данных должен
-                быть таким же, как и базы данных. Исключением является случай миграции с 1-го в 3-й
-                диалект, когда в строке соединения с базой данных используется 2-й диалект. </para>
+            <para>Для вновь разрабатываемых баз данных и приложений настоятельно рекомендуется
+                использовать 3-й диалект. Диалект при соединении с базой данных должен быть таким
+                же, как и базы данных. Исключением является случай миграции с 1-го в 3-й диалект,
+                когда в строке соединения с базой данных используется 2-й диалект. </para>
             <note>
                 <title>Замечание:</title>
                 <para>По умолчанию это руководство описывает семантику SQL третьего диалекта, если
@@ -165,7 +170,7 @@
             </note>
         </section>
 
-        <section xml:id="langref-structure-errors">
+        <section xml:id="fblangref-structure-errors">
             <title>Действия при ошибках</title>
 
             <para>Обработка любого оператора либо успешно завершается, либо прерывается из-за
@@ -174,7 +179,7 @@
         </section>
     </section>
 
-    <section xml:id="langref-structure-basics">
+    <section xml:id="fblangref-structure-basics">
         <title>Основные сведения: операторы, предложения, ключевые слова </title>
 
 
@@ -206,10 +211,10 @@ CREATE TABLE T (ABS INT NOT NULL);
 CREATE TABLE T (ADD INT NOT NULL);
         </programlisting>
         <para>Список зарезервированных и ключевых слов представлен в приложении <link
-                linkend="keywords">Зарезервированные и ключевые слова</link>. </para>
+                linkend="fblangref-appx-keywords">Зарезервированные и ключевые слова</link>. </para>
     </section>
 
-    <section xml:id="langref-structure-identifiers">
+    <section xml:id="fblangref-structure-identifiers">
         <title>Идентификаторы</title>
 
         <para>Все объекты базы данных имеют имена, которые иногда называют идентификаторами.
@@ -217,26 +222,37 @@ CREATE TABLE T (ADD INT NOT NULL);
             имена, похожие по форме на имена переменных в обычных языках программирования, и имена с
             разделителями (delimited name), которые являются отличительной особенностью языка SQL. </para>
 
-        <para>Обычное имя должно начинаться с буквы латинского алфавита, за которой могут следовать
-            буквы (латинского алфавита), цифры, символ подчёркивания и знак доллара. Такое имя
-            нечувствительно к регистру, его можно записывать как строчными, так и прописными
-            буквами. В имени нельзя использовать буквы кириллицы, пробелы, другие специальные
-            символы.</para>
+        <section>
+            <title>Правила для обычных идентификаторов</title>
 
-        <para>Следующие имена с точки зрения системы являются одинаковыми: </para>
-        <para>
-            <programlisting>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>Длина идентификатора не должна превышать 63 символа</para>
+                    </listitem>
+                    <listitem>
+                        <para>Обычное имя должно начинаться с буквы латинского алфавита (первые 7
+                            бит таблицы ASCII), за которой могут следовать буквы (латинского
+                            алфавита), цифры, символ подчёркивания и знак доллара. В имени нельзя
+                            использовать буквы кириллицы, пробелы, другие специальные символы. Такое
+                            имя нечувствительно к регистру, его можно записывать как строчными, так
+                            и прописными буквами. Следующие имена с точки зрения системы являются
+                            одинаковыми:
+                            <programlisting>
 fullname
 FULLNAME
 FuLlNaMe
 FullName
             </programlisting>
-        </para>
-        <formalpara>
-            <title>Синтаксис:</title>
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <formalpara>
+                <title>Синтаксис:</title>
 
-            <para>
-                <literallayout class="monospaced">
+                <para>
+                    <literallayout class="monospaced">
 <replaceable>&lt;name&gt;</replaceable> ::=
   <replaceable>&lt;letter&gt;</replaceable> |
   <replaceable>&lt;name&gt;</replaceable><replaceable>&lt;letter&gt;</replaceable> |
@@ -254,32 +270,68 @@ FullName
 
 <replaceable>&lt;digit&gt;</replaceable> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9  
                 </literallayout>
-            </para>
-        </formalpara>
-        <para>Имя с разделителями заключается в двойные кавычки. Оно может содержать любые символы,
-            включая буквы кириллицы, пробелы, специальные символы. В нем также могут присутствовать
-            зарезервированные слова. Такое имя является чувствительным к регистру. Имена с
-            разделителем доступны только в диалекте 3. Подробнее о диалектах см. <link
-                linkend="langref-structure-dialects">Диалекты SQL</link>
-        </para>
-        <para>
-            <literallayout class="monospaced">  
-<replaceable>&lt;delimited name&gt;</replaceable> ::= "<replaceable>&lt;ASCII char&gt;</replaceable>[<replaceable>&lt;ASCII char&gt;</replaceable> …]"                
+                </para>
+            </formalpara>
+        </section>
+        <section>
+            <title>Правила для идентификаторов с разделителями</title>
+            <itemizedlist>
+                <listitem>
+                    <para>Длина идентификатора не должна превышать 63 символа.</para>
+                </listitem>
+                <listitem>
+                    <para> Имя должно быть заключено в двойные кавычки, например
+                            <code>"anIdentifier"</code>.</para>
+                </listitem>
+                <listitem>
+                    <para> Идентификатор может содержать любой символ из набора символов UTF-8,
+                        включая символы с диакритическими знаками, пробелы и специальные
+                        символы.</para>
+                </listitem>
+                <listitem>
+                    <para> Идентификатор может быть зарезервированным словом.</para>
+                </listitem>
+                <listitem>
+                    <para> Идентификаторы с разделителями чувствительны к регистру во всех
+                        контекстах.</para>
+                </listitem>
+                <listitem>
+                    <para> Завершающие пробелы в именах с разделителями игнорируются, как и в случае
+                        любой строковой константы.</para>
+                </listitem>
+                <listitem>
+                    <para> Идентификаторы с разделителями доступны только в Диалекте 3. Подробнее о
+                        диалектах см. <link linkend="fblangref-structure-dialects">Диалекты SQL</link>
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">  
+<replaceable>&lt;delimited name&gt;</replaceable> ::= "<replaceable>&lt;permitted_character&gt;</replaceable>[<replaceable>&lt;permitted_character&gt;</replaceable> …]"                
             </literallayout>
-        </para>
-        <para>Следует иметь в виду, что конечные пробелы в именах с разделителями, как и в любых
-            строковых константах, отбрасываются. </para>
-        <para>Существует определённая похожесть и отличие обычных имён и имён с разделителями. Такие
-            имена с разделителями и обычные, как "FULLNAME" и FULLNAME являются одинаковыми, а
-            "FullName" и FULLNAME (так же как, например, и FullName) отличаются. </para>
+                </para>
+            </formalpara>
+            <note>
+                <para>Идентификатор с разделителями, например <code>"FULLNAME"</code>, совпадает с
+                    обычными идентификаторами <code>FULLNAME</code>, <code>fullname</code>,
+                        <code>FullName</code> и т. д. Причина в том, что Firebird хранит обычные
+                    идентификаторы в верхнем регистре, независимо от того, как они были определены
+                    или объявлены. Идентификаторы с разделителями всегда сохраняются так как их
+                    определили или объявили. Таким образом, идентификатор <code>"FullName"</code> (в
+                    кавычках) отличается от <code>FullName</code> (без кавычек), который хранится в
+                    метаданных как <code>FULLNAME</code>.</para>
+            </note>
+        </section>
     </section>
 
-    <section xml:id="langref-structure-literals">
+    <section xml:id="fblangref-structure-literals">
         <info>
             <title>Литералы</title>
         </info>
 
-        <para>Литералы служат для непосредственного представления данных, ниже приведён список
+        <para>Литералы служат для непосредственного представления данных. Ниже приведены примеры
             стандартных литералов: </para>
         <para>
             <itemizedlist spacing="compact">
@@ -287,30 +339,39 @@ FullName
                     <para> целочисленные — 0, -34, 45, 0X080000000; </para>
                 </listitem>
                 <listitem>
-                    <para> вещественные — 0.0, -3.14, 3.23e-23; </para>
+                    <para>числа с фиксированной точкой — 0.0, -3.14;</para>
                 </listitem>
                 <listitem>
-                    <para> строковые — 'текст', 'don''t!'; </para>
+                    <para>вещественные — 3.23e-23; </para>
                 </listitem>
                 <listitem>
-                    <para> дата — DATE '10.01.2014'; </para>
+                    <para>строковые — 'текст', 'don''t!'; </para>
                 </listitem>
                 <listitem>
-                    <para> время — TIME '15:12:56'; </para>
+                    <para>двоичные строки — x'48656C6C6F20776F726C64';</para>
                 </listitem>
                 <listitem>
-                    <para> временная отметка — TIMESTAMP '10.01.2014 13:32:02'; </para>
+                    <para>дата — DATE '10.01.2014'; </para>
                 </listitem>
                 <listitem>
-                    <para> неопределённое состояние — null. </para>
+                    <para>время — TIME '15:12:56'; </para>
+                </listitem>
+                <listitem>
+                    <para>временная отметка — TIMESTAMP '10.01.2014 13:32:02'; </para>
+                </listitem>
+                <listitem>
+                    <para>логические — TRUE, FALSE, UNKNOWN;</para>
+                </listitem>
+                <listitem>
+                    <para>неопределённое состояние — null. </para>
                 </listitem>
             </itemizedlist>
         </para>
         <para>Подробней о литералах для каждого из типов данных см. <link
-                linkend="langref-datatypes">Типы и подтипы данных</link>.</para>
+                linkend="fblangref-datatypes">Типы и подтипы данных</link>.</para>
     </section>
 
-    <section xml:id="langref-structure-operators">
+    <section xml:id="fblangref-structure-operators">
         <info>
             <title>Операторы и специальные символы </title>
         </info>
@@ -318,9 +379,9 @@ FullName
         <para>Существует набор специальных символов, используемых в качестве разделителей. </para>
         <para>
             <literallayout class="monospaced"> 
-<replaceable>&lt;special char&gt;</replaceable> ::= <replaceable>&lt;space&gt;</replaceable> | " | % | &amp; | ' | ( | ) 
-    | * | + | , | - | . | / | : | ; | &lt; | = | &gt; | ? | [ | ] 
-    | ^ | { | } | <emphasis role="bold">|</emphasis>               
+<replaceable>&lt;special char&gt;</replaceable> ::= 
+    <replaceable>&lt;space&gt;</replaceable> | " | % | &amp; | ' | ( | ) | * | + | , | -
+  | . | / | : | ; | &lt; | = | > | ? | [ | ] | ^ | { | }  |  <replaceable>&lt;vertical bar&gt;</replaceable>        
             </literallayout>
         </para>
         <para>Часть этих символов, а так же их комбинации могут быть использованы как операторы
@@ -337,24 +398,23 @@ FullName
     <replaceable>&lt;comparison operator&gt;</replaceable> |  
     <replaceable>&lt;logical operator&gt;</replaceable>
         
-<replaceable>&lt;string operator&gt;</replaceable> ::= {||}
+<replaceable>&lt;string operator&gt;</replaceable> ::= "||"
                     
 <replaceable>&lt;arithmetic operator&gt;</replaceable> ::= * | / | + | - |
                     
-<replaceable>&lt;comparison operator&gt;</replaceable> ::=
-    {=} | {&lt;&gt;} | {!=} | {~=} | {^=} |
-    {&gt;} | {&lt;} | {&gt;=} | {&lt;=} | {!&gt;} | {~&gt;} | {^&gt;} |
-    {!&lt;} | {~&lt;} | {^&lt;}
+<replaceable>&lt;comparison operator&gt;</replaceable> ::=    
+    =  | &lt;> | != | ~= | ^= | > | &lt; | >= | &lt;=
+  | !> | ~> | ^> | !&lt; | ~&lt; | ^&lt;
     
 <replaceable>&lt;logical operator&gt;</replaceable> ::= NOT | AND | OR                    
                 </literallayout>
             </para>
         </formalpara>
-        <para>Подробнее об операторах см. <link linkend="langref-commons-expressions"
+        <para>Подробнее об операторах см. <link linkend="fblangref-commons-expressions"
                 >Выражения</link>.</para>
     </section>
 
-    <section xml:id="langref-structure-comments">
+    <section xml:id="fblangref-structure-comments">
         <info>
             <title>Комментарии</title>
         </info>

@@ -1,10 +1,10 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="syspackage" xml:lang="ru">
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-syspackage" xml:lang="ru">
     <info>
         <title>Системные пакеты</title>
     </info>
 
-    <section xml:id="syspackage-timezoneutil">
+    <section xml:id="fblangref-syspackage-timezoneutil">
         <info>
             <title>RDB$TIME_ZONE_UTIL</title>
             <keywordset>
@@ -15,7 +15,7 @@
 
         <para>Данный пакет содержит процедуры и функции для работы с часовыми поясами.</para>
 
-        <section xml:id="syspackage-timezoneutil-databaseversion">
+        <section xml:id="fblangref-syspackage-timezoneutil-databaseversion">
             <info>
                 <title>Функция DATABASE_VERSION</title>
             </info>
@@ -53,7 +53,7 @@ DATABASE_VERSION
             </formalpara>
         </section>
 
-        <section xml:id="syspackage-timezoneutil-transitions">
+        <section xml:id="fblangref-syspackage-timezoneutil-transitions">
             <info>
                 <title>Процедура TRANSITIONS</title>
             </info>

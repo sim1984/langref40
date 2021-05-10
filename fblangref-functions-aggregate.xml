@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-aggfuncs" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-aggfuncs" xml:lang="ru">
     <info>
         <title>Агрегатные функции</title>
     </info>
@@ -18,7 +18,7 @@
         </itemizedlist>
     </para>
 
-    <section xml:id="langref-aggfuncs-syntax">
+    <section xml:id="fblangref-aggfuncs-syntax">
         <title>Синтаксис агрегатных функций</title>
 
         <para>Обобщённый синтаксис агрегатных функций выглядит следующим образом:
@@ -28,7 +28,7 @@
                 </programlisting>
         </para>
 
-        <section xml:id="langref-aggfuncs-filter">
+        <section xml:id="fblangref-aggfuncs-filter">
             <info>
                 <title>Предложение FILTER</title>
                 <keywordset>
@@ -96,20 +96,20 @@ GROUP BY invoice_year
             </formalpara>
         </section>
 
-        <section xml:id="langref-aggfuncs-over">
+        <section xml:id="fblangref-aggfuncs-over">
             <title>Предложение OVER</title>
 
 
             <para>Любая агрегатная функция может быть использована в качестве оконной. Подробнее см.
-                <link linkend="langref-windowfuncs-aggfuncs">Оконные (аналитические) функции</link>. </para>
+                <link linkend="fblangref-windowfuncs-aggfuncs">Оконные (аналитические) функции</link>. </para>
         </section>
     </section>
 
-    <section xml:id="langref-aggfuncs-general">
+    <section xml:id="fblangref-aggfuncs-general">
         <title>Основные агрегатные функции</title>
 
 
-        <section xml:id="langref-aggfuncs-avg">
+        <section xml:id="fblangref-aggfuncs-avg">
             <info>
                 <title>AVG</title>
                 <keywordset>
@@ -198,10 +198,10 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-dml-select">SELECT</link>. </para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-count">
+        <section xml:id="fblangref-aggfuncs-count">
             <info>
                 <title>COUNT</title>
                 <keywordset>
@@ -295,10 +295,10 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-dml-select">SELECT</link>. </para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-list">
+        <section xml:id="fblangref-aggfuncs-list">
             <info>
                 <title>LIST</title>
                 <keywordset>
@@ -403,11 +403,11 @@ FROM (SELECT display_name
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-dml-select">SELECT</link>. </para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-aggfuncs-max">
+        <section xml:id="fblangref-aggfuncs-max">
             <info>
                 <title>MAX</title>
                 <keywordset>
@@ -492,12 +492,12 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-dml-select">SELECT</link>, <link
-                        linkend="langref-aggfuncs-min">MIN</link>. </para>
+                    <link linkend="fblangref-dml-select">SELECT</link>, <link
+                        linkend="fblangref-aggfuncs-min">MIN</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-aggfuncs-min">
+        <section xml:id="fblangref-aggfuncs-min">
             <info>
                 <title>MIN</title>
                 <keywordset>
@@ -585,11 +585,11 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-dml-select">SELECT</link>, <link
-                        linkend="langref-aggfuncs-max">MAX</link>. </para>
+                    <link linkend="fblangref-dml-select">SELECT</link>, <link
+                        linkend="fblangref-aggfuncs-max">MAX</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-functions-agg-sum">
+        <section xml:id="fblangref-functions-agg-sum">
             <info>
                 <title>SUM</title>
                 <keywordset>
@@ -674,13 +674,13 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-dml-select">SELECT</link>. </para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
             </formalpara>
         </section>
 
     </section>
 
-    <section xml:id="langref-aggfuncs-stats">
+    <section xml:id="fblangref-aggfuncs-stats">
         <info>
             <title>Статистические функции</title>
         </info>
@@ -689,9 +689,9 @@ GROUP BY dept_no
             DISTINCT.</para>
         <para>Статистические функции часто используются совместно с предложением GROUP BY. Любую из
             статистических функций можно использовать в качестве оконной. Подробнее см. <link
-                linkend="langref-windowfuncs-aggfuncs">OVER</link>.</para>
+                linkend="fblangref-windowfuncs-aggfuncs">OVER</link>.</para>
 
-        <section xml:id="langref-aggfuncs-corr">
+        <section xml:id="fblangref-aggfuncs-corr">
             <info>
                 <title>CORR</title>
                 <keywordset>
@@ -791,11 +791,11 @@ FROM measure
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>, <link
-                        linkend="langref-aggfuncs-stddev-pop">STDDEV_POP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>, <link
+                        linkend="fblangref-aggfuncs-stddev-pop">STDDEV_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-covar-pop">
+        <section xml:id="fblangref-aggfuncs-covar-pop">
             <info>
                 <title>COVAR_POP</title>
                 <keywordset>
@@ -893,12 +893,12 @@ FROM measure
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-covar-samp">COVAR_SAMP</link>, <link
-                        linkend="langref-functions-agg-sum">SUM</link>, <link
-                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
+                    <link linkend="fblangref-aggfuncs-covar-samp">COVAR_SAMP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-covar-samp">
+        <section xml:id="fblangref-aggfuncs-covar-samp">
             <info>
                 <title>COVAR_SAMP</title>
                 <keywordset>
@@ -996,12 +996,12 @@ FROM measure
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>, <link
-                        linkend="langref-functions-agg-sum">SUM</link>, <link
-                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
+                    <link linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-stddev-pop">
+        <section xml:id="fblangref-aggfuncs-stddev-pop">
             <info>
                 <title>STDDEV_POP</title>
                 <keywordset>
@@ -1089,11 +1089,11 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-stddev-pop">STDDEV_SAMP</link>, <link
-                        linkend="langref-aggfuncs-var-pop">VAR_POP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-stddev-pop">STDDEV_SAMP</link>, <link
+                        linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-stddev-samp">
+        <section xml:id="fblangref-aggfuncs-stddev-samp">
             <info>
                 <title>STDDEV_SAMP</title>
                 <keywordset>
@@ -1181,11 +1181,11 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-stddev-pop">STDDEV_POP</link>, <link
-                        linkend="langref-aggfuncs-var-samp">VAR_SAMP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-stddev-pop">STDDEV_POP</link>, <link
+                        linkend="fblangref-aggfuncs-var-samp">VAR_SAMP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-var-pop">
+        <section xml:id="fblangref-aggfuncs-var-pop">
             <info>
                 <title>VAR_POP</title>
                 <keywordset>
@@ -1276,12 +1276,12 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-var-samp">VAR_SAMP</link>, <link
-                        linkend="langref-functions-agg-sum">SUM</link>, <link
-                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
+                    <link linkend="fblangref-aggfuncs-var-samp">VAR_SAMP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-var-samp">
+        <section xml:id="fblangref-aggfuncs-var-samp">
             <info>
                 <title>VAR_SAMP</title>
                 <keywordset>
@@ -1372,15 +1372,15 @@ GROUP BY dept_no
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-var-pop">VAR_POP</link>, <link
-                        linkend="langref-functions-agg-sum">SUM</link>, <link
-                        linkend="langref-aggfuncs-count">COUNT</link>. </para>
+                    <link linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
             </formalpara>
         </section>
     </section>
 
 
-    <section xml:id="langref-aggfuncs-regr">
+    <section xml:id="fblangref-aggfuncs-regr">
         <info>
             <title>Функции линейной регрессии</title>
         </info>
@@ -1392,10 +1392,10 @@ GROUP BY dept_no
         <para>В синтаксисе функций, <replaceable>у</replaceable> интерпретируется в качестве
             переменной, зависящей от <replaceable>х</replaceable>.</para>
         <para>Любую функции линейной регрессии из статистических функций можно использовать в
-            качестве оконной. Подробнее см. <link linkend="langref-windowfuncs-aggfuncs"
+            качестве оконной. Подробнее см. <link linkend="fblangref-windowfuncs-aggfuncs"
                 >Оконные (аналитические) функции</link>.</para>
 
-        <section xml:id="langref-aggfuncs-regr-avgx">
+        <section xml:id="fblangref-aggfuncs-regr-avgx">
             <info>
                 <title>REGR_AVGX</title>
                 <keywordset>
@@ -1477,11 +1477,11 @@ SUM(<replaceable>&lt;X></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
-                        linkend="langref-aggfuncs-regr-avgy">REGR_AVGY</link>. </para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-regr-avgy">REGR_AVGY</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-avgy">
+        <section xml:id="fblangref-aggfuncs-regr-avgy">
             <info>
                 <title>REGR_AVGY</title>
                 <keywordset>
@@ -1563,11 +1563,11 @@ SUM(<replaceable>&lt;Y></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
-                        linkend="langref-aggfuncs-regr-avgx">REGR_AVGX</link>. </para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-regr-avgx">REGR_AVGX</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-count">
+        <section xml:id="fblangref-aggfuncs-regr-count">
             <info>
                 <title>REGR_COUNT</title>
                 <keywordset>
@@ -1645,7 +1645,7 @@ SUM(CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</repla
 </programlisting>
             </para>
         </section>
-        <section xml:id="langref-aggfuncs-regr-intercept">
+        <section xml:id="fblangref-aggfuncs-regr-intercept">
             <info>
                 <title>REGR_INTERCEPT</title>
                 <keywordset>
@@ -1770,12 +1770,12 @@ BYYEAR     TOTAL_VALUE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-regr-avgy">REGR_AVGY</link>, <link
-                        linkend="langref-aggfuncs-regr-avgx">REGR_AVGX</link>, <link
-                        linkend="langref-aggfuncs-regr-slope">REGR_SLOPE</link>. </para>
+                    <link linkend="fblangref-aggfuncs-regr-avgy">REGR_AVGY</link>, <link
+                        linkend="fblangref-aggfuncs-regr-avgx">REGR_AVGX</link>, <link
+                        linkend="fblangref-aggfuncs-regr-slope">REGR_SLOPE</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-r2">
+        <section xml:id="fblangref-aggfuncs-regr-r2">
             <info>
                 <title>REGR_R2</title>
                 <keywordset>
@@ -1856,10 +1856,10 @@ POWER(CORR(<replaceable>y</replaceable>, <replaceable>x</replaceable>), 2)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-corr">CORR</link>. </para>
+                    <link linkend="fblangref-aggfuncs-corr">CORR</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-slope">
+        <section xml:id="fblangref-aggfuncs-regr-slope">
             <info>
                 <title>REGR_SLOPE</title>
                 <keywordset>
@@ -1941,10 +1941,10 @@ COVAR_POP(<replaceable>y</replaceable>, <replaceable>x</replaceable>) / VAR_POP(
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-sxx">
+        <section xml:id="fblangref-aggfuncs-regr-sxx">
             <info>
                 <title>REGR_SXX</title>
                 <keywordset>
@@ -2024,11 +2024,11 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
-                        linkend="langref-aggfuncs-var-pop">VAR_POP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-sxy">
+        <section xml:id="fblangref-aggfuncs-regr-sxy">
             <info>
                 <title>REGR_SXY</title>
                 <keywordset>
@@ -2106,11 +2106,11 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * COVAR_P
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
-                        linkend="langref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
             </formalpara>
         </section>
-        <section xml:id="langref-aggfuncs-regr-syy">
+        <section xml:id="fblangref-aggfuncs-regr-syy">
             <info>
                 <title>REGR_SYY</title>
                 <keywordset>
@@ -2190,8 +2190,8 @@ REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-aggfuncs-regr-count">REGR_COUNT</link>, <link
-                        linkend="langref-aggfuncs-var-pop">VAR_POP</link>. </para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>. </para>
             </formalpara>
         </section>
     </section>

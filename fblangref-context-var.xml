@@ -1,9 +1,9 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-contextvars" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-contextvars" xml:lang="ru">
     <info>
         <title>Контекстные переменные</title>
     </info>
-    <section xml:id="langref-contextvars-current_connection">
+    <section xml:id="fblangref-contextvars-current_connection">
         <info>
             <title>CURRENT_CONNECTION</title>
             <keywordset>
@@ -51,11 +51,11 @@ SELECT CURRENT_CONNECTION FROM RDB$DATABASE
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_transaction"
+                <link linkend="fblangref-contextvars-current_transaction"
                     >CURRENT_TRANSACTION</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-current_date">
+    <section xml:id="fblangref-contextvars-current_date">
         <info>
             <title>CURRENT_DATE</title>
             <keywordset>
@@ -101,12 +101,12 @@ DATE DEFAULT CURRENT_DATE NOT NULL
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
-                    <link linkend="langref-contextvars-current_time">CURRENT_TIME</link>.
+                <link linkend="fblangref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
+                    <link linkend="fblangref-contextvars-current_time">CURRENT_TIME</link>.
             </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-current_role">
+    <section xml:id="fblangref-contextvars-current_role">
         <info>
             <title>CURRENT_ROLE</title>
             <keywordset>
@@ -145,7 +145,7 @@ CURRENT_ROLE
                 входе в систему или с помощью SET ROLE), неявно определяемые роли (выданные
                 оператором GRANT с использованием ключевого слова DEFAULT) не будут попадать в неё.
                 Для того чтобы узнать используется ли текущим пользователем неявно указанная роль
-                используйте системную функцию <link linkend="langref-functions-func-security-roleinuse"
+                используйте системную функцию <link linkend="fblangref-scalarfuncs-roleinuse"
                     >RDB$ROLE_IN_USE</link>.</para>
         </note>
 
@@ -172,12 +172,12 @@ FROM RDB$DATABASE;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-session-role-setrole">SET ROLE</link>, <link
-                    linkend="langref-functions-func-context-getcontext">RDB$GET_CONTEXT</link>, <link
-                    linkend="langref-functions-func-security-roleinuse">RDB$ROLE_IN_USE</link>. </para>
+                <link linkend="fblangref-session-role-setrole">SET ROLE</link>, <link
+                    linkend="fblangref-scalarfuncs-get-context">RDB$GET_CONTEXT</link>, <link
+                    linkend="fblangref-scalarfuncs-roleinuse">RDB$ROLE_IN_USE</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-current_time">
+    <section xml:id="fblangref-contextvars-current_time">
         <info>
             <title>CURRENT_TIME</title>
             <keywordset>
@@ -261,12 +261,12 @@ SELECT CURRENT_TIME(2) FROM RDB$DATABASE;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
-                    <link linkend="langref-contextvars-current_date">CURRENT_DATE</link>.
+                <link linkend="fblangref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
+                    <link linkend="fblangref-contextvars-current_date">CURRENT_DATE</link>.
             </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-current_timestamp">
+    <section xml:id="fblangref-contextvars-current_timestamp">
         <info>
             <title>CURRENT_TIMESTAMP</title>
             <keywordset>
@@ -350,11 +350,11 @@ SELECT CURRENT_TIMESTAMP(2) FROM RDB$DATABASE;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_time">CURRENT_TIME</link>, <link
-                    linkend="langref-contextvars-current_date">CURRENT_DATE</link>. </para>
+                <link linkend="fblangref-contextvars-current_time">CURRENT_TIME</link>, <link
+                    linkend="fblangref-contextvars-current_date">CURRENT_DATE</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-current_transaction">
+    <section xml:id="fblangref-contextvars-current_transaction">
         <info>
             <title>CURRENT_TRANSACTION</title>
             <keywordset>
@@ -405,12 +405,12 @@ NEW.TRANS_ID = CURRENT_TRANSACTION;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_connection"
-                >CURRENT_CONNECTION</link>, <link linkend="langref-functions-func-context-getcontext"
+                <link linkend="fblangref-contextvars-current_connection"
+                >CURRENT_CONNECTION</link>, <link linkend="fblangref-scalarfuncs-get-context"
                     >RDB$GET_CONTEXT</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-current_user">
+    <section xml:id="fblangref-contextvars-current_user">
         <info>
             <title>CURRENT_USER</title>
             <keywordset>
@@ -458,11 +458,11 @@ NEW.ADDED_BY = CURRENT_USER;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-user">USER</link>, <link
-                    linkend="langref-contextvars-current_role">CURRENT_ROLE</link>. </para>
+                <link linkend="fblangref-contextvars-user">USER</link>, <link
+                    linkend="fblangref-contextvars-current_role">CURRENT_ROLE</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-deleting">
+    <section xml:id="fblangref-contextvars-deleting">
         <info>
             <title>DELETING</title>
             <keywordset>
@@ -520,12 +520,12 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-inserting">INSERTING</link>, <link
-                    linkend="langref-contextvars-updating">UPDATING</link>. </para>
+                <link linkend="fblangref-contextvars-inserting">INSERTING</link>, <link
+                    linkend="fblangref-contextvars-updating">UPDATING</link>. </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-gdscode">
+    <section xml:id="fblangref-contextvars-gdscode">
         <info>
             <title>GDSCODE</title>
             <keywordset>
@@ -595,11 +595,11 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-sqlcode">SQLCODE</link>, <link
-                    linkend="langref-contextvars-sqlstate">SQLSTATE</link>. </para>
+                <link linkend="fblangref-contextvars-sqlcode">SQLCODE</link>, <link
+                    linkend="fblangref-contextvars-sqlstate">SQLSTATE</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-inserting">
+    <section xml:id="fblangref-contextvars-inserting">
         <info>
             <title>INSERTING</title>
             <keywordset>
@@ -655,12 +655,12 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-updating">UPDATING</link>, <link
-                    linkend="langref-contextvars-deleting">DELETING</link>. </para>
+                <link linkend="fblangref-contextvars-updating">UPDATING</link>, <link
+                    linkend="fblangref-contextvars-deleting">DELETING</link>. </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-localtime">
+    <section xml:id="fblangref-contextvars-localtime">
         <info>
             <title>LOCALTIME</title>
             <keywordset>
@@ -745,14 +745,14 @@ SELECT LOCALTIME(2) FROM RDB$DATABASE;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_time">CURRENT_TIME</link>, <link
-                    linkend="langref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
-                    <link linkend="langref-contextvars-current_date">CURRENT_DATE</link>.
+                <link linkend="fblangref-contextvars-current_time">CURRENT_TIME</link>, <link
+                    linkend="fblangref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
+                    <link linkend="fblangref-contextvars-current_date">CURRENT_DATE</link>.
             </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-localtimestamp">
+    <section xml:id="fblangref-contextvars-localtimestamp">
         <info>
             <title>LOCALTIMESTAMP</title>
             <keywordset>
@@ -838,13 +838,13 @@ SELECT LOCALTIMESTAMP(2) FROM RDB$DATABASE;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
-                    <link linkend="langref-contextvars-current_time">CURRENT_TIME</link>, <link
-                    linkend="langref-contextvars-current_date">CURRENT_DATE</link>. </para>
+                <link linkend="fblangref-contextvars-current_timestamp">CURRENT_TIMESTAMP</link>,
+                    <link linkend="fblangref-contextvars-current_time">CURRENT_TIME</link>, <link
+                    linkend="fblangref-contextvars-current_date">CURRENT_DATE</link>. </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-new">
+    <section xml:id="fblangref-contextvars-new">
         <info>
             <title>NEW</title>
             <keywordset>
@@ -900,11 +900,11 @@ NEW
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-old">OLD</link>. </para>
+                <link linkend="fblangref-contextvars-old">OLD</link>. </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-old">
+    <section xml:id="fblangref-contextvars-old">
         <info>
             <title>OLD</title>
             <keywordset>
@@ -955,10 +955,10 @@ OLD
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-new">NEW</link>. </para>
+                <link linkend="fblangref-contextvars-new">NEW</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-resetting">
+    <section xml:id="fblangref-contextvars-resetting">
         <info>
             <title>RESETTING</title>
             <keywordset>
@@ -1013,10 +1013,10 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-session-resetsession">ALTER SESSION RESET</link>.</para>
+                <link linkend="fblangref-session-resetsession">ALTER SESSION RESET</link>.</para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-row_count">
+    <section xml:id="fblangref-contextvars-row_count">
         <info>
             <title>ROW_COUNT</title>
             <keywordset>
@@ -1055,7 +1055,7 @@ ROW_COUNT
                         данных и 0 в противном случае;</para>
                 </listitem>
                 <listitem>
-                    <para>В цикле <link linkend="langref-psql-statements-forselect">FOR SELECT</link>
+                    <para>В цикле <link linkend="fblangref-psql-statements-forselect">FOR SELECT</link>
                         переменная ROW_COUNT увеличивается на каждой итерации (начиная с 0 в
                         качестве первого значения);</para>
                 </listitem>
@@ -1124,7 +1124,7 @@ IF (row_count = 0) THEN
             </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-sqlcode">
+    <section xml:id="fblangref-contextvars-sqlcode">
         <info>
             <title>SQLCODE</title>
             <keywordset>
@@ -1181,11 +1181,11 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-gdscode">GDSCODE</link>, <link
-                    linkend="langref-contextvars-sqlstate">SQLSTATE</link>. </para>
+                <link linkend="fblangref-contextvars-gdscode">GDSCODE</link>, <link
+                    linkend="fblangref-contextvars-sqlstate">SQLSTATE</link>. </para>
         </formalpara>
     </section>
-    <section xml:id="langref-contextvars-sqlstate">
+    <section xml:id="fblangref-contextvars-sqlstate">
         <info>
             <title>SQLSTATE</title>
             <keywordset>
@@ -1261,13 +1261,13 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-gdscode">GDSCODE</link>, <link
-                    linkend="langref-contextvars-sqlcode">SQLCODE</link>, <link linkend="langref-appx02-errorcodes"
+                <link linkend="fblangref-contextvars-gdscode">GDSCODE</link>, <link
+                    linkend="fblangref-contextvars-sqlcode">SQLCODE</link>, <link linkend="fblangref-appx-errorcodes"
                     >Коды ошибок SQLSTATE</link>. </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-updating">
+    <section xml:id="fblangref-contextvars-updating">
         <info>
             <title>UPDATING</title>
             <keywordset>
@@ -1320,12 +1320,12 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-inserting">INSERTING</link>, <link
-                    linkend="langref-contextvars-deleting">DELETING</link>. </para>
+                <link linkend="fblangref-contextvars-inserting">INSERTING</link>, <link
+                    linkend="fblangref-contextvars-deleting">DELETING</link>. </para>
         </formalpara>
     </section>
 
-    <section xml:id="langref-contextvars-user">
+    <section xml:id="fblangref-contextvars-user">
         <info>
             <title>USER</title>
             <keywordset>
@@ -1371,8 +1371,8 @@ NEW.ADDED_BY = USER;
             <title>См. также:</title>
 
             <para>
-                <link linkend="langref-contextvars-current_user">CURRENT_USER</link>, <link
-                    linkend="langref-contextvars-current_role">CURRENT_ROLE</link>. </para>
+                <link linkend="fblangref-contextvars-current_user">CURRENT_USER</link>, <link
+                    linkend="fblangref-contextvars-current_role">CURRENT_ROLE</link>. </para>
         </formalpara>
     </section>
 

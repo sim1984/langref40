@@ -1,12 +1,12 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="charset-coll"
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-appx-charsets"
     xml:lang="ru">
     <info>
         <title>Наборы символов и порядки сортировки</title>
     </info>
 
     <para>
-        <table frame="all">
+        <table frame="all" xml:id="fblangref-appx-tbl-charsets">
             <title>Наборы символов и порядки сортировки</title>
             <tgroup cols="5">
                 <colspec colname="c1" colnum="1" colwidth="0.7*" align="justify"/>

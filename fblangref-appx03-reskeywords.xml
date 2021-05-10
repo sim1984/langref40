@@ -1,5 +1,5 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="keywords"
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-appx-keywords"
     xml:lang="ru">
     <info>
         <title>Зарезервированные и ключевые слова</title>
@@ -14,7 +14,7 @@
         самим сервером Firebird. Вы можете использовать их в качестве идентификаторов без заключения
         в двойные кавычки.</para>
 
-    <section xml:id="keywords-reversed">
+    <section xml:id="fblangref-reskeywords-reswords">
         <info>
             <title>Зарезервированные слова</title>
         </info>
@@ -244,7 +244,7 @@
             </simplelist>
         </para>
     </section>
-    <section xml:id="keywords-keywords">
+    <section xml:id="fblangref-reskeywords-allkeywords">
         <info>
             <title>Ключевые слова</title>
         </info>

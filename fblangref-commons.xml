@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-commons" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-commons" xml:lang="ru">
     <info>
         <title>Общие элементы языка</title>
     </info>
@@ -8,7 +8,7 @@
         SQL — выражения, которые используются для извлечения и работают на утверждениях о данных, и
         предикатов, которые проверяют истинность этих утверждений.</para>
 
-    <section xml:id="langref-commons-expressions">
+    <section xml:id="fblangref-commons-expressions">
         <info>
             <title>Выражения</title>
         </info>
@@ -19,7 +19,7 @@
             список допустимых символов (tokens) в выражениях описан ниже.</para>
         
         <para>
-            <table xml:id="langref-commons-tbl-elem" frame="all">
+            <table xml:id="fblangref-commons-tbl-elem" frame="all">
                 <?dbfo keep-together='auto'?>
                 <title>Описание элементов языка</title>
                 <tgroup cols="2">
@@ -100,7 +100,7 @@
                         </row>
                         <row>
                             <entry>Контекстные переменные</entry>
-                            <entry>Встроенные <link linkend="langref-contextvars">контекстные
+                            <entry>Встроенные <link linkend="fblangref-contextvars">контекстные
                                     переменные</link>.</entry>
                         </row>
                         <row>
@@ -178,7 +178,7 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                 </tgroup>
             </table>
         </para>
-        <section xml:id="langref-commons-constants">
+        <section xml:id="fblangref-commons-constants">
             <info>
                 <title>Литералы (константы)</title>
             </info>
@@ -186,7 +186,7 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                 оператор, которое не получено из выражения, параметра, ссылки на столбец или
                 переменной. </para>
 
-            <section xml:id="langref-commons-string-constant">
+            <section xml:id="fblangref-commons-string-constant">
                 <title>Строковые литералы (константы)</title>
 
                 <para>Строковый литерал это последовательность символов, заключенных между парой
@@ -226,14 +226,14 @@ CAST(<replaceable>&lt;value&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</
                         символов столбца предназначенного для её сохранения. </para>
                 </note>
 
-                <section xml:id="langref-commons-hexstrings">
+                <section xml:id="fblangref-commons-hexstrings">
                     <title>Строковые константы в шестнадцатеричной нотации</title>
 
                     <para>Начиная с Firebird 2.5 строковые константы могут быть записаны в
                         шестнадцатеричной нотации, так называемые <quote>двоичные строки</quote>.
                         Каждая пара шестнадцатеричных цифр определяет один байт в строке. Строки
                         введённые таким образом будут иметь кодировку OCTETS по умолчанию, но <link
-                            linkend="langref-commons-introducer-syntax">вводный синтаксис
+                            linkend="fblangref-commons-introducer-syntax">вводный синтаксис
                             (introducer syntax)</link> может быть использован для принудительной
                         интерпретации строки в другом наборе символов. </para>
                     <formalpara>
@@ -280,7 +280,7 @@ SELECT _utf8 x'53C3A46765' FROM rdb$database
                     </note>
                 </section>
 
-                <section xml:id="langref-commons-qstrings">
+                <section xml:id="fblangref-commons-qstrings">
                     <title>Альтернативы для апострофов в строковых литералах</title>
 
                     <indexterm><primary>Q</primary></indexterm>
@@ -342,7 +342,7 @@ END
                     </example>
                 </section>
 
-                <section xml:id="langref-commons-introducer-syntax">
+                <section xml:id="fblangref-commons-introducer-syntax">
                     <title>Вводный синтаксис для строковых литералов</title>
 
                     <para>При необходимости, строковому литералу может предшествовать имя набор
@@ -365,7 +365,7 @@ VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
                 </section>
             </section>
 
-            <section xml:id="langref-commons-number-constant">
+            <section xml:id="fblangref-commons-number-constant">
                 <title>Числовые константы</title>
 
                 <para>Числовая константа — это любое правильное число в одной из поддерживаемых
@@ -439,7 +439,7 @@ VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
                     </table>
                 </para>
 
-                <section xml:id="langref-commons-hexnumbers">
+                <section xml:id="fblangref-commons-hexnumbers">
                     <title>Шестнадцатеричная нотация чисел</title>
 
                     <para>Начиная с Firebird 2.5 целочисленные значения могут быть записаны в
@@ -476,7 +476,7 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                     </formalpara>
                 </section>
 
-                <section xml:id="langref-commons-hexranges">
+                <section xml:id="fblangref-commons-hexranges">
                     <title>Диапазон значений шестнадцатеричных чисел</title>
                     <para><itemizedlist>
                             <listitem>
@@ -536,21 +536,21 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                 </section>
             </section>
 
-            <section xml:id="langref-commons-boolean-literal">
+            <section xml:id="fblangref-commons-boolean-literal">
                 <title>Логические литералы</title>
 
                 <para>Логический литерал может быть одним из следующих значений: <code>TRUE</code>,
                         <code>FALSE</code> или <code>UNKNOWN</code>. </para>
             </section>
         </section>
-        <section xml:id="langref-commons-sqloperators">
+        <section xml:id="fblangref-commons-sqloperators">
             <info>
                 <title>Операторы SQL</title>
             </info>
             <para>SQL операторы включают в себя операторы для сравнения, вычисления, оценки и
                 конкатенации значений.</para>
 
-            <section xml:id="langref-commons-operpreced">
+            <section xml:id="fblangref-commons-operpreced">
                 <title>Приоритет операторов</title>
 
                 <para>Приоритет определяет порядок, в котором операторы и получаемые с помощью них
@@ -562,7 +562,7 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                     направо. Для изменения порядка вычислений операции могут быть сгруппированы с
                     помощью круглых скобок. </para>
                 <para>
-                    <table xml:id="langref-commons-tbl-operpreced" frame="all">
+                    <table xml:id="fblangref-commons-tbl-operpreced" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Приоритеты типов операторов</title>
                         <tgroup cols="3">
@@ -609,7 +609,7 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                 </para>
             </section>
 
-            <section xml:id="langref-commons-concat">
+            <section xml:id="fblangref-commons-concat">
                 <title>Оператор конкатенации</title>
 
                 <para>Оператор конкатенации <command>||</command> соединяет две символьные строки и
@@ -629,11 +629,11 @@ FROM EMPLOYEE
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-arith">
+            <section xml:id="fblangref-commons-arith">
                 <title>Арифметические операторы</title>
 
                 <para>
-                    <table xml:id="langref-commons-tbl-arithpreced" frame="all">
+                    <table xml:id="fblangref-commons-tbl-arithpreced" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Приоритет арифметических операторов</title>
                         <tgroup cols="3">
@@ -696,11 +696,11 @@ SET A = 4 + 1/(B-C)*D
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-compar">
+            <section xml:id="fblangref-commons-compar">
                 <title>Операторы сравнения</title>
 
                 <para>
-                    <table xml:id="langref-commons-tbl-compar" frame="all">
+                    <table xml:id="fblangref-commons-tbl-compar" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Операторы сравнения</title>
                         <tgroup cols="3">
@@ -767,12 +767,12 @@ SET A = 4 + 1/(B-C)*D
                     </table>
                 </para>
                 <para>В эту же группу входят предикаты сравнения <link
-                        linkend="langref-commons-isnotdistinct">IS DISTINCT FROM</link>, <link
-                        linkend="langref-commons-predbetween">BETWEEN</link>, <link
-                        linkend="langref-commons-in">IN</link>, <link
-                        linkend="langref-commons-predlike">LIKE</link>, <link
-                        linkend="langref-commons-predcontaining">CONTAINING</link>, <link
-                        linkend="langref-commons-predstartwith">SIMILAR TO</link> и другие. </para>
+                        linkend="fblangref-commons-isnotdistinct">IS DISTINCT FROM</link>, <link
+                        linkend="fblangref-commons-predbetween">BETWEEN</link>, <link
+                        linkend="fblangref-commons-in">IN</link>, <link
+                        linkend="fblangref-commons-predlike">LIKE</link>, <link
+                        linkend="fblangref-commons-predcontaining">CONTAINING</link>, <link
+                        linkend="fblangref-commons-predstartwith">SIMILAR TO</link> и другие. </para>
                 <formalpara>
                     <title>Пример:</title>
                     <para>
@@ -788,13 +788,13 @@ IF (SALARY &gt; 1400) THEN
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-commons-othercomppreds">Другие предикаты
+                        <link linkend="fblangref-commons-othercomppreds">Другие предикаты
                             сравнения</link>. </para>
 
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-logical">
+            <section xml:id="fblangref-commons-logical">
                 <info>
                     <title>Логические операторы</title>
                     <keywordset>
@@ -807,7 +807,7 @@ IF (SALARY &gt; 1400) THEN
                 <indexterm><primary>AND</primary></indexterm>
                 <indexterm><primary>OR</primary></indexterm>
                 <para>
-                    <table xml:id="langref-commons-tbl-logical" frame="all">
+                    <table xml:id="fblangref-commons-tbl-logical" frame="all">
                         <?dbfo keep-together='auto'?>
                         <title>Приоритет логических операторов</title>
                         <tgroup cols="3">
@@ -859,7 +859,7 @@ IF (A &gt; B OR (A &gt; C AND A &gt; D) AND NOT (C = D)) THEN
             </section>
         </section>
 
-        <section xml:id="langref-commons-at">
+        <section xml:id="fblangref-commons-at">
             <info>
                 <title>AT</title>
                 <keywordset>
@@ -912,7 +912,7 @@ select timestamp '2018-01-01 12:00 GMT' at local
             </formalpara>
         </section>
 
-        <section xml:id="langref-commons-nxtvlufor">
+        <section xml:id="fblangref-commons-nxtvlufor">
             <info>
                 <title>NEXT VALUE FOR</title>
                 <keywordset>
@@ -956,12 +956,12 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
-                        linkend="langref-functions-func-gen-gen_id">GEN_ID</link>. </para>
+                    <link linkend="fblangref-ddl-sequence">SEQUENCE (GENERATOR)</link>, <link
+                        linkend="fblangref-scalarfuncs-gen-id">GEN_ID</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="langref-commons-conditional">
+        <section xml:id="fblangref-commons-conditional">
             <info>
                 <title>Условные выражения</title>
             </info>
@@ -969,9 +969,9 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                 зависимости от истинности некоторого условия или условий. В данном разделе описано
                 лишь одно условное выражение CASE. Остальные условные выражения являются
                 производными встроенными функциями и описаны в разделе <link
-                    linkend="langref-functions-func-case">Условные функции</link>.</para>
+                    linkend="fblangref-functions-conditional">Условные функции</link>.</para>
 
-            <section xml:id="langref-commons-conditional-case">
+            <section xml:id="fblangref-commons-conditional-case">
                 <info>
                     <title>CASE</title>
                     <keywordset>
@@ -999,7 +999,7 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
                     </itemizedlist>
                 </para>
 
-                <simplesect xml:id="langref-commons-conditional-case-simple">
+                <simplesect xml:id="fblangref-commons-conditional-case-simple">
                     <title>Простой CASE</title>
                     <formalpara>
                         <title>Синтаксис:</title>
@@ -1047,10 +1047,10 @@ FROM PEOPLE
                         </para>
                     </formalpara>
                     <para>Сокращённый вид простого оператора CASE используется в функции <link
-                            linkend="langref-functions-func-case-decode">DECODE</link>. </para>
+                            linkend="fblangref-scalarfuncs-decode">DECODE</link>. </para>
                 </simplesect>
 
-                <simplesect xml:id="langref-commons-conditional-case-srched">
+                <simplesect xml:id="fblangref-commons-conditional-case-srched">
                     <title>Поисковый CASE</title>
                     <formalpara>
                         <title>Синтаксис:</title>
@@ -1092,7 +1092,7 @@ END;
             </section>
         </section>
 
-        <section xml:id="langref-commons-null-in-expr">
+        <section xml:id="fblangref-commons-null-in-expr">
             <info>
                 <title>NULL в выражениях</title>
                 <keywordset>
@@ -1114,7 +1114,7 @@ END;
                     псевдо-значением NULL. </para>
             </important>
 
-            <section xml:id="langref-commons-returningnull">
+            <section xml:id="fblangref-commons-returningnull">
                 <info>
                     <title>Выражения возвращающие NULL</title>
                 </info>
@@ -1131,7 +1131,7 @@ not (NULL)
                         <quote>неизвестно</quote>.</para>
             </section>
 
-            <section xml:id="langref-commons-nullinlogical">
+            <section xml:id="fblangref-commons-nullinlogical">
                 <info>
                     <title>NULL в логических выражениях</title>
                 </info>
@@ -1174,7 +1174,7 @@ NULL and NULL = NULL
         </section>
     </section>
 
-    <section xml:id="langref-commons-subqueries">
+    <section xml:id="fblangref-commons-subqueries">
         <title>Подзапросы</title>
 
         <para> Подзапрос — это специальный вид выражения, которое фактически является запросом
@@ -1190,7 +1190,7 @@ NULL and NULL = NULL
                     HAVING).</para>
             </listitem>
         </itemizedlist>
-        <section xml:id="langref-commons-correlatedsq">
+        <section xml:id="fblangref-commons-correlatedsq">
             <title>Коррелированные подзапросы</title>
 
             <para>Подзапрос может быть коррелированным (соотнесённым). Запрос называется
@@ -1221,7 +1221,7 @@ WHERE EXISTS
                 выбора SELECT, подзапрос должен возвращать скалярный результат. </para>
         </section>
 
-        <section xml:id="langref-commons-scalarsq">
+        <section xml:id="fblangref-commons-scalarsq">
             <title>Подзапросы возвращающие скалярный результат (Singletons)</title>
 
             <para><emphasis>Подзапросы</emphasis>, используемые в предикатах поиска, кроме
@@ -1279,7 +1279,7 @@ WHERE
         </section>
     </section>
 
-    <section xml:id="langref-commons-predicates">
+    <section xml:id="fblangref-commons-predicates">
         <info>
             <title>Предикаты</title>
         </info>
@@ -1292,7 +1292,7 @@ WHERE
             PSQL операторы управления потоком выполнения проверяют предикаты в предложениях IF,
             WHILE и WHEN.</para>
 
-        <section xml:id="langref-commons-condition">
+        <section xml:id="fblangref-commons-condition">
             <title>Утверждения</title>
 
             <para>Проверяемые условия не всегда являются простыми предикатами. Они могут быть
@@ -1307,7 +1307,7 @@ WHERE
                 утверждение.</para>
         </section>
 
-        <section xml:id="langref-commons-comppreds">
+        <section xml:id="fblangref-commons-comppreds">
             <title>Предикаты сравнения</title>
 
             <para>Предикат сравнения представляет собой два выражения, соединяемых оператором
@@ -1315,7 +1315,7 @@ WHERE
                 <literallayout>
 <command>=</command>, <command>&gt;</command>, <command>&lt;</command>, <command>&gt;=</command>, <command>&lt;=</command>, <command>&lt;&gt;</command>
         </literallayout>
-                (Полный список операторов сравнения см. <link linkend="langref-commons-compar"
+                (Полный список операторов сравнения см. <link linkend="fblangref-commons-compar"
                     >Операторы сравнения</link>).</para>
             <para>Если в одной из частей (левой или правой) предиката сравнения встречается NULL, то
                 значение предиката будет неопределённым (UNKNOWN). </para>
@@ -1368,12 +1368,12 @@ WHERE type = NULL AND price &lt; 300;
             </note>
         </section>
 
-        <section xml:id="langref-commons-othercomppreds">
+        <section xml:id="fblangref-commons-othercomppreds">
             <title>Другие предикаты сравнения</title>
 
             <para>Другие предикаты сравнения состоят из ключевых слов.</para>
 
-            <section xml:id="langref-commons-predbetween">
+            <section xml:id="fblangref-commons-predbetween">
                 <info>
                     <title>BETWEEN</title>
                     <keywordset>
@@ -1419,7 +1419,7 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                 </informalexample>
             </section>
 
-            <section xml:id="langref-commons-predlike">
+            <section xml:id="fblangref-commons-predlike">
                 <info>
                     <title>LIKE</title>
                     <keywordset>
@@ -1487,7 +1487,7 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                     символом пробела на конце), то строка, содержащая 'абв' (без пробела), не будет
                     возвращена.</para>
 
-                <section xml:id="langref-commons-wildcards">
+                <section xml:id="fblangref-commons-wildcards">
                     <title>Трафаретные символы</title>
 
                     <para>В шаблоне, разрешается использование двух трафаретных символов: </para>
@@ -1506,7 +1506,7 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
                         символов, то предикат истинен.</para>
                 </section>
 
-                <section xml:id="langref-commons-escapechar">
+                <section xml:id="fblangref-commons-escapechar">
                     <info>
                         <title>Использование управляющего символа в предложении ESCAPE</title>
                         <keywordset>
@@ -1541,7 +1541,7 @@ WHERE DEPT_NAME LIKE 'Software%';
                             предикат STARTING WITH, который будет использовать индекс. Если вам
                             необходимо выполнить поиск с начала строки, то вместо предиката LIKE
                             рекомендуется использовать предикат <link
-                                linkend="langref-commons-predstartwith">STARTING WITH</link>.</para>
+                                linkend="fblangref-commons-predstartwith">STARTING WITH</link>.</para>
                     </note>
                     <informalexample>
                         <para>Поиск сотрудников, имена которых состоят из 5 букв, начинающихся с
@@ -1572,7 +1572,7 @@ WHERE ADDRESS LIKE '%Ростов%'
                     <tip>
                         <para>Если вам необходимо выполнить поиск внутри строки, то вместо предиката
                             LIKE рекомендуется использовать предикат <link
-                                linkend="langref-commons-predcontaining">CONTAINING</link>.</para>
+                                linkend="fblangref-commons-predcontaining">CONTAINING</link>.</para>
                     </tip>
                     <informalexample>
                         <para>Поиск таблиц, содержащих в имени знак подчёркивания. В данном случае в
@@ -1590,15 +1590,15 @@ WHERE RDB$RELATION_NAME LIKE '%#_%' ESCAPE '#'
                         <title>См. также:</title>
 
                         <para>
-                            <link linkend="langref-commons-predstartwith">STARTING WITH</link>,
-                                <link linkend="langref-commons-predcontaining">CONTAINING</link>,
-                                <link linkend="langref-commons-predsimilarto">SIMILAR TO</link>.
+                            <link linkend="fblangref-commons-predstartwith">STARTING WITH</link>,
+                                <link linkend="fblangref-commons-predcontaining">CONTAINING</link>,
+                                <link linkend="fblangref-commons-predsimilarto">SIMILAR TO</link>.
                         </para>
                     </formalpara>
                 </section>
             </section>
 
-            <section xml:id="langref-commons-predstartwith">
+            <section xml:id="fblangref-commons-predstartwith">
                 <info>
                     <title>STARTING WITH</title>
                     <keywordset>
@@ -1639,11 +1639,11 @@ WHERE LAST_NAME STARTING WITH 'Jo'
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-commons-predlike">LIKE</link>. </para>
+                        <link linkend="fblangref-commons-predlike">LIKE</link>. </para>
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-predcontaining">
+            <section xml:id="fblangref-commons-predcontaining">
                 <info>
                     <title>CONTAINING</title>
                     <keywordset>
@@ -1705,11 +1705,11 @@ WHERE CHANGE_DATE CONTAINING 84;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-commons-predlike">LIKE</link>. </para>
+                        <link linkend="fblangref-commons-predlike">LIKE</link>. </para>
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-predsimilarto">
+            <section xml:id="fblangref-commons-predsimilarto">
                 <info>
                     <title>SIMILAR TO</title>
                     <keywordset>
@@ -1772,14 +1772,14 @@ WHERE CHANGE_DATE CONTAINING 84;
                     подстроки не достаточно. Если один из операндов имеет значение NULL, то и
                     результат будет NULL. В противном случае результат является TRUE или FALSE. </para>
 
-                <section xml:id="langref-commons-syntaxregex">
+                <section xml:id="fblangref-commons-syntaxregex">
                     <title>Синтаксис регулярных выражений SQL</title>
 
                     <para>Следующий синтаксис определяет формат регулярного выражения SQL. Это
                         полное и корректное его определение. Он является весьма формальным и
                         довольно длинным и, вероятно, озадачивает тех, кто не имеет опыта работы с
                         регулярными выражениями. Не стесняйтесь пропустить его и начать читать
-                        следующий раздел, <link linkend="langref-commons-buildregex">Создание
+                        следующий раздел, <link linkend="fblangref-commons-buildregex">Создание
                             регулярных выражений</link>, использующий подход от простого к
                         сложному.</para>
                     <para><literallayout class="monospaced">
@@ -1830,10 +1830,10 @@ WHERE CHANGE_DATE CONTAINING 84;
                 </literallayout></para>
                 </section>
 
-                <section xml:id="langref-commons-buildregex">
+                <section xml:id="fblangref-commons-buildregex">
                     <title>Создание регулярных выражений </title>
 
-                    <simplesect xml:id="langref-commons-regexchar">
+                    <simplesect xml:id="fblangref-commons-regexchar">
                         <title>Символы</title>
 
                         <para>В регулярных выражениях большинство символов представляет сами себя,
@@ -1854,7 +1854,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                         </programlisting></para>
                     </simplesect>
 
-                    <simplesect xml:id="langref-commons-regexwildcards">
+                    <simplesect xml:id="fblangref-commons-regexwildcards">
                         <title>Шаблоны</title>
 
                         <para>Известным SQL шаблонам _ и % соответствует любой единственный символ и
@@ -1870,7 +1870,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                             строке.</para>
                     </simplesect>
 
-                    <simplesect xml:id="langref-commons-regexcharclass">
+                    <simplesect xml:id="fblangref-commons-regexcharclass">
                         <title>Классы символов</title>
 
                         <para>Набор символов, заключённый в квадратные скобки определяют класс
@@ -1894,7 +1894,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Datte' SIMILAR TO 'Dat[bcg-km-pwz]e' -- FALSE                           
                             </programlisting></para>
                     </simplesect>
-                    <simplesect xml:id="langref-commons-regexpredclass">
+                    <simplesect xml:id="fblangref-commons-regexpredclass">
                         <title>Предопределённые классы символов</title>
                         
                         <para>Следующие предопределенные классы символов также могут использоваться в определении класса:</para>
@@ -1996,7 +1996,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                             символов, соответствуя любому единственному символу.</para>
                     </simplesect>
 
-                    <simplesect xml:id="langref-commons-regexquantifiers">
+                    <simplesect xml:id="fblangref-commons-regexquantifiers">
                         <title>Кванторы</title>
 
                         <para>Вопросительный знак сразу после символа или класса указывает на то,
@@ -2058,7 +2058,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                             соответственно.</para>
                     </simplesect>
 
-                    <simplesect xml:id="langref-commons-regexoring">
+                    <simplesect xml:id="fblangref-commons-regexoring">
                         <title>Термин ИЛИ</title>
 
                         <para>В условиях регулярных выражений можно использовать оператор ИЛИ (|).
@@ -2071,7 +2071,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                         </programlisting></para>
                     </simplesect>
 
-                    <simplesect xml:id="langref-commons-regexsubexpr">
+                    <simplesect xml:id="fblangref-commons-regexsubexpr">
                         <title>Подвыражения</title>
 
                         <para>Одна или более частей регулярного выражения могут быть сгруппированы в
@@ -2085,7 +2085,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                         </programlisting></para>
                     </simplesect>
 
-                    <simplesect xml:id="langref-commons-regexescap">
+                    <simplesect xml:id="fblangref-commons-regexescap">
                         <title>Экранирование специальных символов</title>
 
                         <para>Для исключения из процесса сопоставления специальных символов (которые
@@ -2101,7 +2101,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                     </simplesect>
                 </section>
             </section>
-            <section xml:id="langref-commons-isnotdistinct">
+            <section xml:id="fblangref-commons-isnotdistinct">
                 <info>
                     <title>IS DISTINCT FROM</title>
                     <keywordset>
@@ -2206,12 +2206,12 @@ THEN POST_EVENT 'JOB_CHANGED';
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-commons-isnotboolean">IS</link>. </para>
+                        <link linkend="fblangref-commons-isnotboolean">IS</link>. </para>
 
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-isnotboolean">
+            <section xml:id="fblangref-commons-isnotboolean">
                 <info>
                     <title>Логический IS [NOT]</title>
                     <keywordset>
@@ -2281,7 +2281,7 @@ ID           BVAL
                 </example>
             </section>
 
-            <section xml:id="langref-commons-isnotnull">
+            <section xml:id="fblangref-commons-isnotnull">
                 <info>
                     <title>IS [NOT] NULL</title>
                     <keywordset>
@@ -2322,14 +2322,14 @@ WHERE SHIP_DATE IS NULL;
             </section>
         </section>
 
-        <section xml:id="langref-commons-existential">
+        <section xml:id="fblangref-commons-existential">
             <title>Предикаты существования</title>
 
             <para>В эту группу предикатов включены предикаты, которые используют подзапросы и
                 передают значения для всех видов утверждений в условиях поиска. Предикаты
                 существования называются так потому, что они различными способами проверяют
                 существование или отсутствие результатов подзапросов.</para>
-            <section xml:id="langref-commons-exists">
+            <section xml:id="fblangref-commons-exists">
                 <info>
                     <title>EXISTS</title>
                     <keywordset>
@@ -2399,7 +2399,7 @@ WHERE NOT EXISTS (SELECT *
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-in">
+            <section xml:id="fblangref-commons-in">
                 <info>
                     <title>IN</title>
                     <keywordset>
@@ -2547,12 +2547,12 @@ WHERE
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="langref-commons-exists">EXISTS</link>. </para>
+                        <link linkend="fblangref-commons-exists">EXISTS</link>. </para>
 
                 </formalpara>
             </section>
 
-            <section xml:id="langref-commons-singular">
+            <section xml:id="fblangref-commons-singular">
                 <info>
                     <title>SINGULAR</title>
                     <keywordset>
@@ -2597,7 +2597,7 @@ WHERE SINGULAR (SELECT *
             </section>
         </section>
 
-        <section xml:id="langref-commons-quantifiedsq">
+        <section xml:id="fblangref-commons-quantifiedsq">
             <info>
                 <title>Количественные предикаты подзапросов</title>
             </info>
@@ -2624,7 +2624,7 @@ WHERE SINGULAR (SELECT *
 <replaceable>&lt;value expression&gt;</replaceable> <replaceable>&lt;comp op&gt;</replaceable> <replaceable>&lt;quantifier&gt;</replaceable> <replaceable>&lt;subquery&gt;</replaceable>
 </programlisting>
             </para>
-            <section xml:id="langref-commons-quant-all">
+            <section xml:id="fblangref-commons-quant-all">
                 <info>
                     <title>ALL</title>
                     <keywordset>
@@ -2677,7 +2677,7 @@ WHERE rating &gt; ALL
                         множестве.</para>
                 </important>
             </section>
-            <section xml:id="langref-commons-quant-anysome">
+            <section xml:id="fblangref-commons-quant-anysome">
                 <info>
                     <title>ANY и SOME</title>
                     <keywordset>

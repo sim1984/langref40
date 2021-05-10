@@ -1,5 +1,5 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-session" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-session" xml:lang="ru">
     <info>
         <title>Сессионное окружение</title>
     </info>
@@ -32,7 +32,7 @@
             </listitem>
         </itemizedlist></para>
 
-    <section xml:id="langref-session-timeout">
+    <section xml:id="fblangref-session-timeout">
         <info>
             <title>Тайм-ауты</title>
         </info>
@@ -46,7 +46,7 @@
                 </listitem>
             </itemizedlist></para>
 
-        <section xml:id="langref-session-timeout-statemen">
+        <section xml:id="fblangref-session-timeout-statemen">
             <title>Тайм-аут выполнения SQL оператора</title>
 
             <para>Данная функциональность позволяет автоматически прекратить выполнение SQL
@@ -101,7 +101,7 @@
                     <listitem>
                         <para>На уровне соединения. Может быть установлен с использованием API (в
                             миллисекундах) или с помощью SQL оператора <link
-                                linkend="langref-session-timeout-set_statement_timeout">SET
+                                linkend="fblangref-session-timeout-set_statement_timeout">SET
                                 STATEMENT TIMEOUT</link>. Область действия текущее
                             подключение.</para>
                     </listitem>
@@ -143,7 +143,7 @@
                 используется движком Firebird. Кроме того, тайм-аут игнорируется для DDL
                 операторов.</para>
 
-            <section xml:id="langref-session-timeout-set_statement_timeout">
+            <section xml:id="fblangref-session-timeout-set_statement_timeout">
                 <info>
                     <title>SET STATEMENT TIMEOUT</title>
                     <keywordset>
@@ -235,7 +235,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
 
         </section>
 
-        <section xml:id="langref-session-timeout-idle_session">
+        <section xml:id="fblangref-session-timeout-idle_session">
             <title>Тайм-аут простоя соединения</title>
 
             <para>Данная функциональность позволяет автоматически закрывать пользовательские
@@ -283,7 +283,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                     <listitem>
                         <para>На уровне подключения. Может быть установлен с использованием API (в
                             секундах) или с помощью SQL оператора <link
-                                linkend="langref-session-timeout-set_session_idle_timeout">SET
+                                linkend="fblangref-session-timeout-set_session_idle_timeout">SET
                                 SESSION IDLE TIMEOUT</link>. Область действия все операторы в
                             текущем подключении.</para>
                     </listitem>
@@ -311,7 +311,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                 Единственная гарантия которую может дать Firebird это то, что тайм-аут не сработает
                 раньше указанного момента.</para>
 
-            <section xml:id="langref-session-timeout-set_session_idle_timeout">
+            <section xml:id="fblangref-session-timeout-set_session_idle_timeout">
                 <info>
                     <title>SET SESSION IDLE TIMEOUT</title>
                     <keywordset>
@@ -393,7 +393,7 @@ SET SESSION IDLE TIMEOUT 8 HOUR
     </section>
 
 
-    <section xml:id="langref-session-extconnpool">
+    <section xml:id="fblangref-session-extconnpool">
         <info>
             <title>Пул внешних соединений</title>
             <keywordset>
@@ -405,7 +405,7 @@ SET SESSION IDLE TIMEOUT 8 HOUR
 
         <para>Каждое внешнее соединение (созданное оператором EXECUTE STATEMENT ... ON EXTERNAL) при
             создании связывается с пулом соединений (подробнее см. <link
-                linkend="langref-psql-statements-execstmt-ext-connpool">Пул внешних
+                linkend="fblangref-psql-statements-execstmt-ext-connpool">Пул внешних
                 подключений</link>). Данная группа операторов позволяет управлять пулом внешних
             соединений. При его подготовке они описываются как DDL операторы, но имеют немедленный
             эффект: то есть они выполняются немедленно и полностью, не дожидаясь фиксации
@@ -416,9 +416,9 @@ SET SESSION IDLE TIMEOUT 8 HOUR
 
         <para>Для выполнения операторов данной группы требуется системная привилегия
             MODIFY_EXT_CONN_POOL. Подробнее о системных привилегиях см. <link
-                linkend="langref-security-roles-create">CREATE ROLE</link>.</para>
+                linkend="fblangref-security-roles-create">CREATE ROLE</link>.</para>
 
-        <section xml:id="langref-session-extconnpool-setsize">
+        <section xml:id="fblangref-session-extconnpool-setsize">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
             </info>
@@ -478,7 +478,7 @@ ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>
 
         </section>
 
-        <section xml:id="langref-session-extconnpool-setlifetime">
+        <section xml:id="fblangref-session-extconnpool-setlifetime">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
             </info>
@@ -539,7 +539,7 @@ ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replace
 
         </section>
 
-        <section xml:id="langref-session-extconnpool-clearall">
+        <section xml:id="fblangref-session-extconnpool-clearall">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</title>
             </info>
@@ -572,7 +572,7 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL
 
         </section>
 
-        <section xml:id="langref-session-extconnpool-clearoldest">
+        <section xml:id="fblangref-session-extconnpool-clearoldest">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</title>
             </info>
@@ -605,11 +605,11 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST
     </section>
 
 
-    <section xml:id="langref-session-role">
+    <section xml:id="fblangref-session-role">
         <info>
             <title>Изменение текущей роли</title>
         </info>
-        <section xml:id="langref-session-role-setrole">
+        <section xml:id="fblangref-session-role-setrole">
             <info>
                 <title>SET ROLE</title>
                 <keywordset>
@@ -689,7 +689,7 @@ MANAGER
                 </para>
             </formalpara>
         </section>
-        <section xml:id="langref-session-role-settrustedrole">
+        <section xml:id="fblangref-session-role-settrustedrole">
             <info>
                 <title>SET TRUSTED ROLE</title>
                 <keywordset>
@@ -740,12 +740,12 @@ SET TRUSTED ROLE
         </section>
     </section>
 
-    <section xml:id="langref-session-timezone">
+    <section xml:id="fblangref-session-timezone">
         <info>
             <title>Управление часовым поясом сеанса</title>
         </info>
 
-        <section xml:id="langref-session-timezone-settimezone">
+        <section xml:id="fblangref-session-timezone-settimezone">
             <info>
                 <title>SET TIME ZONE</title>
             </info>
@@ -815,17 +815,17 @@ set time zone local;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-datatypes-datetime-timezone">Часовой пояс</link>. </para>
+                    <link linkend="fblangref-datatypes-datetime-timezone">Часовой пояс</link>. </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="langref-session-decfloat">
+    <section xml:id="fblangref-session-decfloat">
         <info>
             <title>Управление обработкой DECFLOAT</title>
         </info>
 
-        <section xml:id="langref-session-decfloat-round">
+        <section xml:id="fblangref-session-decfloat-round">
             <info>
                 <title>SET DECFLOAT ROUND</title>
             </info>
@@ -947,11 +947,11 @@ SET DECFLOAT ROUND HALF_DOWN;
             </formalpara>
 
             <para>Подробнее о режимах округления для типа DECFLOAT см. <link
-                    linkend="langref-datatypes-float-decfloat-round-mode">Режимы
+                    linkend="fblangref-datatypes-float-decfloat-round-mode">Режимы
                 округления</link>.</para>
         </section>
 
-        <section xml:id="langref-session-decfloat-traps">
+        <section xml:id="fblangref-session-decfloat-traps">
             <info>
                 <title>SET DECFLOAT TRAPS TO</title>
             </info>
@@ -997,7 +997,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
 
     </section>
 
-    <section xml:id="langref-session-set_bind">
+    <section xml:id="fblangref-session-set_bind">
         <info>
             <title>SET BIND OF</title>
         </info>
@@ -1189,7 +1189,7 @@ SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
         </example>
     </section>
 
-    <section xml:id="langref-session-resetsession">
+    <section xml:id="fblangref-session-resetsession">
         <info>
             <title>ALTER SESSION RESET</title>
             <keywordset>
@@ -1293,7 +1293,7 @@ ALTER SESSION RESET  
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="langref-contextvars-resetting">RESETTING</link>.</para>
+                    <link linkend="fblangref-contextvars-resetting">RESETTING</link>.</para>
             </formalpara>
         </simplesect>
     </section>

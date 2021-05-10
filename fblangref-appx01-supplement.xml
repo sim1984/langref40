@@ -1,10 +1,10 @@
 <!DOCTYPE appendix>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="langref-appx01-supplement" xml:lang="ru">
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-appx-supplement" xml:lang="ru">
     <info>
         <title>Дополнительные статьи</title>
     </info>
 
-    <section xml:id="langref-appx01-supp-rdb-validblr" xml:lang="ru">
+    <section xml:id="fblangref-appx-supp-rdb-validblr" xml:lang="ru">
         <info>
             <title>Поле RDB$VALID_BLR</title>
         </info>
@@ -228,7 +228,7 @@ WHERE
             </note>
         </section>
     </section>
-    <section xml:id="langref-appx01-note-on-equality">
+    <section xml:id="fblangref-appx-note-on-equality">
         <title>Замечание о равенстве</title>
 
         <important>
