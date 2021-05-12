@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-extrnalfunction">
+    <info>
+        <title>EXTERNAL FUNCTION</title>
+        <keywordset>
+            <keyword>EXTERNAL FUNCTION</keyword>
+        </keywordset>
+    </info>
+    <para>Внешние функции, также известные как функции определяемые пользователем (User Defined
+        Function) — это программы, написанные на любом языке программирования, и хранящиеся в
+        динамических библиотеках. После того как функция объявлена в базе данных, она становится в
+        динамических и процедурных операторах, как будто они реализованы внутри языка SQL.</para>
+    <para>Внешние функции существенно расширяют возможности SQL по обработке данных. Для того чтобы
+        функции были доступны в базе данных, их необходимо объявить с помощью оператора DECLARE
+        EXTERNAL FUNCTON. </para>
+    <para>После объявления функции, содержащая её библиотека будет загружаться при первом обращении
+        к любой из функций, включённой в библиотеку.</para>
+    <important>
+        <para>Внешние функции (UDF) объявлены устаревшими в Firebird 4: <itemizedlist>
+                <listitem>
+                    <para>По умолчанию для параметра конфигурации <parameter>UdfAccess</parameter>
+                        установлено значение <code>None</code>. Для того, чтобы запускать UDF,
+                        теперь потребуется явная конфигурация <code>UdfAccess = Restrict
+                                <replaceable>path-list</replaceable></code>. </para>
+                </listitem>
+                <listitem>
+                    <para>UDF библиотеки (<filename>ib_udf</filename>, <filename>fbudf</filename>)
+                        больше не входят в состав установочных комплектов.</para>
+                </listitem>
+                <listitem>
+                    <para>Большинство функций в библиотеках, ранее распространявшихся в общих
+                        (динамических) библиотеках ib_udf и fbudf, уже заменены на встроенные
+                        функции. Несколько оставшихся UDF были заменены либо аналогичными функциями
+                        в новой UDR библиотеке под названием udf_compat, либо преобразованы в
+                        сохраненные функции.</para>
+                    <para>Обратитесь к разделу <quote>Прекращение поддержки внешних функций
+                            (UDF)</quote> в главе <quote>Совместимость</quote> Firebird 4.0 Release
+                        Notes для получения подробной информации и инструкций по обновлению для
+                        использования безопасных функций.</para>
+                </listitem>
+                <listitem>
+                    <para>Настоятельно рекомендуется заменить UDF на UDR или сохраненные функции.
+                        См. <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>.</para>
+                </listitem>
+            </itemizedlist></para>
+    </important>
+    <caution>
+        <para>UDF принципиально небезопасны. Мы рекомендуем по возможности избегать их использования
+            и отключать UDF в конфигурации вашей базы данных (<code>UdfAccess = None</code> в
+                <filename>firebird.conf</filename>, значение по умолчанию начиная с Firebird 4.0).
+            Если вам действительно нужно вызвать собственный код из вашей базы данных, используйте
+            вместо этого механизм UDR. </para>
+    </caution>
+    <section xml:id="fblangref-ddl-extrnalfunction-declare">
+        <info>
+            <title>DECLARE EXTERNAL FUNCTION</title>
+            <keywordset>
+                <keyword>DECLARE EXTERNAL FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Объявление в базе данных функции определённой пользователем (UDF).</para>
+        </formalpara>
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>
+DECLARE EXTERNAL FUNCTION <replaceable>funcname</replaceable>
+[<replaceable>&lt;arg_type_decl&gt;</replaceable> [, <replaceable>&lt;arg_type_decl&gt;</replaceable> ...]]
+RETURNS { 
+  <replaceable>&lt;sqltype&gt;</replaceable> [BY {DESCRIPTOR | VALUE}] | 
+  CSTRING(<replaceable>length</replaceable>) | 
+  PARAMETER <replaceable>param_num</replaceable> }
+[FREE_IT]
+ENTRY_POINT '<replaceable>entry_point</replaceable>' MODULE_NAME '<replaceable>library_name</replaceable>';
+
+<replaceable>&lt;arg_type_decl&gt;</replaceable> ::= 
+  <replaceable>&lt;sqltype&gt;</replaceable> [{BY DESCRIPTOR} | NULL] | 
+  CSTRING(<replaceable>length</replaceable>) [NULL]   
+  
+<replaceable>&lt;sqltype&gt;</replaceable> ::= <replaceable>&lt;scalar_datatype&gt;</replaceable> |  <replaceable>&lt;blob_datatype&gt;</replaceable> 
+  
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>  
+             </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DECLARE EXTERNAL FUNCTION</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>funcname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя внешней функции. Может содержать до 63 символов.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>entry_point</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя экспортируемой функции (точка входа). </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>library_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя модуля, в котором расположена функция.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>sqltype</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тип данных SQL. Не может быть массивом или элементом массива.
+                                </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>length</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Максимальная длина нуль терминальной строки. Указывается в
+                                    байтах. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>param_num</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Номер входного параметра, который будет возвращён
+                                    функцией.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор DECLARE EXTERNAL FUNCTION делает доступным функцию, определенную
+            пользователем (UDF), в базе данных. Внешние функции должны быть объявлены в каждой базе
+            данных, которая собирается их использовать. Не нужно объявлять UDF, если вы никогда не
+            будете её использовать.</para>
+        <para>Имя внешней функции должно быть уникальным среди всех имён функций. Оно может
+            отличаться от имени функции указанной в аргументе ENTRY_POINT. </para>
+        <para>Входные параметры функции перечисляются через запятую сразу после имени функции. Для
+            каждого параметра указывается SQL тип данных. Массивы не могут использоваться в качестве
+            параметров функций. Помимо SQL типов можно указать тип CSTRING. В этом случае параметр
+            является нуль терминальной строкой с максимальной длиной
+                <replaceable>length</replaceable> байт. Существует несколько механизмов передачи
+            параметра из движка Firebird во внешнюю функцию, каждый из этих механизмов будет
+            рассмотрен отдельно.</para>
+        <para> По умолчанию входные параметры передаются по ссылке. Не существует отдельного
+            предложения для явного указания, что параметр передаётся по ссылке. </para>
+        <para>При передаче NULL значения по ссылке оно преобразуется в эквивалент нуля, например,
+            число 0 или пустую строку. Если после указанного параметра указано ключевое слово NULL,
+            то при передаче значение NULL оно попадёт в функцию в виде нулевого указателя
+            (NULL).</para>
+        <note>
+            <para> Обратите внимание на то, что объявление функции с ключевым словом NULL не
+                гарантирует вам, что эта функция правильно обработает входной параметр со значением
+                NULL. Любая функция должна быть написана или переписана таким образом, чтобы
+                правильно обрабатывать значения NULL. Всегда смотрите и используйте объявления
+                функции, предоставленные её разработчиком. </para>
+        </note>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+            <secondary>BY DESCRIPTOR</secondary>
+        </indexterm>
+        <para>Если указано предложение BY DESCRIPTOR, то входной параметр передаётся по дескриптору.
+            В этом случае параметр UDF получит указатель на внутреннюю структуру, известную как
+            дескриптор, несущую информацию о типе данных, подтипе, точности, наборе символов и
+            сортировке, масштабе, указателе на сами данные и некоторых флагах, в том числе NULL
+            индикаторе. Отметим, что это объявление работает только в том случае, если внешняя
+            функция написана с использованием дескриптора.</para>
+        <warning>
+            <para> При передаче параметра функции по дескриптору передаваемое значение не приводится
+                к задекларированному типу данных. </para>
+        </warning>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+            <secondary>BY SCALAR_ARRAY</secondary>
+        </indexterm>
+        <para>Предложение BY SCALAR_ARRAY используется при передачи массивов в качестве входных
+            параметров. В отличие от других типов, вы не можете вернуть массив из UDF. </para>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+            <secondary>RETURNS</secondary>
+        </indexterm>
+        <para>Обязательное предложение RETURNS описывает выходной параметр возвращаемый функцией.
+            Функция всегда возвращает только один параметр. Выходной параметр может быть любым SQL
+            типом (кроме массива и элемента массива) или нуль терминальной строкой (CSTRING).
+            Выходной параметр может быть передан по ссылке, по дескриптору или по значению. По
+            умолчанию выходной параметр передаётся по ссылке. Если указано предложение BY
+            DESCRIPTOR, то выходной параметр передаётся по дескриптору. Если указано предложение BY
+            VALUE, то выходной параметр передаётся по значению.</para>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+            <secondary>PARAMETER</secondary>
+        </indexterm>
+        <para>Ключевое слово PARAMETER указывает, что функция возвращает значение из параметра с
+            номером <replaceable>param_num</replaceable>. Такая необходимость возникает, если
+            необходимо возвращать значение типа BLOB.</para>
+        <para>Ключевое слово FREE_IT означает, что память, выделенная для хранения возвращаемого
+            значения, будет освобождена после завершения выполнения функции. Применяется только в
+            том случае, если эта память в UDF выделялась динамически. В такой UDF память должна
+            выделяться при помощи функции <emphasis role="itallic">ib_util_malloc</emphasis> из
+            модуля <emphasis role="itallic">ib_util</emphasis>. Это необходимо для совместимости
+            функций выделения и освобождения памяти используемого в коде Firebird и коде UDF.</para>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+            <secondary>ENTRY_POINT</secondary>
+        </indexterm>
+        <para>Предложение ENTRY_POINT указывает имя точки входа (имя экспортируемой функции) в
+            модуле.</para>
+        <indexterm>
+            <primary>DECLARE EXTERNAL FUNCTION</primary>
+            <secondary>MODULE_NAME</secondary>
+        </indexterm>
+        <para>Предложение MODULE_NAME задаёт имя модуля, в котором находится экспортируемая функция.
+            В ссылке на модуль может отсутствовать полный путь и расширение файла. Это позволяет
+            легче переносить базу данных между различными платформами. По умолчанию динамические
+            библиотеки пользовательских функций должны располагаться в папке UDF корневого каталога
+            сервера. Параметр <parameter>UDFAccess</parameter> в файле
+                <filename>firebird.conf</filename> позволяет изменить ограничения доступа к
+            библиотекам внешних функций.</para>
+        <section xml:id="fblangref-ddl-extrnalfunction-declare-who">
+            <title>Кто может объявить внешнюю функцию?</title>
+
+            <para>Выполнить оператор <database>DECLARE EXTERNAL FUNCTION</database> могут:
+                    <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>CREATE FUNCTION</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>Пользователь, объявивший внешнюю функцию, становится её владельцем.</para>
+        </section>
+        <section xml:id="fblangref-ddl-extrnalfunction-declare-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Объявление внешней функции с передачей входных и выходных параметров по
+                    ссылке</title>
+                <para>
+                    <programlisting language="sql">
+DECLARE EXTERNAL FUNCTION addDay
+TIMESTAMP, INT
+RETURNS TIMESTAMP
+ENTRY_POINT 'addDay' MODULE_NAME 'fbudf';       
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Объявление внешней функции с передачей входных и выходных параметров по
+                    дескриптору</title>
+                <para>
+                    <programlisting language="sql">
+DECLARE EXTERNAL FUNCTION invl
+INT BY DESCRIPTOR, INT BY DESCRIPTOR
+RETURNS INT BY DESCRIPTOR
+ENTRY_POINT 'idNvl' MODULE_NAME 'fbudf';      
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Объявление внешней функции с передачей входных параметров по ссылке, выходных
+                    по значению</title>
+                <para>
+                    <programlisting language="sql">
+DECLARE EXTERNAL FUNCTION isLeapYear
+TIMESTAMP 
+RETURNS INT BY VALUE
+ENTRY_POINT 'isLeapYear' MODULE_NAME 'fbudf';     
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Объявление внешней функции с передачей входных и выходных параметров по
+                    дескриптору. В качестве выходного параметра используется второй параметр
+                    функции.</title>
+                <para>
+                    <programlisting language="sql">
+DECLARE EXTERNAL FUNCTION i64Truncate
+NUMERIC(18) BY DESCRIPTOR, NUMERIC(18) BY DESCRIPTOR
+RETURNS PARAMETER 2
+ENTRY_POINT 'fbtruncate' MODULE_NAME 'fbudf';     
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-extrnalfunction-alter">ALTER EXTERNAL
+                        FUNCTION</link>, <link linkend="fblangref-ddl-extrnalfunction-drop">DROP
+                        EXTERNAL FUNCTION</link>, <link linkend="fblangref-ddl-function-create"
+                        >CREATE FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-extrnalfunction-alter">
+        <info>
+            <title>ALTER EXTERNAL FUNCTION</title>
+            <keywordset>
+                <keyword>ALTER EXTERNAL FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER EXTERNAL FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение точки входа и/или имени модуля для функции определённой пользователем
+                (UDF).</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>
+ALTER EXTERNAL FUNCTION <replaceable>funcname</replaceable>
+[ENTRY_POINT '<replaceable>new_entry_point</replaceable>'] 
+[MODULE_NAME '<replaceable>new_library_name</replaceable>']; 
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора ALTER EXTERNAL FUNCTION</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>funcname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя внешней функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>new_entry_point</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Новое имя экспортируемой функции (точки входа).</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>new_library_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Новое имя модуля, в котором расположена функция.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор ALTER EXTERNAL FUNCTION изменяет точку вход и/или имя модуля для функции
+            определённой пользователем (UDF). При этом существующие зависимости сохраняются. </para>
+        <para>Предложение ENTRY_POINT позволяет указать новую точку входа (имя экспортируемой
+            функции). </para>
+        <para>Предложение MODULE_NAME позволяет указать новое имя модуля, в котором расположена
+            экспортируемая функция.</para>
+        <section xml:id="fblangref-ddl-extrnalfunction-alter-who">
+            <title>Кто может изменить внешнюю функцию?</title>
+
+            <para>Выполнить оператор <database>ALTER EXTERNAL FUNCTION</database> могут:
+                    <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец внешней функции; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY FUNCTION</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-extrnalfunction-alter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Изменение точки входа для внешней функции</title>
+                <para>
+                    <programlisting language="sql">
+ALTER EXTERNAL FUNCTION invl ENTRY_POINT 'intNvl';       
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Изменение имени модуля для внешней функции</title>
+                <para>
+                    <programlisting language="sql">
+ALTER EXTERNAL FUNCTION invl MODULE_NAME 'fbudf2';    
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-extrnalfunction-declare">DECLARE EXTERNAL
+                        FUNCTION</link>, <link linkend="fblangref-ddl-extrnalfunction-drop">DROP
+                        EXTERNAL FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-extrnalfunction-drop">
+        <info>
+            <title>DROP EXTERNAL FUNCTION</title>
+            <keywordset>
+                <keyword>DROP EXTERNAL FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DROP EXTERNAL FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление объявления функции определённой пользователем (UDF) из базы
+                данных.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>
+DROP EXTERNAL FUNCTION <replaceable>funcname</replaceable>; 
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DROP EXTERNAL FUNCTION</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>funcname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя внешней функции.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор DROP EXTERNAL FUNCTION удаляет объявление функции определённой пользователем
+            из базы данных. Если есть зависимости от внешней функции, то удаления не произойдёт и
+            будет выдана соответствующая ошибка.</para>
+        <section xml:id="fblangref-ddl-extrnalfunction-drop-who">
+            <title>Кто может удалить внешнюю функцию?</title>
+
+            <para>Выполнить оператор <database>DROP EXTERNAL FUNCTION</database> могут:
+                    <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец внешней функции; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>DROP ANY FUNCTION</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-extrnalfunction-drop-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Удаление внешней функции</title>
+                <para>
+                    <programlisting language="sql">
+DROP EXTERNAL FUNCTION addDay;     
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <info>
+                    <title>См. также:</title>
+                </info>
+                <para>
+                    <link linkend="fblangref-ddl-extrnalfunction-declare">DECLARE EXTERNAL
+                        FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</section>

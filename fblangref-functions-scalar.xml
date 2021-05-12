@@ -364,8 +364,8 @@ NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-set-context"
-                    >RDB$SET_CONTEXT</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-set-context">RDB$SET_CONTEXT</link>.
+                </para>
             </formalpara>
         </section>
         <section xml:id="fblangref-scalarfuncs-set-context">
@@ -528,8 +528,8 @@ COMMIT;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-get-context"
-                    >RDB$GET_CONTEXT</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-get-context">RDB$GET_CONTEXT</link>.
+                </para>
             </formalpara>
         </section>
     </section>
@@ -3017,8 +3017,7 @@ ASCII_CHAR (<replaceable>code</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-ascii-val">ASCII_VAL</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-ascii-val">ASCII_VAL</link>. </para>
             </formalpara>
         </section>
 
@@ -3094,8 +3093,7 @@ ASCII_VAL (<replaceable>ch</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-ascii-char">ASCII_CHAR</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-ascii-char">ASCII_CHAR</link>. </para>
             </formalpara>
         </section>
 
@@ -3192,9 +3190,8 @@ FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>,
-                        <link linkend="fblangref-scalarfuncs-octet-length"
-                        >OCTET_LENGTH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>, <link
+                        linkend="fblangref-scalarfuncs-octet-length">OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
@@ -3267,9 +3264,8 @@ CHARACTER_LENGTH (<replaceable>str</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-bit-length">BIT_LENGTH</link>,
-                        <link linkend="fblangref-scalarfuncs-octet-length"
-                        >OCTET_LENGTH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bit-length">BIT_LENGTH</link>, <link
+                        linkend="fblangref-scalarfuncs-octet-length">OCTET_LENGTH</link>. </para>
             </formalpara>
         </section>
 
@@ -3662,9 +3658,8 @@ FROM rdb$database
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-bit-length">BIT_LENGTH</link>,
-                        <link linkend="fblangref-scalarfuncs-char-length"
-                    >CHAR_LENGTH</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-bit-length">BIT_LENGTH</link>, <link
+                        linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>. </para>
             </formalpara>
         </section>
 
@@ -3948,8 +3943,7 @@ POSITION ('be' in 'Alas, poor Yorick!') -- Результат: 0
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-substring">SUBSTRING</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-substring">SUBSTRING</link>. </para>
             </formalpara>
         </section>
         <section xml:id="fblangref-scalarfuncs-replace">
@@ -4565,11 +4559,11 @@ SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- &lt;null&gt;
                     <title>См. также:</title>
 
                     <para>
-                        <link linkend="fblangref-scalarfuncs-position">POSITION</link>,
-                            <link linkend="fblangref-scalarfuncs-left">LEFT</link>, <link
+                        <link linkend="fblangref-scalarfuncs-position">POSITION</link>, <link
+                            linkend="fblangref-scalarfuncs-left">LEFT</link>, <link
                             linkend="fblangref-scalarfuncs-right">RIGHT</link>, <link
-                            linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>,
-                            <link linkend="fblangref-commons-predsimilarto">SIMILAR TO</link>. </para>
+                            linkend="fblangref-scalarfuncs-char-length">CHAR_LENGTH</link>, <link
+                            linkend="fblangref-commons-predsimilarto">SIMILAR TO</link>. </para>
                 </formalpara>
             </section>
         </section>
@@ -5529,8 +5523,7 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-firstday">FIRST_DAY</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-firstday">FIRST_DAY</link>. </para>
             </formalpara>
         </section>
     </section>
@@ -5900,8 +5893,8 @@ select base64_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-base64-decode"
-                    >BASE64_DECODE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-base64-decode">BASE64_DECODE</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -5936,8 +5929,8 @@ BASE64_DECODE (<replaceable>&lt;base64 data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-base64-encode"
-                    >BASE64_ENCODE</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-base64-encode">BASE64_ENCODE</link>.
+                </para>
             </formalpara>
         </section>
 
@@ -5983,8 +5976,7 @@ select hex_encode(public_key) from clients;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-hex-decode">HEX_DECODE</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-hex-decode">HEX_DECODE</link>. </para>
             </formalpara>
         </section>
 
@@ -6019,8 +6011,7 @@ HEX_DECODE (<replaceable>&lt;hex data&gt;</replaceable>)
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-hex-encode">HEX_ENCODE</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-hex-encode">HEX_ENCODE</link>. </para>
             </formalpara>
         </section>
     </section>
@@ -6553,8 +6544,7 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>. </para>
             </formalpara>
         </section>
 
@@ -6618,8 +6608,7 @@ RSA_PUBLIC (<replaceable>&lt;private key&gt;</replaceable>)
                         <title>Использование функции RSA_PUBLIC</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="fblangref-scalarfuncs-rsa-private"
-                                >RSA_PRIVATE</link>
+                                linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>
                         </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'public_key',
@@ -6633,8 +6622,7 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>. </para>
             </formalpara>
         </section>
 
@@ -6736,8 +6724,7 @@ from rdb$database;
 
                 <para>
                     <link linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>, <link
-                        linkend="fblangref-scalarfuncs-rsa-decrypt">RSA_DECRYPT</link>.
-                </para>
+                        linkend="fblangref-scalarfuncs-rsa-decrypt">RSA_DECRYPT</link>. </para>
             </formalpara>
         </section>
 
@@ -6824,10 +6811,9 @@ RSA_DECRYPT (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;privat
                         <title>Использование функции RSA_DECRYPT</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="fblangref-scalarfuncs-rsa-private"
-                                >RSA_PRIVATE</link>. Данные для расшифровки сипользуются из примера
-                            в <link linkend="fblangref-scalarfuncs-rsa-encrypt"
-                                >RSA_ENCRYPT</link>
+                                linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>.
+                            Данные для расшифровки сипользуются из примера в <link
+                                linkend="fblangref-scalarfuncs-rsa-encrypt">RSA_ENCRYPT</link>
                         </para>
                         <para><programlisting language="sql">
 select RSA_DECRYPT(rdb$get_context('USER_SESSION', 'msg')
@@ -6841,20 +6827,19 @@ from RDB$DATABASE;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>,
-                        <link linkend="fblangref-scalarfuncs-rsa-encrypt">RSA_ENCRYPT</link>.
-                </para>
+                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>, <link
+                        linkend="fblangref-scalarfuncs-rsa-encrypt">RSA_ENCRYPT</link>. </para>
             </formalpara>
         </section>
 
-        <section xml:id="fblangref-scalarfuncs-rsa-sign">
+        <section xml:id="fblangref-scalarfuncs-rsa-sign-hash">
             <info>
-                <title>RSA_SIGN</title>
+                <title>RSA_SIGN_HASH</title>
                 <keywordset>
-                    <keyword>RSA_SIGN</keyword>
+                    <keyword>RSA_SIGN_HASH</keyword>
                 </keywordset>
             </info>
-            <indexterm><primary>RSA_SIGN</primary></indexterm>
+            <indexterm><primary>RSA_SIGN_HASH</primary></indexterm>
             <formalpara>
                 <title>Доступно в:</title>
 
@@ -6864,7 +6849,7 @@ from RDB$DATABASE;
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_key&gt;</replaceable> [HASH <replaceable>&lt;hash&gt;</replaceable>] [SALT_LENGTH <replaceable>&lt;length&gt;</replaceable>])
+RSA_SIGN_HASH (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_key&gt;</replaceable> [HASH <replaceable>&lt;hash&gt;</replaceable>] [SALT_LENGTH <replaceable>&lt;length&gt;</replaceable>])
                             
 <replaceable>&lt;hash&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
                         </programlisting>
@@ -6873,7 +6858,7 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
             <para>
                 <table frame="all">
                     <?dbfo keep-together='auto'?>
-                    <title>Параметры функции RSA_SIGN</title>
+                    <title>Параметры функции RSA_SIGN_HASH</title>
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
                         <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
@@ -6924,14 +6909,13 @@ RSA_SIGN (<replaceable>&lt;data&gt;</replaceable> KEY <replaceable>&lt;private_k
                 <title>Примеры:</title>
                 <para>
                     <example>
-                        <title>Использование функции RSA_SIGN</title>
+                        <title>Использование функции RSA_SIGN_HASH</title>
 
                         <para>Закрытый ключ должен быть инициализирован ранее см. пример в <link
-                                linkend="fblangref-scalarfuncs-rsa-private"
-                                >RSA_PRIVATE</link>. </para>
+                                linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>. </para>
                         <para><programlisting language="sql">
 select rdb$set_context('USER_SESSION', 'msg', 
-    rsa_sign(crypt_hash('Test message' using sha256)
+    rsa_sign_hash(crypt_hash('Test message' using sha256)
     key rdb$get_context('USER_SESSION', 'private_key'))) 
 from rdb$database;
                 </programlisting></para>
@@ -6942,19 +6926,20 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>.
+                    <link linkend="fblangref-scalarfuncs-rsa-private">RSA_PRIVATE</link>, <link
+                        linkend="fblangref-scalarfuncs-rsa-verify-hash">RSA_VERIFY_HAS</link>.
                 </para>
             </formalpara>
         </section>
 
-        <section xml:id="fblangref-scalarfuncs-rsa-verify">
+        <section xml:id="fblangref-scalarfuncs-rsa-verify-hash">
             <info>
-                <title>RSA_VERIFY</title>
+                <title>RSA_VERIFY_HASH</title>
                 <keywordset>
-                    <keyword>RSA_VERIFY</keyword>
+                    <keyword>RSA_VERIFY_HASH</keyword>
                 </keywordset>
             </info>
-            <indexterm><primary>RSA_VERIFY</primary></indexterm>
+            <indexterm><primary>RSA_VERIFY_HASH</primary></indexterm>
             <formalpara>
                 <title>Доступно в:</title>
 
@@ -6964,7 +6949,7 @@ from rdb$database;
                 <title>Синтаксис:</title>
                 <para>
                     <programlisting>
-RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;signature&gt;</replaceable> KEY <replaceable>&lt;public_key&gt;</replaceable> [HASH <replaceable>&lt;hash&gt;</replaceable>] 
+RSA_VERIFY_HASH (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;signature&gt;</replaceable> KEY <replaceable>&lt;public_key&gt;</replaceable> [HASH <replaceable>&lt;hash&gt;</replaceable>] 
   [SALT_LENGTH <replaceable>&lt;length&gt;</replaceable>])
                             
 <replaceable>&lt;hash&gt;</replaceable> ::= { MD5 | SHA1 | SHA256 | SHA512 }                            
@@ -6974,7 +6959,7 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
             <para>
                 <table frame="all">
                     <?dbfo keep-together='auto'?>
-                    <title>Параметры функции RSA_VERIFY</title>
+                    <title>Параметры функции RSA_VERIFY_HASH</title>
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
                         <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
@@ -6995,7 +6980,7 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
                                 <entry><replaceable>signature</replaceable></entry>
                                 <entry>
                                     <para>Подпись. Должно быть значением возвращаемым функцией
-                                        RSA_SIGN.</para>
+                                        RSA_SIGN_HASH.</para>
                                 </entry>
                             </row>
                             <row>
@@ -7032,13 +7017,14 @@ RSA_VERIFY (<replaceable>&lt;data&gt;</replaceable> SIGNATURE <replaceable>&lt;s
                 <title>Примеры:</title>
                 <para>
                     <example>
-                        <title>Использование функции RSA_SIGN</title>
+                        <title>Использование функции RSA_VERIFY_HASH</title>
 
                         <para>Открытый ключ должен быть инициализирован ранее см. пример в <link
                                 linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>
-                            Цифровая подпись получена ранее с помощью функции RSA_SIGN. </para>
+                            Цифровая подпись получена ранее с помощью функции <link
+                                linkend="fblangref-scalarfuncs-rsa-sign-hash">RSA_SIGN_HASH</link>. </para>
                         <para><programlisting language="sql">
-select rsa_verify(crypt_hash('Test message' using sha256) 
+select rsa_verify_hash(crypt_hash('Test message' using sha256) 
     signature rdb$get_context('USER_SESSION', 'msg')
     key rdb$get_context('USER_SESSION', 'public_key')) 
 from rdb$database;
@@ -7050,7 +7036,7 @@ from rdb$database;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-rsa-sign">RSA_SIGN</link>, <link
+                    <link linkend="fblangref-scalarfuncs-rsa-sign-hash">RSA_SIGN_HASH</link>, <link
                         linkend="fblangref-scalarfuncs-rsa-public">RSA_PUBLIC</link>. </para>
             </formalpara>
         </section>
@@ -7834,8 +7820,7 @@ SELECT CHAR_TO_UUID('A0bF4E45-3029-2A44-X493-4998c9b439A3') FROM rdb$database
 
                 <para>
                     <link linkend="fblangref-scalarfuncs-gen-uuid">GEN_UUID</link>, <link
-                        linkend="fblangref-scalarfuncs-uuid-to-char">UUID_TO_CHAR</link>.
-                </para>
+                        linkend="fblangref-scalarfuncs-uuid-to-char">UUID_TO_CHAR</link>. </para>
             </formalpara>
         </section>
         <section xml:id="fblangref-scalarfuncs-gen-uuid">
@@ -7894,9 +7879,8 @@ SELECT GEN_UUID() AS GUID FROM RDB$DATABASE
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-scalarfuncs-char-to-uuid">CHAR_TO_UUID</link>,
-                        <link linkend="fblangref-scalarfuncs-uuid-to-char"
-                    >UUID_TO_CHAR</link>. </para>
+                    <link linkend="fblangref-scalarfuncs-char-to-uuid">CHAR_TO_UUID</link>, <link
+                        linkend="fblangref-scalarfuncs-uuid-to-char">UUID_TO_CHAR</link>. </para>
             </formalpara>
         </section>
         <section xml:id="fblangref-scalarfuncs-uuid-to-char">
@@ -7980,8 +7964,7 @@ SELECT UUID_TO_CHAR('Firebird swings!') FROM RDB$DATABASE;
 
                 <para>
                     <link linkend="fblangref-scalarfuncs-gen-uuid">GEN_UUID</link>, <link
-                        linkend="fblangref-scalarfuncs-char-to-uuid">CHAR_TO_UUID</link>.
-                </para>
+                        linkend="fblangref-scalarfuncs-char-to-uuid">CHAR_TO_UUID</link>. </para>
             </formalpara>
         </section>
     </section>
@@ -8283,11 +8266,11 @@ END
             </formalpara>
 
             <para>Данная функция эквивалентна конструкции <link
-                    linkend="fblangref-commons-conditional-case-simple">Простой CASE</link>, в которой
-                заданное выражение сравнивается с другими выражениями до нахождения совпадения.
-                Результатом является значение, указанное после выражения, с которым найдено
-                совпадение. Если совпадений не найдено, то возвращается значение по умолчанию (если
-                оно, конечно, задано – в противном случае возвращается NULL).</para>
+                    linkend="fblangref-commons-conditional-case-simple">Простой CASE</link>, в
+                которой заданное выражение сравнивается с другими выражениями до нахождения
+                совпадения. Результатом является значение, указанное после выражения, с которым
+                найдено совпадение. Если совпадений не найдено, то возвращается значение по
+                умолчанию (если оно, конечно, задано – в противном случае возвращается NULL).</para>
             <caution>
                 <para>Совпадение эквивалентно оператору &quot;=&quot;, т.е. если
                         <replaceable>testexpr</replaceable> имеет значение NULL, то он не

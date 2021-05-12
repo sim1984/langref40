@@ -1,0 +1,1735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-trigger">
+    <info>
+        <title>TRIGGER</title>
+        <keywordset>
+            <keyword>TRIGGER</keyword>
+        </keywordset>
+    </info>
+    <para>Триггер (trigger) — это хранимая процедура особого типа, которая не вызывается
+        непосредственно, а исполнение которой обусловлено наступлением одного из событий,
+        относящегося к одной конкретной таблице (представлению), или наступлению одного из событий
+        базы данных. </para>
+    <section xml:id="fblangref-ddl-trigger-create">
+        <info>
+            <title>CREATE TRIGGER</title>
+            <keywordset>
+                <keyword>CREATE TRIGGER</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE TRIGGER</primary>
+        </indexterm>
+
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание нового триггера.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+CREATE TRIGGER <replaceable>trigname</replaceable> {   
+    <replaceable>&lt;relation_trigger_legacy&gt;</replaceable>
+  | <replaceable>&lt;relation_trigger_sql2003&gt;</replaceable>
+  | <replaceable>&lt;database_trigger&gt;</replaceable> 
+  | <replaceable>&lt;ddl_trigger&gt;</replaceable> }                  
+<replaceable>&lt;routine body&gt;</replaceable> 
+  
+
+<replaceable>&lt;relation_trigger_legacy&gt;</replaceable> ::= 
+  FOR {<replaceable>tablename</replaceable> | <replaceable>viewname</replaceable>}
+  [ACTIVE | INACTIVE]
+  {BEFORE | AFTER} <replaceable>&lt;mutation_list&gt;</replaceable>
+  [POSITION <replaceable>number</replaceable>]
+
+<replaceable>&lt;relation_trigger_sql2003&gt;</replaceable> ::= 
+  [ACTIVE | INACTIVE]
+  {BEFORE | AFTER} <replaceable>&lt;mutation_list&gt;</replaceable>
+  ON {<replaceable>tablename</replaceable> | <replaceable>viewname</replaceable>}
+  [POSITION <replaceable>number</replaceable>]
+
+<replaceable>&lt;database_trigger&gt;</replaceable> ::= 
+  [ACTIVE | INACTIVE] 
+  ON <replaceable>db_event</replaceable>
+  [POSITION <replaceable>number</replaceable>]
+                    
+<replaceable>&lt;ddl_trigger&gt;</replaceable> ::=  
+  [ACTIVE | INACTIVE]
+  {BEFORE | AFTER} <replaceable>&lt;ddl_events&gt;</replaceable>
+  [POSITION <replaceable>number</replaceable>]                    
+
+<replaceable>&lt;mutation_list&gt;</replaceable> ::= <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable>]]
+
+<replaceable>&lt;mutation&gt;</replaceable> ::=  INSERT | UPDATE | DELETE 
+
+<replaceable>&lt;db_event&gt;</replaceable> ::=  
+    CONNECT 
+  | DISCONNECT 
+  | TRANSACTION START 
+  | TRANSACTION COMMIT 
+  | TRANSACTION ROLLBACK 
+
+
+<replaceable>&lt;ddl_events&gt;</replaceable> ::= {
+    ANY DDL STATEMENT
+  | <replaceable>&lt;ddl_event_item&gt;</replaceable> [{OR <replaceable>&lt;ddl_event_item&gt;</replaceable>} ...]
+}
+
+<replaceable>&lt;ddl_event_item&gt;</replaceable> ::=
+    CREATE TABLE | ALTER TABLE | DROP TABLE
+  | CREATE PROCEDURE | ALTER PROCEDURE | DROP PROCEDURE
+  | CREATE FUNCTION | ALTER FUNCTION | DROP FUNCTION
+  | CREATE TRIGGER | ALTER TRIGGER | DROP TRIGGER
+  | CREATE EXCEPTION | ALTER EXCEPTION | DROP EXCEPTION
+  | CREATE VIEW | ALTER VIEW | DROP VIEW
+  | CREATE DOMAIN | ALTER DOMAIN | DROP DOMAIN
+  | CREATE ROLE | ALTER ROLE | DROP ROLE
+  | CREATE SEQUENCE | ALTER SEQUENCE | DROP SEQUENCE
+  | CREATE USER | ALTER USER | DROP USER
+  | CREATE INDEX | ALTER INDEX | DROP INDEX
+  | CREATE COLLATION | DROP COLLATION
+  | ALTER CHARACTER SET
+  | CREATE PACKAGE | ALTER PACKAGE | DROP PACKAGE
+  | CREATE PACKAGE BODY | DROP PACKAGE BODY 
+  | CREATE MAPPING | ALTER MAPPING | DROP MAPPING
+
+<replaceable>&lt;routine body&gt;</replaceable> ::=
+    <replaceable>&lt;SQL routine spec&gt;</replaceable>
+  | <replaceable>&lt;external body reference&gt;</replaceable>
+                    
+<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
+  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
+
+
+<replaceable>&lt;rights clause&gt;</replaceable> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
+
+     
+<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
+  AS       
+    [<replaceable>&lt;declarations&gt;</replaceable>]       
+  BEGIN       
+    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
+  END                      
+
+<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
+
+<replaceable>&lt;declare_item&gt;</replaceable> ::=      
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
+
+<replaceable>&lt;external body reference&gt;</replaceable> ::=
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
+
+<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора CREATE TRIGGER</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.33*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.67*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>trigname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя триггера. Может содержать до 63 символов.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>relation_trigger_legacy</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление табличного триггера (унаследованное). </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>relation_trigger_sql2003</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление табличного триггера согласно стандарту SQL-2003.
+                                </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>database_trigger</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление триггера базы данных. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>ddl_trigger</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление DDL триггера. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>tablename</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>viewname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя представления. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>mutation_list</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Список событий таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>mutation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Одно из событий таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>db_event</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Событие соединения или транзакции. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>ddl_events</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Список событий изменения метаданных. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>ddl_event_item</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Одно из событий изменения метаданных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>number</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Порядок срабатывания триггера. От 0 до 32767.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declarations</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Секция объявления локальных переменных, подпрограмм и
+                                    именованных курсоров. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>PSQL_statments</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Операторы языка PSQL.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>extbody</replaceable>
+                            </entry>
+                            <entry>Тело внешнего триггера. Строковый литерал который может
+                                использоваться UDR для различных целей.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>module name</replaceable>
+                            </entry>
+                            <entry>Имя внешнего модуля.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>routine name</replaceable>
+                            </entry>
+                            <entry>Имя точки входа внутри модуля.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>misc info</replaceable>
+                            </entry>
+                            <entry>Различная информация используемая внешним триггером по своему
+                                усмотрению.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор CREATE TRIGGER создаёт новый триггер. Триггер может быть создан для события
+            (или событий) отношения (таблицы или представления), для события (событий) изменения
+            метаданных или для одного из событий базы данных.</para>
+        <para>Оператор CREATE TRIGGER как и его родственники <database>ALTER TRIGGER</database>,
+                <database>CREATE OR ALTER TRIGGER</database> и <database>RECREATE TRIGGER</database>
+            являются составными операторами, содержащими заголовок и тело.</para>
+        <para>Заголовок определяет имя триггера, а также содержит имя отношения (для табличных
+            триггеров), фазу триггера, событие (или события) на которые срабатывает триггер и
+            позицию. Имя триггера должно быть уникальным среди имён других триггеров.</para>
+        <section xml:id="fblangref-ddl-trigger-create-sql_security">
+            <title>Привилегии выполнения</title>
+            <indexterm>
+                <primary>CREATE TRIGGER</primary>
+                <secondary>SQL SECURITY</secondary>
+            </indexterm>
+            <para>Необязательное предложение SQL SECURITY позволяет задать с какими привилегиями
+                выполняется триггер. Если выбрана опция INVOKER, то триггер выполняется с
+                привилегиями вызывающего пользователя. Если выбрана опция DEFINER, то триггер
+                выполняется с привилегиями определяющего пользователя (владельца). Эти привилегии
+                будут дополнены привилегиями выданные самому триггеру с помощью оператора GRANT. По
+                умолчанию триггер наследует привилегии выполнения указанные для таблицы. Триггера на
+                события базы данных по умолчанию выполняются с привилегиями определяющего
+                пользователя (владельца).</para>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-create-body">
+            <title>Тело триггера</title>
+            <para>Тело триггера состоит из необязательных объявлений локальных переменных,
+                подпрограмм и именованных курсоров, и одного или нескольких операторов или блоков
+                операторов, заключённых во внешнем блоке, который начинается с ключевого слова BEGIN
+                и заканчивается ключевым словом END. Объявления и внутренние операторы завершаются
+                точкой с запятой (;).</para>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-term">
+            <title>Терминатор оператора</title>
+
+            <para>Некоторые редакторы SQL-операторов — в частности утилита
+                    <application>isql</application>, которая идёт в комплекте с Firebird, и возможно
+                некоторые сторонние редакторы — используют внутреннее соглашение, которое требует,
+                чтобы все операторы были завершены с точкой с запятой.</para>
+            <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы не
+                знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в
+                разделе, озаглавленном <link linkend="fblangref-psql-setterm">Изменение терминатора
+                    в <application>isql</application></link>.</para>
+
+        </section>
+        <section xml:id="fblangref-ddl-trigger-create-table">
+            <title>DML триггеры (на таблицу или представление)</title>
+
+            <para>DML триггеры выполняются на уровне строки (записи) каждый раз, когда изменяется
+                образ строки. Они могут быть определены и для таблиц и представлений.</para>
+
+            <section xml:id="fblangref-ddl-trigger-table-forms">
+                <title>Форма объявления</title>
+                <para>Объявление DML триггера существует в двух вариантах: <itemizedlist>
+                        <listitem>
+                            <para>своеобразная, унаследованная форма;</para>
+                        </listitem>
+                        <listitem>
+                            <para>SQL-2003 совместимая (рекомендуемая).</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>В настоящее время рекомендуется использовать SQL-2003 совместимую форму. </para>
+                <para>Для DML триггера обязательно указывается фаза и одно или несколько
+                    событий.</para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-state">
+                <title>Состояние триггера</title>
+                <para>Триггер может быть в одном из двух состояний активном (ACTIVE) или неактивном
+                    (INACTIVE). Запускаются только активные триггеры. По умолчанию триггеры
+                    создаются в активном состоянии.</para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-table-phase">
+                <title>Фаза</title>
+                <para>Триггер может выполняться в одной из двух фаз, связанных с запрошенными
+                    изменениями состояния данных. Ключевое слово BEFORE означает, что триггер
+                    вызывается до наступления соответствующего события (событий, если их указано
+                    несколько), AFTER — после наступления события (событий). </para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-table-events">
+                <title>События</title>
+                <para>Для DML триггера может быть указано одно из событий таблицы (представления) —
+                    INSERT (добавление), UPDATE (изменение), DELETE (удаление) — или несколько
+                    событий, разделённых ключевым словом OR, при которых вызывается триггер. При
+                    создании триггера каждое событие (INSERT, UPDATE или DELETE) не должно
+                    упоминаться более одного раза.</para>
+                <para>Контекстные переменные <link linkend="fblangref-contextvars-inserting"
+                        >INSERTING</link>, <link linkend="fblangref-contextvars-updating"
+                        >UPDATING</link> и <link linkend="fblangref-contextvars-deleting"
+                        >DELETING</link> логического типа могут быть использованы в теле триггера
+                    для определения события, которое вызвало срабатывание триггера.</para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-position">
+                <title>Порядок срабатывания</title>
+                <para>Ключевое слово POSITION позволяет задать порядок, в котором будут выполняться
+                    триггеры с одинаковой фазой и событием (или группы событий). По умолчанию
+                    позиция равна 0. Если позиции для триггеров не заданы или несколько триггеров
+                    имеют одно и то же значение позиции, то такие триггеры будут выполняться в
+                    алфавитном порядке их имен.</para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-table-body">
+                <title>Тело триггера</title>
+                <para>После ключевого слова AS следует тело триггера.</para>
+                <section xml:id="fblangref-ddl-trigger-declare">
+                    <title>Объявление локальных переменных, курсоров и подпрограмм</title>
+                    <para>В необязательной секции <replaceable>declarations</replaceable> описаны
+                        локальные переменные триггера, именованные курсоры и подпрограммы
+                        (подпроцедуры и подфункции). Подробности вы можете посмотреть в главе
+                            <quote>Процедурный язык PSQL</quote> в разделах <link
+                            linkend="fblangref-psql-statements-declare-var">DECLARE VARIABLE</link>
+                        и <link linkend="fblangref-psql-statements-declare-cursor">DECLARE
+                            CURSOR</link>, <link
+                            linkend="fblangref-psql-statements-declare-procedure">DECLARE
+                            PROCEDURE</link>, <link
+                            linkend="fblangref-psql-statements-declare-function">DECLARE
+                            FUNCTION</link>.</para>
+                    <para>После необязательной секции деклараций обязательно следует составной
+                        оператор. Составной оператор состоит из одного или нескольких PSQL
+                        операторов, заключенных между ключевыми словами BEGIN и END. Составной
+                        оператор может содержать один или несколько других составных операторов.
+                        Вложеность ограничена 512 уровнями. Любой из BEGIN ... END блоков может быть
+                        пустым, в том числе и главный блок.</para>
+                </section>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-external">
+                <title>Внешние триггеры</title>
+
+                <indexterm>
+                    <primary>CREATE TRIGGER</primary>
+                    <secondary>EXTERNAL NAME</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>CREATE TRIGGER</primary>
+                    <secondary>ENGINE</secondary>
+                </indexterm>
+                <para>Триггер может быть расположена во внешнем модуле. В этом случае вместо тела
+                    триггера указывается место его расположения во внешнем модуле с помощью
+                    предложения <database>EXTERNAL NAME</database>. Аргументом этого предложения
+                    является строка, в которой через разделитель указано имя внешнего модуля, имя
+                    процедуры внутри модуля и определённая пользователем информация. В предложении
+                        <database>ENGINE</database> указывается имя движка для обработки подключения
+                    внешних модулей. В Firebird для работы с внешними модулями используется движок
+                    UDR. После ключевого слова AS может быть указан строковый литерал — "тело"
+                    внешнего триггера, оно может быть использовано внешнем модулем для различных
+                    целей.</para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-table-create-who">
+                <title>Кто может создать DML триггер?</title>
+
+                <para>DML триггеры могут создать: <itemizedlist spacing="compact">
+                        <listitem>
+                            <para><link linkend="fblangref-security-administrators"
+                                    >Администраторы</link></para>
+                        </listitem>
+                        <listitem>
+                            <para>Владелец таблицы (представления); </para>
+                        </listitem>
+                        <listitem>
+                            <para>Пользователи с привилегией <database>ALTER ANY {TABLE |
+                                    VIEW}</database>. </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+
+            </section>
+            <section xml:id="fblangref-ddl-trigger-table-create-examples">
+                <title>Примеры</title>
+                <example>
+                    <title>Создание DML триггера в Legacy стиле</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE TRIGGER SET_CUST_NO FOR CUSTOMER
+ACTIVE BEFORE INSERT POSITION 0
+AS
+BEGIN
+  IF (NEW.CUST_NO IS NULL) THEN
+    NEW.CUST_NO = GEN_ID(CUST_NO_GEN, 1);
+END             
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Создание DML триггера согласно стандарту SQL-2003</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END           
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Создание DML триггера выполняющегося с правами определяющего
+                        пользователя</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+SQL SECURITY DEFINER
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END           
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Создание DML триггера на несколько событий</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE TRIGGER TR_CUST_LOG
+ACTIVE AFTER INSERT OR UPDATE OR DELETE 
+ON CUSTOMER POSITION 10
+AS
+BEGIN
+  INSERT INTO CHANGE_LOG (LOG_ID,
+                          ID_TABLE,
+                          TABLE_NAME,
+                          MUTATION)
+  VALUES (NEXT VALUE FOR SEQ_CHANGE_LOG,
+          OLD.CUST_NO,
+          'CUSTOMER',
+          CASE
+            WHEN INSERTING THEN 'INSERT'
+            WHEN UPDATING  THEN 'UPDATE'
+            WHEN DELETING  THEN 'DELETE'
+          END);
+END         
+                </programlisting>
+                    </para>
+                </example>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="fblangref-ddl-trigger-alter">ALTER TRIGGER</link>, <link
+                            linkend="fblangref-ddl-trigger-drop">DROP TRIGGER</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-create-db">
+            <title>Триггеры на событие базы данных</title>
+
+            <para>Триггер может быть создан для одного из событий базы данных: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para>CONNECT (соединение с базой данных или после сброса сеанса);</para>
+                    </listitem>
+                    <listitem>
+                        <para>DISCONNECT (отсоединение от базы данных или перед сбросом
+                            сеанса);</para>
+                    </listitem>
+                    <listitem>
+                        <para>TRANSACTION START (старт транзакции); </para>
+                    </listitem>
+                    <listitem>
+                        <para>TRANSACTION COMMIT (подтверждение транзакции); </para>
+                    </listitem>
+                    <listitem>
+                        <para>TRANSACTION ROLLBACK (откат транзакции). </para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Контекстная переменная <link linkend="fblangref-contextvars-resetting"
+                    >RESETTING</link> может использоваться в триггерах на события CONNECT и
+                DISCONNECT для того, чтобы отличить сброс сеанса от подключения/отключения от базы
+                данных.</para>
+
+            <para>Указать для триггера несколько событий базы данных невозможно.</para>
+            <section xml:id="fblangref-ddl-trigger-db-exception">
+                <title>Выполнение триггеров на событие базы данных и обработка исключений</title>
+                <para>Триггеры на события CONNECT и DISCONNECT выполняются в специально созданной
+                    для этого транзакции. Если при обработке триггера не было вызвано исключение, то
+                    транзакция подтверждается. Не перехваченные исключения откатят транзакцию и:
+                        <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>в случае триггера на событие CONNECT соединение разрывается, а
+                                исключения возвращается клиенту;</para>
+                        </listitem>
+                        <listitem>
+                            <para>для триггера на событие DISCONNECT соединение разрывается, как это
+                                и предусмотрено, но исключения не возвращается клиенту. </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <para>Триггеры на события CONNECT и DISCONNECT срабатывают также при выполнении
+                    оператора сброса сессионного окружения. Особенности обработки ошибок в триггерах
+                    на события CONNECT и DISCONNECT смотри в секции <link
+                        linkend="fblangref-session-resetsession">ALTER SESSION RESET</link>.</para>
+
+                <para>Триггеры на события транзакций срабатывают при старте транзакции, её
+                    подтверждении или откате. Не перехваченные исключения обрабатываются в
+                    зависимости от типа события: <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>для события TRANSACTION START исключение возвращается клиенту, а
+                                транзакция отменяется;</para>
+                        </listitem>
+                        <listitem>
+                            <para>для события TRANSACTION COMMIT исключение возвращается клиенту,
+                                действия, выполненные триггером, и транзакция отменяются;</para>
+                        </listitem>
+                        <listitem>
+                            <para>для события TRANSACTION ROLLBACK исключение не возвращается
+                                клиенту, а транзакция, как и предусмотрено, отменяется.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <section>
+                    <title>Ловушки</title>
+                    <para>Из вышеизложенного следует, что нет прямого способа узнать, какой триггер
+                        (DISCONNECT или ROLLBACK) вызвал исключение. Также ясно, что вы не сможете
+                        подключиться к базе данных в случае исключения в триггере на событие
+                        CONNECT, а также отменяется старт транзакции при исключении в триггере на
+                        событие TRANSACTION START. В обоих случаях база данных эффективно
+                        блокируется до тех пор, пока вы не отключите триггеры базы данных и не
+                        исправите ошибочный код.</para>
+                    <simplesect xml:id="fblangref-ddl-trigger-db-suppression">
+                        <title>Отключение триггеров</title>
+
+                        <para>В некоторые утилиты командной строки Firebird были добавлены новые
+                            ключи для отключения триггеров на базу данных:
+                            <screen>
+gbak -nodbtriggers
+isql -nodbtriggers
+nbackup -T
+                    </screen>
+                            Эти ключи могут использоваться только SYSDBA или владельцем базы данных.
+                        </para>
+                    </simplesect>
+                </section>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-db-two-phase">
+                <title>Двухфазное подтверждение транзакций</title>
+                <para>В случае двухфазных транзакций триггеры на событие TRANSACTION START
+                    срабатывают в фазе подготовки (prepare), а не в фазе commit.</para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-db-сaveats">
+                <title>Предостережения</title>
+                <para>
+                    <orderedlist>
+                        <listitem>
+                            <para>Триггеры для событий базы данных DISCONNECT и ROLLBACK не будут
+                                вызваны при отключении клиентов через таблицы мониторинга (DELETE
+                                FROM MON$ATTACHMENTS).</para>
+                        </listitem>
+                        <listitem>
+                            <para>Использование оператора IN AUTONOMOUS TRANSACTION DO в триггерах
+                                на событие базы данных связанные с транзакциями (COMMIT, ROLLBACK,
+                                START) может привести к его зацикливанию.</para>
+                        </listitem>
+                    </orderedlist>
+                </para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-db-сreate-who">
+                <title>Кто может создать триггеры на события базы данных?</title>
+
+
+                <para>Триггеры для событий базы данных могут создать: <itemizedlist
+                        spacing="compact">
+                        <listitem>
+                            <para><link linkend="fblangref-security-administrators"
+                                    >Администраторы</link></para>
+                        </listitem>
+                        <listitem>
+                            <para>Владелец базы данных;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Пользователи с привилегией <database>ALTER DATABASE</database>.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+
+            </section>
+
+            <section xml:id="fblangref-ddl-trigger-db-examples">
+                <title>Примеры</title>
+                <example>
+                    <title>Создание триггера на событие подключения к БД для логирования
+                        события</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE TRIGGER tr_log_connect
+INACTIVE ON CONNECT POSITION 0
+AS
+BEGIN
+  INSERT INTO LOG_CONNECT (ID,
+                           USERNAME,
+                           ATIME)
+  VALUES (NEXT VALUE FOR SEQ_LOG_CONNECT,
+          CURRENT_USER,
+          CURRENT_TIMESTAMP);
+END              
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Создание триггера на событие подключения к БД для контроля
+                        доступа</title>
+                    <para>
+                        <programlisting language="sql">
+<![CDATA[                         
+CREATE EXCEPTION E_INCORRECT_WORKTIME 'Рабочий день ещё не начался';
+
+CREATE TRIGGER TR_LIMIT_WORKTIME ACTIVE 
+ON CONNECT POSITION 1
+AS
+BEGIN
+  IF ((CURRENT_USER <> 'SYSDBA') AND
+      NOT (CURRENT_TIME BETWEEN time '9:00' AND time '17:00')) THEN
+     EXCEPTION E_INCORRECT_WORKTIME;
+END
+]]>
+                </programlisting>
+                    </para>
+                </example>
+                <formalpara>
+                    <title>См. также:</title>
+
+
+                    <para>
+                        <link linkend="fblangref-ddl-trigger-alter">ALTER TRIGGER</link>, <link
+                            linkend="fblangref-ddl-trigger-drop">DROP TRIGGER</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-create-ddl">
+            <title>Триггеры на события изменения метаданных</title>
+
+            <para>Триггеры на события изменения метаданных (DDL триггеры) предназначены для
+                обеспечения ограничений, которые будут распространены на пользователей, которые
+                пытаются создать, изменить или удалить DDL объект. Другое их назначение — ведение
+                журнала изменений метаданных.</para>
+            <para>Триггеры на события изменения метаданных являются одним из подвидов триггеров на
+                события базы данных.</para>
+            <para>Особенности: <orderedlist>
+                    <listitem>
+                        <para>BEFORE триггеры запускаются до изменений в системных таблицах. AFTER
+                            триггеры запускаются после изменений в системных таблицах. </para>
+                    </listitem>
+                    <listitem>
+                        <para>Когда оператор DDL запускает триггер, в котором возбуждается
+                            исключение (BEFORE или AFTER, преднамеренно или неумышленно), оператор
+                            не будет фиксирован. Т.е. исключения могут использоваться, чтобы
+                            гарантировать, что оператор DDL будет отменен, если некоторые условия не
+                            будут соблюдены. </para>
+                    </listitem>
+                    <listitem>
+                        <para>Действия DDL триггеров выполняются только при фиксации транзакции, в
+                            которой работает затронутая DDL команда. Никогда не забывайте о том, что
+                            в AFTER триггере, возможно сделать только то, что возможно сделать после
+                            DDL команды без автоматической фиксации транзакций. Вы не можете,
+                            например, создать таблицу в триггере и использовать её там. </para>
+                    </listitem>
+                    <listitem>
+                        <para>Для операторов <database>CREATE OR ALTER</database>... триггер
+                            срабатывает один раз для события CREATE или события ALTER, в зависимости
+                            от того существовал ли ранее объект. Для операторов RECREATE триггер
+                            вызывается для события DROP, если объект существовал, и после этого для
+                            события CREATE. </para>
+                    </listitem>
+                    <listitem>
+                        <para>Если объект метаданных не существует, то обычно триггеры на события
+                            ALTER и DROP не запускаются. Исключения описаны в пункте 6. </para>
+                    </listitem>
+                    <listitem>
+                        <para>Исключением из правила 5 являются BEFORE ALTER/DROP USER триггеры,
+                            которые будут вызваны, даже если имя пользователя не существует. Это
+                            вызвано тем, что эти команды выполняются для базы данных безопасности,
+                            для которой не делается проверка существования пользователей перед их
+                            выполнением. Данное поведение, вероятно, будет отличаться для встроенных
+                            пользователей, поэтому не пишите код, который зависит от этого.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Если некоторое исключение возбуждено после того как начала выполняться
+                            DDL команда и до того как запущен AFTER триггер, то AFTER триггер не
+                            запускается. </para>
+                    </listitem>
+                    <listitem>
+                        <para>Для процедур и функций в составе пакетов не запускаются индивидуальные
+                            триггеры {CREATE | ALTER | DROP} {PROCEDURE | FUNCTION}.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Оператор ALTER DOMAIN <replaceable>&lt;old name&gt;</replaceable> TO
+                                <replaceable>&lt;new name&gt;</replaceable> устанавливает
+                            контекстные переменные OLD_OBJECT_NAME и NEW_OBJECT_NAME в обоих
+                            триггерах BEFORE и AFTER. Контекстная переменная OBJECT_NAME будет
+                            содержать старое имя объекта метаданных в триггере BEFORE, и новое — в
+                            триггере AFTER.</para>
+                    </listitem>
+                </orderedlist></para>
+            <para>Если в качестве события указано предложение ANY DDL STATEMENT, то триггер будет
+                вызван при наступлении любого из DDL событий.</para>
+            <section xml:id="fblangref-ddl-trigger-create-ddl-contextvar">
+                <title>Пространство имён DDL_TRIGGER</title>
+
+                <para>Во время работы DDL триггера доступно пространство имён DDL_TRIGGER для
+                    использования в функции <database>RDB$GET_CONTEXT</database>. Его использование
+                    также допустимо в хранимых процедурах и функциях, вызванных триггерами
+                    DDL.</para>
+                <para>Контекст DDL_TRIGGER работает как стек. Перед возбуждением DDL триггера,
+                    значения, относящиеся к выполняемой команде, помещаются в этот стек. После
+                    завершения работы триггера значения выталкиваются. Таким образом. В случае
+                    каскадных DDL операторов, когда каждая пользовательская DDL команда возбуждает
+                    DDL триггер, и этот триггер запускает другие DDL команды, с помощью
+                        <database>EXECUTE STATEMENT</database>, значения переменных в пространстве
+                    имён DDL_TRIGGER будут соответствовать команде, которая вызвала последний DDL
+                    триггер в стеке вызовов.</para>
+                <section>
+                    <title>Переменные доступные в пространстве имён DDL_TRIGGER</title>
+                    <para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>EVENT_TYPE – тип события (CREATE, ALTER, DROP)</para>
+                            </listitem>
+                            <listitem>
+                                <para>OBJECT_TYPE – тип объекта (TABLE, VIEW и д.р.) </para>
+                            </listitem>
+                            <listitem>
+                                <para>DDL_EVENT – имя события (<replaceable>&lt;ddl event
+                                        item&gt;</replaceable>), </para>
+                                <para>где <replaceable>&lt;ddl event item&gt;</replaceable> =
+                                    EVENT_TYPE || ' ' || OBJECT_TYPE </para>
+                            </listitem>
+                            <listitem>
+                                <para>OBJECT_NAME – имя объекта метаданных</para>
+                            </listitem>
+                            <listitem>
+                                <para>OLD_OBJECT_NAME – имя объекта метаданных до
+                                    переименования</para>
+                            </listitem>
+                            <listitem>
+                                <para>NEW_OBJECT_NAME – имя объекта метаданных после переименования
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>SQL_TEXT – текст SQL запроса </para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                </section>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-ddl-suppression">
+                <title>Отключение триггеров</title>
+
+                <para>В некоторые утилиты командной строки Firebird были добавлены новые ключи для
+                    отключения триггеров на базу данных:
+                    <screen>
+gbak -nodbtriggers
+isql -nodbtriggers
+nbackup -T
+                    </screen>
+                    Эти ключи могут использоваться только SYSDBA или владельцем базы данных. </para>
+            </section>
+            <section xml:id="fblangref-ddl-trigger-create-ddl-who">
+                <title>Кто может создать триггеры на события изменения метаданных?</title>
+
+                <para>Триггеры на события изменения метаданных могут создать: <itemizedlist
+                        spacing="compact">
+                        <listitem>
+                            <para><link linkend="fblangref-security-administrators"
+                                    >Администраторы</link></para>
+                        </listitem>
+                        <listitem>
+                            <para>Владелец базы данных;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Пользователи с привилегией <database>ALTER DATABASE</database>.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+
+            </section>
+            <section xml:id="fblangref-ddl-trigger-create-ddl-examples">
+                <title>Примеры</title>
+                <example>
+                    <title>Контроль наименования объектов базы данных с помощью DDL триггера</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE EXCEPTION e_invalid_sp_name 
+  'Неверное имя хранимой процедуры (должно начинаться с SP_)';
+
+SET TERM !;
+
+CREATE TRIGGER trig_ddl_sp BEFORE CREATE PROCEDURE
+AS
+BEGIN
+  IF (rdb$get_context('DDL_TRIGGER', 'OBJECT_NAME') 
+      NOT STARTING 'SP_') THEN
+    EXCEPTION e_invalid_sp_name;
+END!
+
+-- Test
+CREATE PROCEDURE sp_test
+AS
+BEGIN
+END!
+
+CREATE PROCEDURE test
+AS
+BEGIN
+END!
+</programlisting>
+                        <screen>                        
+-- Statement failed, SQLSTATE = 42000
+-- exception 1
+-- -E_INVALID_SP_NAME
+-- -Неверное имя хранимой процедуры (должно начинаться с SP_)
+-- -At trigger 'TRIG_DDL_SP' line: 4, col: 5
+</screen>
+                        <programlisting language="sql">
+SET TERM ;!          
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Контроль безопасности DDL операторов</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE EXCEPTION e_access_denied 'Access denied';
+
+SET TERM !;
+
+CREATE TRIGGER trig_ddl BEFORE ANY DDL STATEMENT
+AS
+BEGIN
+  IF (current_user &lt;&gt; 'SUPER_USER') THEN
+    EXCEPTION e_access_denied;
+END!
+
+-- Test
+CREATE PROCEDURE sp_test
+AS
+BEGIN
+END!
+</programlisting>
+                        <screen>
+-- The last command raises this exception and procedure SP_TEST is not created
+-- Statement failed, SQLSTATE = 42000
+-- exception 1
+-- -E_ACCESS_DENIED
+-- -Access denied
+-- -At trigger 'TRIG_DDL' line: 4, col: 5
+</screen>
+                        <programlisting language="sql">
+SET TERM ;!         
+                </programlisting>
+                    </para>
+                </example>
+                <note>
+                    <para>В Firebird существуют привилегии на DDL операторы, поэтому прибегать к
+                        написанию DDL триггера нужно только в случае, если того же самого эффекта
+                        невозможно достичь стандартными методами.</para>
+                </note>
+                <example>
+                    <title>Использование DDL триггеров для регистрации событий изменения
+                        метаданных</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE SEQUENCE ddl_seq;
+
+CREATE TABLE ddl_log (
+  id BIGINT NOT NULL PRIMARY KEY,
+  moment TIMESTAMP NOT NULL,
+  user_name VARCHAR(63) NOT NULL,
+  event_type VARCHAR(25) NOT NULL,
+  object_type VARCHAR(25) NOT NULL,
+  ddl_event VARCHAR(25) NOT NULL,
+  object_name VARCHAR(63) NOT NULL,
+  old_object_name VARCHAR(63),
+  new_object_name VARCHAR(63),
+  sql_text BLOB sub_type text NOT NULL,
+  ok CHAR(1) NOT NULL
+);
+
+SET TERM !;
+
+CREATE TRIGGER trig_ddl_log_before BEFORE ANY DDL STATEMENT
+AS
+  DECLARE id TYPE OF COLUMN ddl_log.id;
+BEGIN
+  -- Мы должны производить изменения в AUTONOMOUS TRANSACTION, 
+  -- таким образом, если произойдёт исключение и команда
+  -- не будет запущена, она всё равно будет зарегистрирована.
+  IN AUTONOMOUS TRANSACTION DO
+  BEGIN
+    INSERT INTO ddl_log (
+      id, moment, user_name, event_type, object_type, ddl_event, 
+      object_name, old_object_name, new_object_name, sql_text, ok)
+    VALUES (NEXT VALUE FOR ddl_seq, 
+            current_timestamp, current_user,
+            rdb$get_context('DDL_TRIGGER', 'EVENT_TYPE'),
+            rdb$get_context('DDL_TRIGGER', 'OBJECT_TYPE'),
+            rdb$get_context('DDL_TRIGGER', 'DDL_EVENT'),
+            rdb$get_context('DDL_TRIGGER', 'OBJECT_NAME'),
+            rdb$get_context('DDL_TRIGGER', 'OLD_OBJECT_NAME'),
+            rdb$get_context('DDL_TRIGGER', 'NEW_OBJECT_NAME'),
+            rdb$get_context('DDL_TRIGGER', 'SQL_TEXT'),
+            'N')
+    RETURNING id INTO id;
+    rdb$set_context('USER_SESSION', 'trig_ddl_log_id', id);
+  END
+END!
+
+-- Примечание: 
+-- созданный выше триггер будет запущен для этой DDL. 
+-- Хорошей идеей является использование –nodbtriggers
+-- при работе с ним
+CREATE TRIGGER trig_ddl_log_after AFTER ANY DDL STATEMENT
+AS
+BEGIN
+  -- Здесь нам требуется автономная транзакция, 
+  -- потому что в оригинальной транзакции
+  -- мы не увидим запись, вставленную в 
+  -- BEFORE триггере в автономной транзакции, 
+  -- если пользовательская транзакции не запущена
+  -- с режимом изоляции  READ COMMITTED.
+  IN AUTONOMOUS TRANSACTION DO
+    UPDATE ddl_log SET ok = 'Y'
+    WHERE 
+      id = rdb$get_context('USER_SESSION', 'trig_ddl_log_id');
+END!
+
+COMMIT!
+
+SET TERM ;!
+
+-- Удаляем запись о создании trig_ddl_log_after.
+DELETE FROM ddl_log;
+COMMIT;
+
+-- Тест
+
+-- Эта команда будет зарегистрирована единожды
+-- (т.к. T1 не существует, RECREATE вызовет событие CREATE) 
+-- с OK = Y.
+RECREATE TABLE t1 (
+  n1 INTEGER,
+  n2 INTEGER
+);
+
+-- Оператор не выполнится, т.к. T1 уже существует, 
+-- таким образом OK будет иметь значение N.
+CREATE TABLE t1 (
+  n1 INTEGER,
+  n2 INTEGER
+);
+
+-- T2 не существует. Это действие не будет зарегистрировано.
+DROP TABLE t2;
+
+-- Это действие будет зарегистрировано дважды
+-- (т.к. T1 существует, действие RECREATE рассматривается 
+-- как DROP и CREATE) с полем OK = Y.
+RECREATE TABLE t1 (
+  n INTEGER
+);
+
+CREATE DOMAIN dom1 AS INTEGER;
+
+ALTER DOMAIN dom1 TYPE BIGINT;
+
+ALTER DOMAIN dom1 TO dom2;
+
+COMMIT;
+
+SELECT 
+  id, 
+  ddl_event, 
+  object_name as name, 
+  old_object_name as old_name, 
+  new_object_name as new_name, 
+  sql_text, 
+  ok
+FROM ddl_log 
+ORDER BY id;         
+                </programlisting>
+                    </para>
+                    <para>
+                        <informaltable frame="all">
+                            <tgroup cols="7">
+                                <colspec colname="c1" colnum="1" colwidth="0.12*"/>
+                                <colspec colname="c2" colnum="2" colwidth="0.63*"/>
+                                <colspec colname="c3" colnum="3" colwidth="0.32*"/>
+                                <colspec colname="c4" colnum="4" colwidth="0.46*"/>
+                                <colspec colname="c5" colnum="5" colwidth="0.46*"/>
+                                <colspec colname="c6" colnum="6" colwidth="1.0*"/>
+                                <colspec colname="c7" colnum="7" colwidth="0.15*"/>
+                                <thead>
+                                    <row>
+                                        <entry align="center">ID</entry>
+                                        <entry align="center">DDL_EVENT</entry>
+                                        <entry align="center">NAME</entry>
+                                        <entry align="center">OLD_NAME</entry>
+                                        <entry align="center">NEW_NAME</entry>
+                                        <entry align="center">SQL_TEXT</entry>
+                                        <entry align="center">OK</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>2</entry>
+                                        <entry>CREATE TABLE</entry>
+                                        <entry>T1</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>
+                                            <programlisting>
+RECREATE TABLE t1 (
+  n1 INTEGER,
+  n2 INTEGER
+)                                               
+</programlisting>
+                                        </entry>
+                                        <entry>Y</entry>
+                                    </row>
+                                    <row>
+                                        <entry>3</entry>
+                                        <entry>CREATE TABLE</entry>
+                                        <entry>T1</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>
+                                            <programlisting>
+CREATE TABLE t1 (
+  n1 INTEGER,
+  n2 INTEGER
+)                                                
+</programlisting>
+                                        </entry>
+                                        <entry>N</entry>
+                                    </row>
+                                    <row>
+                                        <entry>4</entry>
+                                        <entry>DROP TABLE</entry>
+                                        <entry>T1</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>
+                                            <programlisting>
+RECREATE TABLE t1 (
+  n INTEGER
+)                                              
+</programlisting>
+                                        </entry>
+                                        <entry>Y</entry>
+                                    </row>
+                                    <row>
+                                        <entry>5</entry>
+                                        <entry>CREATE TABLE</entry>
+                                        <entry>T1</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>
+                                            <programlisting>
+RECREATE TABLE t1 (
+  n INTEGER
+)                                              
+</programlisting>
+                                        </entry>
+                                        <entry>Y</entry>
+                                    </row>
+                                    <row>
+                                        <entry>6</entry>
+                                        <entry>CREATE DOMAIN</entry>
+                                        <entry>DOM1</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>
+                                            <programlisting>
+CREATE DOMAIN dom1 
+  AS INTEGER                                             
+</programlisting>
+                                        </entry>
+                                        <entry>Y</entry>
+                                    </row>
+                                    <row>
+                                        <entry>7</entry>
+                                        <entry>ALTER DOMAIN</entry>
+                                        <entry>DOM1</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>&lt;null&gt;</entry>
+                                        <entry>
+                                            <programlisting>
+ALTER DOMAIN dom1 
+  TYPE BIGINT                                            
+</programlisting>
+                                        </entry>
+                                        <entry>Y</entry>
+                                    </row>
+                                    <row>
+                                        <entry>8</entry>
+                                        <entry>ALTER DOMAIN</entry>
+                                        <entry>DOM1</entry>
+                                        <entry>DOM1</entry>
+                                        <entry>DOM2</entry>
+                                        <entry>
+                                            <programlisting>
+ALTER DOMAIN dom1 
+  TO dom2                                           
+</programlisting>
+                                        </entry>
+                                        <entry>Y</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </informaltable>
+                    </para>
+                </example>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="fblangref-ddl-trigger-alter">ALTER TRIGGER</link>, <link
+                            linkend="fblangref-ddl-trigger-drop">DROP TRIGGER</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-trigger-alter">
+        <info>
+            <title>ALTER TRIGGER</title>
+            <keywordset>
+                <keyword>ALTER TRIGGER</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER TRIGGER</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение существующего триггера.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+ALTER TRIGGER <replaceable>trigname</replaceable> 
+[ACTIVE | INACTIVE]
+[{BEFORE | AFTER} <replaceable>&lt;mutation_list&gt;</replaceable>]
+[POSITION <replaceable>number</replaceable>]
+[SQL SECURITY {DEFINER | INVOKER} | DROP SQL SECURITY]
+[<replaceable>&lt;routine body&gt;</replaceable>] 
+
+<replaceable>&lt;mutation_list&gt;</replaceable> ::= <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable> [OR <replaceable>&lt;mutation&gt;</replaceable>]]
+
+<replaceable>&lt;mutation&gt;</replaceable> ::= { INSERT | UPDATE | DELETE }
+   
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора ALTER TRIGGER</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>trigname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя триггера.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>mutation_list</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Список событий таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>mutation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Одно из событий таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>number</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Порядок срабатывания триггера. От 0 до 32767.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>routine_body</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тело триггера</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>ALTER TRIGGER</database> позволяет изменять заголовок и/или тело
+            триггера.</para>
+        <section xml:id="fblangref-ddl-trigger-alter-changes">
+            <title>Допустимые изменения</title>
+            <para>В операторе изменения триггера можно изменить:<itemizedlist>
+                    <listitem>
+                        <para>Состояние активности (ACTIVE | INACTIVE);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Фазу (BEFORE | AFTER);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Событие(я);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Позицию срабатывания;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Привилегии выполнения триггера: вызывающего пользователя (SQL SECURITY
+                            INVOKER), определяющего пользователя (SQL SECURITY DEFINER) или
+                            наследует у таблицы (DROP SQL SECURITY);</para>
+                    </listitem>
+                    <listitem>
+                        <para>Код тела триггера.</para>
+                    </listitem>
+                </itemizedlist></para>
+            <para>Если какой-либо элемент не указан, то он остаётся без изменений.</para>
+            <note>
+                <para>DML триггер невозможно изменить в триггер на событие базы данных и
+                    наоборот.</para>
+                <para>Событие в триггере базы данных невозможно изменить.</para>
+            </note>
+            <tip>
+                <title>Помните</title>
+                <para>Триггер с ключевым словом BEFORE наступает до соответствующего события, с
+                    ключевым словом AFTER — после соответствующего события.</para>
+                <para>Один DML триггер может содержать более одного события (INSERT, UPDATE,
+                    DELETE). События должны быть разделены ключевым словом OR. Каждое из событий
+                    может быть указано не более одного раза.</para>
+                <para>Ключевое слово POSITION позволяет задать дополнительный порядок выполнения с
+                    одинаковыми фазой и событием. По умолчанию позиция равна 0. Если позиция не
+                    задана, или если несколько триггеров имеют один и тот же номер позиции, то
+                    триггеры будут выполнены в алфавитном порядке их наименований.</para>
+            </tip>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-alter-who">
+            <title>Кто может изменить триггеры?</title>
+
+            <para>DML триггеры могут изменить: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы (представления); </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY {TABLE |
+                                VIEW}</database>. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+
+            <para>Триггеры для событий базы данных и триггеры событий на изменение метаданных могут
+                изменить: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец базы данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователь, имеющий привилегию ALTER DATABASE.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-alter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Отключение (перевод в неактивное состояние) триггера</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TRIGGER set_cust_no INACTIVE;            
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Изменение позиции триггера</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TRIGGER set_cust_no POSITION 14;          
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Перевод триггера в неактивное состояние и изменение списка событий</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TRIGGER TR_CUST_LOG
+INACTIVE AFTER INSERT OR UPDATE;       
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Изменение привилегий выполнения триггера</title>
+                <para>После выполнения данного оператора триггер будет выполняться с привилегиями
+                    определяющего пользователя
+                    (владельца).<programlisting language="sql">
+ALTER TRIGGER TR_CUST_LOG
+SQL SECURITY DEFINER;       
+                </programlisting></para>
+            </example>
+            <example>
+                <title>Удаление привилегий выполнения триггера</title>
+                <para>После удаления привилегий выполнения триггера, триггер выполняется с
+                    привилегиями унаследованными от таблицы. Если у таблицы не определены привилегии
+                    выполнения, то триггер будет выполняться с привилегиями вызывающего
+                    пользователя.<programlisting language="sql">
+ALTER TRIGGER TR_CUST_LOG
+DROP SQL SECURITY;       
+                </programlisting></para>
+            </example>
+            <example>
+                <title>Перевод триггера в активное состояние, изменение его позиции и его
+                    тела</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TRIGGER tr_log_connect
+ACTIVE POSITION 1
+AS
+BEGIN
+  INSERT INTO LOG_CONNECT (ID,
+                           USERNAME,
+                           ROLENAME,
+                           ATIME)
+  VALUES (NEXT VALUE FOR SEQ_LOG_CONNECT,
+          CURRENT_USER,
+          CURRENT_ROLE,
+          CURRENT_TIMESTAMP);
+END      
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-trigger-create">CREATE TRIGGER</link>, <link
+                        linkend="fblangref-ddl-trigger-createoralter">CREATE OR ALTER
+                    TRIGGER</link>, <link linkend="fblangref-ddl-trigger-recreate">RECREATE
+                        TRIGGER</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-trigger-createoralter">
+        <info>
+            <title>CREATE OR ALTER TRIGGER</title>
+            <keywordset>
+                <keyword>CREATE OR ALTER TRIGGER</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE OR ALTER TRIGGER</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание нового или изменение существующего триггера.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para><programlisting>
+CREATE OR ALTER TRIGGER <replaceable>trigname</replaceable> {   
+    <replaceable>&lt;relation_trigger_legacy&gt;</replaceable>
+  | <replaceable>&lt;relation_trigger_sql2003&gt;</replaceable>
+  | <replaceable>&lt;database_trigger&gt;</replaceable> 
+  | <replaceable>&lt;ddl_trigger&gt;</replaceable> }
+<replaceable>&lt;routine body&gt;</replaceable>
+                       </programlisting>
+                Полное описание оператора см. <link linkend="fblangref-ddl-trigger-create">CREATE
+                    TRIGGER</link>. </para>
+        </formalpara>
+
+        <para>Оператор <database>CREATE OR ALTER TRIGGER</database> создаёт новый триггер, если он
+            не существует, или изменяет и перекомпилирует его в противном случае, при этом
+            существующие права и зависимости сохраняются.</para>
+
+        <section xml:id="fblangref-ddl-trigger-createoralter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание нового или изменение существующего триггера</title>
+                <para>
+                    <programlisting language="sql">
+CREATE OR ALTER TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END              
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-trigger-create">CREATE TRIGGER</link>, <link
+                        linkend="fblangref-ddl-trigger-alter">ALTER TRIGGER</link>, <link
+                        linkend="fblangref-ddl-trigger-recreate">RECREATE TRIGGER</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-trigger-drop">
+        <info>
+            <title>DROP TRIGGER</title>
+            <keywordset>
+                <keyword>DROP TRIGGER</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DROP TRIGGER</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление существующего триггера.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+DROP TRIGGER <replaceable>trigname</replaceable>  
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DROP TRIGGER</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>trigname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя триггера.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>DROP TRIGGER</database> удаляет существующий триггер.</para>
+        <section xml:id="fblangref-ddl-trigger-drop-who">
+            <title>Кто может удалить триггеры?</title>
+
+            <para>DML триггеры могут удалить: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы (представления); </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY {TABLE |
+                                VIEW}</database>. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+
+            <para>Триггеры для событий базы данных и триггеры событий на изменение метаданных могут
+                удалить: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец базы данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователь, имеющий привилегию ALTER DATABASE.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>
+        <section xml:id="fblangref-ddl-trigger-drop-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Удаление триггера</title>
+                <para>
+                    <programlisting language="sql">
+DROP TRIGGER set_cust_no;                
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-trigger-create">CREATE TRIGGER</link>, <link
+                        linkend="fblangref-ddl-trigger-alter">ALTER TRIGGER</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-trigger-recreate">
+        <info>
+            <title>RECREATE TRIGGER</title>
+            <keywordset>
+                <keyword>RECREATE TRIGGER</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RECREATE TRIGGER</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание нового или пересоздание существующего триггера.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para><programlisting>
+RECREATE TRIGGER <replaceable>trigname</replaceable> {   
+    <replaceable>&lt;relation_trigger_legacy&gt;</replaceable>
+  | <replaceable>&lt;relation_trigger_sql2003&gt;</replaceable>
+  | <replaceable>&lt;database_trigger&gt;</replaceable> 
+  | <replaceable>&lt;ddl_trigger&gt;</replaceable> }
+<replaceable>&lt;routine body&gt;</replaceable>
+                       </programlisting>
+                Полное описание оператора см. <link linkend="fblangref-ddl-trigger-create">CREATE
+                    TRIGGER</link>. </para>
+        </formalpara>
+
+        <para>Оператор RECREATE TRIGGER создаёт новый триггер, если триггер с указанным именем не
+            существует, в противном случае оператор RECREATE TRIGGER попытается удалить его и
+            создать новый.</para>
+
+        <section xml:id="fblangref-ddl-trigger-recreate-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание или пересоздание триггера</title>
+                <para>
+                    <programlisting language="sql">
+RECREATE TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END              
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-trigger-create">CREATE TRIGGER</link>, <link
+                        linkend="fblangref-ddl-trigger-drop">DROP TRIGGER</link>, <link
+                        linkend="fblangref-ddl-trigger-createoralter">CREATE OR ALTER
+                    TRIGGER</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</section>

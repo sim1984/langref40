@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-comment">
+    <info>
+        <title>COMMENTS</title>
+    </info>
+
+    <para>Объекты базы данных и сама база данных могут содержать примечания. Это удобное средство
+        документирования во время разработки базы данных и её поддержки.</para>
+    <section xml:id="fblangref-ddl-commenton">
+        <info>
+            <title>COMMENT ON</title>
+            <keywordset>
+                <keyword>COMMENT ON</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>COMMENT ON</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Документирование метаданных.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>  
+COMMENT ON <replaceable>&lt;object&gt;</replaceable> IS {'<replaceable>sometext</replaceable>' | NULL}
+<replaceable>&lt;object&gt;</replaceable> ::= 
+    DATABASE 
+  | <replaceable>&lt;basic-type&gt;</replaceable> <replaceable>objectname</replaceable> 
+  | COLUMN <replaceable>relationname</replaceable>.<replaceable>fieldname</replaceable> 
+  | [PROCEDURE | FUNCTION] PARAMETER
+    [<replaceable>package_name</replaceable>.] <replaceable>routinename</replaceable>.<replaceable>paramname</replaceable>
+  | {PROCEDURE | [EXTERNAL] FUNCTION} 
+    [<replaceable>package_name</replaceable>.]<replaceable>routinename</replaceable>
+
+<replaceable>&lt;basic-type&gt;</replaceable> ::= 
+    CHARACTER SET 
+  | COLLATION 
+  | DOMAIN 
+  | EXCEPTION 
+  | FILTER 
+  | GENERATOR 
+  | INDEX 
+  | PACKAGE 
+  | ROLE 
+  | SEQUENCE 
+  | TABLE 
+  | TRIGGER 
+  | VIEW    
+  
+COMMENT ON <replaceable>&lt;username&gt;</replaceable> [USING PLUGIN <replaceable>&lt;plugin_name&gt;</replaceable>] IS {'<replaceable>sometext</replaceable>' | NULL}  
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора COMMENT ON</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>sometext</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Текст комментария.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>basic-type</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тип объекта метаданных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>objectname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя объекта метаданных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>relationname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы или представления.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>filedname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя поля таблицы или представления.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>routinename</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя хранимой процедуры или функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>paramname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя параметра хранимой процедуры или функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>package_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя пакета.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>username</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя пользователя.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>plugin_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя плагина управления пользователями.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор COMMENT ON добавляет комментарии для объектов базы данных (метаданных).
+            Комментарии при этом сохраняются в текстовые поля RDB$DESCRIPTION типа BLOB
+            соответствующей системной таблицы (из этих полей клиентское приложение может просмотреть
+            комментарии). </para>
+        <para>При добавлении комментария для пользователя вы можете уточнить в каком плагине
+            управления пользователями он находится с помощью необязательного предложения USING
+            PLUGIN. Если это предложение отсутствует, то предполагает что пользователь создан в
+            плагине управления по умолчанию, то есть первого плагина указанного в параметре
+            UserManager в файле <filename>firebird.conf</filename> или
+                <filename>databases.conf</filename>.</para>
+        <note>
+            <para>Если вы вводите пустой комментарий (''), то он будет сохранен в базе данных как
+                NULL. </para>
+        </note>
+        <section xml:id="fblangref-ddl-comment-who">
+            <title>Кто может добавить комментарий?</title>
+
+            <para>Выполнить оператор <database>COMMENT ON</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец объекта, для которого добавляется комментарий;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией ALTER ANY
+                                <replaceable>object_type</replaceable>. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-commenton-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Добавление комментария для текущей базы данных.</title>
+
+                <para>
+                    <programlisting language="sql"> 
+COMMENT ON DATABASE IS 'Это тестовая (''my.fdb'') БД';     
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Добавление комментария для таблицы.</title>
+
+                <para>
+                    <programlisting language="sql"> 
+COMMENT ON TABLE METALS IS 'Справочник металлов';    
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Добавление комментария для поля таблицы.</title>
+
+                <para>
+                    <programlisting language="sql"> 
+COMMENT ON COLUMN METALS.ISALLOY 
+IS '0 = чистый металл, 1 = сплав';  
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Добавление комментария для параметра процедуры.</title>
+
+                <para>
+                    <programlisting language="sql"> 
+COMMENT ON PARAMETER ADD_EMP_PROJ.EMP_NO 
+IS 'Код сотрудника';   
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Добавление комментария для пакета, его процедур и функций, и их
+                    параметров.</title>
+
+                <para>
+                    <programlisting language="sql"> 
+COMMENT ON PACKAGE APP_VAR IS 'Переменные приложения';
+
+COMMENT ON FUNCTION APP_VAR.GET_DATEBEGIN 
+IS 'Возвращает дату начала периода';
+
+COMMENT ON PROCEDURE APP_VAR.SET_DATERANGE 
+IS 'Установка диапазона дат';
+
+COMMENT ON 
+PROCEDURE PARAMETER APP_VAR.SET_DATERANGE.ADATEBEGIN 
+IS 'Дата начала';  
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Добавление комментария для пользователя.</title>
+
+                <para>
+                    <programlisting language="sql"> 
+COMMENT ON USER BOB35 IS 'Это Боб из плагина по умолчанию';  
+
+COMMENT ON USER JHON USING PLUGIN Legacy_UserManager 
+IS 'Это Джон из плагина Legacy_UserManager';  
+                </programlisting>
+                </para>
+            </example>
+        </section>
+    </section>
+</section>

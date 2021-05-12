@@ -1,0 +1,1296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-database">
+    <info>
+        <title>DATABASE</title>
+    </info>
+
+    <para>В данном разделе описываются вопросы создания базы данных, подключения к существующей базе
+        данных, изменения структуры файлов, перевод базы данных в состояние, необходимое для
+        безопасного резервного копирования, и обратно и удаления базы данных. </para>
+
+    <section xml:id="fblangref-ddl-database-create">
+        <info>
+            <title>CREATE DATABASE</title>
+            <keywordset>
+                <keyword>CREATE DATABASE</keyword>
+                <keyword>CREATE SCHEMA</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE DATABASE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой базы данных.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>                     
+CREATE {DATABASE | SCHEMA} '<replaceable>&lt;filespec&gt;</replaceable>'
+  [USER <replaceable>username</replaceable> [PASSWORD '<replaceable>password</replaceable>'] [ROLE <replaceable>rolename</replaceable>]]
+  [PAGE_SIZE [=] <replaceable>size</replaceable>]
+  [LENGTH [=] <replaceable>num</replaceable> [PAGE[S]]
+  [SET NAMES '<replaceable>charset</replaceable>']
+  [DEFAULT CHARACTER SET <replaceable>default_charset</replaceable>
+  [COLLATION <replaceable>collation</replaceable>]]
+  [<replaceable>&lt;sec_file&gt;</replaceable> [<replaceable>&lt;sec_file&gt;</replaceable> ...]]
+  [DIFFERENCE FILE '<replaceable>diff_file</replaceable>'];
+
+<replaceable>&lt;filespec&gt;</replaceable> ::= [<replaceable>&lt;server_spec&gt;</replaceable>]{<replaceable>filepath</replaceable> | <replaceable>db_alias</replaceable>}
+
+<replaceable>&lt;server_spec&gt;</replaceable> ::= 
+    <replaceable>host</replaceable>[\<replaceable>port</replaceable> | <replaceable>service</replaceable>]: 
+  | \\<replaceable>host</replaceable>[@<replaceable>port</replaceable> | <replaceable>service</replaceable>]\ 
+  | <replaceable>&lt;protocol&gt;</replaceable>://[<replaceable>host</replaceable>[:<replaceable>port</replaceable> | <replaceable>service</replaceable>]/]
+
+<replaceable>&lt;protocol&gt;</replaceable> = inet | inet4 | inet6 | wnet | xnet
+
+<replaceable>&lt;sec_file&gt;</replaceable> ::= FILE '<replaceable>filepath</replaceable>'
+  [LENGTH [=] <replaceable>num</replaceable> [PAGE[S]] [STARTING [AT [PAGE]] <replaceable>pagenum</replaceable>]              
+                  
+</programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора CREATE DATABASE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="colArgument" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="colDesc" colnum="2" colwidth="2.8*" align="left"/>
+                    <thead>
+                        <row valign="middle">
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>filespec</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Спецификация первичного файла базы данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>server_spec</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Спецификация удалённого сервера. Включает в себя имя сервера и
+                                    протокол. Необходима, если база данных создаётся на удалённом
+                                    сервере.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>filepath</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Полный путь и имя файла, включая расширение. Имя файла должно
+                                    быть задано в соответствии со спецификой используемой
+                                    платформы.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>db_alias</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Псевдоним (alias) базы данных, присутствующий в файле
+                                        <filename>databases.conf</filename></para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>host</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя сервера или IP адрес, на котором создаётся база
+                                    данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>port</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Номер порта, который слушает удалённый сервер (параметр
+                                        <parameter>RemoteServicePort</parameter> файла
+                                        <filename>firebird.conf</filename>).</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>service</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя сервиса. Должно совпадать со значением параметра
+                                        <parameter>RemoteServiceName</parameter> файла
+                                        <filename>firebird.conf</filename>.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>protocol</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Наименование протокола.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>username</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя пользователя-владельца базы данных. Может быть заключено в
+                                    одинарные или двойные кавычки. Если имя пользователя заключено в
+                                    двойные кавычки, то оно чувствительно к регистру.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>password</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Пароль пользователя-владельца базы данных. Чувствительно к
+                                    регистру.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>role</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя роли, права которой могут учитываться при создании базы
+                                    данных. Может быть заключено в одинарные или двойные кавычки.
+                                    Если имя роли заключено в двойные кавычки, то оно чувствительно
+                                    к регистру.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>size</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Размер страницы для базы данных. Допустимые значения 4096,
+                                    8192, 16384, 32768. Размер страницы по умолчанию 8192.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>num</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Максимальный размер первичного или вторичного файла в
+                                    страницах.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>charset</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Задаёт набор символов подключения, доступного после успешного
+                                    создания базы данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>default_charset</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Задаёт набор символов по умолчанию для строковых типов
+                                    данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>collation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Сортировка для набора символов по умолчанию.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>sec_file</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Спецификация вторичного файла.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>pagenum</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Номер страницы, с которой начинается вторичный файл базы
+                                    данных. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>diff_file</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Путь и имя дельта файла. </para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>CREATE DATABASE</database> создаёт новую базу данных. Вы можете
+            использовать <database>CREATE DATABASE</database> или <database>CREATE
+            SCHEMA</database>. Это синонимы. </para>
+        <para>База данных может состоять из одного или нескольких файлов. Первый, основной, файл
+            называется первичным, остальные файлы — вторичными. </para>
+        <note>
+            <para>В настоящее время многофайловые базы данных являются атавизмом. Многофайловые базы
+                данных имеет смысл использовать на старых файловых системах, в которых существует
+                ограничение на размер любого файла. Например, в FAT32 нельзя создать файл больше 4х
+                гигабайт. </para>
+        </note>
+        <para>Спецификация первичного файла — имя файла базы данных и его расширение с указанием к
+            нему полного пути в соответствии с правилами используемой операционной системы. При
+            создании базы данных файл базы данных должен отсутствовать. В противном случае будет
+            выдано сообщение об ошибке и база данных не будет создана. Если полный путь к базе
+            данных не указан, то база данных будет создана в одном из системных каталогов. В каком
+            именно зависит от операционной системы. </para>
+        <section xml:id="fblangref-ddl-database-create-aliasedb">
+            <title>Использование псевдонимов БД</title>
+            <para>Вместо полного пути к первичному файлу базы можно использовать псевдонимы
+                (aliases). Псевдонимы описываются в файле <filename>databases.conf</filename> в
+                формате:
+                <programlisting>  
+<replaceable>alias</replaceable> = <replaceable>filepath</replaceable>                    
+                </programlisting>
+            </para>
+            <note>
+                <para>Помимо указания псевдонимов для базы данных в этом файле можно задать
+                    параметры уровня базы данных для каждой описываемой базы данных. Эти параметры
+                    задаются в фигурных скобках сразу после объявления псевдонима.</para>
+            </note>
+        </section>
+        <section xml:id="fblangref-ddl-database-create-remotely">
+            <title>Создание БД на удалённом сервере</title>
+            <para>При создании базы данных на удалённом сервере необходимо указать спецификацию
+                удалённого сервера. Спецификация удалённого сервера зависит от используемого
+                протокола. </para>
+            <para>Если вы при создании базы данных используете протокол TCP/IP, то спецификация
+                первичного файла должна выглядеть следующим образом:
+                <programlisting>  
+<replaceable>host</replaceable>[/<replaceable>port</replaceable> | <replaceable>service</replaceable>]:{<replaceable>filepath</replaceable> | <replaceable>db_alias</replaceable>}                   
+                </programlisting>
+            </para>
+            <para>Если вы при создании базы данных используете протокол под названием именованные
+                каналы (Name Pipes), то спецификация первичного файла должна выглядеть следующим
+                образом.
+                <programlisting>  
+\\<replaceable>host</replaceable>[@<replaceable>port</replaceable> | <replaceable>service</replaceable>]\{<replaceable>filepath</replaceable> | <replaceable>db_alias</replaceable>}                   
+                </programlisting>
+            </para>
+            <para>Существует также унифицированный URL-подобный синтаксис спецификации удалённого
+                сервера. В этом синтаксисе первым параметром указывается наименование протокола,
+                далее указывается имя сервера или IP адрес, номер порта и путь к первичному файлу
+                базы данных или псевдоним. В качестве протокола можно указать следующие значения:<itemizedlist>
+                    <listitem>
+                        <para>INET — TCP/IP (сначала пробует подключится по протоколу TCP/IP v6,
+                            если не получилось, то TCP/IP v4);</para>
+                    </listitem>
+                    <listitem>
+                        <para>INET4 — TCP/IP v4;</para>
+                    </listitem>
+                    <listitem>
+                        <para>INET6 — TCP/IP v6;</para>
+                    </listitem>
+                    <listitem>
+                        <para>WNET — NetBEUI или протокол именованных каналов;</para>
+                    </listitem>
+                    <listitem>
+                        <para>XNET — локальный протокол.</para>
+                    </listitem>
+                </itemizedlist>
+                <programlisting>  
+<replaceable>protocol</replaceable>://[<replaceable>host</replaceable>[:<replaceable>port</replaceable> | <replaceable>service</replaceable>]/]{<replaceable>filepath</replaceable> | <replaceable>db_alias</replaceable>}                   
+                </programlisting>
+            </para>
+        </section>
+        <section xml:id="fblangref-ddl-database-create-optionals">
+            <title>Необязательные параметры CREATE DATABASE</title>
+
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>USER</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>PASSWORD</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>ROLE</secondary>
+            </indexterm>
+            <para>Необязательные предложения <database>USER</database> и
+                    <database>PASSWORD</database> задают, соответственно, имя и пароль пользователя
+                присутствующего в базе данных безопасности (<filename>security4.fdb</filename> или
+                той, что указана в параметре <parameter>SecurityDatabase</parameter>). Пользователя
+                и пароль можно не указывать, если установлены переменные окружения
+                    <envar>ISC_USER</envar> и <envar>ISC_PASSWORD</envar>. Необязательное
+                предложение ROLE задаёт имя роли (обычно это RDB$ADMIN), права которой будут
+                учитываться при создании базы данных. Роль должна быть назначена пользователю в
+                соответствующей базе данных безопасности. </para>
+            <para>Пользователь, указанный при создании базы данных, будет её владельцем. </para>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>PAGE_SIZE</secondary>
+            </indexterm>
+            <para>Необязательное предложение <database>PAGE_SIZE</database> задаёт размер страницы
+                базы данных. Этот размер будет установлен для первичного файла и всех вторичных
+                файлов базы данных. При вводе размера страницы БД меньшего, чем 4096, он будет
+                автоматически изменён на 4096. Другие числа (не равные 4096, 8192, 16384 или 32768)
+                будут изменены на ближайшее меньшее из поддерживаемых значений. Если размер страницы
+                базы данных не указан, то по умолчанию принимается значение 8192. </para>
+            <tip>
+                <title>Больше не значит лучше</title>
+                <para>Большие размеры страницы могут вместить больше записей на одной странице,
+                    иметь более широкие индексы и больше индексов, но они также будут тратить больше
+                    места для BLOB (сравните потраченное впустую пространство BLOB размером 3 КБ на
+                    странице размером 4096 и такого же BLOB на 32768: +/- 1 КБ против +/- 29 КБ).
+                    Кроме того, при большом размере страницы увеличивается конкуренция за одну и ту
+                    же страницу данных, поскольку на неё вмещается больше записей, который могли бы
+                    располагаться на разных страницах. </para>
+            </tip>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>LENGTH</secondary>
+            </indexterm>
+            <para>Необязательное предложение <database>LENGTH</database> задаёт максимальный размер
+                первичного или вторичного файла базы данных в страницах. При создании базы данных её
+                первичный или вторичный файл будут занимать минимально необходимое количество
+                страниц для хранения системных данных, не зависимо от величины, установленной в
+                предложении <database>LENGHT</database>. Для единственного или последнего (в
+                многофайловой базе данных) файла значение <database>LENGTH</database> никак не
+                влияет на его размер. Файл будет автоматически увеличивать свой размер по мере
+                необходимости. </para>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>SET NAMES</secondary>
+            </indexterm>
+            <para>Необязательное предложение <database>SET NAMES</database> задаёт набор символов
+                подключения, доступного после успешного создания базы данных. По умолчанию
+                используется набор символов NONE. </para>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>DEFAULT CHARACTER SET</secondary>
+            </indexterm>
+            <para>Необязательное предложение <database>DEFAULT CHARACTER SET</database> задаёт набор
+                символов по умолчанию для строковых типов данных. Наборы символов применяются для
+                типов <database class="datatype">CHAR</database>, <database class="datatype"
+                    >VARCHAR</database> и <database class="datatype">BLOB</database>. По умолчанию
+                используется набор символов NONE. Для набора символов по умолчанию можно также
+                указать сортировку по умолчанию (<database>COLLATION</database>). В этом случае
+                сортировка станет умалчиваемой для набора символов по умолчанию (т.е. для всей БД за
+                исключением случаев использования других наборов символов). </para>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>STARTING AT</secondary>
+            </indexterm>
+            <para>Предложение <database>STARTING AT</database> задаёт номер страницы базы данных, с
+                которой должен начинаться следующий файл базы данных. Когда предыдущий файл будет
+                полностью заполнен данными в соответствии с заданным номером страницы, система
+                начнёт помещать вновь добавляемые данные в следующий файл базы данных. </para>
+            <indexterm>
+                <primary>CREATE DATABASE</primary>
+                <secondary>DIFFERENCE FILE</secondary>
+            </indexterm>
+            <para>Необязательное предложение <database>DIFFERENCE FILE</database> задаёт путь и имя
+                дельта файла, в который будут записываться изменения, внесённые в БД после перевода
+                её в режим <quote>безопасного копирования</quote> (<quote>copy-safe</quote>) путём
+                выполнения команды ALTER DATABASE BEGIN BACKUP. Полное описание данного параметра
+                см. в <link linkend="fblangref-ddl-database-alter">ALTER DATABASE</link>. </para>
+            <para>Для того чтобы база данных была создана в нужном вам диалекте SQL, следует перед
+                выполнением оператора создания базы данных задать нужный диалект, выполнив оператор
+                SET SQL DIALECT. По умолчанию база данных создаётся в 3 диалекте. </para>
+        </section>
+        <section xml:id="fblangref-ddl-database-create-who">
+            <title>Кто может создать базу данных?</title>
+
+            <para>Выполнить оператор CREATE DATABASE могут: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link>;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>CREATE DATABASE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>
+        <section xml:id="fblangref-ddl-database-create-examples">
+            <title>Примеры</title>
+
+            <example>
+                <title>Создание базы данных в операционной системе Windows</title>
+
+                <para>Создание базы данных в операционной системе Windows расположенной на диске D с
+                    размером страницы 8192. Владельцем базы данных будет пользователь wizard. База
+                    данных будет в 1 диалекте, и использовать набор символов по умолчанию WIN1251.
+                    <programlisting language="sql">  
+SET SQL DIALECT 1;
+CREATE DATABASE 'D:\test.fdb'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET WIN1251;                
+</programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание базы данных в операционной системе Linux</title>
+
+                <para>Создание базы данных в операционной системе Linux с размером страницы 4096.
+                    Владельцем базы данных будет пользователь wizard. База данных будет в 3
+                    диалекте, и использовать набор символов по умолчанию UTF8 с умалчиваемой
+                    сортировкой UNICODE_CI_AI.
+                    <programlisting language="sql">  
+CREATE DATABASE '/home/firebird/test.fdb'
+USER "wizard" PASSWORD 'player' ROLE 'RDB$ADMIN'
+PAGE_SIZE = 4096
+DEFAULT CHARACTER SET UTF8 COLLATION UNICODE_CI_AI;                
+</programlisting>
+                </para>
+            </example>
+            <important>
+                <para>В данном случае при создании базы данных будет учитываться регистр символов
+                    для имени пользователя, потому что оно указано в двойных кавычках.</para>
+            </important>
+            <example>
+                <title>Создание базы данных на удалённом сервере</title>
+
+                <para>Создание базы данных на удалённом сервере baseserver расположенном по пути, на
+                    который ссылается псевдоним test, описанный в файле
+                        <filename>databases.conf</filename>. Используется протокол TCP. Владельцем
+                    базы данных будет пользователь wizard.
+                    <programlisting language="sql">  
+CREATE DATABASE 'baseserver:test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                    То же самое с использованием унифицированного URL-подобного синтаксиса задания
+                    спецификации удалённого сервера.
+                    <programlisting language="sql">  
+CREATE DATABASE 'inet://baseserver:3050/test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                    или
+                    <programlisting language="sql">  
+CREATE DATABASE 'inet://baseserver:gds_db/test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                    При использовании доменных имён может быть полезно указать какой именно из
+                    протоколов IP v4 или IP v6 вы хотите использовать.
+                    <programlisting language="sql">  
+CREATE DATABASE 'inet4://baseserver/test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                    или
+                    <programlisting language="sql">  
+CREATE DATABASE 'inet6://baseserver/test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                    Создание базы данных с указанием IP адреса (IPv4) вместо указания имени сервера.
+                    <programlisting language="sql">  
+CREATE DATABASE '127:0:0:1:test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                    Создание базы данных с указанием IP адреса (IPv6) вместо указания имени сервера.
+                    <programlisting language="sql">  
+CREATE DATABASE '[::1]:test'
+USER wizard PASSWORD 'player' ROLE RDB$ADMIN
+DEFAULT CHARACTER SET UTF8;                 
+</programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание многофайловой базы данных</title>
+
+                <para>Создание базы данных в 3 диалекте с набором символов по умолчанию UTF8.
+                    Первичный файл будет содержать 10000 страниц с размером страницы 8192. Как
+                    только в процессе работы с базой данных первичный файл будет заполнен, СУБД
+                    будет помещать новые данные во вторичный файл <filename>test.fdb2</filename>.
+                    Аналогичные действия будут происходить и со вторым вторичным файлом. Размер
+                    последнего файла будет увеличиваться до тех пор, пока это позволяет используемая
+                    операционная система или пока не будет исчерпана память на внешнем носителе.
+                    <programlisting language="sql">  
+SET SQL DIALECT 3;
+CREATE DATABASE 'baseserver:D:\test.fdb'
+USER wizard PASSWORD 'player' ROLE 'RDB$ADMIN'
+PAGE_SIZE = 8192
+DEFAULT CHARACTER SET UTF8
+FILE 'D:\test.fdb2'
+STARTING AT PAGE 10001
+FILE 'D:\test.fdb3'
+STARTING AT PAGE 20001;                  
+</programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание многофайловой базы данных 2</title>
+
+                <para>Создание базы данных в 3 диалекте с набором символов по умолчанию UTF8.
+                    Первичный файл будет содержать 10000 страниц с размером страницы 8192. Как
+                    только в процессе работы с базой данных первичный файл будет заполнен, СУБД
+                    будет помещать новые данные во вторичный файл <filename>test.fdb2</filename>.
+                    Аналогичные действия будут происходить и со вторым вторичным файлом.
+                    <programlisting language="sql">  
+SET SQL DIALECT 3;
+CREATE DATABASE 'baseserver:D:\test.fdb'
+USER wizard PASSWORD 'player' ROLE 'RDB$ADMIN'
+PAGE_SIZE = 8192
+LENGTH 10000 PAGES
+DEFAULT CHARACTER SET UTF8
+FILE 'D:\test.fdb2'
+FILE 'D:\test.fdb3'
+STARTING AT PAGE 20001;                 
+</programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-database-alter">ALTER DATABASE</link>, <link
+                        linkend="fblangref-ddl-database-drop">DROP DATABASE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-database-alter">
+        <info>
+            <title>ALTER DATABASE</title>
+            <keywordset>
+                <keyword>ALTER DATABASE</keyword>
+                <keyword>ALTER SCHEMA</keyword>
+                <keyword>ADD DIFFERENCE FILE</keyword>
+                <keyword>DROP DIFFERENCE FILE</keyword>
+                <keyword>BEGIN BACKUP</keyword>
+                <keyword>END BACKUP</keyword>
+                <keyword>SET DEFAULT CHARACTER SET</keyword>
+                <keyword>SET DEFAULT SQL SECURITY</keyword>
+                <keyword>SET LINGER TO</keyword>
+                <keyword>DROP LINGER</keyword>
+                <keyword>ENCRYPT WITH</keyword>
+                <keyword>DECRYPT</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER DATABASE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение структуры файлов базы данных, переключение её в состояние
+                    <quote>безопасное для копирования</quote> или изменение некоторых свойств базы
+                данных. </para>
+        </formalpara>
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting> 
+ALTER {DATABASE | SCHEMA}
+    {<replaceable>&lt;add_sec_clause&gt;</replaceable> [<replaceable>&lt;add_sec_clausee&gt;</replaceable> ...]}
+  | {ADD DIFFERENCE FILE '<replaceable>diff_file</replaceable>' | DROP DIFFERENCE FILE}
+  | {{BEGIN | END} BACKUP}
+  | {SET DEFAULT CHARACTER SET <replaceable>charset</replaceable>}
+  | {SET DEFAULT SQL SECURITY {DEFINER | INVOKER}}
+  | {SET LINGER TO <replaceable>seconds</replaceable> | DROP LINGER}
+  | {ENCRYPT WITH <replaceable>plugin_name</replaceable> [KEY <replaceable>key_name</replaceable>] | DECRYPT}
+  | {ENABLE | DISABLE} PUBLICATION
+  | INCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
+  | EXCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
+
+<replaceable>&lt;add_sec_clause&gt;</replaceable> ::= ADD FILE <replaceable>&lt;sec_file&gt;</replaceable> 
+
+<replaceable>&lt;sec_file&gt;</replaceable> ::= '<replaceable>filepath</replaceable>'
+  [STARTING [AT [PAGE]] <replaceable>pagenum</replaceable>]
+  [LENGTH [=] <replaceable>num</replaceable> [PAGE[S]]
+                        
+<replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...]                        
+</programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора ALTER DATABASE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>add_sec_clause</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Инструкция для добавления вторичного файла базы данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>sec_file</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Спецификация вторичного файла.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>filepath</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Полный путь и имя дельта файла или вторичного файла базы
+                                    данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>pagenum</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Номер страницы, с которой начинается вторичный файл базы
+                                    данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>num</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Максимальный размер вторичного файла в страницах.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>diff_file</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Путь и имя дельта файла.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>charset</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Новый набор символов по умолчанию для базы данных.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>seconds</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Задержка в секундах.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>plugin_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя плагина шифрования.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>key_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя ключа шифрования.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>table_list</replaceable>
+                            </entry>
+                            <entry>Список таблиц, которые необходим разрешить или запретить для
+                                публикации (репликации).</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>tablename</replaceable>
+                            </entry>
+                            <entry>Имя таблицы.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>ALTER DATABASE</database> изменяет структуру файлов базы данных или
+            переключает её в состояние <quote>безопасное для копирования</quote>. </para>
+        <section xml:id="fblangref-ddl-database-alter-addfile">
+            <title>Добавление вторичного файла</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>ADD FILE</secondary>
+            </indexterm>
+            <para>Предложение <database>ADD FILE</database> добавляет к базе данных вторичный файл.
+                Для вторичного файла необходимо указывать полный путь к файлу и имя вторичного
+                файла. Описание вторичного файла аналогично тому, что описано в операторе CREATE
+                DATABASE. </para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Добавление вторичного файла в базу данных</title>
+
+                        <para>Как только в предыдущем первичном или вторичных файлах будет заполнено
+                            30000 страниц, СУБД будет помещать данные во вторичный файл
+                                <filename>test4.fdb</filename>.
+                            <programlisting language="sql">  
+ALTER DATABASE 
+ADD FILE 'D:\test.fdb4'
+STARTING PAGE 30001;                
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-add_diffile">
+            <title>Изменение пути и имени дельта файла</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>ADD DIFFERENCE FILE</secondary>
+            </indexterm>
+            <para>Предложение <database>ADD DIFFERENCE FILE</database> задаёт путь и имя дельта
+                файла, в который будут записываться изменения, внесённые в базу данных после
+                перевода её в режим <quote>безопасного копирования</quote>
+                (<quote>copy-safe</quote>). Этот оператор в действительности не добавляет файла. Он
+                просто переопределяет умалчиваемые имя и путь файла дельты. Для изменения
+                существующих установок необходимо сначала удалить ранее указанное описание файла
+                дельты с помощью оператора DROP DIFFERENCE FILE, а затем задать новое описание файла
+                дельты. Если не переопределять путь и имя файла дельты, то он будет иметь тот же
+                путь и имя, что и БД, но с расширением <filename>.delta</filename>. </para>
+            <note>
+                <para>При задании относительного пути или только имени файла дельты он будет
+                    создаваться в текущем каталоге сервера. Для операционных систем Windows это
+                    системный каталог. </para>
+            </note>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>DROP DIFFERENCE FILE</secondary>
+            </indexterm>
+            <para>Предложение <database>DROP DIFFERENCE FILE</database> удаляет описание (путь и
+                имя) файла дельты, заданное ранее командой <database>ADD DIFFERENCE FILE</database>.
+                На самом деле при выполнении этого оператора файл не удаляется. Он удаляет путь и
+                имя файла дельты и при последующем переводе БД в режим <quote>безопасного
+                    копирования</quote> будут использованы значения по умолчанию (т.е. тот же путь и
+                имя что и у файла БД, но с расширением <filename>.delta</filename>). </para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Установка пути и имени файла дельты</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE 
+ADD DIFFERENCE FILE 'D:\test.diff';                
+</programlisting>
+                        </para>
+                    </example>
+                    <example>
+                        <title>Удаление описание файла дельты</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE 
+DROP DIFFERENCE FILE;              
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-backup">
+            <title>Перевод базы данных в режим <quote>безопасного копирования</quote></title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>BEGIN BACKUP</secondary>
+            </indexterm>
+            <para>Предложение <database>BEGIN BACKUP</database> предназначено для перевода базы
+                данных в режим <quote>безопасного копирования</quote> (<quote>copy-safe</quote>).
+                Этот оператор <quote>замораживает</quote> основной файл базы данных, что позволяет
+                безопасно делать резервную копию средствами файловой системы, даже если пользователи
+                подключены и выполняют операции с данными. При этом все изменения, вносимые
+                пользователями в базу данных, будут записаны в отдельный файл, так называемый дельта
+                файл (<emphasis role="italic">delta file</emphasis>). </para>
+            <note>
+                <para>Оператор BEGIN BACKUP, не смотря на синтаксис, не начинает резервное
+                    копирование базы данных, а лишь создаёт условия для его осуществления. </para>
+            </note>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>END BACKUP</secondary>
+            </indexterm>
+            <para>Предложение <database>END BACKUP</database> предназначено для перевода базы данных
+                из режима <quote>безопасного копирования</quote> (<quote>copy-safe</quote>) в режим
+                нормального функционирования. Этот оператор объединяет файл дельты с основным файлом
+                базы данных и восстанавливает нормальное состояние работы, таким образом, закрывая
+                возможность создания безопасных резервных копий средствами файловой системы. (При
+                этом безопасное резервное копирование с помощью утилиты
+                    <application>gbak</application> остаётся доступным). </para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Перевод базы данных в режим <quote>безопасного
+                            копирования</quote></title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE 
+BEGIN BACKUP;           
+</programlisting>
+                        </para>
+                    </example>
+                    <example>
+                        <title>Возвращение базы данных в режим нормального функционирования из
+                            режима <quote>безопасного копирования</quote></title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE 
+END BACKUP;         
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-charset">
+            <title>Изменение набора символов по умолчанию</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>SET DEFAULT CHARACTER SET</secondary>
+            </indexterm>
+            <para>Предложение <database>SET DEFAULT CHARACTER SET</database> изменяет набор символов
+                по умолчанию для базы данных. Это изменение не затрагивает существующие данные.
+                Новый набор символов по умолчанию будет использоваться только в последующих DDL
+                командах, кроме того для них будет использоваться сортировка по умолчанию для нового
+                набора символов.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение набора символов по умолчанию для базы данных</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE SET DEFAULT CHARACTER SET WIN1251;         
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-sql_security">
+            <title>Изменение привилегий выполнения по умолчанию</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>SET DEFAULT SQL SECURITY</secondary>
+            </indexterm>
+            <para>Начиная с Firebird 4.0 появилась возможность указывать объектам метаданных с
+                какими привилегиями они будут выполняться: вызывающего или определяющего
+                пользователя. Для этого используется предложение <database>SQL SECURITY</database>,
+                которое можно указать для таблицы, триггера, процедуры, функции или пакета. Если
+                выбрана опция INVOKER, то объект метаданных будет выполняться с привилегиями
+                вызывающего пользователя. Если выбрана опция DEFINER, то объект метаданных будет
+                выполняться с привилегиями определяющего пользователя (владельца). Если при создании
+                PSQL модуля или таблицы предложение SQL SECURITY не задано, то по умолчанию
+                используется опция INVOKER.</para>
+            <para>Предложение <database>SET DEFAULT SQL SECURITY</database> изменяет привилегии
+                выполнения с которым по умолчанию создаются PSQL модули (хранимые процедуры, функции
+                и пакеты).</para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение привилегий выполнения по умолчанию</title>
+
+                        <para>После выполнения данного оператора PSQL модули по умолчанию будут
+                            создаваться с опцией SQL SECURITY DEFINER</para>
+                        <para>
+                            <programlisting language="sql">
+ALTER DATABASE SET DEFAULT SQL SECURITY DEFINER;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-linger">
+            <title>LINGER</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>SET LINGER</secondary>
+            </indexterm>
+            <para>Предложение <database>SET LINGER</database> позволяет установить задержку закрытия
+                базы данных. Этот механизм позволяет Firebird в режиме SuperServer, сохранять базу
+                данных в открытом состоянии в течение некоторого времени после того как последние
+                соединение закрыто, т.е. иметь механизм задержки закрытия базы данных. Это может
+                помочь улучшить производительность и уменьшить издержки в случаях, когда база данных
+                часто открывается и закрывается, сохраняя при этом ресурсы
+                    <quote>разогретыми</quote> до следующего открытия. </para>
+            <tip>
+                <para>Такой режим может быть полезен для Web приложений, в которых коннект к базе
+                    обычно <quote>живёт</quote> очень короткое время. </para>
+            </tip>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>DROP LINGER</secondary>
+            </indexterm>
+            <para>Предложение <database>DROP LINGER</database> удаляет задержку и возвращает базу
+                данных к нормальному состоянию (без задержки). Эта команда эквивалентна установки
+                задержки в 0. </para>
+            <tip>
+                <para>Удаление LINGER не самое лучшее решение для временной необходимости его
+                    отключения для некоторых разовых действий, требующих принудительного завершения
+                    работы сервера. Утилита <application>gfix</application> теперь имеет
+                    переключатель <option>-NoLinger</option>, который сразу закроет указанную базу
+                    данных, после того как последнего соединения не стало, независимо от установок
+                    LINGER в базе данных. Установка LINGER будет сохранена и нормально отработает в
+                    следующий раз. </para>
+                <para>Кроме того, одноразовое переопределение доступно также через сервисы API, с
+                    использованием тега isc_spb_prp_nolinger, например (в такой строке): </para>
+                <para>
+                    <programlisting>
+fbsvcmgr host:service_mgr user sysdba password xxx
+action_properties dbname employee prp_nolinger                    
+                </programlisting>
+                </para>
+            </tip>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Установка задержки в 30 секунд</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE SET LINGER 30;         
+</programlisting>
+                        </para>
+                    </example>
+                    <example>
+                        <title>Удаление задержки</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE DROP LINGER;         
+</programlisting>
+                        </para>
+                        <para>или</para>
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE SET LINGER 0;         
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-encrypt">
+            <title>Шифрование базы данных</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>ENCRYPT WITH</secondary>
+            </indexterm>
+            <para>Оператор ALTER DATABASE с предложением <database>ENCRYPT WITH</database> шифрует
+                базу данных с помощью указанного плагина шифрования. Шифрование начинается сразу
+                после этого оператора и будет выполняться в фоновом режиме. Нормальная работа с
+                базами данных не нарушается во время шифрования. </para>
+            <note>
+                <para>Процесс шифрования может быть проконтролирован с помощью поля MON$CRYPT_PAGE в
+                    псевдо-таблице MON$DATABASE или просмотрен на странице заголовка базы данных с
+                    помощью <command>gstat -e</command>. </para>
+                <para>
+                    <command>gstat –h</command> также будет предоставлять ограниченную информацию о
+                    состоянии шифрования. </para>
+                <para>Например, следующий запрос
+                    <programlisting language="sql">
+select MON$CRYPT_PAGE * 100 / MON$PAGES from MON$DATABASE                  
+                </programlisting>
+                    будет отображать процент завершения процесса шифрования. </para>
+            </note>
+            <para>Необязательное предложение KEY позволяет передать имя ключа для плагина
+                шифрования. Что делать с этим именем ключа решает плагин.</para>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>DECRYPT</secondary>
+            </indexterm>
+            <para>Оператор ALTER DATABASE с предложением <database>DECRYPT</database> дешифрует базу
+                данных. </para>
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Шифрование базы данных</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE ENCRYPT WITH DbCrypt;         
+</programlisting>
+                        </para>
+                    </example>
+                    <example>
+                        <title>Дешифрование базы данных</title>
+
+                        <para>
+                            <programlisting language="sql">  
+ALTER DATABASE DECRYPT;         
+</programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-publication">
+            <title>Управление репликацией</title>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>ENABLE PUBLICATION</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>DISABLE PUBLICATION</secondary>
+            </indexterm>
+            <para>Оператор ALTER DATABASE с предложением ENABLE PUBLICATION включает репликацию базы
+                данных.</para>
+            <programlisting language="sql">  
+ALTER DATABASE ENABLE PUBLICATION         
+</programlisting>
+            <para>Для отключения репликации базы данных выполните оператор
+                <programlisting language="sql">  
+ALTER DATABASE DISABLE PUBLICATION         
+</programlisting>
+            </para>
+            <para>Изменения будут применены сразу после подтверждения транзакции.</para>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>INCLUDE TABLE TO PUBLICATION</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>INCLUDE ALL TO PUBLICATION</secondary>
+            </indexterm>
+            <para>При настойке репликации должен быть определен набор репликации (он же публикация).
+                Он включает в себя таблицы, которые должны быть реплицированы. Это также делается с
+                помощью команды DDL:
+                <programlisting>  
+ALTER DATABASE INCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} TO PUBLICATION
+
+<replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...] 
+</programlisting>
+            </para>
+            <para>При использовании ключевого слова ALL в набор репликации будут включены все
+                таблицы, включая те что будут созданы позднее. Команда будет выглядеть следующим
+                образом:
+                <programlisting language="sql">  
+ALTER DATABASE INCLUDE ALL TO PUBLICATION       
+</programlisting>
+            </para>
+            <para>Вы можете задать конкретный набор таблиц для репликации. Для этого после ключевого
+                слова TABLE необходимо указать список таблиц через запятую. В следующем примере мы
+                разрешаем репликацию для таблиц t1 и t2:
+                <programlisting language="sql">  
+ALTER DATABASE INCLUDE TABLE t1, t2 TO PUBLICATION       
+</programlisting>
+            </para>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>EXCLUDE TABLE FROM PUBLICATION</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>ALTER DATABASE</primary>
+                <secondary>EXCLUDE ALL FROM PUBLICATION</secondary>
+            </indexterm>
+            <para>Для исключения таблиц из набора репликации (публикации) используется следующий
+                оператор:
+                <programlisting>  
+ALTER DATABASE EXCLUDE {TABLE <replaceable>&lt;table_list&gt;</replaceable> | ALL} FROM PUBLICATION
+
+<replaceable>&lt;table_list&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...] 
+</programlisting>
+            </para>
+            <para>При использовании ключевого слова ALL из набора репликации будут исключены все
+                таблицы. Если ранее в публикацию были добавлены все таблицы с использованием
+                ключевого слова ALL, то данный оператор отключит автоматическую публикацию для вновь
+                создаваемых таблиц. Команда будет выглядеть следующим образом:
+                <programlisting language="sql">  
+ALTER DATABASE EXCLUDE ALL FROM PUBLICATION       
+</programlisting>
+            </para>
+            <para>Вы можете задать конкретный набор таблиц для исключения из репликации. Для этого
+                после ключевого слова TABLE необходимо указать список таблиц через запятую. В
+                следующем примере мы исключаем таблицы t1 и t2 из набора репликации:
+                <programlisting language="sql">  
+ALTER DATABASE EXCLUDE TABLE t1, t2 FROM PUBLICATION       
+</programlisting>
+            </para>
+            <para>Таблицы, включенные для репликации, могут быть дополнительно отфильтрованы с
+                использованием двух параметров в файле конфигурации
+                    <filename>replication.conf</filename>: <parameter>include_filter</parameter> и
+                    <parameter>exclude_filter</parameter>. Это регулярные выражения, которые
+                применяются к именам таблиц и определяют правила для включения таблиц в набор
+                репликации или исключения их из набора репликации.</para>
+        </section>
+        <section xml:id="fblangref-ddl-database-alter-who">
+            <title>Кто может выполнить ALTER DATABASE?</title>
+
+            <para>Выполнить оператор <database>ALTER DATABASE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link>;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец базы данных; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER DATABASE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-database-create">CREATE DATABASE</link>, <link
+                        linkend="fblangref-ddl-database-drop">DROP DATABASE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-database-drop">
+        <info>
+            <title>DROP DATABASE</title>
+
+            <keywordset>
+                <keyword>DROP DATABASE</keyword>
+            </keywordset>
+        </info>
+
+        <indexterm>
+            <primary>DROP DATABASE</primary>
+        </indexterm>
+
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление текущей базы данных. </para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting> 
+DROP DATABASE;
+                    </programlisting>
+            </para>
+        </formalpara>
+
+        <para>Оператор <database>DROP DATABASE</database> удаляет текущую базу данных. Перед
+            удалением базы данных, к ней необходимо присоединиться. Оператор удаляет первичный, все
+            вторичные файлы и все файлы теневых копий. </para>
+        <section xml:id="fblangref-ddl-database-drop-who">
+            <title>Кто может удалить базу данных?</title>
+
+            <para>Выполнить оператор <database>DROP DATABASE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link>;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец базы данных; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>DROP DATABASE</database>. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-database-drop-examples">
+            <title>Примеры</title>
+
+            <example>
+                <title>Удаление базы данных</title>
+
+                <para>Удаление базы данных, к которой подключен клиент.</para>
+                <para>
+                    <programlisting language="sql">  
+DROP DATABASE;
+</programlisting>
+                </para>
+            </example>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-database-create">CREATE DATABASE</link>, <link
+                        linkend="fblangref-ddl-database-alter">ALTER DATABASE</link>. </para>
+
+            </formalpara>
+        </section>
+    </section>
+</section>

@@ -14,8 +14,8 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>DocBook PDF FBDoc</String>
                                         <String>DocBook HTML FBDoc</String>
+                                        <String>DocBook PDF FBDoc</String>
                                         <String>DocBook HTML - Chunk FBDoc</String>
                                     </list>
                                 </field>
@@ -23,6 +23,21 @@
                                     <list>
                                         <String>XSL</String>
                                         <String>XSL</String>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>fblangref-ddl.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>DocBook PDF FBDoc</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
                                         <String>XSL</String>
                                     </list>
                                 </field>
@@ -375,6 +390,7 @@
         </options>
     </meta>
     <projectTree name="fblangref40.xpr">
+        <folder path="ddl/"/>
         <folder path="xsl/"/>
         <file name="fblangref-appx01-supplement.xml"/>
         <file name="fblangref-appx02-errorcodes.xml"/>

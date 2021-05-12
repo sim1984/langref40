@@ -1,5 +1,6 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-commons" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-commons"
+    xml:lang="ru">
     <info>
         <title>Общие элементы языка</title>
     </info>
@@ -17,7 +18,7 @@
             сравнения значений. Выражения SQL могут включать в себя столбцы таблиц, переменные,
             константы, литералы, различные операторы и предикаты, а так же другие выражения. Полный
             список допустимых символов (tokens) в выражениях описан ниже.</para>
-        
+
         <para>
             <table xml:id="fblangref-commons-tbl-elem" frame="all">
                 <?dbfo keep-together='auto'?>
@@ -482,7 +483,7 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                             <listitem>
                                 <para>Шестнадцатеричные числа в диапазоне 0 .. 7FFF FFFF являются
                                     положительными INTEGER числа со значениями 0 .. 2147483647. Для
-                                    того, чтобы интерпретировать константу как BIGINT число
+                                    того чтобы интерпретировать константу как BIGINT число,
                                     необходимо дописать необходимо количества нулей слева. Это
                                     изменит тип, но не значение. </para>
                             </listitem>
@@ -493,7 +494,7 @@ SELECT 0xFFFFFFFFFFFFFFFF FROM rdb$database -- returns -1
                                             <para>При записи восемью шестнадцатеричный числами,
                                                 такие как 0x9E44F9A8, интерпретируется как 32-битное
                                                 целое. Поскольку крайний левый (знаковый) бит
-                                                установлен, то такие числа будут находится в
+                                                установлен, то такие числа будут находиться в
                                                 отрицательном диапазоне -2147483648 .. -1. </para>
                                         </listitem>
                                         <listitem>
@@ -1013,10 +1014,10 @@ END
                 </literallayout></para>
                     </formalpara>
                     <para>При использовании этого варианта
-                            <replaceable>&lt;test-expr&gt;</replaceable> сравнивается с
-                            <replaceable>&lt;expr&gt;</replaceable> 1,
-                            <replaceable>&lt;expr&gt;</replaceable> 2 и т.д. до тех пор, пока не
-                        будет найдено совпадение, и тогда возвращается соответствующий результат.
+                            <replaceable>&lt;test-expr&gt;</replaceable> сравнивается с первым
+                            <replaceable>&lt;expr&gt;</replaceable>, затем со вторым
+                            <replaceable>&lt;expr&gt;</replaceable> 2 и так далее, до тех пор, пока
+                        не будет найдено совпадение, и тогда возвращается соответствующий результат.
                         Если совпадений не найдено, то возвращается
                             <replaceable>defaultresult</replaceable> из ветви ELSE. Если нет
                         совпадений, и ветвь ELSE отсутствует, возвращается значение NULL.</para>
@@ -1024,7 +1025,7 @@ END
                         т.е. если <replaceable>&lt;test-expr&gt;</replaceable> имеет значение NULL,
                         то он не соответствует ни одному из <replaceable>&lt;expr&gt;</replaceable>,
                         даже тем, которые имеют значение NULL.</para>
-                    <para>Результаты не обязательно должны быть литеральными значениями, они также
+                    <para>Результаты необязательно должны быть литеральными значениями, они также
                         могут быть именами полей, переменными, сложными выражениями или NULL. </para>
 
                     <formalpara>
@@ -1222,13 +1223,22 @@ WHERE EXISTS
         </section>
 
         <section xml:id="fblangref-commons-scalarsq">
-            <title>Подзапросы возвращающие скалярный результат (Singletons)</title>
+            <title>Подзапросы возвращающие скалярный результат</title>
 
             <para><emphasis>Подзапросы</emphasis>, используемые в предикатах поиска, кроме
                 предикатов существования и количественных предикатов, должны возвращать скалярный
                 результат, то есть не более чем один столбец из одной отобранной строки или одно
                 агрегированное значение, в противном случае, произойдёт ошибка времени выполнения
                     (<quote>Multiple rows in a singleton select...</quote>).</para>
+
+            <note>
+                <para>Несмотря на то, что Firebird сообщает о подлинной ошибке, сообщение может
+                    немного вводить в заблуждение. <quote>singleton SELECT</quote> — это запрос,
+                    который не должен возвращать более одной строки. Однако <quote>singleton</quote>
+                    и <quote>scalar</quote> не являются синонимами: не все одноэлементные SELECTS
+                    должны быть скалярными; а выборка по одному столбцу может возвращать несколько
+                    строк для предикатов существования и количественных предикатов. </para>
+            </note>
 
             <formalpara>
                 <title>Примеры:</title>
@@ -1299,12 +1309,14 @@ WHERE
                 группой предикатов, каждый из которых при вычислении делает вклад в вычислении общей
                 истинности. Такие сложные условия называются утверждениями. Утверждения могут
                 состоять из одного или нескольких предикатов, связанных логическими операторами AND,
-                OR и NOT. </para>
+                OR и NOT. Для группировки предикатов и управления порядком вычислений можно
+                использовать скобки.</para>
+
             <para>Каждый из предикатов может содержать вложенные предикаты. Результат вычисления
                 истинности утверждения получается в результате вычисления всех предикатов по
                 направлению от внутренних к внешним. Каждый <quote>уровень</quote> вычисляется в
-                порядке приоритета, до тех пор, пока невозможно будет получить окончательное
-                утверждение.</para>
+                порядке приоритета до тех пор, пока не будет получено значение истинности
+                окончательного утверждения.</para>
         </section>
 
         <section xml:id="fblangref-commons-comppreds">
@@ -1541,7 +1553,8 @@ WHERE DEPT_NAME LIKE 'Software%';
                             предикат STARTING WITH, который будет использовать индекс. Если вам
                             необходимо выполнить поиск с начала строки, то вместо предиката LIKE
                             рекомендуется использовать предикат <link
-                                linkend="fblangref-commons-predstartwith">STARTING WITH</link>.</para>
+                                linkend="fblangref-commons-predstartwith">STARTING
+                            WITH</link>.</para>
                     </note>
                     <informalexample>
                         <para>Поиск сотрудников, имена которых состоят из 5 букв, начинающихся с
@@ -1769,7 +1782,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                 <para>Оператор <database>SIMILAR TO</database> проверяет соответствие строки с
                     шаблоном регулярного выражения SQL. В отличие от некоторых других языков для
                     успешного выполнения шаблон должен соответствовать всей строке — соответствие
-                    подстроки не достаточно. Если один из операндов имеет значение NULL, то и
+                    подстроки недостаточно. Если один из операндов имеет значение NULL, то и
                     результат будет NULL. В противном случае результат является TRUE или FALSE. </para>
 
                 <section xml:id="fblangref-commons-syntaxregex">
@@ -1896,9 +1909,10 @@ WHERE CHANGE_DATE CONTAINING 84;
                     </simplesect>
                     <simplesect xml:id="fblangref-commons-regexpredclass">
                         <title>Предопределённые классы символов</title>
-                        
-                        <para>Следующие предопределенные классы символов также могут использоваться в определении класса:</para>
-                        
+
+                        <para>Следующие предопределенные классы символов также могут использоваться
+                            в определении класса:</para>
+
                         <para>
                             <variablelist>
                                 <varlistentry>
@@ -2067,7 +2081,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                             условий:<programlisting language="sql">
 'Nektarin' SIMILAR TO 'Nek|tarin' -- FALSE
 'Nektarin' SIMILAR TO 'Nektarin|Persika' -- TRUE
-'Nektarin' SIMILAR TO 'M_+|N_+|P_+' – TRUE                                
+'Nektarin' SIMILAR TO 'M_+|N_+|P_+' -- TRUE                                
                         </programlisting></para>
                     </simplesect>
 
@@ -2081,7 +2095,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 'Orange' SIMILAR TO 'O(ra|ri|ro)nge' -- TRUE
 'Orange' SIMILAR TO 'O(r[a-e])+nge' -- TRUE
 'Orange' SIMILAR TO 'O(ra){2,4}nge' -- FALSE
-'Orange' SIMILAR TO 'O(r(an|in)g|rong)?e' – TRUE                               
+'Orange' SIMILAR TO 'O(r(an|in)g|rong)?e' -- TRUE                               
                         </programlisting></para>
                     </simplesect>
 
@@ -2123,7 +2137,7 @@ WHERE CHANGE_DATE CONTAINING 84;
                 </formalpara>
 
                 <para>Два операнда считают различными (DISTINCT), если они имеют различные значения,
-                    или если одно из них — NULL, и другое нет. Они считаются NOT DISTINCT (равными),
+                    или если одно из них — NULL, а другое нет. Они считаются NOT DISTINCT (равными),
                     если имеют одинаковые значения или оба имеют значение NULL. </para>
                 <para>IS [NOT] DISTINCT FROM всегда возвращает TRUE или FALSE и никогда UNKNOWN
                     (NULL) (неизвестное значение). Операторы <quote><command>=</command></quote> и

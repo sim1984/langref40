@@ -1,0 +1,1029 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-function">
+    <info>
+        <title>FUNCTION</title>
+        <keywordset>
+            <keyword>FUNCTION</keyword>
+        </keywordset>
+    </info>
+    <para>Хранимая функция является программой, хранящейся в области метаданных базы данных и
+        выполняющейся на стороне сервера. К хранимой функции могут обращаться хранимые процедуры,
+        хранимые функции (в том числе и сама к себе), триггеры и клиентские программы. При обращении
+        хранимой функции самой к себе такая хранимая функция называется рекурсивной. </para>
+    <para>В отличие от хранимых процедур хранимые функции всегда возвращают одно скалярное значение.
+        Для возврата значения из хранимой функции используется оператор RETURN, который немедленно
+        прекращает выполнение функции.</para>
+    <section xml:id="fblangref-ddl-function-create">
+        <info>
+            <title>CREATE FUNCTION</title>
+            <keywordset>
+                <keyword>CREATE FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой хранимой функции.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+CREATE FUNCTION <replaceable>funcname</replaceable> 
+[(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>]  
+[DETERMINISTIC]  
+<replaceable>&lt;routine body&gt;</replaceable> 
+  
+<replaceable>&lt;inparam&gt;</replaceable> ::= <replaceable>&lt;param_decl&gt;</replaceable> [{= | DEFAULT} <replaceable>&lt;value&gt;</replaceable>]  
+                    
+<replaceable>&lt;value&gt;</replaceable> ::=  {<replaceable>literal</replaceable> | NULL | <replaceable>context_var</replaceable>} 
+                    
+<replaceable>&lt;param_decl&gt;</replaceable> ::= <replaceable>paramname</replaceable> <replaceable>&lt;type&gt;</replaceable> [NOT NULL] [COLLATE <replaceable>collation</replaceable>]
+                    
+<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'    
+
+<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+                    
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-array">См. Синтаксис массивов</link>                      
+
+<replaceable>&lt;routine body&gt;</replaceable> ::=
+    <replaceable>&lt;SQL routine spec&gt;</replaceable>
+  | <replaceable>&lt;external body reference&gt;</replaceable>
+                    
+<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
+  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
+
+
+<replaceable>&lt;rights clause&gt;</replaceable> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
+
+     
+<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
+  AS       
+    [<replaceable>&lt;declarations&gt;</replaceable>]       
+  BEGIN       
+    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
+  END                      
+
+<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
+
+<replaceable>&lt;declare_item&gt;</replaceable> ::=      
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
+
+<replaceable>&lt;external body reference&gt;</replaceable> ::=
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>]  
+
+<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
+                    
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора CREATE FUNCTION</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>funcname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя хранимой функции. Может содержать до 63 символов.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>inparam</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Описание входного параметра.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declarations</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Секция объявления локальных переменных, именованных курсоров,
+                                    подпроцедур и подфункций.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declare_var</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление локальной переменной. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declare_cursor</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление именованного курсора. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subfunc_decl</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление подпрограммы – функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subproc_decl</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление подпрограммы – процедуры. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subfunc_impl</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Реализация подпрограммы – функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subproc_impl</replaceable>
+                            </entry>
+                            <entry>Реализация подпрограммы – процедуры. </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>literal</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Литерал, совместимый по типу с параметром.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>context_var</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Любая контекстная переменная, тип которой совместим с типом
+                                    параметра. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>paramname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя входного параметра функции. Может содержать до 63
+                                    символов. Имя параметра должно быть уникальным среди входных
+                                    параметров функции, а также её локальных переменных. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>module name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя внешнего модуля, в котором расположена функция.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>routine name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Внутреннее имя функции внутри внешнего модуля. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>misc info</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Определяемая пользователем информация для передачи в функцию
+                                    внешнего модуля. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>extbody</replaceable>
+                            </entry>
+                            <entry>Тело внешней функции. Строковый литерал который может
+                                использоваться UDR для различных целей.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>engine</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя движка для использования внешних функций. Обычно
+                                    указывается имя UDR. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>datatype</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тип данных SQL.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>collation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Порядок сортировки.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>domain_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя домена.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>rel</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы или представления. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>col</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя столбца таблицы или представления.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>CREATE FUNCTION</database> создаёт новую хранимую функцию. Имя
+            хранимой функции должно быть уникальным среди имён всех хранимых функций и внешних (UDF)
+            функций. Если только это не внутренняя функция (<quote>подпрограмма</quote>). Для
+            внутренних функций достаточно уникальности только в рамках модулей, которые их
+                <quote>охватывают</quote>. </para>
+        <note>
+            <para>Желательно также, чтобы имя хранимой функции было уникальным и среди имён функций
+                расположенных в PSQL пакетах (package), хотя это и допустимо. Дело в том, что в
+                настоящее время вы не сможете вызвать функцию/процедуру из глобального пространства
+                имён внутри пакета, если в пакете объявлена одноименная функция/процедура. В этом
+                случае всегда будет вызвана процедура/функция пакета. </para>
+        </note>
+        <para><database>CREATE FUNCTION</database> является составным оператором, состоящий из
+            заголовка и тела. Заголовок определяет имя хранимой функции, объявляет входные параметры
+            и тип возвращаемого значения. </para>
+        <para>Тело функции состоит из необязательных объявлений локальных переменных, подпрограмм и
+            именованных курсоров, и одного или нескольких операторов, или блоков операторов,
+            заключённых во внешнем блоке, который начинается с ключевого слова BEGIN, и завершается
+            ключевым словом END. Объявления локальных переменных и именованных курсоров, а также
+            внутренние операторы должны завершаться точкой с запятой (;).</para>
+        <section xml:id="fblangref-ddl-function-term">
+            <title>Терминатор оператора</title>
+
+            <para>Некоторые редакторы SQL-операторов — в частности утилита
+                    <application>isql</application>, которая идёт в комплекте с Firebird, и возможно
+                некоторые сторонние редакторы — используют внутреннее соглашение, которое требует,
+                чтобы все операторы были завершены с точкой с запятой.</para>
+            <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы не
+                знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в
+                разделе, озаглавленном <link linkend="fblangref-psql-setterm">Изменение терминатора
+                    в <application>isql</application></link>.</para>
+
+        </section>
+        <section xml:id="fblangref-ddl-function-create-params">
+            <title>Входные параметры</title>
+            <para>Входные параметры заключаются в скобки после имени хранимой функции. Они
+                передаются в функцию по значению, то есть любые изменения входных параметров внутри
+                функции никак не повлияет на значения этих параметров в вызывающей программе.</para>
+            <para>У каждого параметра указывается тип данных. Кроме того, для параметра можно
+                указать ограничение NOT NULL, тем самым запретив передавать в него значение
+                NULL.</para>
+            <para>Для параметра строкового типа существует возможность задать порядок сортировки с
+                помощью предложения COLLATE.</para>
+            <para>Входные параметры могут иметь значение по умолчанию. Параметры, для которых заданы
+                значения, должны располагаться в конце списка параметров.</para>
+        </section>
+
+        <section xml:id="fblangref-ddl-function-create-domain">
+            <title>Использование доменов при объявлении параметров</title>
+            <para>В качестве типа параметра можно указать имя домена. В этом случае, параметр будет
+                наследовать все характеристики домена.</para>
+            <para>Если перед названием домена дополнительно используется предложение <database>TYPE
+                    OF</database>, то используется только тип данных домена — не проверяется (не
+                используется) его ограничение (если оно есть в домене) на NOT NULL, CHECK
+                ограничения и/или значения по умолчанию. Если домен текстового типа, то всегда
+                используется его набор символов и порядок сортировки.</para>
+        </section>
+        <section xml:id="fblangref-ddl-function-create-typeofcolumn">
+            <title>Использование типа столбца при объявлении параметров</title>
+            <para>Входные и выходные параметры можно объявлять, используя тип данных столбцов
+                существующих таблиц и представлений. Для этого используется предложение TYPE OF
+                COLUMN, после которого указывается имя таблицы или представления и через точку имя
+                столбца.</para>
+            <para>При использовании <database>TYPE OF COLUMN</database> наследуется только тип
+                данных, а в случае строковых типов ещё и набор символов, и порядок сортировки.
+                Ограничения и значения по умолчанию столбца никогда не используются. </para>
+        </section>
+
+        <section xml:id="fblangref-ddl-function-create-return">
+            <title>Возвращаемое значение</title>
+            <indexterm>
+                <primary>CREATE FUNCTION</primary>
+                <secondary>RETURNS</secondary>
+            </indexterm>
+            <para>Предложение <database>RETURNS</database> задаёт тип возвращаемого значения
+                хранимой функции. Если функция возвращает значение строкового типа, то существует
+                возможность задать порядок сортировки с помощью предложения COLLATE. В качестве типа
+                выходного значения можно указать имя домена, ссылку на его тип (с помощью
+                предложения <database>TYPE OF</database>) или ссылку на тип столбца таблицы (с
+                помощью предложения <database>TYPE OF COLUMN</database>). </para>
+        </section>
+
+        <section xml:id="fblangref-ddl-function-create-deterministic">
+            <title>Детерминированные функции</title>
+            <indexterm>
+                <primary>CREATE FUNCTION</primary>
+                <secondary>DETERMINISTIC</secondary>
+            </indexterm>
+            <para>Необязательное предложение <database>DETERMINISTIC</database> указывает, что
+                функция детерминированная. Детерминированные функции каждый раз возвращают один и
+                тот же результат, если предоставлять им один и тот же набор входных значений.
+                Недетерминированные функции могут возвращать каждый раз разные результаты, даже если
+                предоставлять им один и тот же набор входных значений. Если для функции указано, что
+                она является детерминированной, то такая функция не вычисляется заново, если она уже
+                была вычислена однажды с данным набором входных аргументов, а берет свои значения из
+                кэша метаданных (если они там есть). </para>
+            <note>
+                <para>На самом деле в текущей версии Firebird, не существует кэша хранимых функций с
+                    маппингом входных аргументов на выходные значения. </para>
+                <para>Указание инструкции <database>DETERMINISTIC</database> на самом деле нечто
+                    вроде <quote>обещания</quote>, что код функции будет возвращать одно и то же. В
+                    данный момент детерминистическая функция считается инвариантом и работает по тем
+                    же принципам, что и другие инварианты. Т.е. вычисляется и кэшируется на уровне
+                    текущего выполнения данного запроса. </para>
+                <para>Это легко демонстрируется таким примером:
+                    <programlisting language="sql">
+CREATE FUNCTION FN_T
+RETURNS DOUBLE PRECISION DETERMINISTIC
+AS
+BEGIN
+  RETURN rand();
+END
+
+-- функция будет вычислена дважды и вернёт 2 разных значения
+SELECT fn_t() FROM rdb$database
+UNION ALL
+SELECT fn_t() FROM rdb$database
+
+-- функция будет вычислена единожды и вернёт 2 одинаковых значения
+WITH t(n) AS (
+  SELECT 1 FROM rdb$database
+  UNION ALL
+  SELECT 2 FROM rdb$database
+)
+SELECT n, fn_t() FROM t 
+                       </programlisting>
+                </para>
+            </note>
+        </section>
+
+        <section xml:id="fblangref-ddl-function-create-sql_security">
+            <title>Привилегии выполнения</title>
+            <indexterm>
+                <primary>CREATE FUNCTION</primary>
+                <secondary>SQL SECURITY</secondary>
+            </indexterm>
+            <para>Необязательное предложение SQL SECURITY позволяет задать с какими привилегиями
+                выполняется хранимая функция. Если выбрана опция INVOKER, то хранимая функция
+                выполняется с привилегиями вызывающего пользователя. Если выбрана опция DEFINER, то
+                хранимая функция выполняется с привилегиями определяющего пользователя (владельца
+                функции). Эти привилегии будут дополнены привилегиями выданные самой хранимой
+                функции с помощью оператора GRANT. По умолчанию хранимая функция выполняется с
+                привилегиями вызывающего пользователя.</para>
+            <tip>
+                <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов метаданных
+                    можно изменить с помощью оператора
+                    <programlisting>
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+                </programlisting>
+                </para>
+            </tip>
+        </section>
+
+        <section xml:id="fblangref-ddl-function-create-body">
+            <title>Тело хранимой функции</title>
+            <para>После ключевого слова AS следует тело хранимой функции.</para>
+            <section xml:id="fblangref-ddl-function-create-declare">
+                <title>Объявление локальных переменных, курсоров и подпрограмм</title>
+                <para>В необязательной секции <replaceable>declarations</replaceable> описаны
+                    локальные переменные функции, именованные курсоры и подпрограммы (подпроцедуры и
+                    подфункции). Локальные переменные подчиняются тем же правилам что и входные
+                    параметры функции в отношении спецификации типа данных. Подробности вы можете
+                    посмотреть в главе <quote>Процедурный язык PSQL</quote> в разделах <link
+                        linkend="fblangref-psql-statements-declare-var">DECLARE VARIABLE</link> и
+                        <link linkend="fblangref-psql-statements-declare-cursor">DECLARE
+                        CURSOR</link>, <link linkend="fblangref-psql-statements-declare-procedure"
+                        >DECLARE PROCEDURE</link>, <link
+                        linkend="fblangref-psql-statements-declare-function">DECLARE
+                    FUNCTION</link>.</para>
+                <para>После необязательной секции деклараций обязательно следует составной оператор.
+                    Составной оператор состоит из одного или нескольких PSQL операторов, заключенных
+                    между ключевыми словами BEGIN и END. Составной оператор может содержать один или
+                    несколько других составных операторов. Вложеность ограничена 512 уровнями. Любой
+                    из BEGIN ... END блоков может быть пустым, в том числе и главный блок.</para>
+            </section>
+        </section>
+
+        <section xml:id="fblangref-ddl-function-create-external">
+            <title>Внешние функции</title>
+            <indexterm>
+                <primary>CREATE FUNCTION</primary>
+                <secondary>EXTERNAL NAME</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE FUNCTION</primary>
+                <secondary>ENGINE</secondary>
+            </indexterm>
+            <para>Хранимая функция может быть расположена во внешнем модуле. В этом случае вместо
+                тела функции указывается место расположения функции во внешнем модуле с помощью
+                предложения EXTERNAL NAME. Аргументом этого предложения является строка, в которой
+                через разделитель указано имя внешнего модуля, имя функции внутри модуля и
+                определённая пользователем информация. В предложении ENGINE указывается имя движка
+                для обработки подключения внешних модулей. В Firebird для работы с внешними модулями
+                используется движок UDR. После ключевого слова AS может быть указан строковый
+                литерал — "тело" внешней функции, оно может быть использовано внешнем модулем для
+                различных целей. </para>
+            <warning>
+                <para>Не следует путать внешние функции, объявленные как DECLARE EXTERNAL FUNCTION,
+                    так же известные как UDF, с функциями расположенными во внешних модулях
+                    объявленных как CREATE FUNCTION ... EXTERNAL NAME, называемых UDR (User Defined
+                    Routine). Первые являются унаследованными (Legacy) из предыдущих версий
+                    Firebird. Их возможности существенно уступают возможностям нового типа внешних
+                    функций. В Firebird 4.0 UDF объявлены устаревшими. </para>
+            </warning>
+        </section>
+        <section xml:id="fblangref-ddl-function-create-who">
+            <title>Кто может создать функцию?</title>
+
+            <para>Выполнить оператор <database>CREATE FUNCTION</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>CREATE FUNCTION</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>Пользователь, создавший хранимую функцию, становится её владельцем.</para>
+        </section>
+        <section xml:id="fblangref-ddl-function-create-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание хранимой функции</title>
+                <para>
+                    <programlisting language="sql">
+CREATE FUNCTION ADD_INT(A INT, B INT DEFAULT 0) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B;
+END            
+                </programlisting>
+                </para>
+                <para>Вызов в запросе:
+                    <programlisting language="sql">
+SELECT ADD_INT(2, 3) AS R FROM RDB$DATABASE          
+                </programlisting></para>
+                <para>Вызов внутри PSQL кода, второй необязательный параметр не
+                    указан:<programlisting language="sql">
+MY_VAR = ADD_INT(A);         
+                </programlisting></para>
+            </example>
+            <example>
+                <title>Создание детерминистической хранимой функции</title>
+                <para>
+                    <programlisting language="sql">
+CREATE FUNCTION FN_E() 
+RETURNS DOUBLE PRECISION DETERMINISTIC
+AS
+BEGIN
+  RETURN EXP(1);
+END            
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание хранимой функции с параметрами типа столбца таблицы</title>
+                <para>Функция, возвращающая имя мнемоники по имени столбца и значения
+                    мнемоники.<programlisting language="sql">
+CREATE FUNCTION GET_MNEMONIC ( 
+    AFIELD_NAME TYPE OF COLUMN RDB$TYPES.RDB$FIELD_NAME, 
+    ATYPE TYPE OF COLUMN RDB$TYPES.RDB$TYPE) 
+RETURNS TYPE OF COLUMN RDB$TYPES.RDB$TYPE_NAME 
+AS 
+BEGIN 
+  RETURN (SELECT RDB$TYPE_NAME 
+          FROM RDB$TYPES 
+          WHERE RDB$FIELD_NAME = :AFIELD_NAME 
+            AND RDB$TYPE = :ATYPE); 
+END           
+                </programlisting></para>
+                <para>Тоже самое, но хранимая функция будет выполняться с привилегиями определяющего
+                    пользователя (владельца функции).
+                    <programlisting language="sql">
+CREATE FUNCTION GET_MNEMONIC ( 
+    AFIELD_NAME TYPE OF COLUMN RDB$TYPES.RDB$FIELD_NAME, 
+    ATYPE TYPE OF COLUMN RDB$TYPES.RDB$TYPE) 
+RETURNS TYPE OF COLUMN RDB$TYPES.RDB$TYPE_NAME 
+SQL SECURITY DEFINER
+AS 
+BEGIN 
+  RETURN (SELECT RDB$TYPE_NAME 
+          FROM RDB$TYPES 
+          WHERE RDB$FIELD_NAME = :AFIELD_NAME 
+            AND RDB$TYPE = :ATYPE); 
+END           
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание внешней хранимой функции</title>
+                <para>Создание функции находящейся во внешнем модуле (UDR). Реализация функции
+                    расположена во внешнем модуле udrcpp_example. Имя функции внутри модуля —
+                    wait_event.<programlisting language="sql">
+CREATE FUNCTION wait_event (
+   event_name varchar(63) CHARACTER SET ascii
+) RETURNS INTEGER
+EXTERNAL NAME 'udrcpp_example!wait_event'
+ENGINE udr           
+                </programlisting></para>
+            </example>
+            <example>
+                <title>Создание хранимой функции содержащую подфункцию</title>
+                <para>Создание функции для перевода числа в 16-ричный формат.
+                    <programlisting language="sql">
+CREATE FUNCTION INT_TO_HEX (
+    ANumber BIGINT,
+    AByte_Per_Number SMALLINT = 8)
+RETURNS CHAR(66)
+AS
+DECLARE VARIABLE xMod SMALLINT;
+DECLARE VARIABLE xResult VARCHAR(64);
+DECLARE FUNCTION TO_HEX(ANum SMALLINT) RETURNS CHAR
+AS
+BEGIN
+  RETURN CASE ANum
+           WHEN 0 THEN '0'
+           WHEN 1 THEN '1'
+           WHEN 2 THEN '2'
+           WHEN 3 THEN '3'
+           WHEN 4 THEN '4'
+           WHEN 5 THEN '5'
+           WHEN 6 THEN '6'
+           WHEN 7 THEN '7'
+           WHEN 8 THEN '8'
+           WHEN 9 THEN '9'
+           WHEN 10 THEN 'A'
+           WHEN 11 THEN 'B'
+           WHEN 12 THEN 'C'
+           WHEN 13 THEN 'D'
+           WHEN 14 THEN 'E'
+           WHEN 15 THEN 'F'
+           ELSE NULL
+         END;
+END
+BEGIN
+  xMod = MOD(ANumber, 16);
+  ANumber = ANumber / 16;
+  xResult = TO_HEX(xMod);
+  WHILE (ANUMBER > 0) DO
+  BEGIN
+    xMod = MOD(ANumber, 16);
+    ANumber = ANumber / 16;
+    xResult = TO_HEX(xMod) || xResult;
+  END
+  RETURN '0x' || LPAD(xResult, AByte_Per_Number * 2, '0');
+END          
+                </programlisting></para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-function-createoralter">CREATE OR ALTER
+                        FUNCTION</link>, <link linkend="fblangref-ddl-function-alter">ALTER
+                        FUNCTION</link>, <link linkend="fblangref-ddl-function-recreate">RECREATE
+                        FUNCTION</link>, <link linkend="fblangref-ddl-function-drop">DROP
+                        FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-function-alter">
+        <info>
+            <title>ALTER FUNCTION</title>
+            <keywordset>
+                <keyword>ALTER FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение существующей хранимой функции.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+ALTER FUNCTION <replaceable>funcname</replaceable> 
+[(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>]      
+[DETERMINISTIC]
+<replaceable>&lt;routine body&gt;</replaceable>   
+                       </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Подробнее см.</title>
+
+            <para>
+                <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>. </para>
+        </formalpara>
+
+        <para>Оператор ALTER FUNCTION позволяет изменять состав и характеристики входных параметров,
+            типа выходного значения, локальных переменных, именованных курсоров, подпрограмм и тело
+            хранимой функции. Для внешних функций (UDR) вы можете изменить точку входа и имя движка.
+            Внешние функции, объявленные как DECLARE EXTERNAL FUNCTION, так же известные как UDF,
+            невозможно преобразовать в PSQL функции и наоборот. После выполнения существующие
+            привилегии и зависимости сохраняются. </para>
+        <note>
+            <para>Будьте осторожны при изменении количества и типов входных параметров хранимых
+                функций. Существующий код приложения может стать неработоспособным из-за того, что
+                формат вызова функции несовместим с новым описанием параметров. Кроме того, PSQL
+                модули, использующие изменённую хранимую функцию, могут стать некорректными.
+                Информация о том, как это обнаружить, находится в приложении <link
+                    linkend="fblangref-appx-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
+        </note>
+        <warning>
+            <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
+                    FUNCTION</code>), то оператор <code>ALTER FUNCTION</code> изменит её на обычную
+                функцию без всяких предупреждений. Это было сделано умышлено для облегчения миграции
+                на новый стиль написания внешних функций известных как UDR.</para>
+        </warning>
+        <section xml:id="fblangref-ddl-function-alter-who">
+            <title>Кто может изменить функцию?</title>
+
+            <para>Выполнить оператор <database>ALTER FUNCTION</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец хранимой функции; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY FUNCTION</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-function-alter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Изменение хранимой функции</title>
+                <para>
+                    <programlisting language="sql">
+ALTER FUNCTION ADD_INT(A INT, B INT, C INT) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B+C;
+END           
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>, <link
+                        linkend="fblangref-ddl-function-createoralter">CREATE OR ALTER
+                        FUNCTION</link>, <link linkend="fblangref-ddl-function-drop">DROP
+                        FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-function-createoralter">
+        <info>
+            <title>CREATE OR ALTER FUNCTION</title>
+            <keywordset>
+                <keyword>CREATE OR ALTER FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE OR ALTER FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой или изменение существующей хранимой функции.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+CREATE OR ALTER FUNCTION <replaceable>funcname</replaceable> 
+[(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>]      
+[DETERMINISTIC]
+<replaceable>&lt;routine body&gt;</replaceable>   
+                       </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Подробнее см.</title>
+
+            <para>
+                <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>. </para>
+        </formalpara>
+
+        <para>Оператор CREATE OR ALTER FUNCTION создаёт новую или изменяет существующую хранимую
+            функцию. Если хранимая функция не существует, то она будет создана с использованием
+            предложения CREATE FUNCTION. Если она уже существует, то она будет изменена и
+            перекомпилирована, при этом существующие привилегии и зависимости сохраняются. </para>
+
+        <warning>
+            <para>Если у вас уже есть внешняя функция в Legacy стиле (<code>DECLARE EXTERNAL
+                    FUNCTION</code>), то оператор <code>CREATE OR ALTER FUNCTION</code> изменит её
+                на обычную функцию без всяких предупреждений. Это было сделано умышлено для
+                облегчения миграции на новый стиль написания внешних функций известных как
+                UDR.</para>
+        </warning>
+
+        <section xml:id="fblangref-ddl-function-createoralter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание новой или изменение существующей хранимой функции</title>
+                <para>
+                    <programlisting language="sql">
+CREATE OR ALTER FUNCTION ADD_INT(A INT, B INT DEFAULT 0) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B;
+END          
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>, <link
+                        linkend="fblangref-ddl-function-alter">ALTER FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-function-drop">
+        <info>
+            <title>DROP FUNCTION</title>
+            <keywordset>
+                <keyword>DROP FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DROP FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление хранимой функции.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+DROP FUNCTION <replaceable>funcname</replaceable>
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DROP FUNCTION</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>funcname</replaceable>
+                            </entry>
+                            <entry>Имя хранимой функции.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор DROP FUNCTION удаляет существующую хранимую функцию. Если от хранимой функции
+            существуют зависимости, то при попытке удаления такой функции будет выдана
+            соответствующая ошибка. </para>
+
+        <section xml:id="fblangref-ddl-function-drop-who">
+            <title>Кто может удалить функцию?</title>
+
+            <para>Выполнить оператор <database>DROP FUNCTION</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец хранимой функции; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>DROP ANY FUNCTION</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-function-drop-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Удаление хранимой функции</title>
+                <para>
+                    <programlisting language="sql">
+DROP FUNCTION ADD_INT;         
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-function-recreate">
+        <info>
+            <title>RECREATE FUNCTION</title>
+            <keywordset>
+                <keyword>RECREATE FUNCTION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RECREATE FUNCTION</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой или пересоздание существующей хранимой функции.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+RECREATE FUNCTION <replaceable>funcname</replaceable> 
+[(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS <replaceable>&lt;type&gt;</replaceable> [COLLATE <replaceable>collation</replaceable>]      
+[DETERMINISTIC]
+<replaceable>&lt;routine body&gt;</replaceable>     
+                       </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Подробнее см.</title>
+
+            <para>
+                <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>. </para>
+        </formalpara>
+
+        <para>Оператор RECREATE FUNCTION создаёт новую или пересоздаёт существующую хранимую
+            функцию. Если функция с таким именем уже существует, то оператор попытается удалить её и
+            создать новую функцию. Операция закончится неудачей при подтверждении транзакции, если
+            функция имеет зависимости.</para>
+        <note>
+            <para>Имейте ввиду, что ошибки зависимостей не обнаруживаются до фазы подтверждения
+                транзакции.</para>
+        </note>
+
+        <para>После пересоздания функции привилегии на выполнение хранимой функции и привилегии
+            самой хранимой функции не сохраняются. </para>
+
+        <section xml:id="fblangref-ddl-function-recreate-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание или пересоздание хранимой функции </title>
+                <para>
+                    <programlisting language="sql">
+RECREATE FUNCTION ADD_INT(A INT, B INT DEFAULT 0) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B;
+END        
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-function-create">CREATE FUNCTION</link>, <link
+                        linkend="fblangref-ddl-function-drop">DROP FUNCTION</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</section>

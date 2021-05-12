@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <book version="5.0" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
-    xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:db="http://docbook.org/ns/docbook" xml:id="fblangref" xml:lang="ru">
+    xmlns:xi="http://www.w3.org/2001/XInclude" xml:lang="ru" xml:id="fblangref">
     <info>
         <title>Руководство по языку SQL СУБД Firebird 4.0</title>
         <subtitle>Firebird 4.0</subtitle>
-        <edition>10 мая 2021 — v.0001-1</edition>
-
+        <edition>12 мая 2021 — v.0001-1</edition>
+      
         <authorgroup>
             <author>
                 <personname><firstname>Денис</firstname><surname>Симонов</surname></personname>
@@ -38,18 +36,18 @@
         <copyright>
             <year>2021</year>
             <holder>Firebird Project и все авторы, в соответствии с лицензией <link
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
                     xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation
-                    License Version 1.0</link>. Смотри <link linkend="langref-license">Лицензионное
+                    License Version 1.0</link>. Смотри <link linkend="fblangref-license">Лицензионное
                     соглашение в Приложении</link>. </holder>
         </copyright>
 
         <editor>
             <personname>Симонов Денис</personname>
-        </editor>
+        </editor>       
     </info>
     
-    <xi:include href="fblangref-intro.xml" xpointer="element(/1)"/>
+    
+    <xi:include href="fblangref-intro.xml" xpointer="element(/1)"/>    
     <xi:include href="fblangref-structure.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-datatypes.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-commons.xml" xpointer="element(/1)"/>
@@ -72,10 +70,11 @@
     <xi:include href="fblangref-appx07-syspackage.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-appx08-charsets.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-appx09-license.xml" xpointer="element(/1)"/> 
-
+    
     <index xml:lang="ru">
         <info>
             <title>Алфавитный указатель</title>
         </info>
     </index>
+    
 </book>
