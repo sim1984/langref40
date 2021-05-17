@@ -23,19 +23,22 @@ DSQL
 ----
 CREATE FUNCTION _funcname_
 [(<inparam> [, <inparam> ...])]   
-RETURNS <type> [COLLATE collation]  
+RETURNS <type> [COLLATE _collation_]
 [DETERMINISTIC]
 <routine body> 
   
 <inparam> ::= <param_decl> [{= | DEFAULT} <value>]  
                     
-<value> ::=  {literal | NULL | context_var} 
+<value> ::=  {<literal> | NULL | _context_var_}
                     
-<param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE collation]
+<param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
                     
 <extname> ::= '<module name>!<routine name>[!<misc info>]'    
 
-<type> ::= <datatype> | [TYPE OF] _domain_ | TYPE OF COLUMN _rel_._col_
+<type> ::=
+    <datatype>
+  | [TYPE OF] _domain_
+  | TYPE OF COLUMN _rel_._col_
                     
 <datatype> ::= 
     <scalar_datatype> | <blob_datatype> | <array_datatype>                   
