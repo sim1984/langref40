@@ -84,40 +84,24 @@ CREATE TRIGGER _trigname_ {
   | {CREATE | DROP} PACKAGE BODY
   | {CREATE | ALTER | DROP} MAPPING
 
-<routine body> ::=
-    <SQL routine spec>
-  | <external body reference>
-                    
-<SQL routine spec> ::=
-  [<rights clause>] <SQL routine body>                    
+<routine-body> ::=
+    <psql-routine-spec>
+  | <external-body-reference>
+
+<psql-routine-spec> ::=
+  [<rights-clause>] <psql-routine-body>
 
 
-<rights clause> ::=
-  SQL SECURITY {DEFINER | INVOKER}                    
+<rights-clause> ::=
+  SQL SECURITY {DEFINER | INVOKER}
 
-<SQL routine body> ::=  
-  AS
-    [<declarations>]
-  BEGIN
-    [<PSQL_statements>]
-  END                      
+<psql-module-body> ::=
+  См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
-<declarations> ::= <declare_item> [<declare_item> ...]
-
-<declare_item> ::=
-    <declare_var>; 
-  | <declare_cursor>; 
-  | <subroutine declaration>;
-  | <subroutine implimentation>  
-
-<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
-
-<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl> 
-
-<external body reference> ::=
+<external-body-reference> ::=
   EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]
 
-<extname> ::= '<module name>!<routine name>[!<misc info>]'
+<extname> ::= '<module-name>!<routine-name>[!<misc-info>]'
 ----
 
 [[fblangref-ddl-trgr-createtrigger]]
@@ -168,23 +152,17 @@ CREATE TRIGGER _trigname_ {
 |Порядок срабатывания триггера.
 От 0 до 32767.
 
-|declarations
-|Секция объявления локальных переменных, подпрограмм и именованных курсоров.
-
-|PSQL_statments
-|Операторы языка PSQL.
-
 |extbody
 |Тело внешнего триггера. Строковый литерал который может
 использоваться UDR для различных целей.
 
-|module name
+|module-name
 |Имя внешнего модуля.
 
-|routine name
+|routine-name
 |Имя точки входа внутри модуля.
 
-|misc info
+|misc-info
 |Различная информация используемая внешним триггером по своему
 усмотрению.
 |===
@@ -658,13 +636,13 @@ END!
 
 SET TERM ;!
 ----
+====
 
 [NOTE]
 ====
 В Firebird существуют привилегии на DDL операторы, поэтому прибегать к написанию DDL триггера нужно только в случае, если того же самого эффекта невозможно достичь стандартными методами.
 ====
 
-====
 
 .Использование DDL триггеров для регистрации событий изменения метаданных
 [example]
@@ -846,7 +824,7 @@ ALTER TRIGGER _trigname_
 [{BEFORE | AFTER} <mutation_list>]
 [POSITION number]
 [SQL SECURITY {DEFINER | INVOKER} | DROP SQL SECURITY]
-[<routine body>] 
+[<routine-body>]
 
 <mutation_list> ::= <mutation> [OR <mutation> [OR <mutation>]]
 
@@ -1004,7 +982,7 @@ CREATE OR ALTER TRIGGER trigname {
   | <relation_trigger_sql2003>
   | <database_trigger> 
   | <ddl_trigger> }
-<routine body>
+<routine-body>
 
 Полное описание оператора см. <<fblangref-ddl-trigger-create,CREATE TRIGGER>>.
 ----
@@ -1107,7 +1085,7 @@ RECREATE TRIGGER _trigname_ {
   | <relation_trigger_sql2003>
   | <database_trigger> 
   | <ddl_trigger> }
-<routine body>
+<routine-body>
 
 Полное описание оператора см. <<fblangref-ddl-trigger-create,CREATE TRIGGER>>.
 ----

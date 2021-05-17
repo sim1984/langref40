@@ -5252,12 +5252,8 @@ DSQL
 [listing,subs="+quotes,macros"]
 ----
 EXECUTE BLOCK [(<inparams>)]
-[RETURNS (<outparams>)]
-AS   
-  [<declarations>]   
-BEGIN   
-  [<PSQL statements>]   
-END
+  [RETURNS (<outparams>)]
+  <psql-module-body>
 
 <inparams> ::= <param_decl> = ? [, <inparams> ]
 
@@ -5277,17 +5273,8 @@ END
 
 <blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
                 
-<declarations> ::= <declare_item> [<declare_item> ...]
-
-<declare_item> ::=
-    <declare_var>; 
-  | <declare_cursor>; 
-  | <subroutine declaration>;
-  | <subroutine implimentation>  
-
-<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
-
-<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl>
+<psql-module-body> ::=
+  См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 ----
 
 [[fblangref-dml-tbl-execblock]]
@@ -5299,27 +5286,6 @@ END
 
 |param_decl
 |Описание входного или выходного параметра.
-
-|declarations
-|Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
-
-|declare_var
-|Объявление локальной переменной.
-
-|declare_cursor
-|Объявление именованного курсора.
-
-|subfunc_decl
-|Объявление подпрограммы – функции.
-
-|subproc_decl
-|Объявление подпрограммы – процедуры.
-
-|subfunc_impl
-|Реализация подпрограммы – функции.
-
-|subproc_impl
-|Реализация подпрограммы – процедуры.
 
 |paramname
 |Имя входного или выходного параметра процедуры.

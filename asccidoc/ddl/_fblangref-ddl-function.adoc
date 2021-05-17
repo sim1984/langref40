@@ -21,15 +21,14 @@ DSQL
 .Синтаксис
 [listing,subs="+quotes,macros"]
 ----
-CREATE FUNCTION _funcname_
-[(<inparam> [, <inparam> ...])]   
-RETURNS <type> [COLLATE _collation_]
-[DETERMINISTIC]
-<routine body> 
+CREATE FUNCTION _funcname_ [(<inparam> [, <inparam> ...])]
+  RETURNS <type> [COLLATE _collation_]
+  [DETERMINISTIC]
+  <routine-body>
   
 <inparam> ::= <param_decl> [{= | DEFAULT} <value>]  
                     
-<value> ::=  {<literal> | NULL | _context_var_}
+<value> ::=  {<literal> | NULL | <context_var>}
                     
 <param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
                     
@@ -49,41 +48,24 @@ RETURNS <type> [COLLATE _collation_]
 
 <array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
 
-<routine body> ::=
-    <SQL routine spec>
-  | <external body reference>
+<routine-body> ::=
+    <psql-routine-spec>
+  | <external-body-reference>
                     
-<SQL routine spec> ::=
-  [<rights clause>] <SQL routine body>                    
+<psql-routine-spec> ::=
+  [<rights-clause>] <psql-routine-body>
 
 
-<rights clause> ::=
+<rights-clause> ::=
   SQL SECURITY {DEFINER | INVOKER}                    
 
+<psql-module-body> ::=
+  См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
-<SQL routine body> ::=  
-  AS
-    [<declarations>]
-  BEGIN
-    [<PSQL_statements>]
-  END                      
-
-<declarations> ::= <declare_item> [<declare_item> ...]
-
-<declare_item> ::=
-    <declare_var>; 
-  | <declare_cursor>; 
-  | <subroutine declaration>;
-  | <subroutine implimentation>  
-
-<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
-
-<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl> 
-
-<external body reference> ::=
+<external-body-reference> ::=
   EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]  
 
-<extname> ::= '<module name>!<routine name>[!<misc info>]'
+<extname> ::= '<module-name>!<routine-name>[!<misc-info>]'
 ----
 
 [[fblangref-ddl-tbl-createfunc]]
@@ -100,27 +82,6 @@ RETURNS <type> [COLLATE _collation_]
 |inparam
 |Описание входного параметра.
 
-|declarations
-|Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
-
-|declare_var
-|Объявление локальной переменной.
-
-|declare_cursor
-|Объявление именованного курсора.
-
-|subfunc_decl
-|Объявление подпрограммы – функции.
-
-|subproc_decl
-|Объявление подпрограммы – процедуры.
-
-|subfunc_impl
-|Реализация подпрограммы – функции.
-
-|subproc_impl
-|Реализация подпрограммы – процедуры. 
-
 |literal
 |Литерал, совместимый по типу с параметром.
 
@@ -132,13 +93,13 @@ RETURNS <type> [COLLATE _collation_]
 Может содержать до 63 символов.
 Имя параметра должно быть уникальным среди входных параметров функции, а также её локальных переменных. 
 
-|module name
+|module-name
 |Имя внешнего модуля, в котором расположена функция.
 
-|routine name
+|routine-name
 |Внутреннее имя функции внутри внешнего модуля.
 
-|misc info
+|misc-info
 |Определяемая пользователем информация для передачи в функцию внешнего модуля.
 
 |extbody
@@ -510,9 +471,9 @@ DSQL
 ----
 ALTER FUNCTION _funcname_
 [(<inparam> [, <inparam> ...])]   
-RETURNS <type> [COLLATE collation]
+RETURNS <type> [COLLATE _collation_]
 [DETERMINISTIC]
-<routine body>
+<routine-body>
 
 Подробнее см. <<fblangref-ddl-func-create-syntax,CREATE FUNCTION>>.
 ----
@@ -582,9 +543,9 @@ DSQL
 ----
 CREATE OR ALTER FUNCTION _funcname_
 [(<inparam> [, <inparam> ...])]   
-RETURNS <type> [COLLATE collation]
+RETURNS <type> [COLLATE _collation_]
 [DETERMINISTIC]
-<routine body>
+<routine-body>
 
 Подробнее см. <<fblangref-ddl-func-create-syntax,CREATE FUNCTION>>.
 ----
@@ -688,9 +649,9 @@ DSQL
 ----
 RECREATE FUNCTION _funcname_
 [(<inparam> [, <inparam> ...])]   
-RETURNS <type> [COLLATE collation]
+RETURNS <type> [COLLATE _collation_]
 [DETERMINISTIC]
-<routine body>
+<routine-body>
 
 Подробнее см. <<fblangref-ddl-func-create-syntax,CREATE FUNCTION>>
 ----

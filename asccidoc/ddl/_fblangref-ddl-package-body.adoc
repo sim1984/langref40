@@ -42,12 +42,12 @@ END
   FUNCTION _func_name_ [(<in_impl_params>)]
   RETURNS <type> [COLLATE _collation_]
   [DETERMINISTIC]
-  <routine body>
+  <routine-body>
 
 <procedure_impl> ::=
   PROCEDURE _proc_name_ [(<in_impl_params>)]
   [RETURNS (<out_params>)]
-  <routine body>
+  <routine-body>
 
 <in_params> ::= <inparam> [, <inparam> ...]
 
@@ -74,31 +74,17 @@ END
 
 <array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
 
-<routine body> ::= <sql routine body> | <external body reference>
+<routine-body> ::=
+    <psql-routine-body>
+  | <external-body-reference>
 
-<sql routine body> ::=
-  AS
-    [<declarations>]
-  BEGIN
-    [<PSQL_statements>]
-  END
+<psql-module-body> ::=
+  См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
-<declarations> ::= <declare_item> [<declare_item> ...]
-
-<declare_item> ::=
-    <declare_var>;
-  | <declare_cursor>;
-  | <subroutine declaration>;
-  | <subroutine implimentation>
-
-<subroutine declaration> ::= <subfunc_decl> | <subproc_decl>
-
-<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl>
-
-<external body reference> ::=
+<external-body-reference> ::=
   EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]
 
-<extname> ::= '<module name>!<routine name>[!<misc info>]'
+<extname> ::= '<module-name>!<routine-name>[!<misc-info>]'
 ----
 
 [[fblangref-ddl-tbl-createpkgbdy]]
@@ -138,34 +124,19 @@ END
 |outparam
 |Описание выходного параметра.
 
-|declarations
-|Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
-
-|declare_var
-|Объявление локальной переменной.
-
-|declare_cursor
-|Объявление именованного курсора.
-
-|subfunc_decl
-|Объявление подпрограммы–функции.
-
-|subproc_decl
-|Объявление подпрограммы–процедуры.
-
 |subfunc_impl
 |Реализация подпрограммы–функции.
 
 |subproc_impl
 |Реализация подпрограммы–процедуры.
 
-|module name
+|module-name
 |Имя внешнего модуля, в котором расположена процедура/функция.
 
-|routine name
+|routine-name
 |Внутреннее имя процедуры/функции внутри внешнего модуля.
 
-|misc info
+|misc-info
 |Определяемая пользователем информация для передачи в функцию внешнего модуля.
 
 |extbody
@@ -372,12 +343,12 @@ END
   FUNCTION _func_name_ [(<in_impl_params>)]
   RETURNS <type> [COLLATE _collation_]
   [DETERMINISTIC]
-  <routine body>
+  <routine-body>
 
 <procedure_impl> ::=
   PROCEDURE _proc_name_ [(<in_impl_params>)]
   [RETURNS (<out_params>)]
-  <routine body>
+  <routine-body>
 
 Подробнее см. <<fblangref-ddl-pkg-body-create-syntax,CREATE PACKAGE BODY>>.
 ----
