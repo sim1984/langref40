@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-index">
+    <info>
+        <title>INDEX</title>
+        <keywordset>
+            <keyword>INDEX</keyword>
+        </keywordset>
+    </info>
+    <para>Индекс — это объект базы данных, используемый для более быстрого извлечения данных из
+        таблицы или для ускорения сортировки в запросе. Кроме того, индексы используются для
+        обеспечения ограничений целостности — <database>PRIMARY KEY</database>, <database>FOREIGN
+            KEY</database>, <database>UNIQUE</database>.</para>
+    <para>В данном разделе описываются вопросы создания индексов, перевода их в активное/неактивное
+        состояние, удаление индексов и сбор статистики (пересчёт селективности) для индексов.</para>
+    <section xml:id="fblangref-ddl-index-create">
+        <info>
+            <title>CREATE INDEX</title>
+            <keywordset>
+                <keyword>CREATE INDEX</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE INDEX</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание индекса для таблицы.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting> 
+CREATE [UNIQUE] [ASC[ENDING] | DESC[ENDING]] 
+INDEX <replaceable>indexname</replaceable> ON <replaceable>tablename</replaceable> 
+{(<replaceable>col</replaceable> [, <replaceable>col</replaceable> …]) | COMPUTED BY (<replaceable>&lt;expression&gt;</replaceable>)};                   
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора CREATE INDEX</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>indexname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя индекса. Может содержать до 63 символов.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>tablename</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы, для которой строится индекс.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>col</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Столбец таблицы. В качестве столбцов не могут быть
+                                    использованы поля типа BLOB, ARRAY и вычисляемые поля.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>expression</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Выражение, содержащее столбцы таблицы.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>CREATE INDEX</database> создаёт индекс для таблицы, который может
+            быть использован для ускорения поиска, сортировки и/или группирования. Кроме того,
+            индекс может быть использован при определении ограничений, таких как первичный ключ,
+            внешний ключ или ограничениях уникальности. Индекс может быть построен на столбцах
+            любого типа кроме <database class="datatype">BLOB</database> и массивов. Имя индекса
+            должно быть уникальным среди всех имён индексов.</para>
+        <note>
+            <title>Индексы в ключах</title>
+            <para>При добавлении ограничений первичного ключа, внешнего ключа или ограничения
+                уникальности будет неявно создан одноименный индекс. Так, например, при выполнении
+                следующего оператора будет неявно создан индекс PK_COUNTRY. </para>
+            <para>
+                <programlisting language="sql">
+ALTER TABLE COUNTRY 
+ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);                    
+                </programlisting>
+            </para>
+        </note>
+        <section xml:id="fblangref-ddl-index-unique">
+            <title>Уникальные индексы</title>
+            <indexterm>
+                <primary>CREATE INDEX</primary>
+                <secondary>UNIQUE</secondary>
+            </indexterm>
+            <para>Если при создании индекса указано ключевое слово <database>UNIQUE</database>, то
+                индекс гарантирует уникальность значений ключей. Такой индекс называется уникальным.
+                Уникальный индекс не является ограничением уникальности. </para>
+            <para>Уникальные индексы не могут содержать дубликаты значений ключей (или дубликаты
+                комбинаций значений ключей в случае составного, многоколоночного или
+                многосегментного индекса). Дубликаты значения NULL допускаются в соответствии со
+                стандартом SQL-99 (в том числе и в многосегментном индексе).</para>
+        </section>
+        <section xml:id="fblangref-ddl-index-direction">
+            <title>Направление индекса</title>
+            <indexterm>
+                <primary>CREATE INDEX</primary>
+                <secondary>ASC[ENDING]</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE INDEX</primary>
+                <secondary>DESC[ENDING]</secondary>
+            </indexterm>
+            <para>Все индексы в Firebird являются однонаправленными. Индекс может быть построен в
+                восходящем и нисходящем порядке. Ключевые слова ASC[ENDING] (сокращённо ASC) и
+                DESC[ENDING] используются для указания направленности индекса. По умолчанию
+                создаётся восходящий ASC[ENDING] индекс. Допускается одновременное определение
+                восходящего и нисходящего индекса на одном и том же столбце или наборе
+                ключей.</para>
+            <tip>
+                <para>Убывающий (DESC[ENDING]) индекс может быть полезен при поиске наивысших
+                    значений (максимум, последнее и т.д.)</para>
+            </tip>
+        </section>
+        <section xml:id="fblangref-ddl-index-computed">
+            <title>Вычисляемые индексы или индексы по выражению</title>
+            <indexterm>
+                <primary>CREATE INDEX</primary>
+                <secondary>COMPUTED BY</secondary>
+            </indexterm>
+            <para>При создании индекса вместо одного или нескольких столбцов вы также можете указать
+                одно выражение, используя предложение COMPUTED BY. Такой индекс называется
+                вычисляемым или индексом по выражению. Вычисляемые индексы используются в запросах,
+                в которых условие в предложениях WHERE, ORDER BY или GROUP BY в точности совпадает с
+                выражением в определении индекса. Выражение в вычисляемом индексе может использовать
+                несколько столбцов таблицы. </para>
+        </section>
+        <section xml:id="fblangref-ddl-index-keylimits">
+            <title>Ограничения на индексы</title>
+            <para>Максимальная длина ключа индекса ограничена 1/4 размера страницы. </para>
+            <section xml:id="fblangref-ddl-index-keylimits-char">
+                <title>Ограничения на длину индексируемой строки</title>
+                <para>Максимальная длина индексируемой строки на 9 байтов меньше, чем максимальная
+                    длина ключа. Максимальная длина индексируемой строки зависит от размера страницы
+                    и набора символов. </para>
+                <para>
+                    <table frame="all">
+                        <title>Длина индексируемой строки и набор символов</title>
+                        <tgroup cols="6">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*" align="center"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.0*" align="center"/>
+                            <colspec colname="c3" colnum="3" colwidth="1.0*" align="center"/>
+                            <colspec colname="c4" colnum="4" colwidth="1.0*" align="center"/>
+                            <colspec colname="c5" colnum="5" colwidth="1.0*" align="center"/>
+                            <colspec colname="c6" colnum="6" colwidth="1.0*" align="center"/>
+                            <thead>
+                                <row>
+                                    <entry morerows="1">Размер страницы</entry>
+                                    <entry namest="c2" nameend="c6">Максимальная длина индексируемой
+                                        строки для набора символов, байт/символ </entry>
+                                </row>
+                                <row>
+                                    <entry>1</entry>
+                                    <entry>2</entry>
+                                    <entry>3</entry>
+                                    <entry>4</entry>
+                                    <entry>6</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry> 4096 </entry>
+                                    <entry> 1015 </entry>
+                                    <entry> 507 </entry>
+                                    <entry> 338 </entry>
+                                    <entry> 253 </entry>
+                                    <entry> 169 </entry>
+                                </row>
+                                <row>
+                                    <entry> 8192 </entry>
+                                    <entry> 2039 </entry>
+                                    <entry> 1019 </entry>
+                                    <entry> 679 </entry>
+                                    <entry> 509 </entry>
+                                    <entry> 339 </entry>
+                                </row>
+                                <row>
+                                    <entry> 16384 </entry>
+                                    <entry> 4087 </entry>
+                                    <entry> 2043 </entry>
+                                    <entry> 1362 </entry>
+                                    <entry> 1021 </entry>
+                                    <entry> 681 </entry>
+                                </row>
+                                <row>
+                                    <entry> 32768 </entry>
+                                    <entry> 8183 </entry>
+                                    <entry> 4091 </entry>
+                                    <entry> 2727 </entry>
+                                    <entry> 2045 </entry>
+                                    <entry> 1363 </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+            </section>
+        </section>
+        <section xml:id="fblangref-ddl-index-limitpertable">
+            <title>Максимальное количество индексов на таблицу</title>
+            <para>Для каждой таблицы максимально возможное количество индексов ограничено и зависит
+                от размера страницы и количества столбцов в индексе. </para>
+            <para>
+                <table frame="all">
+                    <title>Число индексов и количество столбцов</title>
+                    <tgroup cols="4">
+                        <colspec colname="c1" colnum="1" colwidth="1.0*" align="center"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.0*" align="center"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.0*" align="center"/>
+                        <colspec colname="c4" colnum="4" colwidth="1.0*" align="center"/>
+                        <thead>
+                            <row>
+                                <entry morerows="1"> Размер страницы </entry>
+                                <entry namest="c2" nameend="c4"> Число индексов в зависимости от
+                                    количества столбцов в индексе </entry>
+                            </row>
+                            <row>
+                                <entry> 1 </entry>
+                                <entry> 2 </entry>
+                                <entry> 3 </entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry> 4096 </entry>
+                                <entry> 203 </entry>
+                                <entry> 145 </entry>
+                                <entry> 113 </entry>
+                            </row>
+                            <row>
+                                <entry> 8192 </entry>
+                                <entry> 408 </entry>
+                                <entry> 291 </entry>
+                                <entry> 227 </entry>
+                            </row>
+                            <row>
+                                <entry> 16384 </entry>
+                                <entry> 818 </entry>
+                                <entry> 584 </entry>
+                                <entry> 454 </entry>
+                            </row>
+                            <row>
+                                <entry>32768</entry>
+                                <entry>1637</entry>
+                                <entry>1169</entry>
+                                <entry>909</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+        </section>
+        <section xml:id="fblangref-ddl-index-create-who">
+            <title>Кто может создать индекс?</title>
+
+            <para>Выполнить оператор <database>CREATE INDEX</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы, для которой создаётся индекс; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY TABLE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-index-create-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание индекса</title>
+                <para>
+                    <programlisting language="sql">
+CREATE INDEX IDX_UPDATER ON SALARY_HISTORY (UPDATER_ID);                    
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание индекса с сортировкой ключей по убыванию</title>
+                <para>
+                    <programlisting language="sql">
+CREATE DESCENDING INDEX IDX_CHANGE 
+ON SALARY_HISTORY (CHANGE_DATE);                  
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание многосегментного индекса</title>
+                <para>
+                    <programlisting language="sql">
+CREATE INDEX IDX_SALESTAT ON SALES (ORDER_STATUS, PAID);                   
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание индекса, не допускающего дубликаты значений</title>
+                <para>
+                    <programlisting language="sql">
+CREATE UNIQUE INDEX UNQ_COUNTRY_NAME ON COUNTRY (NAME);                   
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание вычисляемого индекса</title>
+                <para>
+                    <programlisting language="sql">
+CREATE INDEX IDX_NAME_UPPER ON PERSONS 
+COMPUTED BY (UPPER (NAME));                  
+                </programlisting>
+                </para>
+                <para>Такой индекс может быть использован для регистронезависимого поиска. </para>
+                <para>
+                    <programlisting language="sql">
+SELECT * 
+FROM PERSONS 
+WHERE UPPER(NAME) STARTING WITH UPPER('Iv');                
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-index-alter">ALTER INDEX</link>, <link
+                        linkend="fblangref-ddl-index-drop">DROP INDEX</link>. </para>
+
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-index-alter">
+        <info>
+            <title>ALTER INDEX</title>
+            <keywordset>
+                <keyword>ALTER INDEX</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER INDEX</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Перевод индекса в активное/неактивное состояние, перестройка индекса.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting> 
+ALTER INDEX <replaceable>indexname</replaceable> {ACTIVE | INACTIVE};                 
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора ALTER INDEX</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>indexname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя индекса.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>ALTER INDEX</database> переводит индекс в активное/неактивное
+            состояние. Возможность изменения структуры и порядка сортировки ключей этот оператор не
+            предусматривает. </para>
+
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>При выборе опции <database>INACTIVE</database>, индекс переводится из
+                        активного в неактивное состояние. Перевод индекса в неактивное состояние по
+                        своему действию похоже на команду <database>DROP INDEX</database> за
+                        исключением того, что определение индекса сохраняется в базе данных.
+                        Невозможно перевести в неактивное состояние индекс участвующий в
+                        ограничении.</para>
+                    <para>Активный индекс может быть отключен, только если отсутствуют запросы
+                        использующие этот индекс, иначе будет возвращена ошибка <quote>object in
+                            use</quote>.</para>
+                    <para>Активация неактивного индекс также безопасна. Тем не менее, если есть
+                        активные транзакции, модифицирующие таблицу, то транзакция, содержащая
+                        оператор <database>ALTER INDEX</database> потерпит неудачу, если она имеет
+                        атрибут NO WAIT. Если транзакция находится в режиме WAIT, то она будет ждать
+                        завершения параллельных транзакций.</para>
+                    <para>С другой стороны, если наш оператор <database>ALTER INDEX</database>
+                        начинает перестраивать индекс на <database>COMMIT</database>, то другие
+                        транзакции, изменяющие эту таблицу, потерпят неудачу или будут ожидать в
+                        соответствии с их WAIT/NO WAIT атрибутами. Та же самая ситуация будет и при
+                        выполнении <database>CREATE INDEX</database>.</para>
+                    <tip>
+                        <para>Перевод индекса в неактивное состояние может быть полезен при массовой
+                            вставке, модификации или удалении записей из таблицы, для которой этот
+                            индекс построен. </para>
+                    </tip>
+                </listitem>
+                <listitem>
+                    <para>При выборе альтернативы <database>ACTIVE</database> индекс переводится из
+                        неактивного состояния в активное. При переводе индекса из неактивного
+                        состояния в активное индекс перестраивается.</para>
+                    <tip>
+                        <para>Даже если индекс находится в активном состоянии оператор
+                                <database>ALTER INDEX ... ACTIVE</database> всё равно перестраивает
+                            индекс. Таким образом, эту команду можно использовать как часть
+                            обслуживания БД для перестройки индексов, автоматически созданных для
+                            ограничений <database>PRIMARY KEY</database>, <database>FOREIGN
+                                KEY</database>, <database>UNIQUE</database>, для которых выполнение
+                            оператора <database>ALTER INDEX ... INACTIVE</database> невозможно. </para>
+                    </tip>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <section xml:id="fblangref-ddl-index-alter-active-constr-use">
+            <title>Использование ALTER INDEX для индексов ограничений</title>
+
+            <para>Принудительный перевод индексов созданных для ограничений <database>PRIMARY
+                    KEY</database>, <database>FOREIGN KEY</database> и <database>UNIQUE</database>
+                не допускается. Тем не менее выполнение оператора <database>ALTER INDEX ...
+                    INACTIVE</database> работает так же хорошо для индексов ограничений, как и
+                другие инструменты для других индексов.</para>
+        </section>
+        <section xml:id="fblangref-ddl-index-alter-who">
+            <title>Кто может выполнить ALTER INDEX?</title>
+
+            <para>Выполнить оператор <database>ALTER INDEX</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы, для которой построен индекс; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY TABLE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-index-alter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Перевод индекса в неактивное состояние</title>
+                <para>
+                    <programlisting language="sql">
+ALTER INDEX IDX_UPDATER INACTIVE;                   
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Возврат индекса в активное состояние</title>
+                <para>
+                    <programlisting language="sql">
+ALTER INDEX IDX_UPDATER ACTIVE;                 
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-index-create">CREATE INDEX</link>, <link
+                        linkend="fblangref-ddl-index-drop">DROP INDEX</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-index-drop">
+        <info>
+            <title>DROP INDEX</title>
+            <keywordset>
+                <keyword>DROP INDEX</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DROP INDEX</primary>
+        </indexterm>
+
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление индекса из базы данных.</para>
+        </formalpara>
+
+        <formalpara>
+            <info>
+                <title>Доступно в:</title>
+            </info>
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting> 
+DROP INDEX <replaceable>indexname</replaceable>                 
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DROP INDEX</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>indexname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя индекса.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>DROP INDEX</database> удаляет существующий индекс из базы данных.
+            При наличии зависимостей для существующего индекса (если он используется в ограничении)
+            удаление не будет выполнено.</para>
+        <section xml:id="fblangref-ddl-index-drop-who">
+            <title>Кто может удалить индекс?</title>
+
+            <para>Выполнить оператор <database>DROP INDEX</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы, для которой построен индекс; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY TABLE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-index-drop-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Удаление индекса</title>
+                <para>
+                    <programlisting language="sql">
+DROP INDEX IDX_UPDATER;                  
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-index-create">CREATE INDEX</link>, <link
+                        linkend="fblangref-ddl-index-alter">ALTER INDEX</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-index-stat">
+        <info>
+            <title>SET STATISTICS</title>
+            <keywordset>
+                <keyword>SET STATISTICS</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>SET STATISTICS</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Пересчёт селективности индекса.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting> 
+SET STATISTICS INDEX <replaceable>indexname</replaceable>                 
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора SET STATISTICS</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>indexname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя индекса.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>SET STATISTICS</database> пересчитывает значение селективности для
+            указанного индекса.</para>
+        <section xml:id="fblangref-ddl-index-selectivity">
+            <title>Селективность индекса</title>
+            <para>Селективность (избирательность) индекса — это оценочное количество строк, которые
+                могут быть выбраны при поиске по каждому значению индекса. Уникальный индекс имеет
+                максимальную селективность, поскольку при его использовании невозможно выбрать более
+                одной строки для каждого значения ключа индекса. Актуальность селективности индекса
+                важна для выбора наиболее оптимального плана выполнения запросов
+                оптимизатором.</para>
+            <para>Пересчёт селективности индекса может потребоваться после массовой вставки,
+                модификации или удалении большого количества записей из таблицы, поскольку она
+                становится неактуальной.</para>
+            <note>
+                <para>Отметим, что в Firebird статистика индексов автоматически не пересчитывается
+                    ни после массовых изменений данных, ни при каких либо других условиях. При
+                    создании (CREATE) или его активации (<database>ALTER INDEX ACTIVE</database>)
+                    статистика индекса полностью соответствует его содержимому. </para>
+            </note>
+            <para>Пересчёт селективности индекса может быть выполнен под высоко параллельной
+                нагрузкой без риска его повреждения. Тем не менее следует помнить, что при высоком
+                параллелизме рассчитанная статистика может устареть, как только закончится
+                выполнение оператора <database>SET STATISTICS</database>.</para>
+        </section>
+
+        <section xml:id="fblangref-ddl-index-stat-who">
+            <title>Кто может обновить статистику?</title>
+
+            <para>Выполнить оператор <database>SET STATISTICS</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы, для которой построен индекс; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY TABLE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+
+        <section xml:id="fblangref-ddl-index-stat-examples">
+            <title>Примеры</title>
+            <example>
+                <title>пересчёт селективности индекса</title>
+                <para>
+                    <programlisting language="sql">
+SET STATISTICS INDEX IDX_UPDATER;                  
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-index-create">CREATE INDEX</link>, <link
+                        linkend="fblangref-ddl-index-alter">ALTER INDEX</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</section>

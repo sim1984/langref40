@@ -1,0 +1,39 @@
+[[fblangref-ddl]]
+= Операторы определения данных (DDL)
+
+Data Definition Language (DDL) — язык описания данных. С помощью этого подмножества языка
+создаются, модифицируются и удаляются объекты базы данных (т.е. Метаданные).
+
+include::ddl/_fblangref-ddl-database.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-shadow.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-domain.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-table.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-index.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-view.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-trigger.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-procedure.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-function.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-package.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-package-body.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-extfunc.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-filter.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-sequence.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-collation.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-charset.adoc[leveloffset=+1]
+
+include::ddl/_fblangref-ddl-comment.adoc[leveloffset=+1]

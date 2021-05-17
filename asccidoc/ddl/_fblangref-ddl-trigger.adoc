@@ -1,0 +1,1139 @@
+[[fblangref-ddl-trigger]]
+= TRIGGER
+
+Триггер (trigger) -- это хранимая процедура особого типа, которая не вызывается непосредственно, а исполнение которой обусловлено наступлением одного из событий, относящегося к одной конкретной таблице (представлению), или наступлению одного из событий базы данных.
+
+Триггер -- это особый тип хранимой процедуры, которая не вызывается напрямую, а выполняется, когда в связанной таблице или представлении происходит указанное событие. DML триггер специфичен для одного и только одного отношения (таблица или представление) и одной фазы во времени события (ДО или ПОСЛЕ).
+Его можно задать для выполнения для одного конкретного события (вставка, обновление, удаление) или для некоторой комбинации двух или трех из этих событий.
+
+Помимо DML триггеров существуют также:
+* Триггеры на события базы данных, которые происходят при начале или завершении соединения, или транзакции.
+* DDL триггеры, которые срабатывают до или после выполнения одного или нескольких типов DDL операторов.
+
+[[fblangref-ddl-trigger-create]]
+== CREATE TRIGGER
+
+.Назначение
+Создание нового триггера.
+
+.Доступно в
+DSQL, ESQL
+
+[[fblangref-ddl-trgr-create-syntax]]
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE TRIGGER _trigname_ {
+    <relation_trigger_legacy>
+  | <relation_trigger_sql2003>
+  | <database_trigger> 
+  | <ddl_trigger> }                  
+<routine body> 
+
+<relation_trigger_legacy> ::= 
+  FOR {_tablename_ | _viewname_}
+  [ACTIVE | INACTIVE]
+  {BEFORE | AFTER} <mutation_list>
+  [POSITION _number_]
+
+<relation_trigger_sql2003> ::= 
+  [ACTIVE | INACTIVE]
+  {BEFORE | AFTER} <mutation_list>
+  ON {_tablename_ | _viewname_}
+  [POSITION _number_]
+
+<database_trigger> ::= 
+  [ACTIVE | INACTIVE] 
+  ON _db_event_
+  [POSITION _number_]
+                    
+<ddl_trigger> ::=  
+  [ACTIVE | INACTIVE]
+  {BEFORE | AFTER} <ddl_events>
+  [POSITION _number_]
+
+<mutation_list> ::= <mutation> [OR <mutation> [OR <mutation>]]
+
+<mutation> ::=  INSERT | UPDATE | DELETE 
+
+<db_event> ::=  
+    CONNECT | DISCONNECT
+  | TRANSACTION {START | COMMIT | ROLLBACK}
+
+
+<ddl_events> ::= {
+    ANY DDL STATEMENT
+  | <ddl_event_item> [{OR <ddl_event_item>} ...]
+}
+
+<ddl_event_item> ::=
+    {CREATE | ALTER | DROP} TABLE
+  | {CREATE | ALTER | DROP} PROCEDURE
+  | {CREATE | ALTER | DROP} FUNCTION
+  | {CREATE | ALTER | DROP} TRIGGER
+  | {CREATE | ALTER | DROP} EXCEPTION
+  | {CREATE | ALTER | DROP} VIEW
+  | {CREATE | ALTER | DROP} DOMAIN
+  | {CREATE | ALTER | DROP} ROLE
+  | {CREATE | ALTER | DROP} SEQUENCE
+  | {CREATE | ALTER | DROP} USER
+  | {CREATE | ALTER | DROP} INDEX
+  | {CREATE | DROP} COLLATION
+  | ALTER CHARACTER SET
+  | {CREATE | ALTER | DROP} PACKAGE
+  | {CREATE | DROP} PACKAGE BODY
+  | {CREATE | ALTER | DROP} MAPPING
+
+<routine body> ::=
+    <SQL routine spec>
+  | <external body reference>
+                    
+<SQL routine spec> ::=
+  [<rights clause>] <SQL routine body>                    
+
+
+<rights clause> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
+
+<SQL routine body> ::=  
+  AS
+    [<declarations>]
+  BEGIN
+    [<PSQL_statements>]
+  END                      
+
+<declarations> ::= <declare_item> [<declare_item> ...]
+
+<declare_item> ::=
+    <declare_var>; 
+  | <declare_cursor>; 
+  | <subroutine declaration>;
+  | <subroutine implimentation>  
+
+<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
+
+<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl> 
+
+<external body reference> ::=
+  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]
+
+<extname> ::= '<module name>!<routine name>[!<misc info>]'
+----
+
+[[fblangref-ddl-trgr-createtrigger]]
+.Параметры оператора CREATE TRIGGER
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|trigname
+|Имя триггера.
+Может содержать до 63 символов.
+
+|relation_trigger_legacy
+|Объявление табличного триггера (унаследованное).
+
+|relation_trigger_sql2003
+|Объявление табличного триггера согласно стандарту SQL-2003.
+
+|database_trigger
+|Объявление триггера базы данных.
+
+|ddl_trigger
+|Объявление DDL триггера.
+
+|tablename
+|Имя таблицы.
+
+|viewname
+|Имя представления.
+
+|mutation_list
+|Список событий таблицы.
+
+|mutation
+|Одно из событий таблицы.
+
+|db_event
+|Событие соединения или транзакции.
+
+|ddl_events
+|Список событий изменения метаданных.
+
+|ddl_event_item
+|Одно из событий изменения метаданных.
+
+|number
+|Порядок срабатывания триггера.
+От 0 до 32767.
+
+|declarations
+|Секция объявления локальных переменных, подпрограмм и именованных курсоров.
+
+|PSQL_statments
+|Операторы языка PSQL.
+
+|extbody
+|Тело внешнего триггера. Строковый литерал который может
+использоваться UDR для различных целей.
+
+|module name
+|Имя внешнего модуля.
+
+|routine name
+|Имя точки входа внутри модуля.
+
+|misc info
+|Различная информация используемая внешним триггером по своему
+усмотрению.
+|===
+
+Оператор `CREATE TRIGGER` создаёт новый триггер.
+Триггер может быть создан для события (или событий) отношения (таблицы или представления), для события (событий) изменения метаданных или для одного из событий базы данных.
+
+Оператор `CREATE TRIGGER` как и его родственники `ALTER TRIGGER`, `CREATE OR ALTER TRIGGER` и `RECREATE TRIGGER` являются составными операторами, содержащими заголовок и тело.
+
+Заголовок определяет имя триггера, а также содержит имя отношения (для табличных триггеров), фазу триггера, событие (или события) на которые срабатывает триггер и позицию.
+Имя триггера должно быть уникальным среди имён других триггеров.
+
+[[fblangref-ddl-trigger-create-sql-security]]
+=== Привилегии выполнения
+
+Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется триггер.
+Если выбрана опция `INVOKER`, то триггер выполняется с привилегиями вызывающего пользователя.
+Если выбрана опция `DEFINER`, то триггер выполняется с привилегиями определяющего пользователя (владельца). Эти привилегии будут дополнены привилегиями выданные самому триггеру с помощью оператора `GRANT`.
+По умолчанию триггер наследует привилегии выполнения указанные для таблицы.
+Триггера на события базы данных по умолчанию выполняются с привилегиями определяющего пользователя (владельца).
+
+[[fblangref-ddl-trigger-create-body]]
+=== Тело триггера
+
+Тело триггера состоит из необязательных объявлений локальных переменных, подпрограмм и именованных курсоров, и одного или нескольких операторов или блоков операторов, заключённых во внешнем блоке, который начинается с ключевого слова BEGIN и заканчивается ключевым словом END.
+Объявления и внутренние операторы завершаются точкой с запятой (;).
+
+[[fblangref-ddl-trigger-term]]
+=== Терминатор оператора
+
+Некоторые редакторы SQL-операторов -- в частности утилита [app]``isql``, которая идёт в комплекте с Firebird, и возможно некоторые сторонние редакторы -- используют внутреннее соглашение, которое требует, чтобы все операторы были завершены с точкой с запятой.
+
+Это создает конфликт с синтаксисом PSQL при кодировании в этих средах.
+Если вы не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в разделе,
+озаглавленном <<fblangref-psql-setterm,Изменение терминатора в [app]``isql``>>.
+
+[[fblangref-ddl-trigger-create-table]]
+=== DML триггеры (на таблицу или представление)
+
+DML триггеры выполняются на уровне строки (записи) каждый раз, когда изменяется образ строки.
+Они могут быть определены и для таблиц и представлений.
+
+[[fblangref-ddl-trigger-table-forms]]
+==== Форма объявления
+
+Объявление DML триггера существует в двух вариантах: 
+
+* унаследованная форма;
+* SQL-2003 совместимая (рекомендуемая).
+
+В настоящее время рекомендуется использовать SQL-2003 совместимую форму. 
+
+Для DML триггера обязательно указывается фаза и одно или несколько событий.
+
+[[fblangref-ddl-trigger-state]]
+==== Состояние триггера
+
+Триггер может быть в одном из двух состояний активном (`ACTIVE`) или неактивном (`INACTIVE`). Запускаются только активные триггеры.
+По умолчанию триггеры создаются в активном состоянии.
+
+[[fblangref-ddl-trigger-table-phase]]
+==== Фаза
+
+Триггер может выполняться в одной из двух фаз, связанных с запрошенными изменениями состояния данных.
+Ключевое слово `BEFORE` означает, что триггер вызывается до наступления соответствующего события (событий, если их указано несколько), `AFTER` -- после наступления события (событий).
+
+[[fblangref-ddl-trigger-table-events]]
+==== События
+
+Для DML триггера может быть указано одно из событий таблицы (представления) -- `INSERT` (добавление), `UPDATE` (изменение), `DELETE` (удаление) -- или несколько событий, разделённых ключевым словом `OR`, при которых вызывается триггер.
+При создании триггера каждое событие (`INSERT`, `UPDATE` или `DELETE`) не должно упоминаться более одного раза.
+
+Контекстные переменные <<fblangref-contextvars-inserting,INSERTING>>, <<fblangref-contextvars-updating,UPDATING>> и <<fblangref-contextvars-deleting,DELETING>> логического типа могут быть использованы в теле триггера для определения события, которое вызвало срабатывание триггера.
+
+[[fblangref-ddl-trigger-position]]
+==== Порядок срабатывания
+
+Ключевое слово `POSITION` позволяет задать порядок, в котором будут выполняться триггеры с одинаковой фазой и событием (или группы событий). По умолчанию позиция равна 0.
+Если позиции для триггеров не заданы или несколько триггеров имеют одно и то же значение позиции, то такие триггеры будут выполняться в алфавитном порядке их имен.
+
+[[fblangref-ddl-trigger-table-body]]
+==== Тело триггера
+
+После ключевого слова `AS` следует тело триггера.
+
+[[fblangref-ddl-trigger-declare]]
+===== Объявление локальных переменных, курсоров и подпрограмм
+
+В необязательной секции [replaceable]``declarations`` описаны локальные переменные триггера, именованные курсоры и подпрограммы (подпроцедуры и подфункции). Подробности вы можете посмотреть в главе "`Процедурный язык PSQL`" в разделах
+<<fblangref-psql-statements-declare-var,DECLARE VARIABLE>> и
+<<fblangref-psql-statements-declare-cursor,DECLARE CURSOR>>,
+<<fblangref-psql-statements-declare-procedure,DECLARE PROCEDURE>>,
+<<fblangref-psql-statements-declare-function,DECLARE FUNCTION>>.
+
+После необязательной секции деклараций обязательно следует составной оператор.
+Составной оператор состоит из одного или нескольких PSQL операторов, заключенных между ключевыми словами BEGIN и END.
+Составной оператор может содержать один или несколько других составных операторов.
+Вложенность ограничена 512 уровнями.
+Любой из `BEGIN ... END` блоков может быть пустым, в том числе и главный блок.
+
+[[fblangref-ddl-trigger-external]]
+==== Внешние триггеры
+
+Триггер может быть расположена во внешнем модуле.
+В этом случае вместо тела триггера указывается место его расположения во внешнем модуле с помощью предложения `EXTERNAL NAME`.
+Аргументом этого предложения является строка, в которой через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и определённая пользователем информация.
+В предложении `ENGINE` указывается имя движка для обработки подключения внешних модулей.
+В Firebird для работы с внешними модулями используется движок UDR.
+После ключевого слова AS может быть указан строковый литерал -- "тело" внешнего триггера, оно может быть использовано внешним модулем для различных целей.
+
+[[fblangref-ddl-trigger-table-create-who]]
+==== Кто может создать DML триггер?
+
+DML триггеры могут создать: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец таблицы (представления); 
+* Пользователи с привилегией `ALTER ANY {TABLE | VIEW}`.
+
+
+[[fblangref-ddl-trigger-table-creat-_examples]]
+==== Примеры
+
+.Создание DML триггера в Legacy стиле
+[example]
+====
+[source,sql]
+----
+CREATE TRIGGER SET_CUST_NO FOR CUSTOMER
+ACTIVE BEFORE INSERT POSITION 0
+AS
+BEGIN
+  IF (NEW.CUST_NO IS NULL) THEN
+    NEW.CUST_NO = GEN_ID(CUST_NO_GEN, 1);
+END
+----
+====
+
+.Создание DML триггера согласно стандарту SQL-2003
+[example]
+====
+[source,sql]
+----
+CREATE TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END
+----
+====
+
+.Создание DML триггера выполняющегося с правами определяющего пользователя
+[example]
+====
+[source,sql]
+----
+CREATE TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+SQL SECURITY DEFINER
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END
+----
+====
+
+.Создание DML триггера на несколько событий
+[example]
+====
+[source,sql]
+----
+CREATE TRIGGER TR_CUST_LOG
+ACTIVE AFTER INSERT OR UPDATE OR DELETE 
+ON CUSTOMER POSITION 10
+AS
+BEGIN
+  INSERT INTO CHANGE_LOG (LOG_ID,
+                          ID_TABLE,
+                          TABLE_NAME,
+                          MUTATION)
+  VALUES (NEXT VALUE FOR SEQ_CHANGE_LOG,
+          OLD.CUST_NO,
+          'CUSTOMER',
+          CASE
+            WHEN INSERTING THEN 'INSERT'
+            WHEN UPDATING  THEN 'UPDATE'
+            WHEN DELETING  THEN 'DELETE'
+          END);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-trigger-alter,ALTER TRIGGER>>, <<fblangref-ddl-trigger-drop,DROP TRIGGER>>.
+
+[[fblangref-ddl-trigger-create-db]]
+=== Триггеры на событие базы данных
+
+Триггер может быть создан для одного из событий базы данных: 
+
+* `CONNECT` (соединение с базой данных или после сброса сеанса);
+* `DISCONNECT` (отсоединение от базы данных или перед сбросом сеанса);
+* `TRANSACTION START` (старт транзакции);
+* `TRANSACTION COMMIT` (подтверждение транзакции);
+* `TRANSACTION ROLLBACK` (откат транзакции).
+
+Контекстная переменная <<fblangref-contextvars-resetting,RESETTING>> может использоваться в триггерах на события `CONNECT` и `DISCONNECT` для того, чтобы отличить сброс сеанса от подключения/отключения от базы данных.
+
+Указать для триггера несколько событий базы данных невозможно.
+
+[[fblangref-ddl-trigger-db-exception]]
+==== Выполнение триггеров на событие базы данных и обработка исключений
+
+Триггеры на события `CONNECT` и `DISCONNECT` выполняются в специально созданной для этого транзакции.
+Если при обработке триггера не было вызвано исключение, то транзакция подтверждается.
+Не перехваченные исключения откатят транзакцию и: 
+
+* в случае триггера на событие `CONNECT` соединение разрывается, а исключения возвращается клиенту;
+* для триггера на событие `DISCONNECT` соединение разрывается, как это и предусмотрено, но исключения не возвращается клиенту.
+
+Триггеры на события `CONNECT` и `DISCONNECT` срабатывают также при выполнении оператора сброса сессионного окружения.
+Особенности обработки ошибок в триггерах на события `CONNECT` и `DISCONNECT` смотри в секции <<fblangref-session-resetsession,ALTER SESSION RESET>>.
+
+Триггеры на события транзакций срабатывают при старте транзакции, её подтверждении или откате.
+Не перехваченные исключения обрабатываются в зависимости от типа события: 
+
+* для события `TRANSACTION START` исключение возвращается клиенту, а транзакция отменяется;
+* для события `TRANSACTION COMMIT` исключение возвращается клиенту, действия, выполненные триггером, и транзакция отменяются;
+* для события `TRANSACTION ROLLBACK` исключение не возвращается клиенту, а транзакция, как и предусмотрено, отменяется.
+
+
+===== Ловушки
+
+Из вышеизложенного следует, что нет прямого способа узнать, какой триггер (`DISCONNECT` или `ROLLBACK`) вызвал исключение.
+Также ясно, что вы не сможете подключиться к базе данных в случае исключения в триггере на событие `CONNECT`, а также отменяется старт транзакции при исключении в триггере на событие `TRANSACTION START`.
+В обоих случаях база данных эффективно блокируется до тех пор, пока вы не отключите триггеры базы данных и не исправите ошибочный код.
+
+[float]
+[[fblangref-ddl-trigger-db-suppression]]
+====== Отключение триггеров
+
+В некоторые утилиты командной строки Firebird были добавлены новые ключи для отключения триггеров на базу данных:
+
+----
+gbak -nodbtriggers
+isql -nodbtriggers
+nbackup -T
+----
+
+Эти ключи могут использоваться только SYSDBA или владельцем базы данных. 
+
+[[fblangref-ddl-trigger-db-two-phase]]
+==== Двухфазное подтверждение транзакций
+
+В случае двухфазных транзакций триггеры на событие `TRANSACTION START` срабатывают в фазе подготовки (prepare), а не в фазе commit.
+
+[[fblangref-ddl-trigger-db-caveats]]
+==== Предостережения
+
+. Триггеры для событий базы данных `DISCONNECT` и `ROLLBACK` не будут вызваны при отключении клиентов через таблицы мониторинга (`DELETE FROM MON$ATTACHMENTS`).
+. Использование оператора `IN AUTONOMOUS TRANSACTION DO` в триггерах на событие базы данных связанные с транзакциями (`COMMIT`, `ROLLBACK`, `START`) может привести к его зацикливанию.
+
+
+[[fblangref-ddl-trigger-db-create-who]]
+==== Кто может создать триггеры на события базы данных?
+
+Триггеры для событий базы данных могут создать: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец базы данных;
+* Пользователи с привилегией `ALTER DATABASE`.
+
+
+[[fblangref-ddl-trigger-db-examples]]
+==== Примеры
+
+.Создание триггера на событие подключения к БД для логирования события
+[example]
+====
+[source,sql]
+----
+CREATE TRIGGER tr_log_connect
+INACTIVE ON CONNECT POSITION 0
+AS
+BEGIN
+  INSERT INTO LOG_CONNECT (ID,
+                           USERNAME,
+                           ATIME)
+  VALUES (NEXT VALUE FOR SEQ_LOG_CONNECT,
+          CURRENT_USER,
+          CURRENT_TIMESTAMP);
+END
+----
+====
+
+.Создание триггера на событие подключения к БД для контроля доступа
+[example]
+====
+[source,sql]
+----
+CREATE EXCEPTION E_INCORRECT_WORKTIME 'Рабочий день ещё не начался';
+
+CREATE TRIGGER TR_LIMIT_WORKTIME ACTIVE 
+ON CONNECT POSITION 1
+AS
+BEGIN
+  IF ((CURRENT_USER <> 'SYSDBA') AND
+      NOT (CURRENT_TIME BETWEEN time '9:00' AND time '17:00')) THEN
+     EXCEPTION E_INCORRECT_WORKTIME;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-trigger-alter,ALTER TRIGGER>>, <<fblangref-ddl-trigger-drop,DROP TRIGGER>>.
+
+[[fblangref-ddl-trigger-create-ddl]]
+=== Триггеры на события изменения метаданных
+
+Триггеры на события изменения метаданных (DDL триггеры) предназначены для обеспечения ограничений, которые будут распространены на пользователей, которые пытаются создать, изменить или удалить DDL объект.
+Другое их назначение -- ведение журнала изменений метаданных.
+
+Триггеры на события изменения метаданных являются одним из подвидов триггеров на события базы данных.
+
+Особенности: 
+
+. `BEFORE` триггеры запускаются до изменений в системных таблицах. `AFTER` триггеры запускаются после изменений в системных таблицах.
+. Когда оператор DDL запускает триггер, в котором возбуждается исключение (`BEFORE` или `AFTER`, преднамеренно или неумышленно), оператор не будет фиксирован. Т.е. исключения могут использоваться, чтобы гарантировать, что оператор DDL будет отменен, если некоторые условия не будут соблюдены.
+. Действия DDL триггеров выполняются только при фиксации транзакции, в которой работает затронутая DDL команда. Никогда не забывайте о том, что в `AFTER` триггере, возможно сделать только то, что возможно сделать после DDL команды без автоматической фиксации транзакций. Вы не можете, например, создать таблицу в триггере и использовать её там.
+. Для операторов `CREATE OR ALTER ...` триггер срабатывает один раз для события `CREATE` или события `ALTER`, в зависимости от того существовал ли ранее объект. Для операторов `RECREATE` триггер вызывается для события `DROP`, если объект существовал, и после этого для события `CREATE`.
+. Если объект метаданных не существует, то обычно триггеры на события ALTER и DROP не запускаются. Исключения описаны в пункте 6. 
+. Исключением из правила 5 являются `BEFORE {ALTER | DROP} USER` триггеры, которые будут вызваны, даже если имя пользователя не существует. Это вызвано тем, что эти команды выполняются для базы данных безопасности, для которой не делается проверка существования пользователей перед их выполнением. Данное поведение, вероятно, будет отличаться для встроенных пользователей, поэтому не пишите код, который зависит от этого.
+. Если некоторое исключение возбуждено после того как начала выполняться DDL команда и до того как запущен `AFTER` триггер, то `AFTER` триггер не запускается.
+. Для процедур и функций в составе пакетов не запускаются индивидуальные триггеры `{CREATE | ALTER | DROP} {PROCEDURE | FUNCTION}`.
+. Оператор `ALTER DOMAIN _old name_ TO _new name_` устанавливает контекстные переменные `OLD_OBJECT_NAME` и `NEW_OBJECT_NAME` в обоих триггерах `BEFORE` и `AFTER`. Контекстная переменная `OBJECT_NAME` будет содержать старое имя объекта метаданных в триггере `BEFORE`, и новое -- в триггере `AFTER`.
+
+Если в качестве события указано предложение `ANY DDL STATEMENT`, то триггер будет вызван при наступлении любого из DDL событий.
+
+[[fblangref-ddl-trigger-create-ddl-contextvar]]
+==== Пространство имён DDL_TRIGGER
+
+Во время работы DDL триггера доступно пространство имён `DDL_TRIGGER` для использования в функции `RDB$GET_CONTEXT`.
+Его использование также допустимо в хранимых процедурах и функциях, вызванных триггерами DDL.
+
+Контекст `DDL_TRIGGER` работает как стек.
+Перед возбуждением DDL триггера, значения, относящиеся к выполняемой команде, помещаются в этот стек.
+После завершения работы триггера значения выталкиваются.
+Таким образом.
+В случае каскадных DDL операторов, когда каждая пользовательская DDL команда возбуждает DDL триггер, и этот триггер запускает другие DDL команды, с помощью `EXECUTE STATEMENT`, значения переменных в пространстве имён `DDL_TRIGGER` будут соответствовать команде, которая вызвала последний DDL триггер в стеке вызовов.
+
+===== Переменные доступные в пространстве имён DDL_TRIGGER
+
+* `EVENT_TYPE` – тип события (CREATE, ALTER, DROP)
+* `OBJECT_TYPE` – тип объекта (TABLE, VIEW и д.р.)
+* `DDL_EVENT` – имя события ([replaceable]``<ddl event item>``),
++
+где [replaceable]``<ddl event item>`` = `EVENT_TYPE || ' ' || OBJECT_TYPE`
+* `OBJECT_NAME` – имя объекта метаданных
+* `OLD_OBJECT_NAME` – имя объекта метаданных до переименования
+* `NEW_OBJECT_NAME` – имя объекта метаданных после переименования
+* `SQL_TEXT` – текст SQL запроса
+
+[float]
+[[fblangref-ddl-trigger-ddl-suppression]]
+==== Отключение триггеров
+
+В некоторые утилиты командной строки Firebird были добавлены новые ключи для отключения триггеров на базу данных: 
+
+----
+gbak -nodbtriggers
+isql -nodbtriggers
+nbackup -T
+----
+
+Эти ключи могут использоваться только SYSDBA или владельцем базы данных.
+
+[[fblangref-ddl-trigger-create-ddl-who]]
+==== Кто может создать триггеры на события изменения метаданных?
+
+Триггеры на события изменения метаданных могут создать: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец базы данных;
+* Пользователи с привилегией `ALTER DATABASE`.
+
+[[fblangref-ddl-trigger-create-ddl-examples]]
+==== Примеры
+
+.Контроль наименования объектов базы данных с помощью DDL триггера
+[example]
+====
+[source,sql]
+----
+
+CREATE EXCEPTION e_invalid_sp_name 
+  'Неверное имя хранимой процедуры (должно начинаться с SP_)';
+
+SET TERM !;
+
+CREATE TRIGGER trig_ddl_sp BEFORE CREATE PROCEDURE
+AS
+BEGIN
+  IF (rdb$get_context('DDL_TRIGGER', 'OBJECT_NAME') 
+      NOT STARTING 'SP_') THEN
+    EXCEPTION e_invalid_sp_name;
+END!
+
+-- Test
+CREATE PROCEDURE sp_test
+AS
+BEGIN
+END!
+
+CREATE PROCEDURE test
+AS
+BEGIN
+END!
+----
+----
+                        
+-- Statement failed, SQLSTATE = 42000
+-- exception 1
+-- -E_INVALID_SP_NAME
+-- -Неверное имя хранимой процедуры (должно начинаться с SP_)
+-- -At trigger 'TRIG_DDL_SP' line: 4, col: 5
+----
+[source,sql]
+----
+
+SET TERM ;!
+----
+====
+
+.Контроль безопасности DDL операторов
+[example]
+====
+[source,sql]
+----
+
+CREATE EXCEPTION e_access_denied 'Access denied';
+
+SET TERM !;
+
+CREATE TRIGGER trig_ddl BEFORE ANY DDL STATEMENT
+AS
+BEGIN
+  IF (current_user <> 'SUPER_USER') THEN
+    EXCEPTION e_access_denied;
+END!
+
+-- Test
+CREATE PROCEDURE sp_test
+AS
+BEGIN
+END!
+----
+----
+
+-- The last command raises this exception and procedure SP_TEST is not created
+-- Statement failed, SQLSTATE = 42000
+-- exception 1
+-- -E_ACCESS_DENIED
+-- -Access denied
+-- -At trigger 'TRIG_DDL' line: 4, col: 5
+----
+[source,sql]
+----
+
+SET TERM ;!
+----
+
+[NOTE]
+====
+В Firebird существуют привилегии на DDL операторы, поэтому прибегать к написанию DDL триггера нужно только в случае, если того же самого эффекта невозможно достичь стандартными методами.
+====
+
+====
+
+.Использование DDL триггеров для регистрации событий изменения метаданных
+[example]
+====
+
+[source,sql]
+----
+CREATE SEQUENCE ddl_seq;
+
+CREATE TABLE ddl_log (
+  id BIGINT NOT NULL PRIMARY KEY,
+  moment TIMESTAMP NOT NULL,
+  user_name VARCHAR(63) NOT NULL,
+  event_type VARCHAR(25) NOT NULL,
+  object_type VARCHAR(25) NOT NULL,
+  ddl_event VARCHAR(25) NOT NULL,
+  object_name VARCHAR(63) NOT NULL,
+  old_object_name VARCHAR(63),
+  new_object_name VARCHAR(63),
+  sql_text BLOB sub_type text NOT NULL,
+  ok CHAR(1) NOT NULL
+);
+
+SET TERM !;
+
+CREATE TRIGGER trig_ddl_log_before BEFORE ANY DDL STATEMENT
+AS
+  DECLARE id TYPE OF COLUMN ddl_log.id;
+BEGIN
+  -- Мы должны производить изменения в AUTONOMOUS TRANSACTION, 
+  -- таким образом, если произойдёт исключение и команда
+  -- не будет запущена, она всё равно будет зарегистрирована.
+  IN AUTONOMOUS TRANSACTION DO
+  BEGIN
+    INSERT INTO ddl_log (
+      id, moment, user_name, event_type, object_type, ddl_event, 
+      object_name, old_object_name, new_object_name, sql_text, ok)
+    VALUES (NEXT VALUE FOR ddl_seq, 
+            current_timestamp, current_user,
+            rdb$get_context('DDL_TRIGGER', 'EVENT_TYPE'),
+            rdb$get_context('DDL_TRIGGER', 'OBJECT_TYPE'),
+            rdb$get_context('DDL_TRIGGER', 'DDL_EVENT'),
+            rdb$get_context('DDL_TRIGGER', 'OBJECT_NAME'),
+            rdb$get_context('DDL_TRIGGER', 'OLD_OBJECT_NAME'),
+            rdb$get_context('DDL_TRIGGER', 'NEW_OBJECT_NAME'),
+            rdb$get_context('DDL_TRIGGER', 'SQL_TEXT'),
+            'N')
+    RETURNING id INTO id;
+    rdb$set_context('USER_SESSION', 'trig_ddl_log_id', id);
+  END
+END!
+
+-- Примечание: 
+-- созданный выше триггер будет запущен для этой DDL. 
+-- Хорошей идеей является использование –nodbtriggers
+-- при работе с ним
+CREATE TRIGGER trig_ddl_log_after AFTER ANY DDL STATEMENT
+AS
+BEGIN
+  -- Здесь нам требуется автономная транзакция, 
+  -- потому что в оригинальной транзакции
+  -- мы не увидим запись, вставленную в 
+  -- BEFORE триггере в автономной транзакции, 
+  -- если пользовательская транзакции не запущена
+  -- с режимом изоляции  READ COMMITTED.
+  IN AUTONOMOUS TRANSACTION DO
+    UPDATE ddl_log SET ok = 'Y'
+    WHERE 
+      id = rdb$get_context('USER_SESSION', 'trig_ddl_log_id');
+END!
+
+COMMIT!
+
+SET TERM ;!
+
+-- Удаляем запись о создании trig_ddl_log_after.
+DELETE FROM ddl_log;
+COMMIT;
+
+-- Тест
+
+-- Эта команда будет зарегистрирована единожды
+-- (т.к. T1 не существует, RECREATE вызовет событие CREATE) 
+-- с OK = Y.
+RECREATE TABLE t1 (
+  n1 INTEGER,
+  n2 INTEGER
+);
+
+-- Оператор не выполнится, т.к. T1 уже существует, 
+-- таким образом OK будет иметь значение N.
+CREATE TABLE t1 (
+  n1 INTEGER,
+  n2 INTEGER
+);
+
+-- T2 не существует. Это действие не будет зарегистрировано.
+DROP TABLE t2;
+
+-- Это действие будет зарегистрировано дважды
+-- (т.к. T1 существует, действие RECREATE рассматривается 
+-- как DROP и CREATE) с полем OK = Y.
+RECREATE TABLE t1 (
+  n INTEGER
+);
+
+CREATE DOMAIN dom1 AS INTEGER;
+
+ALTER DOMAIN dom1 TYPE BIGINT;
+
+ALTER DOMAIN dom1 TO dom2;
+
+COMMIT;
+
+SELECT 
+  id, 
+  ddl_event, 
+  object_name as name,
+  sql_text, 
+  ok
+FROM ddl_log 
+ORDER BY id;
+----
+
+----
+ ID DDL_EVENT                 OBJECT_NAME                      SQL_TEXT OK
+=== ========================= ======================= ================= ======
+  2 CREATE TABLE              T1                                   80:3 Y
+====================================================
+SQL_TEXT:
+recreate table t1 (
+    n1 integer,
+    n2 integer
+)
+====================================================
+  3 CREATE TABLE              T1                                   80:2 N
+====================================================
+SQL_TEXT:
+create table t1 (
+    n1 integer,
+    n2 integer
+)
+====================================================
+  4 DROP TABLE                T1                                   80:6 Y
+====================================================
+SQL_TEXT:
+recreate table t1 (
+    n integer
+)
+====================================================
+  5 CREATE TABLE              T1                                   80:9 Y
+====================================================
+SQL_TEXT:
+recreate table t1 (
+    n integer
+)
+====================================================
+----
+
+====
+
+.См. также:
+<<fblangref-ddl-trigger-alter,ALTER TRIGGER>>, <<fblangref-ddl-trigger-drop,DROP TRIGGER>>.
+
+[[fblangref-ddl-trigger-alter]]
+== ALTER TRIGGER
+
+.Назначение
+Изменение существующего триггера.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+ALTER TRIGGER _trigname_
+[ACTIVE | INACTIVE]
+[{BEFORE | AFTER} <mutation_list>]
+[POSITION number]
+[SQL SECURITY {DEFINER | INVOKER} | DROP SQL SECURITY]
+[<routine body>] 
+
+<mutation_list> ::= <mutation> [OR <mutation> [OR <mutation>]]
+
+<mutation> ::= { INSERT | UPDATE | DELETE }
+
+Полное описание оператора см. <<fblangref-ddl-trigger-create,CREATE TRIGGER>>.
+----
+
+[[fblangref-ddl-trigger-alter-changes]]
+=== Допустимые изменения
+
+В операторе изменения триггера можно изменить:
+
+* Состояние активности (`ACTIVE | `INACTIVE`);
+* Фазу (`BEFORE | AFTER`);
+* Событие(я);
+* Позицию срабатывания;
+* Привилегии выполнения триггера: вызывающего пользователя (`SQL SECURITY INVOKER`), определяющего пользователя (`SQL SECURITY DEFINER`) или наследует у таблицы (`DROP SQL SECURITY`);
+* Код тела триггера.
+
+Если какой-либо элемент не указан, то он остаётся без изменений.
+
+[NOTE]
+====
+DML триггер невозможно изменить в триггер на событие базы данных и наоборот.
+
+Событие в триггере базы данных невозможно изменить.
+====
+
+.Помните
+[TIP]
+====
+Триггер с ключевым словом `BEFORE` наступает до соответствующего события, с ключевым словом `AFTER` -- после соответствующего события.
+
+Один DML триггер может содержать более одного события (`INSERT`, `UPDATE`, `DELETE`). События должны быть разделены ключевым словом OR.
+Каждое из событий может быть указано не более одного раза.
+
+Ключевое слово `POSITION` позволяет задать дополнительный порядок выполнения с одинаковыми фазой и событием.
+По умолчанию позиция равна 0.
+Если позиция не задана, или если несколько триггеров имеют один и тот же номер позиции, то триггеры будут выполнены в алфавитном порядке их наименований.
+====
+
+[[fblangref-ddl-trigger-alter-who]]
+=== Кто может изменить триггеры?
+
+DML триггеры могут изменить: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец таблицы (представления); 
+* Пользователи с привилегией `ALTER ANY {TABLE | VIEW}`.
+
+Триггеры для событий базы данных и триггеры событий на изменение метаданных могут изменить: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец базы данных;
+* Пользователь, имеющий привилегию `ALTER DATABASE`.
+
+
+[[fblangref-ddl-trigger-alter-examples]]
+=== Примеры
+
+.Отключение (перевод в неактивное состояние) триггера
+[example]
+====
+[source,sql]
+----
+ALTER TRIGGER set_cust_no INACTIVE;
+----
+====
+
+.Изменение позиции триггера
+[example]
+====
+[source,sql]
+----
+ALTER TRIGGER set_cust_no POSITION 14;
+----
+====
+
+.Перевод триггера в неактивное состояние и изменение списка событий
+[example]
+====
+[source,sql]
+----
+ALTER TRIGGER TR_CUST_LOG
+INACTIVE AFTER INSERT OR UPDATE;
+----
+====
+
+.Изменение привилегий выполнения триггера
+[example]
+====
+После выполнения данного оператора триггер будет выполняться с привилегиями определяющего пользователя (владельца).
+
+[source,sql]
+----
+ALTER TRIGGER TR_CUST_LOG
+SQL SECURITY DEFINER;
+----
+====
+
+.Удаление привилегий выполнения триггера
+[example]
+====
+После удаления привилегий выполнения триггера, триггер выполняется с привилегиями унаследованными от таблицы.
+Если у таблицы не определены привилегии выполнения, то триггер будет выполняться с привилегиями вызывающего пользователя.
+
+[source,sql]
+----
+ALTER TRIGGER TR_CUST_LOG
+DROP SQL SECURITY;
+----
+====
+
+.Перевод триггера в активное состояние, изменение его позиции и его тела
+[example]
+====
+[source,sql]
+----
+ALTER TRIGGER tr_log_connect
+ACTIVE POSITION 1
+AS
+BEGIN
+  INSERT INTO LOG_CONNECT (ID,
+                           USERNAME,
+                           ROLENAME,
+                           ATIME)
+  VALUES (NEXT VALUE FOR SEQ_LOG_CONNECT,
+          CURRENT_USER,
+          CURRENT_ROLE,
+          CURRENT_TIMESTAMP);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-trigger-create,CREATE TRIGGER>>,
+<<fblangref-ddl-trigger-createoralter,CREATE OR ALTER TRIGGER>>,
+<<fblangref-ddl-trigger-recreate,RECREATE TRIGGER>>.
+
+[[fblangref-ddl-trigger-createoralter]]
+== CREATE OR ALTER TRIGGER
+
+.Назначение
+Создание нового или изменение существующего триггера.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE OR ALTER TRIGGER trigname {   
+    <relation_trigger_legacy>
+  | <relation_trigger_sql2003>
+  | <database_trigger> 
+  | <ddl_trigger> }
+<routine body>
+
+Полное описание оператора см. <<fblangref-ddl-trigger-create,CREATE TRIGGER>>.
+----
+
+Оператор `CREATE OR ALTER TRIGGER` создаёт новый триггер, если он не существует, или изменяет и перекомпилирует его в противном случае, при этом существующие права и зависимости сохраняются.
+
+[[fblangref-ddl-trigger-createoralter-examples]]
+=== Примеры
+
+.Создание нового или изменение существующего триггера
+[example]
+====
+[source,sql]
+----
+CREATE OR ALTER TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-trigger-create,CREATE TRIGGER>>, <<fblangref-ddl-trigger-alter,ALTER TRIGGER>>, <<fblangref-ddl-trigger-recreate,RECREATE TRIGGER>>.
+
+[[fblangref-ddl-trigger-drop]]
+== DROP TRIGGER
+
+.Назначение
+Удаление существующего триггера.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes"]
+----
+DROP TRIGGER _trigname_
+----
+
+.Параметры оператора DROP TRIGGER
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|trigname``
+|Имя триггера.
+|===
+
+Оператор `DROP TRIGGER` удаляет существующий триггер.
+
+[[_fblangref_ddl_trigger_drop_who]]
+=== Кто может удалить триггеры?
+
+DML триггеры могут удалить: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец таблицы (представления); 
+* Пользователи с привилегией `ALTER ANY {TABLE | VIEW}`.
+
+Триггеры для событий базы данных и триггеры событий на изменение метаданных могут удалить: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец базы данных;
+* Пользователь, имеющий привилегию `ALTER DATABASE`.
+
+
+[[fblangref-ddl-trigger-drop-examples]]
+=== Примеры
+
+.Удаление триггера
+[example]
+====
+[source,sql]
+----
+DROP TRIGGER set_cust_no;
+----
+====
+
+.См. также:
+<<fblangref-ddl-trigger-create,CREATE TRIGGER>>, <<fblangref-ddl-trigger-alter,ALTER TRIGGER>>.
+
+[[fblangref-ddl-trigger-recreate]]
+== RECREATE TRIGGER
+
+.Назначение
+Создание нового или пересоздание существующего триггера.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+RECREATE TRIGGER _trigname_ {
+    <relation_trigger_legacy>
+  | <relation_trigger_sql2003>
+  | <database_trigger> 
+  | <ddl_trigger> }
+<routine body>
+
+Полное описание оператора см. <<fblangref-ddl-trigger-create,CREATE TRIGGER>>.
+----
+
+Оператор `RECREATE TRIGGER` создаёт новый триггер, если триггер с указанным именем не существует, в противном случае оператор `RECREATE TRIGGER` попытается удалить его и создать новый.
+
+[[fblangref-ddl-trigger-recreate-examples]]
+=== Примеры
+
+.Создание или пересоздание триггера
+[example]
+====
+[source,sql]
+----
+RECREATE TRIGGER set_cust_no
+ACTIVE BEFORE INSERT ON customer POSITION 0
+AS
+BEGIN
+  IF (NEW.cust_no IS NULL) THEN
+    NEW.cust_no = GEN_ID(cust_no_gen, 1);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-trigger-create,CREATE TRIGGER>>,
+<<fblangref-ddl-trigger-drop,DROP TRIGGER>>,
+<<fblangref-ddl-trigger-createoralter,CREATE OR ALTER TRIGGER>>.
+

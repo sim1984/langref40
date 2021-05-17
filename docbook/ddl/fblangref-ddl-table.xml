@@ -1,0 +1,2668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru" xml:id="fblangref-ddl-table">
+    <info>
+        <title>TABLE</title>
+        <keywordset>
+            <keyword>TABLE</keyword>
+        </keywordset>
+    </info>
+    <para>Firebird — это реляционная СУБД. Данные в таких базах хранятся в таблицах. Таблица – это
+        плоская двухмерная структура, содержащая произвольное количество строк (row). Строки таблицы
+        часто называют записями (record). Все строки таблицы имеют одинаковую структуру и состоят из
+        столбцов (column). Столбцы таблицы часто называют полями (fields). Таблица должна иметь хотя
+        бы один столбец. С каждым столбцом связан определённый тип данных SQL. </para>
+    <para>В данном разделе рассматриваются вопросы создания, модификации и удаления таблиц базы
+        данных. </para>
+    <section xml:id="fblangref-ddl-table-create">
+        <info>
+            <title>CREATE TABLE</title>
+            <keywordset>
+                <keyword>CREATE TABLE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE TABLE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой таблицы.</para>
+        </formalpara>
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+CREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>
+  [EXTERNAL [FILE] '<replaceable>&lt;filespec&gt;</replaceable>']
+  (<replaceable>&lt;col_def&gt;</replaceable> [, <replaceable>&lt;col_def&gt;</replaceable> | <replaceable>&lt;tconstraint&gt;</replaceable> ...])  
+  [ON COMMIT {DELETE | PRESERVE} ROWS]
+  [SQL SECURITY {DEFINER | INVOKER}] 
+  [{ENABLE | DISABLE} PUBLICATION]  
+
+<replaceable>&lt;col_def&gt;</replaceable> ::= 
+    <replaceable>&lt;regular_col_def&gt;</replaceable> 
+  | <replaceable>&lt;computed_col_def&gt;</replaceable> 
+  | <replaceable>&lt;identity_col_def&gt;</replaceable>        
+                    
+<replaceable>&lt;regular_col_def&gt;</replaceable> ::= 
+  <replaceable>colname</replaceable> { <replaceable>&lt;datatype&gt;</replaceable> | <replaceable>domain_name</replaceable> } 
+  [DEFAULT {<replaceable>&lt;literal&gt;</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}] 
+  [NOT NULL]     
+  [<replaceable>&lt;col_constraint&gt;</replaceable>]
+  [COLLATE <replaceable>collation_name</replaceable>]        
+  
+                    
+<replaceable>&lt;computed_col_def&gt;</replaceable> ::= 
+  <replaceable>colname</replaceable> [<replaceable>&lt;datatype&gt;</replaceable>] 
+  {COMPUTED [BY] | GENERATED ALWAYS AS} (<replaceable>&lt;expression&gt;</replaceable>) 
+                    
+<replaceable>&lt;identity_col_def&gt;</replaceable> ::= 
+  <replaceable>colname</replaceable> [{ <replaceable>&lt;datatype&gt;</replaceable> | <replaceable>domain_name</replaceable> }] 
+  GENERATED {ALWAYS | BY DEFAULT} AS IDENTITY [(<replaceable>&lt;identity column options&gt;</replaceable>)] 
+  [<replaceable>&lt;col_constraint&gt;</replaceable>]  
+                    
+<replaceable>&lt;identity column options&gt;</replaceable> ::=     
+  <replaceable>&lt;identity column option&gt;</replaceable> [<replaceable>&lt;identity column option&gt;</replaceable>]
+
+<replaceable>&lt;identity column option&gt;</replaceable> ::=
+    START WITH <replaceable>startvalue</replaceable>
+  | INCREMENT [BY] <replaceable>incrementvalue</replaceable>
+                    
+                    
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-array">См. Синтаксис массивов</link>                   
+                    
+<replaceable>&lt;col_constraint&gt;</replaceable> ::= [CONSTRAINT <replaceable>constr_name</replaceable>] 
+{   UNIQUE [<replaceable>&lt;using_index&gt;</replaceable>] 
+  | PRIMARY KEY [<replaceable>&lt;using_index&gt;</replaceable>] 
+  | REFERENCES other_table [(<replaceable>other_col</replaceable>)]  
+      [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}]
+      [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+      [<replaceable>&lt;using_index&gt;</replaceable>]
+  | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
+}          
+
+<replaceable>&lt;tconstraint&gt;</replaceable> ::= [CONSTRAINT <replaceable>constr_name</replaceable>] 
+{   UNIQUE (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
+  | PRIMARY KEY (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
+  | FOREIGN KEY (<replaceable>&lt;col_list&gt;</replaceable>) 
+    REFERENCES <replaceable>other_table</replaceable> [(<replaceable>&lt;col_list&gt;</replaceable>)]  
+      [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+      [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+      [<replaceable>&lt;using_index&gt;</replaceable>]
+  | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
+}    
+
+<replaceable>&lt;col_list&gt;</replaceable> ::= <replaceable>colname</replaceable> [, <replaceable>colname</replaceable> ...]
+
+<replaceable>&lt;using_index&gt;</replaceable> ::= USING [ASC[ENDING] | DESC[ENDING]] INDEX <replaceable>indexname</replaceable>   
+
+<replaceable>&lt;check_condition&gt;</replaceable> ::=  
+    <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;val&gt;</replaceable> AND <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] IN (<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...] | <replaceable>&lt;select_list&gt;</replaceable>) 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] NULL 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] DISTINCT <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] STARTING [WITH] <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] LIKE <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>] 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] SIMILAR TO <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>] 
+  | <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> {ALL | SOME | ANY} (<replaceable>&lt;select_list&gt;</replaceable>) 
+  | [NOT] EXISTS (<replaceable>&lt;select_expr&gt;</replaceable>) 
+  | [NOT] SINGULAR (<replaceable>&lt;select_expr&gt;</replaceable>)   
+  | (<replaceable>&lt;check_condition&gt;</replaceable>)   
+  | NOT <replaceable>&lt;check_condition&gt;</replaceable>   
+  | <replaceable>&lt;check_condition&gt;</replaceable> OR <replaceable>&lt;check_condition&gt;</replaceable>   
+  | <replaceable>&lt;check_condition&gt;</replaceable> AND <replaceable>&lt;check_condition&gt;</replaceable> 
+    
+ 
+<replaceable>&lt;operator&gt;</replaceable> ::= 
+    &lt;> | != | ^= | ~= | = | &lt; | > | &lt;= | >=
+  | !&lt; | ^&lt; | ~&lt; | !> | ^> | ~>    
+                    
+<replaceable>&lt;val&gt;</replaceable> ::=  
+    <replaceable>colname</replaceable> [<emphasis role="bold">[</emphasis><replaceable>&lt;array_idx&gt;</replaceable> [, <replaceable>&lt;array_idx&gt;</replaceable> ...]<emphasis role="bold">]</emphasis>] 
+  | <replaceable>&lt;literal&gt;</replaceable>   
+  | <replaceable>&lt;context_var&gt;</replaceable>   
+  | <replaceable>&lt;expression&gt;</replaceable>   
+  | NULL   
+  | NEXT VALUE FOR <replaceable>genname</replaceable>   
+  | GEN_ID(<replaceable>genname</replaceable>, <replaceable>&lt;val&gt;</replaceable>)   
+  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;cast_type&gt;</replaceable>)   
+  | (<replaceable>&lt;select_one&gt;</replaceable>)   
+  | <replaceable>func</replaceable>(<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...])   
+     
+<replaceable>&lt;cast_type&gt;</replaceable> ::=
+   <replaceable>&lt;datatype&gt;</replaceable> 
+  | [TYPE OF] <replaceable>domain_name</replaceable> 
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable>
+               </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора CREATE TABLE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>tablename</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы, может содержать до 63 символов. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>filespec</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Спецификация файла (только для внешних таблиц). </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>colname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя столбца таблицы, может содержать до 63 символов. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>datatype</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тип данных SQL. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>domain_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя домена. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>startvalue</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Начальное значение столбца идентификации. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>identityvalue</replaceable>
+                            </entry>
+                            <entry>Приращение столбца идентификации. Не может быть равно 0.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>col_constraint</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Ограничение столбца. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>tconstraint</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Ограничение таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>constr_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя ограничения, может содержать до 63 символов. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>other_table</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы, на которую ссылается внешний ключ.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>other_col</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Столбец таблицы, на которую ссылается внешний ключ. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>using_index</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Позволяет задать имя автоматически создаваемого индекса для
+                                    ограничения, и опционально определить, какой это будет индекс —
+                                    по возрастанию (по умолчанию) или по убыванию.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>literal</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Литерал. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>context_var</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Любая контекстная переменная, тип которой совместим с типом
+                                    данных  столбца. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>check_condition</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Условие проверки ограничения. Выполняется, если оценивается
+                                    как TRUE или NULL/UNKNOWN.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>collation_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Порядок сортировки. Необходимо указывать если вы хотите чтобы
+                                    порядок сортировки для столбца отличался от порядка сортировки
+                                    для набора символов по умолчанию этого столбца. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>select_one</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Оператор SELECT выбирающий один столбец и возвращающий только
+                                    одну строку. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>select_list</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Оператор SELECT выбирающий один столбец и возвращающий ноль и
+                                    более строк.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>select_expr</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Оператор SELECT выбирающий несколько столбцов и возвращающий
+                                    ноль и более строк.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>experssion</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Выражение. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>genname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя последовательности (генератора). </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>func</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Скалярная функция. </para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>CREATE TABLE</database> создаёт новую таблицу. Имя таблицы должно
+            быть уникальным среди имён всех таблиц, представлений (VIEWs) и хранимых процедур базы
+            данных. </para>
+        <para>Таблица может содержать, по меньшей мере, один столбец и произвольное количество
+            ограничений таблицы.</para>
+        <para>Имя столбца должно быть уникальным для создаваемой таблицы. Для столбца обязательно
+            должен быть указан либо тип данных, либо имя домена, характеристики которого будут
+            скопированы для столбца, либо должно быть указано, что столбец является
+            вычисляемым.</para>
+        <para>В качестве типа столбца можно использовать любой тип данных SQL. </para>
+        <section xml:id="fblangref-ddl-table-create-column-character">
+            <title>Символьные столбцы</title>
+
+            <para>Для типов <database class="datatype">CHAR</database>, <database class="datatype"
+                    >VARCHAR</database> и <database class="datatype">BLOB</database> с подтипом TEXT
+                можно указать набор символов в предложении <database>CHARACTER SET</database>. Если
+                набор символов не указан, то по умолчанию принимается тот набор символов, что был
+                указан при создании базы данных. Если же при создании базы данных не был указан
+                набор символов, то по умолчанию принимается набор символов NONE. В этом случае
+                данные хранятся и извлекаются, так как они были поданы. В столбец можно загружать
+                данные в любой кодировке, но невозможно загрузить эти данные в столбец с другой
+                кодировкой. Транслитерация между исходными и конечными кодировками не выполняется,
+                что может приводить к ошибкам.</para>
+            <para>Необязательное предложение <database>COLLATE</database> позволяет задать порядок
+                сортировки для строковых типов данных (за исключением <database class="datatype"
+                    >BLOB</database>). Если порядок сортировки не указан, то по умолчанию
+                принимается порядок сортировки по умолчанию для указанного набора сортировки.</para>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-column-nullable">
+            <title>Ограничение NOT NULL</title>
+
+            <para>По умолчанию столбец может принимать значение NULL.</para>
+            <para>Необязательное предложение <database>NOT NULL</database> указывает, что столбцу не
+                может быть присвоено значение NULL.</para>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-column-default">
+            <title>Значение по умолчанию</title>
+
+            <para>Необязательное предложение <database>DEFAULT</database> позволяет указать значение
+                по умолчанию для столбца таблицы. Это значение будет помещено в столбец таблицы при
+                выполнении оператора <database>INSERT</database>, если значение не будет указано для
+                этого столбца. В качестве значения по умолчанию может быть литерал совместимый по
+                типу, неизвестное значение NULL или контекстная переменная, тип которой совместим с
+                типом столбца. Если значение по умолчанию явно не устанавливается, то
+                подразумевается пустое значение, NULL. Использование выражений в значении по
+                умолчанию недопустимо.</para>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-column-domain">
+            <title>Столбцы основанные на домене</title>
+
+            <para>Для определения столбца, можно воспользоваться ранее описанным доменом. Если
+                определение столбца основано на домене, оно может включать новое значение по
+                умолчанию, дополнительные ограничения <database>CHECK</database>, предложение
+                    <database>COLLATE</database>, которые перекрывают значения указанные при
+                определении домена. Определение такого столбца может включать дополнительные
+                ограничения столбца, например NOT NULL, если домен его ещё не содержит.</para>
+            <important>
+                <para>Следует обратить внимание на то, что если в определении домена было указано
+                        <database>NOT NULL</database>, на уровне столбца невозможно определить
+                    допустимость использования в нем значения NULL. Если вы хотите чтобы на основе
+                    домена можно было определять столбцы допускающие псевдозначение NULL и не
+                    допускающее его, то хорошей практикой является создание домена допускающего NULL
+                    и указание ограничения <database>NOT NULL</database> у столбцов таблицы там где
+                    это необходимо.</para>
+            </important>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-column-identity">
+            <title>Столбцы идентификации (автоинкремент)</title>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>IDENTITY</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>GENERATED ALWAYS AS IDENTITY</secondary>
+            </indexterm>
+
+            <para>Столбец идентификации представляет собой столбец, связанный с внутренним
+                генератором последовательностей. Столбцы идентификации могут быть определены либо с
+                помощью предложения <database>GENERATED BY DEFAULT AS IDENTITY</database>, либо
+                предложения <database>GENERATED ALWAYS AS IDENTITY</database>.</para>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>GENERATED BY DEFAULT AS IDENTITY</secondary>
+            </indexterm>
+            <para>Если столбец идентификации задан как GENERATED BY DEFAULT, то его значение будет
+                увеличиваться и использовано как значение по умолчанию при каждой вставке, только в
+                том случае, если значение этого столбца не задано явно.</para>
+            <para>Чтобы использовать сгенерированное по умолчанию значение, необходимо либо указать
+                ключевое слово DEFAULT при вставке в столбец идентификации, или просто не упоминать
+                столбец идентификации в списке столбцов для вставки. В противном случае будет
+                использовано указанное вами значение. Например: <informalexample>
+                    <para><programlisting language="sql"><![CDATA[                    
+CREATE TABLE greetings (
+  id INT GENERATED BY DEFAULT AS IDENTITY, 
+  name CHAR(50));
+	
+-- specify value "1":
+INSERT INTO greetings VALUES (1, 'hi');
+
+-- use generated default
+INSERT INTO greetings VALUES (DEFAULT, 'salut');
+
+-- use generated default
+INSERT INTO greetings(ch) VALUES ('bonjour'); 
+]]></programlisting></para>
+                </informalexample>
+                <note>
+                    <para>Это поведение может быть изменено в операторе INSERT если указана
+                        директива <code>OVERRIDING USER VALUE</code>. Подробнее см. <link
+                            linkend="fblangref-dml-insert-overriding">Директива OVERRIDING</link>.
+                    </para>
+                </note>
+            </para>
+            <para>Если столбец идентификации задан как GENERATED ALWAYS, то его значение будет
+                увеличиваться при каждой вставке. При попытке явно присвоить значение столбца
+                идентификации в операторе INSERT, будет выдано сообщение об ошибке. В операторе
+                INSERT вы можете указать ключевое слово DEFAULT вместо значения для столбца
+                идентификации. <informalexample>
+                    <para><programlisting language="sql"><![CDATA[                    
+create table greetings (
+  id INT GENERATED ALWAYS AS IDENTITY, 
+  name CHAR(50));
+	
+INSERT INTO greetings VALUES (DEFAULT, 'hello');
+
+INSERT INTO greetings(ch) VALUES ('bonjour');
+]]></programlisting></para>
+                </informalexample>
+            </para>
+            <note>
+                <para>Это поведение может быть изменено в операторе INSERT если указана директива
+                        <code>OVERRIDING SYSTEM VALUE</code>. Подробнее см. <link
+                        linkend="fblangref-dml-insert-overriding">Директива OVERRIDING</link>.
+                </para>
+            </note>
+            <para>Необязательное предложение <database>START WITH</database> позволяет указать
+                начальное значение отличное от нуля. Предложение INCREMENT [BY] устанавливает
+                значение приращения. Значение приращения должно быть отлично от 0. По умолчанию
+                значение приращения равно 1.</para>
+            <formalpara>
+                <title>Правила</title>
+                <para>
+                    <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>Тип данных столбца идентификации должен быть целым числом с
+                                нулевым масштабом. Допустимыми типами являются SMALLINT, INTEGER,
+                                BIGINT, NUMERIC(x,0) и DECIMAL(x,0);</para>
+                        </listitem>
+                        <listitem>
+                            <para>Идентификационный столбец не может иметь DEFAULT и COMPUTED
+                                значений.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </formalpara>
+            <note>
+                <para>
+                    <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>Идентификационный столбец может быть изменён, чтобы стать обычным
+                                столбцом. Обычный столбец не может быть изменён, чтобы стать
+                                идентификационным.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Идентификационные столбцы неявно являются NOT NULL
+                                столбцами.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Уникальность не обеспечивается автоматически. Ограничения UNIQUE
+                                или PRIMARY KEY требуются для гарантии уникальности.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </note>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-insert-overriding">Директива OVERRIDING</link>.
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-column-computed">
+            <title>Вычисляемые поля</title>
+
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>COMPUTED BY</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>GENERATED ALWAYS AS</secondary>
+            </indexterm>
+            <para>Вычисляемые поля могут быть определены с помощью предложения COMPUTED [BY] или
+                    <database>GENERATED ALWAYS AS</database> (согласно стандарту SQL-2003). Они
+                эквивалентны по смыслу. Для вычисляемых полей не требуется описывать тип данных (но
+                допустимо), СУБД вычисляет подходящий тип в результате анализа выражения. В
+                выражении требуется указать корректную операцию для типов данных столбцов, входящих
+                в его состав. При явном указании типа столбца для вычисляемого поля результат
+                вычисления приводится к указанному типу, то есть, например, результат числового
+                выражения можно вывести как строку. Вычисление выражения происходит для каждой
+                строки выбранных данных, если в операторе выборки данных SELECT, присутствует такой
+                столбец.</para>
+            <tip>
+                <para>Вместо использования вычисляемого столбца в ряде случаев имеет смысл
+                    использовать обычный столбец, значение которого рассчитывается в триггерах на
+                    добавление и обновление данных. Это может снизить производительность
+                    вставки/модификации записей, но повысит производительность выборки
+                    данных.</para>
+            </tip>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-column-array">
+            <title>Столбцы типа массив</title>
+
+            <para>Для любого типа данных кроме <database class="datatype">BLOB</database> можно
+                указать размерность массива, если столбец должен быть массивом. Размерность массива
+                указывается в квадратных скобках. Чтобы не перепутать их с символами, означающими
+                необязательные элементы, они выделены жирным шрифтом. При указании размерности
+                массива указываются два числа через двоеточие. Первое число означает начальный номер
+                элемента массива, второе — конечный. Если указано только одно число, то оно означает
+                последний номер в элементе массива, а первым номером считается 1. Для многомерного
+                массива размерности массива перечисляются через запятую.</para>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-constraints">
+            <title>Ограничения</title>
+
+            <para>Существуют четыре вида ограничений:</para>
+            <para>
+                <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>первичный ключ (<database>PRIMARY KEY</database>);</para>
+                    </listitem>
+                    <listitem>
+                        <para>уникальный ключ (<database>UNIQUE</database>);</para>
+                    </listitem>
+                    <listitem>
+                        <para>внешний ключ (<database>REFERENCES</database> или <database>FOREIGN
+                                KEY</database>);</para>
+                    </listitem>
+                    <listitem>
+                        <para>проверочное ограничение (<database>CHECK</database>).</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Ограничения могут быть указаны на уровне столбца (<quote>ограничения
+                    столбцов</quote>) или на уровне таблицы (<quote>табличные ограничения</quote>).
+                Ограничения уровня таблицы необходимы, когда ключи (ограничение уникальности,
+                первичный ключ или внешний ключ) должны быть сформированы по нескольким столбцам,
+                или, когда ограничение CHECK включает несколько столбцов, т.е. действует на уровне
+                записи. Синтаксис для некоторых типов ограничений может незначительно отличаться в
+                зависимости от того определяется ограничение на уровне столбца или на уровне
+                таблицы.</para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>Ограничение на уровне столбца указывается после определения других
+                            характеристик столбца. Оно может включать только столбец указанный в
+                            этом определении.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Ограничения на уровне таблицы указываются после определений всех
+                            столбцов. Ограничения таблицы являются более универсальным способом
+                            записи ограничений, поскольку позволяют ограничение более чем для одного
+                            столбца таблицы.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Вы можете смешивать ограничения столбцов и ограничения таблиц в одном
+                            операторе <database>CREATE TABLE</database>.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Системой автоматически создаётся индекс для первичного ключа (PRIMARY KEY),
+                уникального ключа (UNIQUE KEY) и внешнего ключа (REFERENCES для ограничения уровня
+                столбца, и FOREIGN KEY REFERENCES для ограничения уровня таблицы).</para>
+
+            <section xml:id="fblangref-ddl-table-create-constraints-named-index">
+                <title>Имена для ограничений и их индексов</title>
+
+                <para>Если имя ограничения не задано, то оно автоматически будет сгенерировано
+                    системой. </para>
+
+                <para>Ограничения уровня столбца и их индексы автоматически именуются следующим
+                    образом: <itemizedlist>
+                        <listitem>
+                            <para>Имена ограничений имеют следующий вид
+                                        <database>INTEG_<replaceable>n</replaceable></database>, где
+                                    <replaceable>n</replaceable> представлено одним или несколькими
+                                числами;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Имена индексов имеют вид
+                                        <database>RDB$PRIMARY<replaceable>n</replaceable></database>
+                                (для индекса первичного ключа),
+                                        <database>RDB$FOREIGN<replaceable>n</replaceable></database>
+                                (для индекса внешнего ключа) или
+                                        <database>RDB$<replaceable>n</replaceable></database> (для
+                                индекса уникального ключа), где <replaceable>n</replaceable>
+                                представлено одним или несколькими числами;</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <para>Схемы автоматического формирования имён для ограничений уровня таблицы и их
+                    индексов одинаковы.</para>
+                <section xml:id="fblangref-ddl-table-create-constraints-named">
+                    <title>Именованные ограничения</title>
+
+                    <indexterm>
+                        <primary>CREATE TABLE</primary>
+                        <secondary>CONSTRAINT</secondary>
+                    </indexterm>
+
+                    <para>Имя ограничения можно задать явно, если указать его в необязательном
+                        предложении <database>CONSTRAINT</database>. По умолчанию имя индекса
+                        ограничения будет тем же самым, что и самого ограничения. Если для индекса
+                        необходимо задать другое имя, то его можно указать в предложении
+                            <database>USING</database>.</para>
+                </section>
+                <!-- named constraints -->
+                <section xml:id="fblangref-ddl-table-create-constraints-using">
+                    <title>Предложение USING</title>
+                    <indexterm>
+                        <primary>CREATE TABLE</primary>
+                        <secondary>CONSTRAINT</secondary>
+                        <tertiary>USING</tertiary>
+                    </indexterm>
+
+                    <para>Предложение <database>USING</database> позволяет задать определённое
+                        пользователем имя автоматически создаваемого индекса для ограничения, и
+                        опционально определить, какой это будет индекс — по возрастанию (по
+                        умолчанию) или по убыванию.</para>
+                </section>
+                <!-- using clause -->
+            </section>
+            <!-- names for constraints and their indexes -->
+            <section xml:id="fblangref-ddl-table-create-constraints-PK">
+                <title>Первичный ключ (PRIMARY KEY)</title>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>PRIMARY KEY</secondary>
+                </indexterm>
+
+                <para>Ограничение первичного ключа <database>PRIMARY KEY</database> строится на поле
+                    с заданным ограничением <database>NOT NULL</database> и требует уникальности
+                    значений столбца. Таблица может иметь только один первичный ключ. </para>
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Первичный ключ по единственному столбцу может быть определён как
+                                на уровне столбца, так и на уровне таблицы.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Первичный ключ по нескольким столбцам может быть определён только
+                                на уровне таблицы.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </section>
+            <!-- primary key -->
+
+            <section xml:id="fblangref-ddl-table-create-constraints-unique">
+                <title>Ограничение уникальности (UNIQUE)</title>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>UNIQUE</secondary>
+                </indexterm>
+
+                <para>Ограничение уникального ключа <database>UNIQUE</database> задаёт для значений
+                    столбца требование уникальности содержимого. Таблица может содержать любое
+                    количество уникальных ключей.</para>
+
+                <para>Как и первичный ключ, ограничение уникальности может быть определено на
+                    нескольких столбцах. В этом случае вы должны определять его как ограничение
+                    уровня таблицы.</para>
+
+                <section xml:id="fblangref-ddl-table-create-constraints-unique-null">
+                    <title>NULL в уникальных ключах</title>
+
+                    <para>Согласно стандарту SQL-99 Firebird допускает одно или более значений NULL
+                        в столбце на который наложено ограничение <database>UNIQUE</database>. Это
+                        позволяет определить ограничение <database>UNIQUE</database> на столбцах,
+                        которые не имеют ограничения <database>NOT NULL</database>.</para>
+
+                    <para>Для уникальных ключей, содержащих несколько столбцов, логика немного
+                        сложнее:</para>
+                    <para>
+                        <itemizedlist spacing="compact">
+                            <listitem>
+                                <para>Разрешено множество записей со значением NULL во всех столбцах
+                                    ключа;</para>
+                            </listitem>
+                            <listitem>
+                                <para>Разрешено множество записей с различными комбинациями null и
+                                    not-null значений в ключах;</para>
+                            </listitem>
+                            <listitem>
+                                <para>Разрешено множество записей, в которых в одном из столбцов
+                                    уникального ключа содержится значение NULL, а остальные столбцы
+                                    заполнены значениями и эти значения различны хотя бы в одном из
+                                    них;</para>
+                            </listitem>
+                            <listitem>
+                                <para>Разрешено множество записей, в которых в одном из столбцов
+                                    уникального ключа содержится значение NULL, а остальные столбцы
+                                    заполнены значениями, и эти значения имеют совпадения хотя бы в
+                                    одном из них.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>Это можно резюмировать следующим примером:
+                        <programlisting language="sql">
+RECREATE TABLE t( x int, y int, z int, unique(x,y,z));
+INSERT INTO t values( NULL, 1, 1 );
+INSERT INTO t values( NULL, NULL, 1 );
+INSERT INTO t values( NULL, NULL, NULL );
+INSERT INTO t values( NULL, NULL, NULL ); -- Разрешено
+INSERT INTO t values( NULL, NULL, 1 ); -- Запрещено                    
+                </programlisting>
+                    </para>
+                </section>
+                <!-- NULL in Unique Keys -->
+            </section>
+            <!-- unique -->
+
+            <section xml:id="fblangref-ddl-table-create-constraints-FK">
+                <title>Внешний ключ (FOREIGN KEY)</title>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>REFERENCES</secondary>
+                </indexterm>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>FOREIGN KEY</secondary>
+                </indexterm>
+
+                <para>Ограничение внешнего ключа гарантирует, что столбец (столбцы) участник может
+                    содержать только те значения, которые существуют в указанном столбце (столбцах)
+                    главной таблицы. Эти ссылочные столбцы часто называют столбцами назначения. Они
+                    должны быть первичным ключом или уникальным ключом в целевой таблице. Они могут
+                    не иметь ограничения NOT NULL, если они входят в ограничение уникального
+                    ключа.</para>
+
+                <para>Столбцы внешнего ключа не требуют ограничения NOT NULL.</para>
+
+                <para>На уровне столбца ограничение внешнего ключа определяется с использование м
+                    ключевого слова <database>REFERENCES</database>.
+                    <programlisting language="sql">
+... ,
+ARTIFACT_ID INTEGER REFERENCES COLLECTION (ARTIFACT_ID),                        
+                    </programlisting>
+                </para>
+                <para>В этом примере столбец ARTIFACT_ID ссылается на столбец с тем же именем в
+                    таблице COLLECTION.</para>
+                <para>На уровне таблицы могут быть определены внешний ключ над одним или несколькими
+                    столбцами. Внешние ключи над несколькими столбцами можно определить только на
+                    уровне таблицы.</para>
+                <para>Синтаксис определения внешнего ключа на уровне таблицы несколько отличается.
+                    После определения всех столбцов, с их ограничения уровня столбца, вы можете
+                    определить именованное ограничение внешнего ключа уровня таблицы, используя
+                    ключевые слова <database>FOREIGN KEY</database> и имён столбцов для которых оно
+                    применяется:
+                    <programlisting language="sql">
+... ,
+CONSTRAINT FK_ARTSOURCE FOREIGN KEY(DEALER_ID, COUNTRY)
+  REFERENCES DEALER (DEALER_ID, COUNTRY),                      
+                    </programlisting>
+                </para>
+                <para>Обратите внимание на то, что имена столбцов в целевой (master) таблице могут
+                    отличаться от тех что указаны во внешнем ключе.</para>
+                <note>
+                    <para>Если целевые столбцы не указаны, то внешний ключ автоматически ссылается
+                        на столбцы первичного ключа целевой таблицы.</para>
+                </note>
+
+                <section xml:id="fblangref-ddl-table-create-constraints-FK-actions">
+                    <title>Действия внешнего ключа</title>
+
+                    <para>Для обеспечения дополнительной целостности данных можно указать
+                        необязательные опции, которые обеспечат согласованность данных между
+                        родительскими и дочерними таблицами по заданным правилам:<itemizedlist>
+                            <listitem>
+                                <indexterm>
+                                    <primary>CREATE TABLE</primary>
+                                    <secondary>REFERENCES</secondary>
+                                    <tertiary>ON UPDATE</tertiary>
+                                </indexterm>
+                                <para>Предложение <database>ON UPDATE</database> определяет, что
+                                    произойдёт с записями подчинённой таблицы при изменении значения
+                                    первичного/уникального ключа в строке главной таблицы.</para>
+                            </listitem>
+                            <listitem>
+                                <indexterm>
+                                    <primary>CREATE TABLE</primary>
+                                    <secondary>REFERENCES</secondary>
+                                    <tertiary>ON DELETE</tertiary>
+                                </indexterm>
+                                <para>Предложение <database>ON DELETE</database> определяет, что
+                                    произойдёт с записями подчинённой таблицы при удалении
+                                    соответствующей строки главной таблицы.</para>
+                            </listitem>
+                        </itemizedlist></para>
+
+
+                    <para>Для обеспечения ссылочной целостности внешнего ключа, когда изменяется или
+                        удаляется значение связанного первичного или уникального ключа, могут быть
+                        выполнены следующие действия:</para>
+                    <para>
+                        <itemizedlist spacing="compact">
+                            <listitem>
+                                <para><database>NO ACTION</database> (по умолчанию) — не будет
+                                    выполнено никаких действий;</para>
+                            </listitem>
+                            <listitem>
+                                <para><database>CASCADE</database> — при изменении или удалении
+                                    значения первичного ключа над значением внешнего ключа будут
+                                    произведены те же действия. При выполнении удаления строки в
+                                    главной таблице в подчинённой таблице должны быть удалены все
+                                    записи, имеющие те же значения внешнего ключа, что и значение
+                                    первичного (уникального) ключа удалённой строки главной таблицы.
+                                    При выполнении обновления записи главной таблицы в подчинённой
+                                    таблице должны быть изменены все значения внешнего ключа,
+                                    имеющие те же значения, что и значение первичного (уникального)
+                                    ключа изменяемой строки главной таблицы;</para>
+                            </listitem>
+                            <listitem>
+                                <para><database>SET DEFAULT</database> — значения внешнего ключа
+                                    всех соответствующих строк в подчинённой таблице устанавливаются
+                                    в значение по умолчанию, заданное в предложении DEFAULT для
+                                    этого столбца;</para>
+                            </listitem>
+                            <listitem>
+                                <para><database>SET NULL</database> — значения внешнего ключа всех
+                                    соответствующих строк в подчинённой таблице устанавливаются в
+                                    пустое значение NULL.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <formalpara>
+                        <title>Пример:</title>
+                        <para>
+                            <informalexample>
+                                <para>
+                                    <programlisting language="sql">                                        
+CONSTRAINT FK_ORDERS_CUST
+FOREIGN KEY (CUSTOMER) REFERENCES CUSTOMERS (ID)
+ON UPDATE CASCADE ON DELETE SET NULL
+</programlisting>
+                                </para>
+                            </informalexample>
+                        </para>
+                    </formalpara>
+                </section>
+                <!-- foreign key actions -->
+            </section>
+            <!-- foreign key -->
+
+            <section xml:id="fblangref-ddl-table-create-constraints-check">
+                <title>Ограничение CHECK</title>
+                <indexterm>
+                    <primary>CREATE TABLE</primary>
+                    <secondary>CHECK</secondary>
+                </indexterm>
+                <para>Ограничение <database>CHECK</database> задаёт условие, которому должны
+                    удовлетворять значения, помещаемые в данный столбец. Условие — это логическое
+                    выражение, называемое также предикат, которое может возвращать значения TRUE
+                    (истина), FALSE (ложь) и UNKNOWN (неизвестно). Условие считается выполненным,
+                    если предикат возвращает значение TRUE или UNKNOWN (эквивалент NULL). Если
+                    предикат возвращает FALSE, то значение не будет принято. Это условие
+                    используется при добавлении в таблицу новой строки (оператор INSERT) и при
+                    изменении существующего значения столбца таблицы (оператор UPDATE), а также
+                    операторов, в которых может произойти одно из этих действий (UPDATE OR INSERT,
+                    MERGE).</para>
+                <important>
+                    <para>При использовании предложения CHECK для столбца, базирующегося на домене,
+                        следует помнить, что выражение в CHECK лишь дополняет условие проверки,
+                        которое может уже быть определено в домене.</para>
+                </important>
+                <para>На уровне столбца или таблицы выражение в предложении
+                        <database>CHECK</database> ссылается на входящее значения с помощью с
+                    помощью идентификаторов столбцов, в отличие от доменов, где в ограничении
+                        <database>CHECK</database> для этих целей используется ключевое слово
+                        <database>VALUE</database>. </para>
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <example>
+                            <title>CHECK ограничения уровня столбца и уровня таблицы</title>
+                            <para>
+                                <programlisting language="sql">
+CREATE TABLE PLACES (
+  ...
+  LAT DECIMAL(9, 6) CHECK (ABS(LAT) &lt;= 90),
+  LON DECIMAL(9, 6) CHECK (ABS(LON) &lt;= 180),
+  ...
+  CONSTRAINT CHK_POLES CHECK (ABS(LAT) &lt; 90 OR LON = 0)
+);               
+                </programlisting>
+                            </para>
+                        </example>
+                    </para>
+                </formalpara>
+            </section>
+            <!-- check constraint -->
+        </section>
+        <!-- constraints -->
+        <section xml:id="fblangref-ddl-table-create-sql_security">
+            <title>Привилегии выполнения</title>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>SQL SECURITY</secondary>
+            </indexterm>
+            <para>Необязательное предложение SQL SECURITY в спецификации таблицы позволяет задать с
+                какими привилегиями вычисляются вычисляемые столбцы. Если выбрана опция INVOKER, то
+                вычисляемые столбцы вычисляются с привилегиями вызывающего пользователя. Если
+                выбрана опция DEFINER, то вычисляемые столбцы вычисляются с привилегиями
+                определяющего пользователя (владельца). По умолчанию вычисляемые столбцы вычисляются
+                с привилегиями вызывающего пользователя. Кроме триггеры наследуют привилегии
+                выполнения таблицы, если они не переопределены у самих триггеров.</para>
+            <tip>
+                <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов метаданных
+                    можно изменить с помощью оператора
+                    <programlisting>
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+                </programlisting>
+                </para>
+            </tip>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-publication">
+            <title>Управление репликацией</title>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>ENABLE PUBLICATION</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>DISABLE PUBLICATION</secondary>
+            </indexterm>
+            <para>Необязательное предложение ENABLE PUBLICATION включает таблицу в набор репликации
+                (публикацию). Если ранее был выполнен оператор <code>ALTER DATABASE ADD ALL TO
+                    PUBLICATION</code>, то таблица будет включена в публикацию даже если предложение
+                ENABLE PUBLICATION не указано.</para>
+            <para>Необязательное предложение DISABLE PUBLICATION исключает таблицу из набора
+                репликации (публикации). Это предложение имеет смысл указывать только если ранее был
+                выполнен оператор <code>ALTER DATABASE ADD ALL TO PUBLICATION</code>, который
+                автоматически добавляет вновь созданные таблицы в публикацию.</para>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-who">
+            <title>Кто может создать таблицу?</title>
+
+            <para>Выполнить оператор <database>CREATE TABLE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>CREATE TABLE</database>. </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>Пользователь, создавший таблицу, становится её владельцем.</para>
+
+        </section>
+
+        <section xml:id="fblangref-ddl-table-create-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание таблицы</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE COUNTRY (
+  COUNTRY COUNTRYNAME NOT NULL PRIMARY KEY,
+  CURRENCY VARCHAR(10) NOT NULL);                    
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы с заданием именованного первичного и уникального
+                    ключей</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE STOCK (
+  MODEL SMALLINT NOT NULL CONSTRAINT PK_STOCK PRIMARY KEY,
+  MODELNAME CHAR(10) NOT NULL,
+  ITEMID INTEGER NOT NULL,
+  CONSTRAINT MOD_UNIQUE UNIQUE (MODELNAME, ITEMID));                   
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы с добавлением её в набор репликации</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE STOCK (
+  MODEL SMALLINT NOT NULL CONSTRAINT PK_STOCK PRIMARY KEY,
+  MODELNAME CHAR(10) NOT NULL,
+  ITEMID INTEGER NOT NULL,
+  CONSTRAINT MOD_UNIQUE UNIQUE (MODELNAME, ITEMID))
+ENABLE PUBLICATION;                   
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Таблица с полем массивом</title>
+                <para>
+                    <programlisting language="sql">
+<![CDATA[                    
+CREATE TABLE JOB (
+    JOB_CODE         JOBCODE NOT NULL,
+    JOB_GRADE        JOBGRADE NOT NULL,
+    JOB_COUNTRY      COUNTRYNAME,
+    JOB_TITLE        VARCHAR(25) NOT NULL,
+    MIN_SALARY       NUMERIC(18, 2) DEFAULT 0 NOT NULL,
+    MAX_SALARY       NUMERIC(18, 2) NOT NULL,
+    JOB_REQUIREMENT  BLOB SUB_TYPE 1,
+    LANGUAGE_REQ     VARCHAR(15) [1:5],
+    PRIMARY KEY (JOB_CODE, JOB_GRADE, JOB_COUNTRY),
+    FOREIGN KEY (JOB_COUNTRY) REFERENCES COUNTRY (COUNTRY)
+      ON UPDATE CASCADE
+      ON DELETE SET NULL,
+    CONSTRAINT CHK_SALARY CHECK (MIN_SALARY < MAX_SALARY) 
+);  
+]]>  
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы с ограничением первичного, внешнего и уникального ключа для
+                    которых заданы пользовательские имена индексов</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE PROJECT (
+    PROJ_ID    PROJNO NOT NULL,
+    PROJ_NAME  VARCHAR(20) NOT NULL UNIQUE 
+      USING DESC INDEX IDX_PROJNAME,
+    PROJ_DESC    BLOB SUB_TYPE 1,
+    TEAM_LEADER  EMPNO,
+    PRODUCT      PRODTYPE,
+    CONSTRAINT PK_PROJECT PRIMARY KEY (PROJ_ID) 
+      USING INDEX IDX_PROJ_ID,
+    FOREIGN KEY (TEAM_LEADER) REFERENCES EMPLOYEE (EMP_NO) 
+      USING INDEX IDX_LEADER
+);                  
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы со столбцом идентификации BY DEFAULT</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE objects (
+  id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  name VARCHAR(15)
+);
+
+INSERT INTO objects (name) VALUES ('Table');
+INSERT INTO objects (name) VALUES ('Book');
+INSERT INTO objects (id, name) VALUES (10, 'Computer');
+
+SELECT * FROM objects;
+</programlisting>
+                    <screen>
+ID           NAME
+============ ===============
+           1 Table
+           2 Book
+          10 Computer
+</screen>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы со столбцом идентификации ALWAYS</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE objects (
+  id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR(15)
+);
+
+INSERT INTO objects (name) VALUES ('Table');
+INSERT INTO objects (name) VALUES ('Book');
+INSERT INTO objects (id, name) VALUES (DEFAULT, 'Computer');
+
+SELECT * FROM objects;
+</programlisting>
+                    <screen>
+ID           NAME
+============ ===============
+           1 Table
+           2 Book
+           3 Computer
+</screen>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы со столбцом идентификации с начальным значением равным 10 и
+                    приращением равным 2</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE objects (
+  id INTEGER GENERATED BY DEFAULT AS IDENTITY (STER WITH 10 INCREMENT BY 2) PRIMARY KEY,
+  name VARCHAR(15)
+);
+
+INSERT INTO objects (name) VALUES ('Table');
+INSERT INTO objects (name) VALUES ('Book');
+</programlisting>
+                    <screen>
+ID           NAME
+============ ===============
+          12 Table
+          14 Book
+</screen>
+                </para>
+            </example>
+            <example>
+                <title>Создание таблицы с вычисляемыми полями</title>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE SALARY_HISTORY (
+    EMP_NO          EMPNO NOT NULL,
+    CHANGE_DATE     TIMESTAMP DEFAULT 'NOW' NOT NULL,
+    UPDATER_ID      VARCHAR(20) NOT NULL,
+    OLD_SALARY      SALARY NOT NULL,
+    PERCENT_CHANGE  DOUBLE PRECISION DEFAULT 0 NOT NULL,
+    SALARY_CHANGE   GENERATED ALWAYS AS 
+      (OLD_SALARY * PERCENT_CHANGE / 100),
+    NEW_SALARY      COMPUTED BY 
+      (OLD_SALARY + OLD_SALARY * PERCENT_CHANGE / 100)
+);                   
+                </programlisting>
+                </para>
+                <para>Поле SALARY_CHANGE объявлено согласно стандарту SQL::2003, поле NEW_SALARY в
+                    классическом стиле объявления вычисляемых полей в Firebird.</para>
+                <para>
+                    <programlisting language="sql">
+CREATE TABLE SALARY_HISTORY 
+(
+    EMP_NO          EMPNO NOT NULL,
+    CHANGE_DATE     TIMESTAMP DEFAULT 'NOW' NOT NULL,
+    UPDATER_ID      VARCHAR(20) NOT NULL,
+    OLD_SALARY      SALARY NOT NULL,
+    PERCENT_CHANGE  DOUBLE PRECISION DEFAULT 0 NOT NULL,
+    SALARY_CHANGE   GENERATED ALWAYS AS 
+      (OLD_SALARY * PERCENT_CHANGE / 100),
+    NEW_SALARY      COMPUTED BY 
+      (OLD_SALARY + OLD_SALARY * PERCENT_CHANGE / 100)
+)
+SQL SECURITY DEFINER;                   
+                </programlisting>
+                </para>
+                <para>То же самое, но вычисляемые столбцы вычисляются с правами определяющего
+                    пользователя (владельца таблицы). Кроме триггеры наследуют привилегии выполнения
+                    таблицы, если они не переопределены у самих триггеров.</para>
+            </example>
+        </section>
+        <section xml:id="fblangref-ddl-table-create-gtt">
+            <info>
+                <title>Глобальные временные таблицы (GTT)</title>
+                <keywordset>
+                    <keyword>GTT</keyword>
+                    <keyword>GLOBAL TEMPORARY</keyword>
+                    <keyword>ON COMMIT DELETE ROWS</keyword>
+                    <keyword>ON COMMIT PRESERVE ROWS</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>GLOBAL TEMPORARY</secondary>
+                <tertiary>ON COMMIT DELETE ROWS</tertiary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>GLOBAL TEMPORARY</secondary>
+                <tertiary>ON COMMIT PRESERVE ROWS</tertiary>
+            </indexterm>
+            <para>Глобальные временные таблицы (в дальнейшем сокращённо <abbrev>GTT</abbrev>) так
+                же, как и обычные таблицы, являются постоянными метаданными, но данные в них
+                ограничены по времени существования транзакцией (значение по умолчанию) или
+                соединением с БД. Каждая транзакция или соединение имеет свой собственный экземпляр
+                GTT с данными, изолированный от всех остальных. Экземпляры создаются только при
+                условии обращения к GTT, и данные в ней удаляются при завершении транзакции или
+                отключении от БД. Метаданные GTT могут быть изменены или удалены с помощью
+                инструкций ALTER TABLE и DROP TABLE.</para>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+CREATE GLOBAL TEMPORARY TABLE <replaceable>name</replaceable>
+  (<replaceable>&lt;column_def&gt;</replaceable> [, {<replaceable>&lt;column_def&gt;</replaceable> | <replaceable>&lt;table_constraint&gt;</replaceable>} ...])
+  [ON COMMIT {DELETE | PRESERVE} ROWS] 
+  [SQL SECURITY {DEFINER | INVOKER}]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+
+            <para>Если в операторе создания глобальной временной таблицы указано необязательное
+                предложение <database>ON COMMIT DELETE ROWS</database>, то будет создана GTT
+                транзакционного уровня (по умолчанию). При указании предложения <database>ON COMMIT
+                    PRESERVE ROWS</database> — будет создана GTT уровня соединения с базой
+                данных.</para>
+            <para>Предложение EXTERNAL [FILE] нельзя использовать для глобальной временной
+                таблицы.</para>
+
+            <note>
+                <para>Операторы <database>COMMIT RETAINING</database> и <database>ROLLBACK
+                        RETAINING</database> сохраняют данные в глобальных временных таблицах
+                    объявленных как <database>ON COMMIT DELETE ROWS</database>. В Firebird 2.x была
+                    ошибка: <database>COMMIT RETAINING</database> и <database>ROLLBACK
+                        RETAINING</database> делали записи не видимыми для текущей транзакции. Для
+                    возврата поведения 2.x установить параметр
+                        <parameter>ClearGTTAtRetaining</parameter> равным 1 в
+                        <filename>firebird.conf</filename>. Этот параметр может быть удалён в
+                    Firebird 5.0.</para>
+            </note>
+
+            <section>
+                <title>Ограничения GTT</title>
+                <para>GTT обладают всеми атрибутами обычных таблиц (ключи, внешние ключи, индексы и
+                    триггеры), но имеют ряд ограничений:</para>
+                <para>
+                    <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>GTT и обычные таблицы не могут ссылаться друг на друга;</para>
+                        </listitem>
+                        <listitem>
+                            <para>GTT уровня соединения (<quote>PRESERVE ROWS</quote>) GTT не могут
+                                ссылаться на GTT транзакционного уровня (<quote>DELETE
+                                ROWS</quote>);</para>
+                        </listitem>
+                        <listitem>
+                            <para>Ограничения домена не могут ссылаться на любую GTT;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Уничтожения экземпляра GTT в конце своего жизненного цикла не
+                                вызывает срабатывания триггеров до/после удаления.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <tip>
+                    <para> В существующей базе данных не всегда легко отличить обычную таблицу от
+                        GTT, или GTT транзакционного уровня от GTT уровня соединения. Используйте
+                        следующий запрос для определения типа таблицы:
+                        <programlisting language="sql">
+SELECT t.rdb$type_name
+FROM rdb$relations r
+JOIN rdb$types t ON r.rdb$relation_type = t.rdb$type
+WHERE t.rdb$field_name = 'RDB$RELATION_TYPE'
+  AND r.rdb$relation_name = 'TABLENAME'                     
+                                </programlisting>
+                    </para>
+                    <para>Для просмотра информации о типах всех таблиц используйте запрос:
+                        <programlisting language="sql">
+SELECT r.rdb$relation_name, t.rdb$type_name
+FROM rdb$relations r
+JOIN rdb$types t ON r.rdb$relation_type = t.rdb$type
+WHERE t.rdb$field_name = 'RDB$RELATION_TYPE'
+  AND coalesce (r.rdb$system_flag, 0) = 0                  
+                                </programlisting>
+                    </para>
+                    <para>Поле RDB$TYPE_NAME будет отображать PERSISTENT для обычной таблицы, VIEW
+                        для представления, GLOBAL_TEMPORARY_PRESERVE для GTT уровня соединения, и
+                        GLOBAL_TEMPORARY_DELETE для GTT уровня транзакции.</para>
+                </tip>
+            </section>
+            <section xml:id="fblangref-ddl-table-create-gtt-examples">
+                <title>Примеры</title>
+                <example>
+                    <title>Создание глобальной временной таблицы уровня соединения</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE GLOBAL TEMPORARY TABLE MYCONNGTT (
+    ID INTEGER NOT NULL PRIMARY KEY,
+    TXT VARCHAR(32),
+    TS TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+ON COMMIT PRESERVE ROWS;                   
+                </programlisting>
+                    </para>
+                </example>
+                <example>
+                    <title>Создание глобальной временной таблицы уровня транзакции ссылающейся
+                        внешним ключом на глобальную временную таблицу уровня соединения.</title>
+                    <para>
+                        <programlisting language="sql">
+CREATE GLOBAL TEMPORARY TABLE MYTXGTT (
+    ID INTEGER NOT NULL PRIMARY KEY,
+    PARENT_ID INTEGER NOT NULL REFERENCES MYCONNGTT(ID),
+    TXT VARCHAR(32),
+    TS TIMESTAMP DEFAULT CURRENT_TIMESTAMP);                  
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+        </section>
+
+        <section xml:id="fblangref-ddl-table-create-external">
+            <title>Внешние таблицы</title>
+
+            <indexterm>
+                <primary>CREATE TABLE</primary>
+                <secondary>EXTERNAL</secondary>
+            </indexterm>
+            <para>Необязательное предложение EXTERNAL [FILE] указывает, что таблица хранится вне
+                базы данных во внешнем текстовом файле. Столбцы таблицы, хранящейся во внешнем
+                файле, могут быть любого типа за исключением BLOB и массивов с любым типом данных. </para>
+            <para>Над таблицей, хранящейся во внешнем файле, допустимы только операции добавления
+                новых строк (INSERT) и выборки (SELECT) данных. Операции же изменения существующих
+                данных (UPDATE) или удаления строк такой таблицы (DELETE) не могут быть выполнены. </para>
+            <para>Внешняя таблица не может содержать ограничений первичного, внешнего и уникального
+                ключа. Для полей такой таблицы невозможно создать индексы. </para>
+            <para>Файл с внешней таблицей должен располагаться на устройстве хранения, физически
+                расположенном на сервере, на котором расположена СУБД. Если параметр
+                    <parameter>ExternalFileAccess</parameter> в файле конфигурации
+                    <filename>firebird.conf</filename> содержит <function>Restrict</function>, то
+                файл внешней таблицы должен находится в одном из каталогов, указанных в качестве
+                аргумента <function>Restrict</function>. Если при обращении к таблице Firebird не
+                находит файла, то он создаёт его при первом обращении. </para>
+            <important>
+                <para>Возможность использования для таблиц внешних файлов зависит от установки
+                    значения параметра <parameter>ExternalFileAccess</parameter> в файле
+                    конфигурации <filename>firebird.conf</filename>: <itemizedlist>
+                        <listitem>
+                            <para>Если он установлен в значение <function>None</function>, то
+                                запрещён любой доступ к внешнему файлу.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Значение <function>Restrict</function> рекомендуется для
+                                ограничения доступа к внешним файлам только каталогами, созданными
+                                специально для этой цели администратором сервера. Например:
+                                    <itemizedlist spacing="compact">
+                                    <listitem>
+                                        <para><function>ExternalFileAccess = Restrict
+                                                externalfiles</function> ограничит доступ
+                                            директорией <filename>externalfiles</filename> корневого
+                                            каталога Firebird. </para>
+                                    </listitem>
+                                    <listitem>
+                                        <para><function>ExternalFileAccess = Restrict
+                                                d:\databases\outfiles; e:\infiles</function>
+                                            ограничит доступ только двумя директориями Windows.
+                                            Обратите внимание, что любые пути являющиеся
+                                            отображением сетевых путей не будут работать. Также не
+                                            будут работать пути заключённые в одинарные или двойные
+                                            кавычки.</para>
+                                    </listitem>
+                                </itemizedlist></para>
+                        </listitem>
+                        <listitem>
+                            <para>Значение <function>Full</function> позволяет доступ к внешним
+                                файлам в любом месте файловой системы хоста. Это создаёт уязвимость
+                                и не рекомендуется к использованию.</para>
+                        </listitem>
+                    </itemizedlist></para>
+            </important>
+
+            <section xml:id="fblangref-ddl-table-ext-format">
+                <title>Формат внешних файлов</title>
+
+                <para>Внешняя таблица имеет формат <quote>строк</quote> с фиксированной длинной. Нет
+                    никаких разделителей полей: границы полей и строк определяются максимальными
+                    размерами в байтах в определении каждого поля. Это необходимо помнить и при
+                    определении структуры внешней таблицы, и при проектировании входного файла для
+                    внешней таблицы, в которую должны импортироваться данные из другого приложения.
+                    Например, широко распространённый формат <quote>.csv</quote>, не может быть
+                    использован в качестве входного файла, и не может быть получен непосредственно
+                    как внешний файл.</para>
+
+                <para>Самым полезным типом данных для столбцов внешних таблиц является тип CHAR с
+                    фиксированной длинной, длинна должна подходить под данные с которыми необходимо
+                    работать. Числовые типы и даты легко преобразуются в них, строки получаются как
+                    есть, в то время как, если данные не читаются другой базой данных Firebird, то
+                    родные типы могут быть нераспознаваемыми дня внешних приложений и являться для
+                    них <quote>абракадаброй</quote>.</para>
+                <para>Конечно, существуют способы манипулирования типами данных так, чтобы создавать
+                    выходные файлы из Firebird, которые могут быть непосредственно прочитаны как
+                    входные файлы в других приложениях, используя хранимые процедуры с
+                    использованием внешних таблиц или без них. Описания этих методов выходит за
+                    рамки данного руководства. Здесь мы приведём лишь некоторые рекомендации и
+                    советы для создания и работы с простыми текстовыми файлами, поскольку внешняя
+                    таблица часто используется как простой способ для создания или чтения
+                    транзакционно-независимого журнала. Эти файлы могут быть прочитаны в оффлайн
+                    режиме текстовым редактором или приложением аудита.</para>
+
+                <section xml:id="fblangref-ddl-table-ext-format-delimiter">
+                    <title>Разделитель строк</title>
+
+                    <para>Как правило, внешние файлы более удобны если строки разделены
+                        разделителем, в виде последовательности "новой строки", которая может быть
+                        распознана приложением на предназначенной платформе. Для Windows — это
+                        двухбайтная 'CRLF' последовательность, возврат каретки (ASCII код 13) и
+                        перевод строки (ASCII код 10). Для POSIX — LF обычно самодостаточен, в
+                        некоторых MacOS X приложениях она может быть LFCR. Существуют различные
+                        способы для автоматического заполнения столбца разделителя. В нашем примере
+                        это сделано с помощью BEFORE INSERT триггера и встроенной функции
+                        ASCII_CHAR.</para>
+                </section>
+            </section>
+
+            <section xml:id="fblangref-ddl-table-create-external-examples">
+                <title>Примеры использования внешних таблиц</title>
+
+                <para>В нашем примере мы будем определять внешнюю таблицу журнала, которая может
+                    быть использована в обработчике исключений внутри хранимой процедуры или
+                    триггера. Внешняя таблица выбрана потому, что сообщения из любых обрабатываемых
+                    исключений будут сохранены в журнале, даже если транзакция, в которой был
+                    запущен процесс, будет откачена из-за другого необработанного исключения. В
+                    целях демонстрации наша таблица содержит всего два столбца: метку времени и
+                    текстовое сообщение. Третий столбец хранит разделитель строки:
+                    <programlisting language="sql">
+CREATE TABLE ext_log
+EXTERNAL FILE 'd:\externals\log_me.txt' (
+   stamp   CHAR(24), 
+   message CHAR(100),
+   crlf    CHAR(2) -- Для Windows
+);   
+
+COMMIT;                
+                </programlisting>
+                </para>
+                <para>Теперь создадим триггер, для автоматического сохранения метки времени и
+                    разделителя строки, каждый раз когда сообщение записывается в таблицу:
+                    <programlisting language="sql">
+SET TERM ^;
+CREATE TRIGGER bi_ext_log FOR ext_log
+ACTIVE BEFORE INSERT
+AS
+BEGIN
+  IF (NEW.stamp IS NULL) THEN
+    NEW.stamp = CAST (CURRENT_TIMESTAMP AS CHAR(24));
+  NEW.crlf = ASCII_CHAR(13) || ASCII_CHAR(10);
+END ^
+COMMIT ^
+SET TERM ;^               
+                </programlisting>
+                </para>
+                <para>Вставка некоторых записей (это может быть сделано в обработчике исключения):
+                    <programlisting language="sql">
+INSERT INTO ext_log (message)
+VALUES('Shall I compare thee to a summer''s day?');
+INSERT INTO ext_log (message)
+VALUES('Thou art more lovely and more temperate');              
+                </programlisting>
+                </para>
+                <para>Содержимое внешнего файла:
+                    <screen>
+2015-10-07 15:19:03.4110Shall I compare thee to a summer's day?
+2015-10-07 15:19:58.7600Thou art more lovely and more temperate                        
+                    </screen>
+                </para>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="fblangref-ddl-table-alter">ALTER TABLE</link>, <link
+                            linkend="fblangref-ddl-table-alter">DROP TABLE</link>, <link
+                            linkend="fblangref-ddl-domain-create">CREATE DOMAIN</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-table-alter">
+        <info>
+            <title>ALTER TABLE</title>
+            <keywordset>
+                <keyword>ALTER TABLE</keyword>
+                <keyword>ALTER COLUMN</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER TABLE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение структуры таблицы.</para>
+        </formalpara>
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+ALTER TABLE <replaceable>tablename</replaceable> 
+  <replaceable>&lt;operation&gt;</replaceable> [, <replaceable>&lt;operation&gt;</replaceable>];       
+
+<replaceable>&lt;operation&gt;</replaceable> ::=      
+    ADD <replaceable>&lt;col_def&gt;</replaceable> 
+  | ADD <replaceable>&lt;tconstraint&gt;</replaceable> 
+  | DROP <replaceable>colname</replaceable>   
+  | DROP CONSTRAINT <replaceable>constr_name</replaceable>   
+  | DROP SQL SECURITY
+  | ALTER [COLUMN] <replaceable>colname</replaceable> <replaceable>&lt;col_mod&gt;</replaceable>
+  | ALTER SQL SECURITY {DEFINER | INVOKER}
+  | {ENABLE | DISABLE} PUBLICATION
+                        
+<replaceable>&lt;col_def&gt;</replaceable> ::= 
+    <replaceable>&lt;regular_col_def&gt;</replaceable> 
+  | <replaceable>&lt;computed_col_def&gt;</replaceable> 
+  | <replaceable>&lt;identity_col_def&gt;</replaceable>                        
+
+<replaceable>&lt;regular_col_def&gt;</replaceable> ::= 
+  <replaceable>colname</replaceable> { <replaceable>&lt;datatype&gt;</replaceable> | <replaceable>domainname</replaceable> }
+  [DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>}]
+  [NOT NULL]
+  [<replaceable>&lt;col_constraint&gt;</replaceable>]
+  [COLLATE <replaceable>collation_name</replaceable>]   
+
+
+<replaceable>&lt;computed_col_def&gt;</replaceable>  ::=   
+  <replaceable>colname</replaceable> [<replaceable>&lt;datatype&gt;</replaceable>] 
+  {COMPUTED [BY] | GENERATED ALWAYS AS} (<replaceable>&lt;expression&gt;</replaceable>)
+                        
+<replaceable>&lt;identity_col_def&gt;</replaceable> ::= 
+  <replaceable>colname</replaceable> [<replaceable>&lt;datatype&gt;</replaceable>] {ALWAYS | GENERATED BY} DEFAULT AS IDENTITY 
+  [(START WITH <replaceable>startvalue</replaceable>)] [<replaceable>&lt;col_constraint&gt;</replaceable>]                          
+
+<replaceable>&lt;col_mod&gt;</replaceable> ::= 
+     TO <replaceable>newname</replaceable> 
+  |  POSITION <replaceable>newpos</replaceable>   
+  | <replaceable>&lt;regular_col_mod&gt;</replaceable> 
+  | <replaceable>&lt;computed_col_mod&gt;</replaceable> 
+  | <replaceable>&lt;identity_col_mod&gt;</replaceable> 
+
+<replaceable>&lt;regular_col_mod&gt;</replaceable> ::=                      
+  |  TYPE { <replaceable>&lt;datatype&gt;</replaceable>  | <replaceable>domain_name</replaceable> }  
+  |  SET DEFAULT {<replaceable>literal</replaceable> | NULL | <replaceable>&lt;context_var&gt;</replaceable>} 
+  |  DROP DEFAULT 
+  |  SET NOT NULL
+  |  DROP NOT NULL  
+
+<replaceable>&lt;computed_col_mod&gt;</replaceable> ::=
+  [TYPE <replaceable>&lt;datatype&gt;</replaceable>] {GENERATED ALWAYS AS | COMPUTED [BY]} (<replaceable>&lt;expression&gt;</replaceable>)  
+
+<replaceable>&lt;identity_col_mod&gt;</replaceable> ::=  
+     <replaceable>&lt;alter identity column option&gt;</replaceable> ...
+  |  SET GENERATED { ALWAYS | BY DEFAULT } [<replaceable>&lt;alter identity column option&gt;</replaceable> ...]
+  |  DROP INDENITY
+          
+<replaceable>&lt;alter identity column option&gt;</replaceable> ::=
+     RESTART [ WITH <replaceable>startvalue</replaceable> ]  
+  |  SET INCREMENT [BY] <replaceable>incrementvalue</replaceable>                          
+
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                    
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-array">См. Синтаксис массивов</link>       
+                    
+<replaceable>&lt;col_constraint&gt;</replaceable> ::= 
+  [CONSTRAINT <replaceable>constr_name</replaceable>] 
+  {   UNIQUE [<replaceable>&lt;using_index&gt;</replaceable>] 
+    | PRIMARY KEY [<replaceable>&lt;using_index&gt;</replaceable>] 
+    | REFERENCES other_table [(<replaceable>other_col</replaceable>)]  
+        [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}]
+        [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+        [<replaceable>&lt;using_index&gt;</replaceable>]
+    | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
+  }          
+
+<replaceable>&lt;tconstraint&gt;</replaceable> ::= 
+  [CONSTRAINT <replaceable>constr_name</replaceable>] 
+  {   UNIQUE (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
+    | PRIMARY KEY (<replaceable>&lt;col_list&gt;</replaceable>) [<replaceable>&lt;using_index&gt;</replaceable>] 
+    | FOREIGN KEY (<replaceable>&lt;col_list&gt;</replaceable>) 
+      REFERENCES <replaceable>other_table</replaceable> [(<replaceable>&lt;col_list&gt;</replaceable>)]  
+        [ON DELETE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+        [ON UPDATE { NO ACTION | CASCADE | SET DEFAULT | SET NULL}] 
+        [<replaceable>&lt;using_index&gt;</replaceable>]
+    | CHECK (<replaceable>&lt;check_condition&gt;</replaceable>) 
+  }    
+
+<replaceable>&lt;col_list&gt;</replaceable> ::= <replaceable>colname</replaceable> [, <replaceable>colname</replaceable> ...]   
+
+<replaceable>&lt;using_index&gt;</replaceable> ::= USING [ASC[ENDING] | DESC[ENDING]] INDEX <replaceable>indexname</replaceable>   
+
+<replaceable>&lt;check_condition&gt;</replaceable> ::=  
+    <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] BETWEEN <replaceable>&lt;val&gt;</replaceable> AND <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] IN (<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...] | <replaceable>&lt;select_list&gt;</replaceable>) 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] NULL 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] DISTINCT <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> IS [NOT] {TRUE | FALSE | UNKNOWN}
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] CONTAINING <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] STARTING [WITH] <replaceable>&lt;val&gt;</replaceable> 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] LIKE <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>] 
+  | <replaceable>&lt;val&gt;</replaceable> [NOT] SIMILAR TO <replaceable>&lt;val&gt;</replaceable> [ESCAPE <replaceable>&lt;val&gt;</replaceable>] 
+  | <replaceable>&lt;val&gt;</replaceable> <replaceable>&lt;operator&gt;</replaceable> {ALL | SOME | ANY} (<replaceable>&lt;select_list&gt;</replaceable>) 
+  | [NOT] EXISTS (<replaceable>&lt;select_expr&gt;</replaceable>) 
+  | [NOT] SINGULAR (<replaceable>&lt;select_expr&gt;</replaceable>)   
+  | (<replaceable>&lt;check_condition&gt;</replaceable>)   
+  | NOT <replaceable>&lt;check_condition&gt;</replaceable>   
+  | <replaceable>&lt;check_condition&gt;</replaceable> OR <replaceable>&lt;check_condition&gt;</replaceable>   
+  | <replaceable>&lt;check_condition&gt;</replaceable> AND <replaceable>&lt;check_condition&gt;</replaceable> 
+    
+ 
+<replaceable>&lt;operator&gt;</replaceable> ::= 
+    &lt;> | != | ^= | ~= | = | &lt; | > | &lt;= | >=
+  | !&lt; | ^&lt; | ~&lt; | !> | ^> | ~>       
+                    
+<replaceable>&lt;val&gt;</replaceable> ::=  
+    <replaceable>colname</replaceable> [<emphasis role="bold">[</emphasis><replaceable>&lt;array_idx&gt;</replaceable> [, <replaceable>&lt;array_idx&gt;</replaceable> ...]<emphasis role="bold">]</emphasis>] 
+  | <replaceable>literal</replaceable>   
+  | <replaceable>&lt;context_var&gt;</replaceable>   
+  | <replaceable>&lt;expression&gt;</replaceable>   
+  | NULL   
+  | NEXT VALUE FOR <replaceable>genname</replaceable>   
+  | GEN_ID(<replaceable>genname</replaceable>, <replaceable>&lt;val&gt;</replaceable>)   
+  | CAST(<replaceable>&lt;val&gt;</replaceable> AS <replaceable>&lt;datatype&gt;</replaceable>)   
+  | (<replaceable>&lt;select_one&gt;</replaceable>)   
+  | <replaceable>func</replaceable>(<replaceable>&lt;val&gt;</replaceable> [, <replaceable>&lt;val&gt;</replaceable> ...])   
+                       
+
+<replaceable>&lt;cast_type&gt;</replaceable> ::=
+   <replaceable>&lt;datatype&gt;</replaceable> 
+  | [TYPE OF] <replaceable>domain_name</replaceable> 
+  | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+               </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора ALTER TABLE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>tablename</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>operation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Одна из допустимых операций по изменению структуры
+                                    таблицы.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>colname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя столбца таблицы, может содержать до 63 символов. Должно
+                                    быть уникальным внутри таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>newname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Новое имя столбца таблицы, может содержать до 63 символов.
+                                    Должно быть уникальным внутри таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>gencolname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя вычисляемого столбца таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>idencolname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя столбца идентификации. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>newpos</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Новая позиция столбца в таблице. Целое число в диапазоне от 1
+                                    до количества столбцов таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>datatype</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тип данных SQL. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>domain_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя домена. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>startvalue</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Начальное значение столбца идентификации. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>incrementvalue</replaceable>
+                            </entry>
+                            <entry> Значение приращения для столбца идентификации. Должно быть
+                                отлично от 0. </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>col_constraint</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Ограничение столбца. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>tconstraint</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Ограничение таблицы. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>constr_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя ограничения, может содержать до 63 символов. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>other_table</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы, на которую ссылается внешний ключ.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>other_col</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Столбец таблицы, на которую ссылается внешний ключ. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>using_index</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Позволяет задать имя автоматически создаваемого индекса для
+                                    ограничения, и опционально определить, какой это будет индекс —
+                                    по возрастанию (по умолчанию) или по убыванию.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>literal</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Литерал. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>context_var</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Любая контекстная переменная, тип которой совместим с типом
+                                    данных  столбца. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>check_condition</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Условие проверки ограничения. Выполняется, если оценивается
+                                    как TRUE или NULL/UNKNOWN.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>collation_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя порядка сортировки. Необходимо указывать если вы хотите
+                                    чтобы порядок сортировки для столбца отличался от порядка
+                                    сортировки для набора символов по умолчанию этого столбца.
+                                </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>select_one</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Оператор SELECT выбирающий один столбец и возвращающий только
+                                    одну строку. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>select_list</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Оператор SELECT выбирающий один столбец и возвращающий ноль и
+                                    более строк.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>select_expr</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Оператор SELECT выбирающий несколько столбцов и возвращающий
+                                    ноль и более строк.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>experssion</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Выражение. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>genname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя последовательности (генератора). </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>func</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Скалярная функция. </para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>ALTER TABLE</database> изменяет структуру существующей таблицы.
+            Одиночный оператор <database>ALTER TABLE</database> позволяет производить множество
+            операций добавления/удаления столбцов и ограничений, а также модификаций столбцов.
+            Список операций выполняемых при модификации таблицы разделяется запятой. </para>
+        <section xml:id="fblangref-ddl-table-alter-versinc">
+            <title>Счётчик форматов</title>
+            <para>Некоторые изменения структуры таблицы увеличивают счётчик форматов, закреплённый
+                за каждой таблицей. Количество форматов для каждой таблицы ограничено значением 255.
+                После того как счётчик форматов достигнет этого значения, вы не сможете больше
+                менять структуру таблицы. </para>
+            <para>Для сброса счётчика форматов необходимо сделать резервное копирование и
+                восстановление базы данных (утилитой <application>gbak</application>). </para>
+        </section>
+        <section xml:id="fblangref-ddl-table-alter-add">
+            <title>Предложение ADD</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>ADD</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>ADD CONSTRAINT</secondary>
+            </indexterm>
+            <para>Предложение <database>ADD</database> позволяет добавить новый столбец или новое
+                ограничение таблицы. Синтаксис определения столбца и синтаксис описания ограничения
+                таблицы полностью совпадают с синтаксисом, описанным в операторе <link
+                    linkend="fblangref-ddl-table-create">CREATE TABLE</link>. </para>
+            <formalpara>
+                <title>Воздействие на счётчик форматов:</title>
+                <para>
+                    <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>При каждом добавлении нового столбца номер формата увеличивается
+                                на единицу. </para>
+                        </listitem>
+                        <listitem>
+                            <para>Добавление нового ограничения таблицы не влечёт за собой
+                                увеличение номера формата.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+            </formalpara>
+            <example>
+                <title>Добавление столбца в таблицу</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TABLE COUNTRY
+ADD CAPITAL VARCHAR(25);
+                </programlisting>
+                </para>
+            </example>
+
+            <example>
+                <title>Добавление столбца с ограничением NOT NULL</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TABLE OBJECTS
+ADD QUANTITY INT DEFAULT 1 NOT NULL;
+                </programlisting>
+                </para>
+            </example>
+            <important>
+                <para>Обратите внимание на предложение DEFAULT, которое обязательно при добавлении
+                    ограничения NOT NULL, если в таблице есть данные. Дело в том, что в этом случае
+                    также происходит проверка данных на допустимость. А поскольку при добавлении
+                    нового столбца, он для всех строк таблицы содержит значение NULL, будет
+                    сгенерировано исключение. </para>
+            </important>
+            <example>
+                <title>Добавление столбца с ограничением уникальности и удаление другого
+                    столбца</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TABLE COUNTRY
+  ADD CAPITAL VARCHAR(25) UNIQUE,
+  DROP CURRENCY;
+                </programlisting>
+                </para>
+            </example>
+            <para>Для добавления ограничений уровня таблицы необходимо использовать предложение ADD
+                [CONSTRAINT].</para>
+            <example>
+                <title>Добавление проверочного ограничения и внешнего ключа</title>
+                <para>
+                    <programlisting language="sql">
+<![CDATA[                    
+ALTER TABLE JOB
+ADD CONSTRAINT CHK_SALARY CHECK (MIN_SALARY < MAX_SALARY),
+ADD FOREIGN KEY (JOB_COUNTRY) 
+REFERENCES COUNTRY (COUNTRY);
+]]>   
+                </programlisting>
+                </para>
+            </example>
+            <warning>
+                <para>Будьте осторожны, при добавлении нового ограничения <database>CHECK</database>
+                    не осуществляется проверка соответствия ему ранее внесённых данных. Поэтому
+                    перед добавлением такого ограничения рекомендуем производить предварительную
+                    проверку данных в таблице. </para>
+            </warning>
+        </section>
+
+        <section xml:id="fblangref-ddl-table-alter-drop">
+            <title>Предложение DROP</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>DROP</secondary>
+            </indexterm>
+            <para>Предложение <database>DROP</database> удаляет указанный столбец таблицы. Столбец
+                таблицы не может быть удалён, если от него существуют зависимости. Другими словами
+                для успешного удаления столбца на него должны отсутствовать ссылки. Ссылки на
+                столбец могут содержаться: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>в ограничениях столбцов или таблицы;</para>
+                    </listitem>
+                    <listitem>
+                        <para>в индексах;</para>
+                    </listitem>
+                    <listitem>
+                        <para>в хранимых процедурах и триггерах;</para>
+                    </listitem>
+                    <listitem>
+                        <para>в представлениях.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>При каждом удалении столбца номер формата увеличивается на единицу. </para>
+        </section>
+
+        <section xml:id="fblangref-ddl-table-alter-drop-constraint">
+            <title>Предложение DROP CONSTRAINT</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>DROP CONSTRAINT</secondary>
+            </indexterm>
+            <para>Предложение <database>DROP CONSTRAINT</database> удаляет указанное ограничение
+                столбца или таблицы. Ограничение первичного ключа или уникального ключа не могут
+                быть удалены, если они используются в ограничении внешнего ключа другой таблицы. В
+                этом случае необходимо удалить ограничение <database>FOREIGN KEY</database> до
+                удаления <database>PRIMARY KEY</database> или <database>UNIQUE</database> ключа, на
+                которые оно ссылается. </para>
+            <para>Удаление ограничения столбца или ограничения таблицы не влечёт за собой увеличение
+                номера формата. </para>
+        </section>
+
+        <section xml:id="fblangref-ddl-table-alter-drop-sql_security">
+            <title>Предложение DROP SQL SECURITY</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>DROP SQL SECURITY</secondary>
+            </indexterm>
+            <para>Предложение <database>DROP SQL SECURITY</database> удаляет привилегии выполнения
+                для таблицы. После удаления привилегий выполнения вычисляемые столбцы таблицы будут
+                вычисляться с привилегиями вызывающего пользователя. Триггеры также будут
+                выполняться с привилегиями вызывающего пользователя, если их привилегии выполнения
+                не переопределены в триггере явно.</para>
+        </section>
+
+        <section xml:id="fblangref-ddl-table-alter-alter-column">
+            <title>Предложение ALTER [COLUMN]</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>ALTER [COLUMN]</secondary>
+            </indexterm>
+            <para>Предложение ALTER [COLUMN] позволяет изменить следующие характеристики
+                существующих столбцов: <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>изменение имени (не изменяет номер формата);</para>
+                    </listitem>
+                    <listitem>
+                        <para>изменение типа данных (увеличивает номер формата на единицу);</para>
+                    </listitem>
+                    <listitem>
+                        <para>изменение позиции столбца в списке столбцов таблицы (не изменяет номер
+                            формата);</para>
+                    </listitem>
+                    <listitem>
+                        <para>удаление значения по умолчанию столбца (не изменяет номер
+                            формата);</para>
+                    </listitem>
+                    <listitem>
+                        <para>добавление значения по умолчанию столбца (не изменяет номер
+                            формата);</para>
+                    </listitem>
+                    <listitem>
+                        <para>изменение типа и выражения для вычисляемого столбца (не изменяет номер
+                            формата);</para>
+                    </listitem>
+                    <listitem>
+                        <para>добавление ограничения NOT NULL (не изменяет номера формата);</para>
+                    </listitem>
+                    <listitem>
+                        <para>удаление ограничения NOT NULL (не изменяет номера формата).</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-to">
+                <title>Переименование столбца</title>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>TO</tertiary>
+                </indexterm>
+                <para>Ключевое слово TO переименовывает существующий столбец. Новое имя столбца не
+                    должно присутствовать в таблице. </para>
+                <para>Невозможно изменение имени столбца, если этот столбец включён в какое-либо
+                    ограничение — первичный или уникальный ключ, внешний ключ, ограничение столбца
+                    или проверочное ограничение таблицы CHECK. Имя столбца также нельзя изменить,
+                    если этот столбец таблицы используется в каком-либо триггере, в хранимой
+                    процедуре или представлении. </para>
+                <example>
+                    <title>Переименование столбца таблицы</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN MODELNAME TO NAME;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-type">
+                <title>Изменение типа столбца</title>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>TYPE</tertiary>
+                </indexterm>
+                <para>Ключевое слово <database>TYPE</database> изменяет тип существующего столбца на
+                    другой допустимый тип. Не допустимы любые изменения типа, которые могут привести
+                    к потере данных. Например, количество символов в новом типе для столбца не может
+                    быть меньше, чем было установлено ранее. </para>
+                <para>Если столбец был объявлен как массив, то изменить ни его тип, ни размерность
+                    нельзя.</para>
+                <para>Нельзя изменить тип данных у столбца, который принимает участие в связке
+                    внешний ключ / первичный (уникальный) ключ.</para>
+                <example>
+                    <title>Изменение типа столбца таблицы</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN ITEMID TYPE BIGINT;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-position">
+                <title>Изменение позиции столбца</title>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>POSITION</tertiary>
+                </indexterm>
+                <para>Ключевое слово <database>POSITION</database> изменяет позицию существующего
+                    столбца. Позиции столбцов нумеруются с единицы.</para>
+                <para>
+                    <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>Если будет задан номер позиции меньше 1, то будет выдано
+                                соответствующее сообщение об ошибке.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если будет задан номер позиции, превышающий количество столбцов в
+                                таблице, то изменения не будут выполнены, но ни ошибки, ни
+                                предупреждения не последуют.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <example>
+                    <title>Изменение позиции столбца таблицы</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN ITEMID POSITION 5;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-default">
+                <title>Установка и удаление значения по умолчанию</title>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>DROP DEFAULT</tertiary>
+                </indexterm>
+                <para>Предложение <database>DROP DEFAULT</database> удаляет значение по умолчанию
+                    для столбца таблицы. </para>
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Если столбец основан на домене со значением по умолчанию —
+                                доменное значение перекроет это удаление.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Если удаление значения по умолчанию производится над столбцом, у
+                                которого нет значения по умолчанию, или чьё значение по умолчанию
+                                основано на домене, то это приведёт к ошибке выполнения данного
+                                оператора.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <example>
+                    <title>Удаление значения по умолчанию для столбца</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN MODEL DROP DEFAULT;
+                </programlisting>
+                    </para>
+                </example>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>SET DEFAULT</tertiary>
+                </indexterm>
+                <para>Предложение <database>SET DEFAULT</database> устанавливает значение по
+                    умолчанию для столбца таблицы. Если столбец уже имел значение по умолчанию, то
+                    оно будет заменено новым. Значение по умолчанию для столбца всегда перекрывает
+                    доменное значение по умолчанию.</para>
+                <example>
+                    <title>Установка значения по умолчанию для столбца</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN MODEL SET DEFAULT 1;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-nullable">
+                <title>Установка и удаление ограничения NOT NULL</title>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>SET NOT NULL</tertiary>
+                </indexterm>
+                <para>Предложение <database>SET NOT NULL</database> добавляет ограничение NOT NULL
+                    для столбца таблицы. </para>
+                <note>
+                    <para>Успешное добавление ограничения NOT NULL происходит, только после полной
+                        проверки данных таблицы, для того чтобы убедится что столбец не содержит
+                        значений NULL. </para>
+                    <para>Явное ограничение NOT NULL на столбце, базирующегося на домене,
+                        преобладает над установками домена. В этом случае изменение домена для
+                        допустимости значения NULL, не распространяется на столбец таблицы. </para>
+                </note>
+                <example>
+                    <title>Добавление ограничения NOT NULL</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN PROPID SET NOT NULL;
+                </programlisting>
+                    </para>
+                </example>
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>DROP NOT NULL</tertiary>
+                </indexterm>
+                <para>Предложение <database>DROP NOT NULL</database> удаляет ограничение NOT NULL
+                    для столбца таблицы. Если столбец основан на домене с ограничением NOT NULL, то
+                    ограничение домена перекроет это удаление.</para>
+                <example>
+                    <title>Удаление ограничения NOT NULL</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE STOCK
+ALTER COLUMN ITEMID DROP NOT NULL;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-identity">
+                <title>Изменение столбцов идентификации</title>
+                <para>Для столбцов идентификации позволено изменять способ генерации, начальное
+                    значение и значение приращения. </para>
+
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>SET GENERATED</tertiary>
+                </indexterm>
+                <para>Предложение SET GENERATED позволяет изменить способ генерации столбца
+                    идентификации. Существует два способа генерации столбца идентификации:<itemizedlist>
+                        <listitem>
+                            <para>BY DEFAULT столбцы позволяют переписать сгенерированное системой
+                                значение в операторах INSERT, UPDATE OR INSERT, MERGE просто указав
+                                значение этого столбца в списке значений.</para>
+                        </listitem>
+                        <listitem>
+                            <para>ALWAYS столбцы не позволяют переписать сгенерированное системой
+                                значение, при попытке переписать значение такого столбца
+                                идентификации будет выдана ошибка. Переписать значение этого столбца
+                                в операторе INSERT можно только при указании директивы <link
+                                    linkend="fblangref-dml-insert-overriding">OVERRIDING SYSTEM
+                                    VALUE</link>.</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <example>
+                    <title>Изменение способа генерации столбца идентификации</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID SET GENERATED ALWAYS;
+                </programlisting>
+                    </para>
+                </example>
+
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>RESTART [WITH]</tertiary>
+                </indexterm>
+                <para>Если указано только предложение <database>RESTART</database>, то происходит
+                    сброс значения генератора в ноль. Необязательное предложение WITH позволяет
+                    указать для нового значения внутреннего генератора отличное от нуля значение. </para>
+                <example>
+                    <title>Изменение текущего значения генератора для столбца идентификации</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID RESTART WITH 100;
+                </programlisting>
+                    </para>
+                </example>
+
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>SET INCREMENT [BY]</tertiary>
+                </indexterm>
+                <para>Предложение SET INCREMENT [BY] позволяет изменить значение приращения столбца
+                    идентификации. Значение приращения должно быть отлично от 0.</para>
+                <example>
+                    <title>Изменение приращения столбца идентификации</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID SET INCREMENT BY 2;
+                </programlisting>
+                    </para>
+                </example>
+                <para>В одном операторе можно изменить сразу несколько свойств столбца
+                    идентификации, например:
+                    <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID SET GENERATED ALWAYS RESTART SET INCREMENT BY 2;
+                </programlisting>
+                </para>
+
+
+                <indexterm>
+                    <primary>ALTER TABLE</primary>
+                    <secondary>ALTER [COLUMN]</secondary>
+                    <tertiary>DROP IDENTITY</tertiary>
+                </indexterm>
+                <para>Предложение DROP IDENTITY удаляет связанный со столбцом идентификации
+                    системную последовательность и преобразует его в обычный столбец.</para>
+                <example>
+                    <title>Превращение столбца идентификации в обычный столбец</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE objects
+ALTER ID DROP INDENTITY;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-computed">
+                <title>Изменение вычисляемых столбцов</title>
+                <para>Для вычисляемых столбцов (<database>GENERATED ALWAYS AS</database> или
+                        <database>COMPUTED BY</database>) позволяется изменить тип и выражение
+                    вычисляемого столбца. Невозможно изменить обычный столбец на вычисляемый и
+                    наоборот. </para>
+                <example>
+                    <title>Изменение вычисляемых столбцов</title>
+                    <para>
+                        <programlisting language="sql">
+ALTER TABLE SALARY_HISTORY
+ALTER NEW_SALARY GENERATED ALWAYS 
+AS (OLD_SALARY + OLD_SALARY * PERCENT_CHANGE / 100),
+ALTER SALARY_CHANGE COMPUTED 
+BY (OLD_SALARY * PERCENT_CHANGE / 100);
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+            <section xml:id="fblangref-ddl-table-alter-alter-column-cannot">
+                <title>Не изменяемые атрибуты</title>
+                <para>На данный момент не существует возможности изменить сортировку по умолчанию.
+                </para>
+            </section>
+        </section>
+        <section xml:id="fblangref-ddl-table-alter-sql_security">
+            <title>Предложение ALTER SQL SECURITY</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>ALTER SQL SECURITY</secondary>
+            </indexterm>
+            <para>Предложение <database>ALTER SQL SECURITY</database> позволяет изменить привилегии
+                с которыми вычисляются вычисляемые столбцы. Если выбрана опция INVOKER, то
+                вычисляемые столбцы вычисляются с привилегиями вызывающего пользователя. Если
+                выбрана опция DEFINER, то вычисляемые столбцы вычисляются с привилегиями
+                определяющего пользователя (владельца). По умолчанию вычисляемые столбцы вычисляются
+                с привилегиями вызывающего пользователя. Кроме того триггеры наследуют привилегии
+                выполнения у таблицы, если они не переопределены у самих триггеров.</para>
+            <informalexample>
+                <para>
+                    <programlisting language="sql">
+ALTER TABLE COUNTRY
+ALTER SQL SECURITY DEFINER;
+                </programlisting>
+                </para>
+            </informalexample>
+        </section>
+        <section xml:id="fblangref-ddl-table-alter-publication">
+            <title>Управление репликацией</title>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>ENABLE PUBLICATION</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>ALTER TABLE</primary>
+                <secondary>DISABLE PUBLICATION</secondary>
+            </indexterm>
+            <para>Предложение ENABLE PUBLICATION включает таблицу в набор репликации (публикацию).
+                Соответственно предложение DISABLE PUBLICATION исключает таблицу из набора
+                репликации.</para>
+            <example>
+                <title>Добавление таблицы в набор репликации</title>
+                <para>
+                    <programlisting language="sql">
+ALTER TABLE COUNTRY
+ENABLE PUBLICATION;
+                </programlisting>
+                </para>
+            </example>
+        </section>
+        <section xml:id="fblangref-ddl-table-alter-who">
+            <title>Кто может изменить таблицу?</title>
+
+            <para>Выполнить оператор <database>ALTER TABLE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY TABLE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-table-create">CREATE TABLE</link>, <link
+                        linkend="fblangref-ddl-table-recreate">RECREATE TABLE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-table-drop">
+        <info>
+            <title>DROP TABLE</title>
+            <keywordset>
+                <keyword>DROP TABLE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DROP TABLE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление существующей таблицы.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting> 
+DROP TABLE <replaceable>tablename</replaceable>                
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DROP TABLE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>tablename</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор <database>DROP TABLE</database> удаляет существующую таблицу. Если таблица
+            имеет зависимости, то удаление не будет произведено. При удалении таблицы будут также
+            удалены все триггеры на её события и индексы, построенные для её полей.</para>
+
+        <example>
+            <title>Удаление таблицы</title>
+            <para>
+                <programlisting language="sql">
+DROP TABLE COUNTRY;
+                </programlisting>
+            </para>
+        </example>
+
+        <section xml:id="fblangref-ddl-table-drop-who">
+            <title>Кто может удалить таблицу?</title>
+
+            <para>Выполнить оператор <database>DROP TABLE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец таблицы; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>DROP ANY TABLE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-table-create">CREATE TABLE</link>, <link
+                        linkend="fblangref-ddl-table-recreate">RECREATE TABLE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-table-recreate">
+        <info>
+            <title>RECREATE TABLE</title>
+            <keywordset>
+                <keyword>RECREATE TABLE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RECREATE TABLE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой таблицы или пересоздание существующей.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>   
+RECREATE [GLOBAL TEMPORARY] TABLE <replaceable>tablename</replaceable>        
+  [EXTERNAL [FILE] '<replaceable>&lt;filespec&gt;</replaceable>'] 
+  (<replaceable>&lt;col_def&gt;</replaceable> [, <replaceable>&lt;col_def&gt;</replaceable> | <replaceable>&lt;tconstraint&gt;</replaceable> ...])         
+  [ON COMMIT {DELETE | PRESERVE} ROWS]
+  [SQL SECURITY {DEFINER | INVOKER}]    
+                 </programlisting>
+            </para>
+        </formalpara>
+        <para>Полное описание определений столбцов и ограничений таблицы смотрите в разделе <link
+                linkend="fblangref-ddl-table-create">CREATE TABLE</link>.</para>
+
+        <para>Создаёт или пересоздаёт таблицу. Если таблица с таким именем уже существует, то
+            оператор <database>RECREATE TABLE</database> попытается удалить её и создать новую.
+            Оператор <database>RECREATE TABLE</database> не выполнится, если существующая таблица
+            имеет зависимости.</para>
+
+        <section xml:id="fblangref-ddl-table-recreate-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание или пересоздание таблицы</title>
+                <para>
+                    <programlisting language="sql">
+RECREATE TABLE COUNTRY (
+  COUNTRY COUNTRYNAME NOT NULL PRIMARY KEY,
+  CURRENCY VARCHAR(10) NOT NULL);
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-table-create">CREATE TABLE</link>, <link
+                        linkend="fblangref-ddl-table-drop">DROP TABLE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</section>

@@ -1,0 +1,121 @@
+<!DOCTYPE chapter>
+<preface xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-intro" xml:lang="ru">
+    <info>
+        <title>Введение</title>
+    </info>
+
+    <para>Это руководство описывает язык SQL, поддерживаемый СУБД Firebird 4.0. </para>
+
+    <para>В руководстве также приводятся практические примеры использования SQL, многие из которых
+        взяты из реальной практики. </para>
+
+    <simplesect xml:id="fblangref-intro-subject">
+        <title>Что содержит данный документ</title>
+
+        <para>Данный документ содержит описание языка SQL Firebird. Firebird полностью соответствует
+            международным стандартам SQL, от поддержки типов данных, структур хранения данных,
+            механизмов ссылочной целостности до возможностей управления данными и прав доступа.
+            В СУБД Firebird также реализован надежный процедурный язык — процедурный SQL (PSQL) — для
+            хранимых процедур, триггеров и динамически исполняемых блоков кода. Это те области, о
+            которых идет речь в этом руководстве.</para>
+
+        <para>В этом документе не рассматриваются вопросы конфигурация, инструменты командной
+            строки и описание API, и другое не относящееся к языку SQL.</para>
+
+    </simplesect>
+
+    <simplesect xml:id="fblangref-intro-authors">
+        <title>Авторство</title>
+
+        <para>В работе над руководством принимали участие:</para>
+        <para>
+            <itemizedlist spacing="compact">
+                <listitem>
+                    <para><personname><firstname>Денис</firstname><surname>Симонов</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Пол</firstname><surname>Винкенуг</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Дмитрий</firstname><surname>Филиппов</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Дмитрий</firstname><surname>Еманов</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Томас</firstname><surname>Воинк</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Александр</firstname><surname>Карпейкин</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Алексей</firstname><surname>Ковязин</surname></personname>;</para>
+                </listitem>
+                <listitem>
+                    <para><personname><firstname>Дмитрий</firstname><surname>Кузьменко</surname></personname>.</para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>Редакторы —
+                <personname><firstname>Александр</firstname><surname>Карпейкин</surname></personname>,
+                    <personname><firstname>Дмитрий</firstname><surname>Кузьменко</surname></personname>,
+                    <personname><firstname>Алексей</firstname><surname>Ковязин</surname></personname>,
+                    <personname><firstname>Денис</firstname><surname>Симонов</surname></personname>.
+        </para>
+    </simplesect>
+
+    <simplesect xml:id="fblangref-intro-sponsors">
+        <title>Спонсоры</title>
+
+        <para>Платиновым спонсором создания <quote>Руководства по языку СУБД Firebird</quote>
+            является Московская Биржа <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="http://www.moex.com">www.moex.com</link>. </para>
+        <para>Московская Биржа — крупнейший в России и Восточной Европе биржевой холдинг,
+            образованный 19 декабря 2011 года в результате слияния биржевых групп ММВБ (основана в
+            1992) и РТС (основана в 1995). Московская Биржа входит в двадцатку ведущих мировых
+            площадок по объёму торгов ценными бумагами, суммарной капитализации торгуемых акций и в
+            десятку крупнейших бирж производных финансовых инструментов. </para>
+        <para>Золотым спонсором <quote>Руководства по языку СУБД Firebird</quote> является IBSurgeon
+            (iBase.ru) (<link xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="http://www.ib-aid.com">www.ib-aid.com</link>, <link
+                xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.ibase.ru"
+                >www.ibase.ru</link>): техническая поддержка и инструменты разработчика и
+            администратора для СУБД Firebird. </para>
+    </simplesect>
+
+    <simplesect xml:id="fblangref-intro-thanks">
+        <title>Благодарности</title>
+
+        <para> Благодарим Влада Хорсуна, Александра Пешкова, Павла Зотова за помощь в создании этого
+            документа. </para>
+    </simplesect>
+
+    <simplesect xml:id="fblangref-intro-updates">
+        <title>Обновления</title>
+
+        <para>Так как СУБД Firebird постоянно развивается, то изменяется и улучшается его
+            документация. Вы можете получить самые свежие версии этого документа по адресам:
+                <itemizedlist spacing="compact">
+                <listitem>
+                    <para>PDF — <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xlink:href="https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf"
+                            >https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf</link></para>
+                </listitem>
+                <listitem>
+                    <para>одностраничный HTML — <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xlink:href="https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip"
+                            >https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip</link></para>
+                </listitem>
+                <listitem>
+                    <para>многостраничный HTML — <link xmlns:xlink="http://www.w3.org/1999/xlink"
+                            xlink:href="https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip"
+                            >https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip</link></para>
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>Исходный код проекта находится по адресу <link
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="https://github.com/sim1984/langref40"
+                >https://github.com/sim1984/langref40</link>. </para>
+    </simplesect>
+</preface>

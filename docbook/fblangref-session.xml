@@ -1,0 +1,1301 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-session" xml:lang="ru">
+    <info>
+        <title>Сессионное окружение</title>
+    </info>
+
+    <para>В этой главе описываются операторы управления сессионным окружением. Данные SQL операторы
+        работают вне механизма управления транзакциями, изменения выполненные ими вступаю в силу
+        немедленно.</para>
+
+    <para>Операторы управления сессионным окружением доступны в том числе и в PSQL коде. Это
+        особенно полезно в ON CONNECT триггерах.</para>
+
+    <para>Операторы управления сессионным окружением разбиты на следующие группы: <itemizedlist>
+            <listitem>
+                <para>управления тайм-аутами;</para>
+            </listitem>
+            <listitem>
+                <para>управление пулом внешних соединений;</para>
+            </listitem>
+            <listitem>
+                <para>изменение текущей роли;</para>
+            </listitem>
+            <listitem>
+                <para>управление обработкой типа DECFLOAT;</para>
+            </listitem>
+            <listitem>
+                <para>управление часовым поясом;</para>
+            </listitem>
+            <listitem>
+                <para>сброс сессионного окружения.</para>
+            </listitem>
+        </itemizedlist></para>
+
+    <section xml:id="fblangref-session-timeout">
+        <info>
+            <title>Тайм-ауты</title>
+        </info>
+
+        <para>В Firebird существует два вида тайм-аута:<itemizedlist>
+                <listitem>
+                    <para>тайм-аут простоя соединения;</para>
+                </listitem>
+                <listitem>
+                    <para>тайм-аут выполнения SQL оператора.</para>
+                </listitem>
+            </itemizedlist></para>
+
+        <section xml:id="fblangref-session-timeout-statemen">
+            <title>Тайм-аут выполнения SQL оператора</title>
+
+            <para>Данная функциональность позволяет автоматически прекратить выполнение SQL
+                оператора если он выполняется дольше заданного значения тайм-аута.</para>
+
+            <para>Данная функция может быть полезна для:<itemizedlist>
+                    <listitem>
+                        <para>Администраторов баз данных, которые получают инструмент для
+                            ограничения времени выполнения тяжёлых запросов, которые потребляют
+                            много ресурсов;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Разработчиков приложений, которые могут использовать тайм-ауты SQL
+                            операторов при написании и отладке сложных запросов с заранее
+                            неизвестным временем выполнения;</para>
+                    </listitem>
+                    <listitem>
+                        <para>Тестеров, которые могут использовать тайм-ауты SQL операторов для
+                            обнаружения долго выполняющихся запросов и обеспечения конечного времени
+                            выполнения набора тестов. </para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Эта функциональность работает следующим образом. Когда начинается выполнение
+                оператора (или открывается курсор) Firebird запускает специальный таймер. Выборка
+                записей (fetch) не сбрасывает таймер. Таймер останавливается если выполнение SQL
+                оператора закончено или извлечена (fetch) последняя запись.</para>
+            <para>По истечению тайм-аута:<itemizedlist>
+                    <listitem>
+                        <para>Если выполнение SQL оператора активно, оно останавливается в заданный
+                            момент.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Если SQL оператор не активен в данный момент (например между выборками
+                            (fetch)), то он будет помечен как отменённый, следующая выборка (fetch)
+                            прервёт выполнение и будет возвращена ошибка.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Значение тайм-аута может быть установлено:<itemizedlist>
+                    <listitem>
+                        <para>На уровне базы данных. Значение параметра
+                                <parameter>StatementTimeout</parameter> может быть установлено в
+                                <filename>firebird.conf</filename> (или
+                                <filename>databases.conf</filename>) администратором базы данных.
+                            Область действия все операторы во всех соединениях. Параметр
+                                <parameter>StatementTimeout</parameter> устанавливает тайм-аут в
+                            секундах, по истечении которого выполнение SQL операторов будет
+                            отменено. Ноль означает, что тайм-аут не установлен. Значение по
+                            умолчанию равно 0.</para>
+                    </listitem>
+                    <listitem>
+                        <para>На уровне соединения. Может быть установлен с использованием API (в
+                            миллисекундах) или с помощью SQL оператора <link
+                                linkend="fblangref-session-timeout-set_statement_timeout">SET
+                                STATEMENT TIMEOUT</link>. Область действия текущее
+                            подключение.</para>
+                    </listitem>
+                    <listitem>
+                        <para>На уровне оператора. Может быть установлен с использованием API (в
+                            миллисекундах). Область действия текущий SQL оператор.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Эффективное значение тайм-аута SQL оператора вычисляется каждый раз, когда
+                запускается SQL оператор (открывается курсор), следующим образом:<itemizedlist>
+                    <listitem>
+                        <para>если тайм-аут не установлен на уровне оператора, будет использовано
+                            значение тайм-аута уровня соединения;</para>
+                    </listitem>
+                    <listitem>
+                        <para>если тайм-аут не установлен на уровне соединения, будет использовано
+                            значение тайм-аута уровня базы данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>значение тайм-аута не может быть больше, чем значение установленное на
+                            уровне базы данных. Таким образом, значение тайм-аута может
+                            перекрываться разработчиком приложения в более низких областях, но оно
+                            не может выти за пределы установленные DBA в конфигурации.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Нулевой тайм-аут не обозначает отсутствие тайм-аута, просто в этом случае таймер
+                выполнения оператора не запускается.</para>
+
+            <para>Несмотря на то, что тайм-аут выполнения SQL оператора может быть установлен в
+                миллисекундах, абсолютная точность не гарантируется. При высокой нагрузке он может
+                быть менее точным. Единственная гарантия которую может дать Firebird это то, что
+                тайм-аут не сработает раньше указанного момента. Клиентское приложение может ждать
+                больше времени, чем установленное значение тайм-аута если движку Firebird необходимо
+                отменить множество действий связанных с отменой оператора.</para>
+
+            <para>Тайм-аут выполнения оператора игнорируется для всех внутренних запросов, которые
+                используется движком Firebird. Кроме того, тайм-аут игнорируется для DDL
+                операторов.</para>
+
+            <section xml:id="fblangref-session-timeout-set_statement_timeout">
+                <info>
+                    <title>SET STATEMENT TIMEOUT</title>
+                    <keywordset>
+                        <keyword>SET STATEMENT TIMEOUT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>SET STATEMENT TIMEOUT</primary></indexterm>
+
+                <formalpara>
+                    <title>Назначение:</title>
+
+                    <para>Установка тайм-аута выполнения SQL операторов на уровне соединения.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para><literallayout class="monospaced">                                       
+SET STATEMENT TIMEOUT <replaceable>value</replaceable> [HOUR | MINUTE | SECOND | MILLISECOND]       
+            </literallayout></para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры оператора SET STATEMENT TIMEOUT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value</replaceable></entry>
+                                    <entry>
+                                        <para>Значение тайм-аута выполнения SQL операторов в
+                                            указанных единицах измерения времени. Если единица
+                                            измерения времени не указано, то по умолчанию значение
+                                            тайм-аута измеряется в секундах.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <para>Устанавливает значение тайм-аута выполнения SQL операторов на уровне текущего
+                    соединения. Если единица времени не указана, то по умолчанию тайм-аут будет
+                    учитываться в секундах.</para>
+
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями и
+                        вступают в силу немедленно.</para>
+                </note>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <informalexample>
+                            <para><programlisting language="sql">
+SET STATEMENT TIMEOUT 2 MINUTE            
+            </programlisting></para>
+                        </informalexample>
+                    </para>
+                </formalpara>
+
+                <note>
+                    <para>Интерактивный инструмент <application>isql</application> дополнительно
+                        поддерживает команду:
+                        <literallayout class="monospaced">
+SET LOCAL_TIMEOUT <replaceable>int</replaceable>
+            </literallayout>
+                    </para>
+                    <para>Эта команда позволяет установить тайм-аут выполнения оператора (в
+                        миллисекундах) для следующего оператора. После выполнения SQL оператора он
+                        автоматически сбрасывается в ноль. </para>
+                </note>
+            </section>
+
+        </section>
+
+        <section xml:id="fblangref-session-timeout-idle_session">
+            <title>Тайм-аут простоя соединения</title>
+
+            <para>Данная функциональность позволяет автоматически закрывать пользовательские
+                подключения после периода бездействия. Она может быть использована администраторами
+                баз данных, чтобы принудительно закрывать старые неактивные соединения и освобождать
+                связанные с ними ресурсы. Приложения и инструменты разработчика могут использовать
+                её как замену самодельного контроля за временем жизни подключения.</para>
+
+            <para>Рекомендуется (но не обязательно) устанавливать тай-аут простоя в разумное большое
+                значение, например, несколько часов. По умолчанию эта функция отключена.</para>
+
+            <para>Эта функциональность работает следующим образом. Когда пользовательский вызов API
+                покидает движок, запускается специальный таймер связанный с текущим подключением.
+                Как только пользовательский вызов входит в движок, таймер ожидания останавливается.
+                Если тайм-аут простоя истечёт движок закроет соединение так как будто произошло
+                асинхронная отмена подключения:<itemizedlist>
+                    <listitem>
+                        <para>все активные операторы и курсоры закрываются;</para>
+                    </listitem>
+                    <listitem>
+                        <para>все активные транзакции откатываются;</para>
+                    </listitem>
+                    <listitem>
+                        <para>сетевые соединения не закрываются в данный момент. Это позволяет
+                            клиентскому приложение получить точный код ошибки при следующем вызове
+                            API. Сетевое соединение будет закрыто на стороне сервера после того, как
+                            ошибка сообщена, или если клиентская сторона отключится по истечению
+                            тайм-аута сети.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Тайм-аут простоя соединения может быть установлен: <itemizedlist>
+                    <listitem>
+                        <para>На уровне базы данных. Значение параметра
+                                <parameter>ConnectionIdleTimeout</parameter> может быть установлено
+                            в <filename>firebird.conf</filename> (или
+                                <filename>databases.conf</filename>) администратором базы данных.
+                            Область действия все пользовательские подключения, исключая системные
+                            подключения (garbage collector, cache writer, и др.). Параметр
+                                <parameter>ConnectionIdleTimeout</parameter> устанавливает тайм-аут
+                            в минутах, по истечении которого неактивное соединение будет разорвано
+                            движком. Ноль означает, что тайм-аут не установлен. Значение по
+                            умолчанию равно 0.</para>
+                    </listitem>
+                    <listitem>
+                        <para>На уровне подключения. Может быть установлен с использованием API (в
+                            секундах) или с помощью SQL оператора <link
+                                linkend="fblangref-session-timeout-set_session_idle_timeout">SET
+                                SESSION IDLE TIMEOUT</link>. Область действия все операторы в
+                            текущем подключении.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Эффективное значение тайм-аута простоя вычисляется каждый раз, когда
+                пользовательский вызов API покидает движок, следующим образом:<itemizedlist>
+                    <listitem>
+                        <para>если тайм-аут не установлен на уровне подключения, будет использовано
+                            значение уровня базы данных;</para>
+                    </listitem>
+                    <listitem>
+                        <para>значение тайм-аута не может быть больше, чем значение установленное на
+                            уровне базы данных. Таким образом, значение тайм-аута простоя может
+                            перекрываться разработчиком приложения для заданного подключения, но оно
+                            не может выти за пределы установленные DBA в конфигурации.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <para>Нулевой тайм-аут не обозначает отсутствие тайм-аута, просто в этом случае таймер
+                ожидания не запускается.</para>
+
+            <para>Несмотря на то, что тайм-аут простоя может быть установлен в секундах, абсолютная
+                точность не гарантируется. При высокой нагрузке он может быть менее точным.
+                Единственная гарантия которую может дать Firebird это то, что тайм-аут не сработает
+                раньше указанного момента.</para>
+
+            <section xml:id="fblangref-session-timeout-set_session_idle_timeout">
+                <info>
+                    <title>SET SESSION IDLE TIMEOUT</title>
+                    <keywordset>
+                        <keyword>SET SESSION IDLE TIMEOUT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm><primary>SET SESSION IDLE TIMEOUT</primary></indexterm>
+
+                <formalpara>
+                    <title>Назначение:</title>
+
+                    <para>Установка тайм-аута простоя соединения на уровне соединения.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Доступно в:</title>
+
+                    <para>DSQL.</para>
+                </formalpara>
+
+                <formalpara>
+                    <title>Синтаксис:</title>
+
+                    <para><literallayout class="monospaced">                                       
+SET SESSION IDLE TIMEOUT <replaceable>value</replaceable> [HOUR | MINUTE | SECOND]       
+            </literallayout></para>
+                </formalpara>
+
+                <para>
+                    <table frame="all">
+                        <?dbfo keep-together='auto'?>
+                        <title>Параметры оператора SET SESSION IDLE TIMEOUT</title>
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Параметр</entry>
+                                    <entry align="center">Описание</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><replaceable>value</replaceable></entry>
+                                    <entry>
+                                        <para>Значение тайм-аута простоя в указанных единицах
+                                            измерения времени. Если единица измерения времени не
+                                            указано, то по умолчанию значение тайм-аута измеряется в
+                                            минутах.</para>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+                <para>Устанавливает значение тайм-аута простоя на уровне текущего соединения. Если
+                    единица времени не указана, то по умолчанию тайм-аут будет учитываться в
+                    минутах.</para>
+
+                <note>
+                    <para>Данный SQL оператор работает вне механизма управления транзакциями и
+                        вступают в силу немедленно.</para>
+                </note>
+
+                <formalpara>
+                    <title>Примеры:</title>
+                    <para>
+                        <informalexample>
+                            <para><programlisting language="sql">
+SET SESSION IDLE TIMEOUT 8 HOUR            
+            </programlisting></para>
+                        </informalexample>
+                    </para>
+                </formalpara>
+            </section>
+
+        </section>
+    </section>
+
+
+    <section xml:id="fblangref-session-extconnpool">
+        <info>
+            <title>Пул внешних соединений</title>
+            <keywordset>
+                <keyword>ALTER EXTERNAL CONNECTIONS POOL</keyword>
+            </keywordset>
+        </info>
+
+        <indexterm><primary>ALTER EXTERNAL CONNECTIONS POOL</primary></indexterm>
+
+        <para>Каждое внешнее соединение (созданное оператором EXECUTE STATEMENT ... ON EXTERNAL) при
+            создании связывается с пулом соединений (подробнее см. <link
+                linkend="fblangref-psql-statements-execstmt-ext-connpool">Пул внешних
+                подключений</link>). Данная группа операторов позволяет управлять пулом внешних
+            соединений. При его подготовке они описываются как DDL операторы, но имеют немедленный
+            эффект: то есть они выполняются немедленно и полностью, не дожидаясь фиксации
+            транзакции. Изменения применяются к экземпляру пула в памяти в текущем процессе
+            Firebird. Поэтому изменение в одном классическом процессе не влияет на другие
+            классические процессы. Изменения не являются постоянными и после перезапуска Firebird
+            будет использовать настройки пула из <filename>firebird.conf</filename>.</para>
+
+        <para>Для выполнения операторов данной группы требуется системная привилегия
+            MODIFY_EXT_CONN_POOL. Подробнее о системных привилегиях см. <link
+                linkend="fblangref-security-roles-create">CREATE ROLE</link>.</para>
+
+        <section xml:id="fblangref-session-extconnpool-setsize">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>SET SIZE</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Устанавливает максимальное количество бездействующих соединений.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>                        
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>size</replaceable></entry>
+                                <entry>
+                                    <para>Размер пула внешних соединений. Допустимые значения от 0
+                                        до 1000.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</code> устанавливает
+                максимальное количество бездействующих соединений в пуле внешних соединений.
+                Допустимые значения от 0 до 1000. Нулевое значение обозначает что пул выключен.
+                Значение по умолчанию определяется в <filename>firebird.conf</filename> (параметр
+                ExtConnPoolSize).</para>
+
+        </section>
+
+        <section xml:id="fblangref-session-extconnpool-setlifetime">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>SET LIFETIME</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Устанавливает время жизни бездействующих соединений.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replaceable> <replaceable>&lt;time_part&gt;</replaceable>
+                        
+<replaceable>&lt;time_part&gt;</replaceable> ::= SECOND | MINUTE | HOUR                       
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>value</replaceable></entry>
+                                <entry>
+                                    <para>Время жизни бездействующих соединений.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</code> устанавливает
+                время жизни бездействующих соединений в пуле внешних соединений. Допустимые значения
+                от 1 секунды до 24 часов. Значение по умолчанию определяется в
+                    <filename>firebird.conf</filename> (параметр ExtConnPoolLifeTime в
+                секундах).</para>
+
+        </section>
+
+        <section xml:id="fblangref-session-extconnpool-clearall">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>CLEAR ALL</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Закрывает все бездействующие соединения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL                     
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</code> закрывает все
+                бездействующие соединения в пуле внешних соединений. Все активные соединения будут
+                отсоединены от пула (такие соединения будут немедленно закрыты, когда они не будут
+                использоваться).</para>
+
+        </section>
+
+        <section xml:id="fblangref-session-extconnpool-clearoldest">
+            <info>
+                <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</title>
+            </info>
+
+            <indexterm>
+                <primary>ALTER EXTERNAL CONNECTIONS POOL</primary>
+                <secondary>CLEAR OLDEST</secondary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Закрывает бездействующие соединения у которых истекло время жизни.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <literallayout class="monospaced">
+ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST                    
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Оператор <code>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</code> закрывает
+                бездействующие соединения в пуле у которых истекло время жизни.</para>
+
+        </section>
+    </section>
+
+
+    <section xml:id="fblangref-session-role">
+        <info>
+            <title>Изменение текущей роли</title>
+        </info>
+        <section xml:id="fblangref-session-role-setrole">
+            <info>
+                <title>SET ROLE</title>
+                <keywordset>
+                    <keyword>SET ROLE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SET ROLE</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение текущей роли.</para>
+            </formalpara>
+
+            <formalpara>
+                <info>
+                    <title>Доступно в:</title>
+                </info>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+
+                <para><programlisting>
+SET ROLE <replaceable>rolename</replaceable>  
+                       </programlisting></para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <title>Параметры оператора SET ROLE</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="0.8*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.0*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>rolename</replaceable></entry>
+                                <entry>
+                                    <para>Имя устанавливаемой роли.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Согласно стандарту SQL-2008 оператор SET ROLE позволяет установить контекстной
+                переменной CURRENT_ROLE одну из назначенных ролей для пользователя CURRENT_USER или
+                роль, полученную в результате доверительной аутентификации (в этом случае оператор
+                принимает вид SET TRUSTED ROLE).</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение текущей роли</title>
+                        <para><programlisting language="sql">
+SET ROLE manager;
+SELECT current_role FROM rdb$database;
+              
+                </programlisting>
+                            <screen>
+ROLE
+=======================
+MANAGER                    
+                </screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-session-role-settrustedrole">
+            <info>
+                <title>SET TRUSTED ROLE</title>
+                <keywordset>
+                    <keyword>SET TRUSTED ROLE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SET TRUSTED ROLE</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Установка доверенной роли.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para><programlisting>
+SET TRUSTED ROLE 
+                       </programlisting></para>
+            </formalpara>
+
+            <para>Оператор SET TRUSTED ROLE включает доступ доверенной роли, при условии, что
+                CURRENT_USER получен с помощью доверительной аутентификации и роль доступна.</para>
+            <para>Идея отдельной команды SET TRUSTED ROLE состоит в том, чтобы при подключении
+                доверенного пользователя не указывать никакой дополнительной информации о роли, SET
+                TRUSTED ROLE делает доверенную роль (если таковая существует) текущей ролью без
+                дополнительной деятельности, связанной с установкой параметров DBP.</para>
+            <para>Доверенная роль это не специальный тип роли, ей может быть любая роль, созданная с
+                помощью оператора CREATE ROLE или предопределённая системная роль RDB$ADMIN. Она
+                становится доверенной ролью для подключения, когда подсистема отображения объектов
+                безопасности (security objects mapping subsystem) находит соответствие между
+                результатом аутентификации, полученным от плагина и локальным или глобальным
+                отображением (mapping) для текущей базы данных. Роль даже может быть той, которая не
+                предоставлена явно этому доверенному пользователю. </para>
+            <note>
+                <para>Доверенная роль не назначается при подключении по умолчанию. Можно изменить
+                    это поведение, используя соответствующий плагин аутентификации и команды
+                    CREATE/ALTER MAPPING.</para>
+            </note>
+            <para>Примером использования доверенной роли является назначение системной роли
+                RDB$ADMIN для администраторов Windows, когда используется доверительная
+                аутентификация Windows.</para>
+        </section>
+    </section>
+
+    <section xml:id="fblangref-session-timezone">
+        <info>
+            <title>Управление часовым поясом сеанса</title>
+        </info>
+
+        <section xml:id="fblangref-session-timezone-settimezone">
+            <info>
+                <title>SET TIME ZONE</title>
+            </info>
+            <indexterm>
+                <primary>SET TIME ZONE</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение часового пояса сеанса.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET TIME ZONE { <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL }
+                        
+<replaceable>&lt;time zone string&gt;</replaceable> ::=
+    '<replaceable>&lt;time zone&gt;</replaceable>'                            
+                            
+<replaceable>&lt;time zone&gt;</replaceable> ::=
+    <replaceable>&lt;time zone region&gt;</replaceable> |
+    [+/-] <replaceable>&lt;hour displacement&gt;</replaceable> [: <replaceable>&lt;minute displacement&gt;</replaceable>]                          
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>Немедленно изменяет часовой пояс сеанса (текущего подключения).</para>
+            <para>Указание LOCAL вернет к начальному часовому поясу сеанса сеанса (либо по
+                умолчанию, либо как указано в свойстве соединения
+                    <code>isc_dpb_session_time_zone</code>). </para>
+
+            <para>Получить текущий часовой пояс сеанса можно с использованием функции
+                    <code>RDB$GET_CONTEXT</code> с аргументами 'SYSTEM' для пространства имён и
+                'SESSION_TIMEZONE' в качестве имени переменной.</para>
+
+            <note>
+                <para>Выполнение <code>ALTER SESSION RESET</code> оказывает такое же влияние на часовой пояс
+                    сеанса, что и <code>SET TIME ZONE LOCAL</code>, но также сбрасывает другие свойства сеанса.
+                </para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение часового пояса</title>
+
+                        <para><programlisting language="sql"> 
+set time zone '-02:00';
+select rdb$get_context('SYSTEM', 'SESSION_TIMEZONE') from rdb$database;
+-- returns -02:00
+
+set time zone 'America/Sao_Paulo';
+select rdb$get_context('SYSTEM', 'SESSION_TIMEZONE') from rdb$database;
+-- returns America/Sao_Paulo
+
+set time zone local;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-datatypes-datetime-timezone">Часовой пояс</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+
+    <section xml:id="fblangref-session-decfloat">
+        <info>
+            <title>Управление обработкой DECFLOAT</title>
+        </info>
+
+        <section xml:id="fblangref-session-decfloat-round">
+            <info>
+                <title>SET DECFLOAT ROUND</title>
+            </info>
+            <indexterm>
+                <primary>SET DECFLOAT ROUND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение режима округления для типа DECFLOAT.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>                      
+                        </literallayout>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET DECFLOAT ROUND</title>
+                    <tgroup cols="2">
+                        <colspec colname="colArgument" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="colDesc" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row valign="middle">
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>mode</replaceable></entry>
+                                <entry>
+                                    <para>Режим округления.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Оператор SET DECFLOAT ROUND изменяет режим округления для текущей сессии.
+                Поддерживаются следующие режимы округления совместимые со стандартом IEEE: <itemizedlist>
+                    <listitem>
+                        <para><emphasis role="bold">CEILING</emphasis>. Округление сверху. Если все
+                            отбрасываемые цифры равны нулю или знак числа отрицателен, последняя не
+                            отбрасываемая цифра не меняется. В противном случае последняя не
+                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            сторону).</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">UP</emphasis>. Округление по направлению от нуля
+                            (усечение с приращением). Отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
+                            значению. Если результат равноудаленный, выполняется округление в
+                            большую сторону. Если отбрасываемые значения больше чем или равны
+                            половине (0.5) единицы в следующей левой позиции, последняя не
+                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            сторону). В противном случае отбрасываемые значения игнорируются. Этот
+                            режим округления используется в Firebird по умолчанию.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">HALF_EVEN</emphasis>. Округление к ближайшему
+                            значению. Если результат равноудаленный, выполняется округление так,
+                            чтобы последняя цифра была четной. Если отбрасываемые значения больше
+                            половины (0.5) единицы в следующей левой позиции, последняя не
+                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
+                            сторону). Если они меньше половины, результат не корректируется (то есть
+                            отбрасываемые знаки игнорируются). В противном случае, когда
+                            отбрасываемые значения точно равны половине, последняя не отбрасываемая
+                            цифра не меняется, если она является четной и инкрементируется на
+                            единицу (округляется в большую сторону) в противном случае (чтобы
+                            получить четную цифру). Этот режим округления называется также
+                            банковским округлением и дает ощущение справедливого округления.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">HALF_DOWN</emphasis>. Округление к ближайшему
+                            значению. Если результат равноудаленный, выполняется округление в
+                            меньшую сторону. Если отбрасываемые значения больше чем или равны
+                            половине (0.5) единицы в следующей левой позиции, последняя не
+                            отбрасываемая цифра декрементируется на единицу (округляется в меньшую
+                            сторону). В противном случае отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">DOWN</emphasis>. Округление по направлению к
+                            нулю (усечение). Отбрасываемые значения игнорируются.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
+                            отбрасываемые цифры равны нулю или знак положителен, последняя не
+                            отбрасываемая цифра не меняется. В противном случае (знак отрицателен)
+                            последняя не отбрасываемая цифра инкрементируется на единицу.</para>
+                    </listitem>
+                    <listitem>
+                        <para><emphasis role="bold">REROUND</emphasis>. Округление к большему
+                            значению, если округляется 0 или 5, в противном случае округление
+                            происходит к меньшему значению.</para>
+                    </listitem>
+                </itemizedlist></para>
+
+            <formalpara>
+                <title>Примеры:</title>
+
+                <para>
+                    <example>
+                        <title>Изменение режима округления</title>
+
+                        <para><programlisting language="sql"> 
+SET DECFLOAT ROUND HALF_DOWN;
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <para>Подробнее о режимах округления для типа DECFLOAT см. <link
+                    linkend="fblangref-datatypes-float-decfloat-round-mode">Режимы
+                округления</link>.</para>
+        </section>
+
+        <section xml:id="fblangref-session-decfloat-traps">
+            <info>
+                <title>SET DECFLOAT TRAPS TO</title>
+            </info>
+            <indexterm>
+                <primary>SET DECFLOAT TRAPS TO</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение обработки ошибок для типа DECFLOAT.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>      
+                            
+<replaceable>&lt;traps list&gt;</replaceable> ::= <replaceable>&lt;trap&gt;</replaceable>[, <replaceable>&lt;trap&gt;</replaceable>[, ... <replaceable>&lt;trap&gt;</replaceable>]]        
+                            
+<replaceable>&lt;trap&gt;</replaceable> ::= 
+    Division_by_zero 
+  | Inexact
+  | Invalid_operation
+  | Overflow 
+  | Underflow                           
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
+                Invalid_operation, Overflow, Underflow.</para>
+            <example>
+                <title>Установка ситуаций для которых будет генерироваться исключение</title>
+
+                <para>
+                    <programlisting language="sql"> 
+SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Underflow;
+                </programlisting>
+                </para>
+            </example>
+        </section>
+
+    </section>
+
+    <section xml:id="fblangref-session-set_bind">
+        <info>
+            <title>SET BIND OF</title>
+        </info>
+        <indexterm>
+            <primary>SET BIND OF</primary>
+        </indexterm>
+
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение привязки типа. Обеспечение совместимости со старыми клиентами.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <literallayout class="monospaced">
+SET BIND OF {<replaceable>&lt;type-from&gt;</replaceable> | TIME ZONE} TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY | EXTENDED | NATIVE }
+                                                     </literallayout>
+            </para>
+        </formalpara>
+
+        <para>
+            <table frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Параметры оператора SET BIND OF</title>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><replaceable>type-from</replaceable></entry>
+                            <entry>
+                                <para>Тип данных для которого задаётся правило
+                                    преобразования.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><replaceable>type-to</replaceable></entry>
+                            <entry>
+                                <para>Тип данных в который следует преобразовать.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Данный оператор позволяет задать правила описания типов возвращаемых клиенту
+            нестандартным способом — тип <replaceable>type-from</replaceable> автоматически
+            преобразуется к типу <replaceable>type-to</replaceable>.</para>
+
+        <para>Если используется неполное определение типа (например CHAR вместо
+                CHAR(<replaceable>n</replaceable>)) в левой части SET BIND OF приведения, то
+            преобразование будет осуществляться для всех CHAR столбцов, а не только для CHAR(1).
+            Специальный неполный тип TIME ZONE обозначает все типы (а именно TIME и TIMESTAMP) с
+            TIME ZONE. Когда неполное определение типа используется в правой части оператора (часть
+            TO), сервер автоматически определит недостающие детали этого типа на основе исходного
+            столбца.</para>
+        <para>Изменение связывания любого NUMERIC и DECIMAL типа не влияет на соответствующий
+            базовый целочисленный тип. Напротив, изменение привязки целочисленного типа данных также
+            влияет на соответствующие NUMERIC и DECIMAL.</para>
+
+        <para>Ключевое слово LEGACY в части TO используется, когда тип данных, отсутствующий в
+            предыдущей версии Firebird, должен быть представлен способом понятным для старого
+            клиентского программного обеспечения (возможна некоторая потеря данных). Существуют
+            следующие преобразования в LEGACY типы: <table frame="all">
+                <?dbfo keep-together='auto'?>
+                <title>Преобразования в legacy типы</title>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" align="left"/>
+                    <colspec colname="c2" colnum="2" align="left"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Native тип</entry>
+                            <entry align="center">Legacy тип</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>BOOLEAN</entry>
+                            <entry>CHAR(5)</entry>
+                        </row>
+                        <row>
+                            <entry>DECFLOAT</entry>
+                            <entry>DOUBLE PRECISION</entry>
+                        </row>
+                        <row>
+                            <entry>INT128</entry>
+                            <entry>BIGINT</entry>
+                        </row>
+                        <row>
+                            <entry>TIME WITH TIME ZONE</entry>
+                            <entry>TIME WITHOUT TIME ZONE</entry>
+                        </row>
+                        <row>
+                            <entry>TIMESTAMP WITH TIME ZONE</entry>
+                            <entry>TIMESTAMP WITHOUT TIME ZONE</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+        <para>Использование EXTENDED в части TO заставляет Firebird использовать расширенную форму
+            типа в части FROM. В настоящее время он работает только для <code>{TIME | TIMESTAMP}
+                WITH TIME ZONE</code> — они принудительно приводятся к <code>EXTENDED {TIME |
+                TIMESTAMP} WITH TIME ZONE</code>.</para>
+
+        <para>Установка NATIVE означает, что тип будет использоваться так, как если бы для него не
+            было предыдущих правил преобразования.</para>
+
+        <para>Ту же функциональность можно получить используй тэг <code>isc_dpb_set_bind</code> в
+            DPB. Кроме того, преобразование типов в legacy типы доступные в предыдущих версиях
+            Firebird можно установить с помощью параметра
+                <parameter>DataTypeCompatibility</parameter> в <filename>firebird.conf</filename>
+            или <filename>databases.conf</filename>. Чем позже введено правило (.conf -> DPB ->
+            SQL), тем выше его приоритет.</para>
+
+        <formalpara>
+            <title>Примеры</title>
+            <para>
+                <programlisting language="sql">
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--native    
+</programlisting>
+                <screen>
+                   CAST
+=======================
+                 123.45                    
+                </screen>
+                <programlisting language="sql">
+SET BIND OF DECFLOAT TO DOUBLE PRECISION;
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--double
+</programlisting>
+                <screen>
+                   CAST
+=======================
+      123.4500000000000                    
+                </screen>
+                <programlisting language="sql">
+SET BIND OF DECFLOAT(34) TO CHAR;
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--всё ещё double
+</programlisting>
+                <screen>
+                   CAST
+=======================
+      123.4500000000000                    
+                </screen>
+                <programlisting language="sql">
+SELECT CAST('123.45' AS DECFLOAT(34)) FROM RDB$DATABASE;	--text
+</programlisting>
+                <screen>
+CAST
+==========================================
+123.45                   
+                </screen>
+            </para>
+        </formalpara>
+
+        <example>
+            <title>Использование SET BIND OF TIME ZONE TO EXTENDED</title>
+
+            <para>Если на стороне клиента отсутствует библиотека ICU, то результат следующего
+                запроса будет таким: <programlisting language="sql">
+SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
+</programlisting>
+                <screen>
+                                        CURRENT_TIMESTAMP
+=========================================================
+2020-02-21 16:26:48.0230 GMT*                  
+                </screen>
+            </para>
+            <para>Для того чтобы получить значение смещения времени относительно GMT выполните
+                следующее: <programlisting language="sql">
+SET BIND OF TIME ZONE TO EXTENDED;
+SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
+</programlisting>
+                <screen>
+                                        CURRENT_TIMESTAMP
+=========================================================
+2020-02-21 19:26:55.6820 +03:00                 
+                </screen>
+            </para>
+        </example>
+    </section>
+
+    <section xml:id="fblangref-session-resetsession">
+        <info>
+            <title>ALTER SESSION RESET</title>
+            <keywordset>
+                <keyword>ALTER SESSION RESET</keyword>
+            </keywordset>
+        </info>
+        <indexterm><primary>ALTER SESSION RESET</primary></indexterm>
+
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Сброс сессионного окружения.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para><literallayout class="monospaced">                                       
+ALTER SESSION RESET      
+            </literallayout></para>
+        </formalpara>
+
+        <para>Сбрасывает сеансовое окружение (подключения) к исходному состоянию. Эта
+            функциональность полезна если сеанс используется повторно, вместо того чтобы производить
+            отключение/подключение.</para>
+
+        <para>Данный оператор делает следующее: <itemizedlist>
+                <listitem>
+                    <para>генерируется ошибка (isc_ses_reset_err), если в текущем соединении
+                        существует какая-либо открытая транзакция, кроме текущей транзакции и
+                        подготовленных транзакций 2PC, которые разрешены и игнорируются этой
+                        проверкой;</para>
+                </listitem>
+                <listitem>
+                    <para>системная переменная RESETTING устанавливается в TRUE;</para>
+                </listitem>
+                <listitem>
+                    <para>запускаются триггеры базы данных на событие ON DISCONNECT, если они
+                        присутствуют и разрешены для текущего соединения;</para>
+                </listitem>
+                <listitem>
+                    <para>текущая пользовательская транзакция откатывается (ROLLBACK), если она
+                        есть. Если в текущей активной транзакции были произведены изменения, то
+                        будет выдано предупреждение;</para>
+                </listitem>
+                <listitem>
+                    <para>сбрасывает установленные параметры DECFLOAT (BIND, TRAP и ROUND) в
+                        значения по умолчанию;</para>
+                </listitem>
+                <listitem>
+                    <para>сбрасывает тайм-ауты сессии и оператора в 0;</para>
+                </listitem>
+                <listitem>
+                    <para>удаляет все контекстные переменные из пространства имён
+                        USER_SESSION;</para>
+                </listitem>
+                <listitem>
+                    <para>сбрасывает роль в значение переданное в DPB (указанное при подключении) и
+                        очищает кеш привилегий (если роль была изменена с помощью оператора SET
+                        ROLE);</para>
+                </listitem>
+                <listitem>
+                    <para>очищает содержимое всех используемых глобальных таблиц уровня соединения
+                        (GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS);</para>
+                </listitem>
+                <listitem>
+                    <para>запускаются триггеры базы данных на событие ON CONNECT, если они
+                        присутствуют и разрешены для текущего соединения;</para>
+                </listitem>
+                <listitem>
+                    <para>начинает новую транзакцию с теми же свойствами, что и транзакция, которая
+                        была отменена (если транзакция присутствовала до сброса);</para>
+                </listitem>
+                <listitem>
+                    <para>системная переменная RESETTING устанавливается в FALSE.</para>
+                </listitem>
+            </itemizedlist></para>
+
+        <simplesect>
+            <title>Обработка ошибок</title>
+
+            <para>Ошибка, возникшая в триггере ON DISCONNECT, прерывает сброс сеанса и оставляет
+                состояние сеанса неизменным. Такие ошибки сообщаются с кодом основной ошибки
+                    <code>isc_session_reset_err</code> и текстом ошибки <quote>Cannot reset user
+                    session</quote>.</para>
+
+            <para>Ошибки, возникающие после того, как триггеры ON DISCONNECT выполнены, прерывают
+                выполнение оператора сброса сеанса и само соединение. Такие ошибки сообщались с
+                кодом основной ошибки <code>isc_session_reset_failed</code> и текстом ошибки
+                    <quote>Reset of user session failed. Connection is shut down</quote>.
+                Последующие операции по подключению (кроме отсоединения) завершатся ошибкой
+                    <code>isc_att_shutdown</code>.</para>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-contextvars-resetting">RESETTING</link>.</para>
+            </formalpara>
+        </simplesect>
+    </section>
+
+</chapter>

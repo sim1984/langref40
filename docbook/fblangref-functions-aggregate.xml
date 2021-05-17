@@ -1,0 +1,2199 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-aggfuncs" xml:lang="ru">
+    <info>
+        <title>Агрегатные функции</title>
+    </info>
+
+    <para>Агрегатные функции выполняют вычисление на наборе значений и возвращают одиночное
+        значение. Агрегатные функции, за исключением COUNT, не учитывают значения NULL. Агрегатные
+        функции часто используются совместно с предложением GROUP BY.</para>
+    <para>Агрегатные функции могут быть использованы в качестве выражений только в следующих
+        случаях: <itemizedlist spacing="compact">
+            <listitem>
+                <para>Список выбора инструкции SELECT (вложенный или внешний запрос);</para>
+            </listitem>
+            <listitem>
+                <para>Предложение HAVING.</para>
+            </listitem>
+        </itemizedlist>
+    </para>
+
+    <section xml:id="fblangref-aggfuncs-syntax">
+        <title>Синтаксис агрегатных функций</title>
+
+        <para>Обобщённый синтаксис агрегатных функций выглядит следующим образом:
+            <programlisting>
+<replaceable>&lt;agg_function&gt;</replaceable>([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+        </para>
+
+        <section xml:id="fblangref-aggfuncs-filter">
+            <info>
+                <title>Предложение FILTER</title>
+                <keywordset>
+                    <keyword>FILTER</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>FILTER</primary></indexterm>
+
+            <para>Предложение FILTER расширяет агрегатные функции дополнительным предложением WHERE.
+                Если используется предложение FILTER, то результат агрегата строится только из
+                строк, которые также удовлетворяют условию в дополнительном предложении
+                WHERE.</para>
+
+            <para>Как правило, предложение фильтра может быть реализовано с использованием выражения
+                CASE внутри агрегатной функции: условие фильтра должно быть помещено в предложение
+                WHEN, значение, которое должно быть агрегировано в предложение THEN. Поскольку
+                агрегатные функции обычно пропускают значения NULL, неявное предложение ELSE NULL
+                достаточно, чтобы игнорировать не подходящие под условия фильтрации строки.
+                Следующие два выражения эквивалентны:
+                <programlisting>
+SUM(<replaceable>&lt;expression&gt;</replaceable>) FILTER(WHERE <replaceable>&lt;condition&gt;</replaceable>)               
+                </programlisting>
+                и
+                <programlisting>
+SUM(CASE WHEN <replaceable>&lt;condition&gt;</replaceable> THEN <replaceable>&lt;expression&gt;</replaceable> END)               
+                </programlisting>
+            </para>
+
+            <para>Для COUNT(*) этот пример выглядит иначе, потому что выражение <quote>*</quote> не
+                может быть использовано в предложении THEN. Вместо этого обычно используется любое
+                константное значение не равное NULL.
+                <programlisting>
+COUNT(*) FILTER(WHERE <replaceable>&lt;condition&gt;</replaceable>)               
+                </programlisting>
+                и
+                <programlisting>
+SUM(CASE WHEN <replaceable>&lt;condition&gt;</replaceable> THEN 1 END)               
+                </programlisting>
+            </para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование предложения FILTER</title>
+                        <para><programlisting language="sql">
+SELECT 
+  invoice_year,
+  SUM(revenue) FILTER (WHERE invoice_month = 1) AS jan_revenue,
+  SUM(revenue) FILTER (WHERE invoice_month= 2) AS feb_revenue,
+  ...
+  SUM(revenue) FILTER (WHERE invoice_month = 12) AS dec_revenue 
+FROM (
+  SELECT
+    EXTRACT(YEAR FROM invoices.invoice_date) AS invoice_year,
+    EXTRACT(MONTH FROM invoices.invoice_date) AS invoice_month,
+    invoices.revenue AS revenue
+  FROM invoices
+)
+GROUP BY invoice_year
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="fblangref-aggfuncs-over">
+            <title>Предложение OVER</title>
+
+
+            <para>Любая агрегатная функция может быть использована в качестве оконной. Подробнее см.
+                <link linkend="fblangref-windowfuncs-aggfuncs">Оконные (аналитические) функции</link>. </para>
+        </section>
+    </section>
+
+    <section xml:id="fblangref-aggfuncs-general">
+        <title>Основные агрегатные функции</title>
+
+
+        <section xml:id="fblangref-aggfuncs-avg">
+            <info>
+                <title>AVG</title>
+                <keywordset>
+                    <keyword>AVG</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>AVG</primary></indexterm>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+AVG([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции AVG</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION, DECFLOAT или масштабируемое целое (INTEGER, BIGINT или
+                    INT128) в зависимости от типа аргумента функции
+                    <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция AVG возвращает среднее значение для группы. Значения NULL
+                пропускаются.</para>
+            <para>Параметр ALL применяет агрегатную функцию ко всем значениям. ALL является
+                параметром по умолчанию. Параметр DISTINCT указывает на то, что функция AVG будет
+                выполнена только для одного экземпляра каждого уникального значения, независимо от
+                того, сколько раз встречается это значение.</para>
+            <para>В случае если выборка записей пустая или содержит только значения NULL, результат
+                будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции AVG</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  AVG(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-count">
+            <info>
+                <title>COUNT</title>
+                <keywordset>
+                    <keyword>COUNT</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>COUNT</primary></indexterm>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+COUNT({[ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable> | *}) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции COUNT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BIGINT.</para>
+            </formalpara>
+
+            <para>Функция COUNT возвращает количество значений в группе, которые не являются
+                NULL.</para>
+            <para>При указании DISTINCT из выборки устраняются дубликаты, ALL является значением по
+                умолчанию для всех выборки значений не NULL.</para>
+            <para>Если вместо выражения <replaceable>expr</replaceable> указана звёздочка (*), то
+                будут подсчитаны все строки. Функция COUNT(*) не принимает параметры и не может
+                использоваться с ключевым словом DISTINCT. Для функции COUNT(*) не нужен параметр
+                    <replaceable>expr</replaceable>, так как по определению она не использует
+                сведения о каких-либо конкретных столбцах. Функция COUNT(*) возвращает количество
+                строк в указанной таблице, не отбрасывая дублированные строки. Она подсчитывает
+                каждую строку отдельно. При этом учитываются и строки, содержащие значения
+                NULL.</para>
+            <para>Для пустой выборки данных или если при выборке окажутся одни значения, содержащие
+                NULL, функция возвратит значение равное 0.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции COUNT</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  COUNT(*) AS cnt,
+  COUNT(DISTINCT name) AS cnt_name
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-list">
+            <info>
+                <title>LIST</title>
+                <keywordset>
+                    <keyword>LIST</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>LIST</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+LIST([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable> [, <replaceable>separator</replaceable>]) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)] 
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>])]                  
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции LIST</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает строковый тип данных или BLOB. Поля типа дата /
+                                        время и числовые преобразуются к строке. Агрегатные функции
+                                        в качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>separator</replaceable></entry>
+                                <entry>
+                                    <para>Разделитель. Выражение строкового типа. По умолчанию
+                                        разделителем является запятая.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BLOB.</para>
+            </formalpara>
+
+            <para>Функция LIST возвращает строку, содержащую значения элементов выборки, которые не
+                равны NULL. При пустой выборке функция возвратит NULL. Тип возвращаемого значения
+                текстовый BLOB за исключением тех случаев, когда выражением являются BLOB других
+                подтипов.</para>
+            <para>ALL является опцией по умолчанию. При ней обрабатываются все значения в выборке,
+                не содержащие NULL. При указании DISTINCT из выборки устраняются дубликаты.</para>
+            <para>Значения выражения <replaceable>expr</replaceable> и разделитель
+                    <replaceable>separator</replaceable> поддерживают тип данных BLOB любого размера
+                и набора символов. Поля типа дата / время и числовые перед проведением операции
+                конкатенации преобразуются в строки.</para>
+            <note>
+                <para>Порядок конкатенации строк определяется порядком чтения записей из источников,
+                    который в общем случае не определён. Для придания списку необходимого порядка вы
+                    можете предварительно упорядочить источник данных, например с помощью
+                    производной таблицы.</para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции LIST</title>
+                        <para><programlisting language="sql">
+-- Получение списка, порядок не определён                    
+SELECT LIST (display_name, '; ') 
+FROM GR_WORK;          
+
+-- Получение списка в алфавитном порядке
+SELECT LIST (display_name, '; ') 
+FROM (SELECT display_name 
+      FROM GR_WORK 
+      ORDER BY display_name);
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="fblangref-aggfuncs-max">
+            <info>
+                <title>MAX</title>
+                <keywordset>
+                    <keyword>MAX</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>MAX</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+MAX([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)] 
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции MAX</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция MAX возвращает максимальный элемент выборки, которые не равны NULL. При
+                пустой выборке, или при выборке из одних NULL функция возвратит NULL. Если аргумент
+                функции строка, то функция вернёт значение, которое окажется последним в сортировке
+                при применении COLLATE.</para>
+            <note>
+                <para>Параметр DISTINCT не имеет смысла при использовании функцией MAX и доступен
+                    только для совместимости со стандартом. </para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции MAX</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  MAX(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-select">SELECT</link>, <link
+                        linkend="fblangref-aggfuncs-min">MIN</link>. </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="fblangref-aggfuncs-min">
+            <info>
+                <title>MIN</title>
+                <keywordset>
+                    <keyword>MIN</keyword>
+                </keywordset>
+            </info>
+
+            <indexterm><primary>MIN</primary></indexterm>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+MIN([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                  
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции MIN</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF.
+                                        Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>тот же что и аргумент функции <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция MIN возвращает минимальный элемент выборки, которые не равны NULL. При
+                пустой выборке, или при выборке из одних NULL функция возвратит NULL. Если аргумент
+                функции строка, то функция вернёт значение, которое окажется первым в сортировке при
+                применении COLLATE.</para>
+            <note>
+                <para>Параметр DISTINCT не имеет смысла при использовании функцией MIN и доступен
+                    только для совместимости со стандартом. </para>
+            </note>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции MIN</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  MIN(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-select">SELECT</link>, <link
+                        linkend="fblangref-aggfuncs-max">MAX</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-functions-agg-sum">
+            <info>
+                <title>SUM</title>
+                <keywordset>
+                    <keyword>SUM</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SUM</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+SUM([ALL | DISTINCT] <replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                  
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции SUM</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION, DECFLOAT или масштабируемое целое (INTEGER, BIGINT или
+                    INT128) в зависимости от типа аргумента функции <replaceable>expr</replaceable>.
+                    Обычно, если это возможно, выбирается тип с большей вместимостью, чем тип
+                    выражения <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция SUM возвращает сумму элементов выборки, которые не равны NULL. При пустой
+                выборке, или при выборке из одних NULL функция возвратит NULL.</para>
+            <para>ALL является опцией по умолчанию. При ней обрабатываются все значения из выборки,
+                не содержащие NULL. При указании DISTINCT из выборки устраняются дубликаты, после
+                осуществляется подсчёт.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции SUM</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  SUM(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-dml-select">SELECT</link>. </para>
+            </formalpara>
+        </section>
+
+    </section>
+
+    <section xml:id="fblangref-aggfuncs-stats">
+        <info>
+            <title>Статистические функции</title>
+        </info>
+        <para>Статистические функции являются агрегатными функциями. Эти функции не учитывают
+            значения NULL. К аргументу статистической функции не применимы параметры ALL и
+            DISTINCT.</para>
+        <para>Статистические функции часто используются совместно с предложением GROUP BY. Любую из
+            статистических функций можно использовать в качестве оконной. Подробнее см. <link
+                linkend="fblangref-windowfuncs-aggfuncs">OVER</link>.</para>
+
+        <section xml:id="fblangref-aggfuncs-corr">
+            <info>
+                <title>CORR</title>
+                <keywordset>
+                    <keyword>CORR</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>CORR</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции CORR</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr1</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>expr2</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция CORR возвращает коэффициент корреляции для пары выражений, возвращающих
+                числовые значения.</para>
+            <para>Функция
+                <programlisting>CORR(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) </programlisting>
+                эквивалентна
+                <programlisting>COVAR_POP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) / (STDDEV_POP(<replaceable>&lt;expr2&gt;</replaceable>) * STDDEV_POP(<replaceable>&lt;expr1&gt;</replaceable>))</programlisting>
+            </para>
+            <para>В статистическом смысле, корреляция — это степень связи между переменными. Связь
+                между переменными означает, что значение одной переменной можно в определённой
+                степени предсказать по значению другой. Коэффициент корреляции представляет степень
+                корреляции в виде числа в диапазоне от -1 (высокая обратная корреляция) до 1
+                (высокая корреляция). Значение 0 соответствует отсутствию корреляции.</para>
+            <para>В случае если выборка записей пустая или содержит только значения NULL, результат
+                будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции CORR</title>
+                        <para><programlisting language="sql">
+SELECT
+    CORR(alength, aheight) AS c_corr
+FROM measure              
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>, <link
+                        linkend="fblangref-aggfuncs-stddev-pop">STDDEV_POP</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-covar-pop">
+            <info>
+                <title>COVAR_POP</title>
+                <keywordset>
+                    <keyword>COVAR_POP</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>COVAR_POP</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+COVAR_POP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции COVAR_POP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr1</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>expr2</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция COVAR_POP возвращает ковариацию совокупности (population covariance) пар
+                выражений с числовыми значениями.</para>
+            <para>Функция
+                <programlisting>COVAR_POP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+(SUM(<replaceable>&lt;expr1&gt;</replaceable> * <replaceable>&lt;expr2&gt;</replaceable>) - SUM(<replaceable>&lt;expr1&gt;</replaceable>) * SUM(<replaceable>&lt;expr2&gt;</replaceable>) / COUNT(*)) 
+  / COUNT(*)                        
+</programlisting>
+            </para>
+            <para>В случае если выборка записей пустая или содержит только значения NULL, результат
+                будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции COVAR_POP</title>
+                        <para><programlisting language="sql">
+SELECT
+    COVAR_POP(alength, aheight) AS c_corr
+FROM measure              
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-covar-samp">COVAR_SAMP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-covar-samp">
+            <info>
+                <title>COVAR_SAMP</title>
+                <keywordset>
+                    <keyword>COVAR_SAMP</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>COVAR_SAMP</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+COVAR_SAMP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции COVAR_SAMP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr1</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>expr2</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция COVAR_SAMP возвращает выборочную ковариацию (sample covariance) пары
+                выражений с числовыми значениями.</para>
+            <para>Функция
+                <programlisting>COVAR_SAMP(<replaceable>&lt;expr1&gt;</replaceable>, <replaceable>&lt;expr2&gt;</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+(SUM(<replaceable>&lt;expr1&gt;</replaceable> * <replaceable>&lt;expr2&gt;</replaceable>) - SUM(<replaceable>&lt;expr1&gt;</replaceable>) * SUM(<replaceable>&lt;expr2&gt;</replaceable>) / COUNT(*)) 
+  / (COUNT(*) - 1)                        
+</programlisting>
+            </para>
+            <para>В случае если выборка записей пустая, содержит только 1 запись или содержит только
+                значения NULL, результат будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции COVAR_SAMP</title>
+                        <para><programlisting language="sql">
+SELECT
+    COVAR_SAMP(alength, aheight) AS c_corr
+FROM measure              
+                </programlisting>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-stddev-pop">
+            <info>
+                <title>STDDEV_POP</title>
+                <keywordset>
+                    <keyword>STDDEV_POP</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>STDDEV_POP</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+STDDEV_POP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции STDDEV_POP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION или NUMERIC в зависимости от типа
+                        <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция STDDEV_POP возвращает среднеквадратичное отклонение для группы. Значения
+                NULL пропускаются.</para>
+            <para>Функция
+                <programlisting>STDDEV_POP(<replaceable>&lt;expr&gt;</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>SQRT(VAR_POP(<replaceable>&lt;expr&gt;</replaceable>))</programlisting>
+            </para>
+            <para>В случае если выборка записей пустая или содержит только значения NULL, результат
+                будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции STDDEV_POP</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  STDDEV_POP(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-stddev-pop">STDDEV_SAMP</link>, <link
+                        linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-stddev-samp">
+            <info>
+                <title>STDDEV_SAMP</title>
+                <keywordset>
+                    <keyword>STDDEV_SAMP</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>STDDEV_SAMP</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+STDDEV_SAMP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции STDDEV_SAMP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION или NUMERIC в зависимости от типа
+                        <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция STDDEV_SAMP возвращает стандартное отклонение для группы. Значения NULL
+                пропускаются.</para>
+            <para>Функция
+                <programlisting>STDDEV_SAMP(<replaceable>&lt;expr&gt;</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>SQRT(VAR_SAMP(<replaceable>&lt;expr&gt;</replaceable>))</programlisting>
+            </para>
+            <para>В случае если выборка записей пустая, содержит только 1 запись или содержит только
+                значения NULL, результат будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции STDDEV_SAMP</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  STDDEV_SAMP(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-stddev-pop">STDDEV_POP</link>, <link
+                        linkend="fblangref-aggfuncs-var-samp">VAR_SAMP</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-var-pop">
+            <info>
+                <title>VAR_POP</title>
+                <keywordset>
+                    <keyword>VAR_POP</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>VAR_POP</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+VAR_POP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции VAR_POP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION или NUMERIC в зависимости от типа
+                        <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция VAR_POP возвращает выборочную дисперсию для группы. Значения NULL
+                пропускаются.</para>
+            <para>Функция
+                <programlisting>VAR_POP(<replaceable>&lt;expr&gt;</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+(SUM(<replaceable>&lt;expr&gt;</replaceable> * <replaceable>&lt;expr&gt;</replaceable>) - SUM(<replaceable>&lt;expr&gt;</replaceable>) * SUM(<replaceable>&lt;expr&gt;</replaceable>) / COUNT(<replaceable>&lt;expr&gt;</replaceable>)) 
+  / COUNT(<replaceable>&lt;expr&gt;</replaceable>)
+</programlisting>
+            </para>
+            <para>В случае если выборка записей пустая или содержит только значения NULL, результат
+                будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции VAR_POP</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  VAR_POP(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-var-samp">VAR_SAMP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-var-samp">
+            <info>
+                <title>VAR_SAMP</title>
+                <keywordset>
+                    <keyword>VAR_SAMP</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>VAR_SAMP</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+VAR_SAMP(<replaceable>&lt;expr&gt;</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции VAR_SAMP</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>expr</replaceable></entry>
+                                <entry>
+                                    <para>Выражение. Может содержать столбец таблицы, константу,
+                                        переменную, выражение, неагрегатную функцию или UDF, которая
+                                        возвращает числовой тип данных. Агрегатные функции в
+                                        качестве выражения не допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION или NUMERIC в зависимости от типа
+                        <replaceable>expr</replaceable>.</para>
+            </formalpara>
+
+            <para>Функция VAR_SAMP возвращает несмещённую выборочную дисперсию для группы. Значения
+                NULL пропускаются.</para>
+            <para>Функция
+                <programlisting>VAR_SAMP(<replaceable>&lt;expr&gt;</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+(SUM(<replaceable>&lt;expr&gt;</replaceable> * <replaceable>&lt;expr&gt;</replaceable>) - SUM(<replaceable>&lt;expr&gt;</replaceable>) * SUM(<replaceable>&lt;expr&gt;</replaceable>) / COUNT(<replaceable>&lt;expr&gt;</replaceable>)) 
+  / (COUNT(<replaceable>&lt;expr&gt;</replaceable>) - 1)
+</programlisting>
+            </para>
+            <para>В случае если выборка записей пустая, содержит только 1 запись или содержит только
+                значения NULL, результат будет содержать NULL.</para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Использование функции VAR_SAMP</title>
+                        <para><programlisting language="sql">
+SELECT 
+  dept_no,
+  VAR_SAMP(salary)
+FROM employee
+GROUP BY dept_no
+                </programlisting></para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>, <link
+                        linkend="fblangref-functions-agg-sum">SUM</link>, <link
+                        linkend="fblangref-aggfuncs-count">COUNT</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+
+
+    <section xml:id="fblangref-aggfuncs-regr">
+        <info>
+            <title>Функции линейной регрессии</title>
+        </info>
+        <para>Функции линейной регрессии полезны для продолжения линии тренда. Линия тренда – это,
+            как правило, закономерность, которой придерживается набор значений. Линия тренда полезна
+            для прогнозирования будущих значений. Этот означает, что тренд будет продолжаться и в
+            будущем. Для продолжения линии тренда необходимо знать угол наклона и точку пересечения
+            с осью Y. Набор линейных функций включает функции для вычисления этих значений.</para>
+        <para>В синтаксисе функций, <replaceable>у</replaceable> интерпретируется в качестве
+            переменной, зависящей от <replaceable>х</replaceable>.</para>
+        <para>Любую функции линейной регрессии из статистических функций можно использовать в
+            качестве оконной. Подробнее см. <link linkend="fblangref-windowfuncs-aggfuncs"
+                >Оконные (аналитические) функции</link>.</para>
+
+        <section xml:id="fblangref-aggfuncs-regr-avgx">
+            <info>
+                <title>REGR_AVGX</title>
+                <keywordset>
+                    <keyword>REGR_AVGX</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_AVGX</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_AVGX(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_AVGX</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция REGR_AVGX вычисляет среднее независимой переменной линии регрессии. </para>
+            <para>Функция
+                <programlisting>REGR_AVGX(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+SUM(<replaceable>&lt;X></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>)                       
+
+<replaceable>&lt;X></replaceable> ::= CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</replaceable> IS NOT NULL THEN <replaceable>x</replaceable> END                    
+                    </programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-regr-avgy">REGR_AVGY</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-avgy">
+            <info>
+                <title>REGR_AVGY</title>
+                <keywordset>
+                    <keyword>REGR_AVGY</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_AVGY</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_AVGY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_AVGY</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция REGR_AVGY вычисляет среднее зависимой переменной линии регрессии. </para>
+            <para>Функция
+                <programlisting>REGR_AVGY(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+SUM(<replaceable>&lt;Y></replaceable>) / REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>)                       
+
+<replaceable>&lt;Y></replaceable> ::= CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</replaceable> IS NOT NULL THEN <replaceable>y</replaceable> END                      
+                    </programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-regr-avgx">REGR_AVGX</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-count">
+            <info>
+                <title>REGR_COUNT</title>
+                <keywordset>
+                    <keyword>REGR_COUNT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_COUNT</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_COUNT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>BIGINT.</para>
+            </formalpara>
+
+            <para>Функция REGR_COUNT возвращает количество не пустых пар, используемых для создания
+                линии регрессии. </para>
+            <para>Функция
+                <programlisting>REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+SUM(CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</replaceable> IS NOT NULL THEN 1 END)                       
+</programlisting>
+            </para>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-intercept">
+            <info>
+                <title>REGR_INTERCEPT</title>
+                <keywordset>
+                    <keyword>REGR_INTERCEPT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_INTERCEPT</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_INTERCEPT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_INTERCEPT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция REGR_INTERCEPT вычисляет точку пересечения линии регрессии с осью  Y. </para>
+            <para>Функция
+                <programlisting>REGR_INTERCEPT(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+REGR_AVGY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) - REGR_SLOPE(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * REGR_AVGX(<replaceable>y</replaceable>, <replaceable>x</replaceable>)                      
+</programlisting>
+            </para>
+
+            <formalpara>
+                <title>Примеры:</title>
+                <para>
+                    <example>
+                        <title>Прогнозирование объёмов продаж</title>
+                        <para><programlisting language="sql">
+WITH RECURSIVE years(byyear) AS (
+  SELECT 1991 FROM rdb$database UNION ALL
+  SELECT byyear+1 FROM years WHERE byyear &lt; 2020
+),
+s AS (
+  SELECT EXTRACT(YEAR FROM order_date) AS byyear,
+         SUM(total_value) AS total_value
+  FROM sales GROUP BY 1
+),
+regr AS (
+  SELECT REGR_INTERCEPT(total_value, byyear) as intercept,
+         REGR_SLOPE(total_value, byyear) as slope
+FROM s)
+SELECT years.byyear AS byyear,
+       intercept + (slope * years.byyear) AS total_value
+FROM years CROSS JOIN regr
+                </programlisting></para>
+                        <para>
+                            <screen>
+BYYEAR     TOTAL_VALUE
+----------------------------
+ 1991        118377,35
+ 1992        414557,62
+ 1993        710737,89
+ 1994       1006918,16
+ 1995       1303098,43
+ 1996       1599278,69
+ 1997       1895458,96
+ 1998       2191639,23
+ 1999       2487819,50
+ 2000       2783999,77
+...                                
+                            </screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-regr-avgy">REGR_AVGY</link>, <link
+                        linkend="fblangref-aggfuncs-regr-avgx">REGR_AVGX</link>, <link
+                        linkend="fblangref-aggfuncs-regr-slope">REGR_SLOPE</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-r2">
+            <info>
+                <title>REGR_R2</title>
+                <keywordset>
+                    <keyword>REGR_R2</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_R2</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_R2(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_R2</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция REGR_R2 вычисляет коэффициент детерминации, или R-квадрат, линии
+                регрессии.</para>
+            <para>Функция
+                <programlisting>REGR_R2(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+POWER(CORR(<replaceable>y</replaceable>, <replaceable>x</replaceable>), 2)                   
+</programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-corr">CORR</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-slope">
+            <info>
+                <title>REGR_SLOPE</title>
+                <keywordset>
+                    <keyword>REGR_SLOPE</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_SLOPE</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_SLOPE(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_SLOPE</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Функция REGR_SLOPE вычисляет угол наклона линии регрессии. </para>
+            <para>Функция
+                <programlisting>REGR_SLOPE(<replaceable>y</replaceable>, <replaceable>x</replaceable>)</programlisting>
+                эквивалентна
+                <programlisting>
+COVAR_POP(<replaceable>y</replaceable>, <replaceable>x</replaceable>) / VAR_POP(<replaceable>&lt;X></replaceable>) 
+                        
+<replaceable>&lt;X></replaceable> ::= CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</replaceable> IS NOT NULL THEN <replaceable>x</replaceable> END                        
+</programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-sxx">
+            <info>
+                <title>REGR_SXX</title>
+                <keywordset>
+                    <keyword>REGR_SXX</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_SXX</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_SXX(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_SXX</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Диагностическая статистика, используемая для анализа регрессии. Вычисляется
+                следующим образом:
+                <programlisting>
+REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP(<replaceable>&lt;X></replaceable>)                  
+
+<replaceable>&lt;X></replaceable> ::= CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</replaceable> IS NOT NULL THEN <replaceable>x</replaceable> END                     
+                    </programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-sxy">
+            <info>
+                <title>REGR_SXY</title>
+                <keywordset>
+                    <keyword>REGR_SXY</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_SXY</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_SXY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_SXY</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Диагностическая статистика, используемая для анализа регрессии. Вычисляется
+                следующим образом:
+                <programlisting>
+REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * COVAR_POP(<replaceable>y</replaceable>, <replaceable>x</replaceable>)                  
+</programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-covar-pop">COVAR_POP</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-aggfuncs-regr-syy">
+            <info>
+                <title>REGR_SYY</title>
+                <keywordset>
+                    <keyword>REGR_SYY</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>REGR_SYY</primary></indexterm>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <programlisting>
+REGR_SYY(<replaceable>y</replaceable>, <replaceable>x</replaceable>) [FILTER (WHERE <replaceable>&lt;condition&gt;</replaceable>)]
+  [OVER ([<replaceable>&lt;partition_exp&gt;</replaceable>] [<replaceable>&lt;order_exp&gt;</replaceable>])]                 
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры функции REGR_SYY</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>y</replaceable></entry>
+                                <entry>
+                                    <para>Зависимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>x</replaceable></entry>
+                                <entry>
+                                    <para>Независимая переменная линии регрессии. Может содержать
+                                        столбец таблицы, константу, переменную, выражение,
+                                        неагрегатную функцию или UDF, которая возвращает числовой
+                                        тип данных. Агрегатные функции в качестве выражения не
+                                        допускаются.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>DOUBLE PRECISION.</para>
+            </formalpara>
+
+            <para>Диагностическая статистика, используемая для анализа регрессии. Вычисляется
+                следующим образом:
+                <programlisting>
+REGR_COUNT(<replaceable>y</replaceable>, <replaceable>x</replaceable>) * VAR_POP(<replaceable>&lt;Y></replaceable>)                  
+
+<replaceable>&lt;Y></replaceable> ::= CASE WHEN <replaceable>x</replaceable> IS NOT NULL AND <replaceable>y</replaceable> IS NOT NULL THEN <replaceable>y</replaceable> END                     
+                    </programlisting>
+            </para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-aggfuncs-regr-count">REGR_COUNT</link>, <link
+                        linkend="fblangref-aggfuncs-var-pop">VAR_POP</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+
+</chapter>

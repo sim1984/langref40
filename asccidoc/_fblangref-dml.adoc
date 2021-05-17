@@ -1,0 +1,5722 @@
+[[_fblangref_dml]]
+= Операторы обработки данных (DML)
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+[[_fblangref_dml_select]]
+== SELECT
+(((SELECT)))
+
+.Назначение:
+Выборка данных.
+
+.Доступно в:
+DSQL, ESQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+[WITH [RECURSIVE] <cte> [, <cte> ...]]   
+SELECT 
+  [FIRST m] [SKIP n] 
+  [DISTINCT | ALL] <columns>   
+FROM 
+  source [[AS] alias] 
+  [<joins>]   
+[WHERE <condition>]   
+[GROUP BY <grouping-list>   
+[HAVING <aggregate-condition>]]   
+[WINDOW <window definition> [, <window definition>] ...]
+[PLAN <plan-expr>]   
+[UNION [DISTINCT | ALL] <other-select>]   
+[ORDER BY <ordering-list>] 
+[   {ROWS m [TO n]} 
+  | {[OFFSET n {ROW | ROWS}] 
+     [FETCH {FIRST | NEXT} [m] {ROW | ROWS} ONLY]}
+]   
+[FOR UPDATE [OF <columns>]]   
+[WITH LOCK]   
+[INTO <variables>]                    
+                       
+<variables> ::= [:]varname [, [:]varname ...]
+----
+
+[float]
+===== Описание
+
+Оператор (команда) SELECT извлекает данные из базы данных и передаёт их в приложение или в вызывающую SQL команду.
+Данные возвращаются в виде набора строк (которых может быть 0 или больше), каждая строка содержит один или более столбцов или полей.
+Совокупность возвращаемых строк является результирующим набором данных команды.
+
+Следующие части команды SELECT являются обязательными:
+
+* Ключевое слово SELECT, за которым следует список полей. Эта часть определяет, что запрашивается из базы данных;
+* Ключевое слово FROM, за которым следует объект выборки (например, таблица). Эта часть сообщает серверу, где следует искать запрашиваемые данные.
+
+В простейшей форме SELECT извлекает ряд полей из единственной таблицы, например: 
+[source,sql]
+----
+
+SELECT id, name, address
+FROM contacts
+----
+
+Или, для того чтобы извлечь все поля таблицы: 
+[source,sql]
+----
+
+SELECT * FROM contacts
+----
+
+На практике команда SELECT обычно выполняется с выражением WHERE, которое ограничивает возвращаемый набор данных.
+Также, полученный набор данных обычно сортируется с помощью выражения ORDER BY, дополнительно ограничивается (с целью организации постраничного просмотра данных) выражениями FIRST ... SKIP, OFFSET ... FETCH или ROWS. 
+
+Список полей может содержать различные типы выражений вместо имён полей, а источник необязательно должен быть таблицей или представлением, он так же может быть производной таблицей (derived table), общим табличным выражением (CTE) или селективной хранимой процедурой. 
+
+Несколько источников данных могут быть соединены с помощью выражения JOIN, и несколько результирующих наборов данных могут быть скомбинированы с использованием выражения UNION.
+
+В следующих секциях мы подробно рассмотрим все выражения для команды SELECT и их использование.
+
+[[_fblangref_dml_select_first_skip]]
+=== FIRST, SKIP
+(((SELECT,FIRST)))
+
+.Назначение:
+Получение части строк из упорядоченного набора.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT [FIRST <m>] [SKIP <n>] 
+FROM ... 
+... 
+
+<m>, <n> ::=  
+    integer literal 
+  | query parameter
+  | (integer-expression)
+----
+
+
+
+.Параметры предложений FIRST и SKIP
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``integer literal``
+|
+
+Целочисленный литерал.
+
+|[replaceable]``query parameter``
+|
+
+Параметр запроса.
+? -- в DSQL и :[replaceable]``paramname`` -- в PSQL.
+
+|[replaceable]``integer-expression``
+|
+
+Выражение, возвращающее целочисленное значение.
+|===
+
+[IMPORTANT]
+====
+FIRST и SKIP используются только в Firebird, они не включены в стандарт SQL.
+Рекомендуется использовать OFFSET, FETCH везде, где это возможно. 
+====
+
+[float]
+===== Описание
+
+Выражение FIRST [replaceable]``<m>`` ограничивает результирующий набор данным указанным числом записей. 
+
+Выражение SKIP [replaceable]``<n>`` пропускает указанное число записей перед выдачей результирующего набора данных.
+
+Когда эти выражения используются совместно, например FIRST [replaceable]``m`` SKIP [replaceable]``n``, то в результате [replaceable]``n`` записей будет пропущено и, из оставшихся, [replaceable]``m`` записей будет возвращено в результирующем наборе данных.
+
+FIRST и SKIP являются необязательными выражениями.
+
+[[_fblangref_dml_select_first_skip01]]
+==== Особенности использования
+
+
+
+* Разрешается использовать SKIP 0 – в этом случае 0 записей будет пропущено; 
+* В случае использования FIRST 0 будет возвращён пустой набор записей;
+* Отрицательные значения FIRST и SKIP вызовут ошибку; 
+* Если указанное в SKIP значение превышает размер результирующего набора данных, то вернётся пустой набор данных;
+* Если число записей в наборе данных (или остаток после применения SKIP) меньше, чем заданное в FIRST значение, то соответственно меньшее количество записей будет возвращено;
+* Любой аргумент FIRST или SKIP, который не является целым числом или параметром SQL должен был заключён в круглые скобки. Это, означает, что в случае использования вложенной команды SELECT в качестве параметра для FIRST или SKIP, он должен быть вложен в две пары скобок.
+
+
+[[_fblangref_dml_select_first_skip_ex]]
+==== Примеры
+
+[example]
+Следующий запрос вернёт первые 10 имён из таблицы PEOPLE (имена также будут отсортированы, см.
+ниже раздел <<_fblangref_dml_select_orderby,ORDER BY>>): 
+[source,sql]
+----
+
+SELECT FIRST 10 id, name 
+FROM People
+ORDER BY name ASC
+----
+Следующий запрос вернёт все записи из таблицы PEOPLE, за исключением первых 10 имён: 
+[source,sql]
+----
+
+SELECT SKIP 10 id, name 
+FROM People
+ORDER BY name ASC
+----
+А этот запрос вернёт последние 10 записей (обратите внимание на двойные скобки): 
+[source,sql]
+----
+
+SELECT SKIP ((SELECT COUNT(*) - 10 FROM People))
+  id, name 
+FROM People
+ORDER BY name ASC
+----
+Этот запрос вернёт строки 81-100 из таблицы PEOPLE: 
+[source,sql]
+----
+
+SELECT FIRST 20 SKIP 80 id, name 
+FROM People
+ORDER BY name ASC
+----
+
+.См. также:
+<<_fblangref_dml_select_fetch_offset,"FETCH, OFFSET">>, <<_fblangref_dml_select_rows,ROWS>>. 
+
+[[_fblangref_dml_select_fieldlist]]
+=== Список полей SELECT
+
+Список полей содержит одно или более выражений, разделённых запятыми.
+Результатом каждого выражения является значение соответствующего поля в наборе данных команды SELECT.
+Исключением является выражение `\*` ("`звёздочка`"), которое возвращает все поля отношения.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT   [...] 
+[DISTINCT | ALL] <output-column> [, <output-column> ...]   
+[...]
+FROM ...
+
+<output-column> ::= 
+    [qualifier.]* 
+  | <value-expression> [COLLATE collation] [[AS] alias]  
+
+<value-expression> ::= 
+    [qualifier.]table-column 
+  | [qualifier.]view-column
+  | [qualifier.]selectable-SP-outparm 
+  | constant 
+  | NULL          
+  | context-variable 
+  | function-call
+  | single-value-subselect 
+  | CASE-construct
+  | other-single-value-expr
+----
+
+
+
+.Параметры списка полей оператора SELECT
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``qualifier``
+|
+
+Имя таблицы (представления) или псевдоним таблицы (представления, хранимой процедуры, производной таблицы).
+
+|[replaceable]``collation``
+|
+
+Существующее имя сортировки (только для столбцов символьных типов).
+
+|[replaceable]``alias``
+|
+
+Псевдоним поля.
+
+|[replaceable]``table-column``
+|
+
+Столбец таблицы.
+
+|[replaceable]``view-column``
+|
+
+Столбец представления.
+
+|[replaceable]``selectable-SP-outparm``
+|
+
+Выходной параметр селективной хранимой процедуры.
+
+|[replaceable]``constant``
+|
+
+Константа.
+
+|[replaceable]``context-variable``
+|
+
+Контекстная переменная.
+
+|[replaceable]``function-call``
+|
+
+Вызов скалярной, агрегатной или оконной функции.
+
+|[replaceable]``single-value-subselect``
+|
+
+Подзапрос, возвращающий единственное скалярное значение (сингелтон).
+
+|[replaceable]``CASE-construct``
+|
+
+Конструкция CASE.
+
+|[replaceable]``other-single-value-expr``
+|
+
+Любое другое выражение, возвращающее единственное значение типа данных Firebird или NULL.
+|===
+
+[float]
+===== Описание
+
+Хорошим тоном является указание полного имени поля вместе с именем алиаса или таблицы/представления/хранимой процедуры, к которой это поле принадлежит. 
+
+Указание полного имени становится *обязательным* в случае, если поле с одним и тем же именем находится в более чем одной таблице, участвующей в объединении.
+
+.Обратите внимание
+[IMPORTANT]
+====
+Алиасы (псевдонимы) заменяют оригинальное имя таблицы/ представления/ хранимой процедуры: как только определён алиас для соответствующего отношения, использовать оригинальное имя нельзя.
+====
+
+В начало списка полей могут быть добавлены ключевые слова DISTINCT или ALL:
+
+* DISTINCT удаляет дубликаты строк: то есть, если две или более записей содержат одинаковые значения во всех соответствующих полях, только одна из этих строк будет включена в результирующий набор данных.
+* ALL включает все строки в результирующий набор данных. ALL включено по умолчанию и поэтому редко используется: явное указание поддерживается для совместимости со стандартом SQL. 
+
+Выражение COLLATE не изменяет содержимое поля, однако, если указать COLLATE для определённого поля, то это может изменить чувствительность к регистру символов или к акцентам (accent sensitivity), что, в свою очередь, может повлиять на: 
+
+* Порядок сортировки, в случае если это поле указано в выражении ORDER BY;
+* Группировку, в случае если это поле указано в выражении GROUP BY;
+* Количество возвращаемых строк, если используется DISTINCT.
+
+
+==== Примеры операторов SELECT с различными типами полей
+
+Простой SELECT использующий только имена полей: 
+[source,sql]
+----
+
+SELECT cust_id, cust_name, phone
+FROM customers
+WHERE city = 'London'
+----
+
+Запрос с конкатенацией и вызовом функции в списке полей: 
+[source,sql]
+----
+
+SELECT 
+  'Mr./Mrs. ' || lastname, 
+  street, 
+  zip, 
+  upper(city)
+FROM contacts
+WHERE date_last_purchase(id) = current_date
+----
+
+Запрос с двумя подзапросами: 
+[source,sql]
+----
+
+SELECT 
+  p.fullname,
+  (SELECT name FROM classes c 
+   WHERE c.id = p.class) AS class,
+  (SELECT name FROM mentors m 
+   WHERE m.id = p.mentor) AS mentor
+FROM pupils p
+----
+
+Следующий запрос делает то же самое, что и предыдущий, только с использованием соединения таблиц (JOIN) вместо подзапросов: 
+[source,sql]
+----
+
+SELECT 
+  p.fullname,
+  c.name AS class,
+  m.name AS mentor
+FROM pupils p
+  JOIN classes c ON c.id = p.class
+  JOIN mentors m ON m.id = p.mentor
+----
+
+Этот запрос использует конструкцию CASE для определения корректного обращения, например, при рассылке сообщений конкретному человеку: 
+[source,sql]
+----
+
+SELECT 
+  CASE upper(sex)
+    WHEN 'F' THEN 'Mrs.'
+    WHEN 'M' THEN 'Mr.'
+    ELSE ''
+  END AS title,
+  lastname,
+  address
+FROM employees
+----
+
+Запрос с использованием оконной функции.
+Выводит сотрудников отранжированных по заработной плате. 
+[source,sql]
+----
+
+SELECT
+    id,
+    salary,
+    name,
+    DENSE_RANK() OVER(ORDER BY salary) AS EMP_RANK
+FROM employees
+ORDER BY salary;
+----
+
+Запрос к хранимой процедуре: 
+[source,sql]
+----
+
+SELECT * 
+FROM interesting_transactions(2010, 3, 'S')
+ORDER BY amount
+----
+
+Выборка полей производной таблицы.
+Производная таблица – это заключённый в скобки оператор SELECT, результат которого используется в запросе уровнем выше, как будто является обычной таблицей или представлением. 
+[source,sql]
+----
+
+SELECT 
+  fieldcount,
+  COUNT(relation) AS num_tables
+FROM 
+  (SELECT 
+     r.rdb$relation_name AS relation,
+     COUNT(*) AS fieldcount
+   FROM rdb$relations r
+     JOIN rdb$relation_fields rf
+       ON rf.rdb$relation_name = r.rdb$relation_name
+   GROUP BY relation)
+GROUP BY fieldcount
+----
+
+Запрос к контекстной переменной (CURRENT_TIME): 
+[source,sql]
+----
+
+SELECT current_time FROM rdb$database
+----
+
+Для тех, кто не знаком с RDB$DATABASE: это системная таблица, которая всегда существует во всех базах данных Firebird и всегда содержит только одну строку.
+И, хотя эта таблица не была создана специально для этой цели, стало распространённой практикой среди разработчиков Firebird выполнять запросы к этой таблице в случае, если нужно выполнить запрос, не привязанный ни к какой таблице, в котором результат получается из выражений, указанных в списке полей оператора SELECT.
+Например: 
+[source,sql]
+----
+
+SELECT 
+  power(12, 2) AS twelve_squared, 
+  power(12, 3) AS twelve_cubed 
+FROM rdb$database
+----
+
+И, наконец, пример запроса к самой таблице RDB$DATABASE, с помощью которого можно получить кодировку по умолчанию данной БД: 
+[source,sql]
+----
+
+SELECT rdb$character_set_name FROM rdb$database
+----
+
+.См. также:
+<<_fblangref_aggfuncs,Агрегатные функции>>, <<_fblangref_windowfuncs,Оконные (аналитические) функции>>, <<_fblangref_contextvars,Контекстные переменные>>, <<_fblangref_commons_conditional_case,CASE>>, <<_fblangref_commons_subqueries,Подзапросы>>. 
+
+[[_fblangref_dml_select_from]]
+=== FROM
+(((SELECT,FROM)))
+
+Выражение FROM определяет источники, из которых будут отобраны данные.
+В простейшей форме, это может быть единственная таблица или представление.
+Однако источниками также могут быть хранимая процедура, производная таблица или общее табличное выражение (CTE). Различные виды источников могут комбинироваться с использованием разнообразных видов соединений (JOIN).
+
+Этот раздел посвящён запрос из единственного источника.
+Соединения рассматриваются в следующем разделе.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT 
+... 
+FROM <source>   
+[<joins>] 
+[...]       
+
+<source> ::= {      
+    table 
+  | view  
+  | selectable-stored-procedure [(args)] 
+  | <derived-table>
+  | <lateral-derived-table> 
+  | <common-table-expression> 
+} [[AS] alias]       
+
+<derived-table> ::= (select-statement) [[AS] alias] [(<column-aliases>)] 
+
+<lateral-derived-table> ::= LATERAL <derived-table>      
+
+<common-table-expression> ::= WITH [RECURSIVE]      
+  <cte-def> [, <cte-def> ...] 
+  select-statement       
+
+<cte-def> ::= name [(<column-aliases>)] AS (select-statement)       
+
+<column-aliases> ::= column-alias [, column-alias ...]
+----
+
+
+
+.Параметры предложения FROM
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``table``
+|
+
+Таблица.
+
+|[replaceable]``view``
+|
+
+Представление.
+
+|[replaceable]``selectable-stored-procedure``
+|
+
+Селективная хранимая процедура.
+
+|[replaceable]``args``
+|
+
+Аргументы селективной хранимой процедуры.
+
+|[replaceable]``derived-table``
+|
+
+Производная таблица.
+
+|[replaceable]``lateral-derived-table``
+|Производная таблица с горизонтальной связью.
+
+|[replaceable]``cte-def``
+|
+
+Общее табличное выражение (CTE).
+
+|[replaceable]``select-statement``
+|
+
+Произвольный SELECT запрос.
+
+|[replaceable]``column-alias``
+|
+
+Алиас столбца CTE или производной таблицы.
+
+|[replaceable]``name``
+|
+
+Имя CTE.
+
+|[replaceable]``alias``
+|
+
+Псевдоним (алиас) для одного из источников данных (таблицы, представления, процедуры, CTE, производной таблицы).
+|===
+
+[[_fblangref_dml_select_from_tableorview]]
+==== Выборка из таблицы или представления
+
+При выборке из таблицы или представления предложение FROM не требует ничего кроме его имени.
+Псевдоним (алиас) может быть полезен или даже необходим при использовании подзапросов, которые соотнесены с главным запросом (обычно подзапросы являются коррелированными).
+
+[float]
+===== Примеры
+
+
+[source,sql]
+----
+
+SELECT id, name, sex, age 
+FROM actors
+WHERE state = 'Ohio'
+
+SELECT * 
+FROM birds
+WHERE type = 'flightless'
+ORDER BY family, genus, species
+
+SELECT 
+  firstname,
+  middlename,
+  lastname,
+  date_of_birth,
+  (SELECT name FROM schools s WHERE p.school = s.id) schoolname
+FROM pupils p
+WHERE year_started = 2012
+ORDER BY schoolname, date_of_birth
+----
+
+[IMPORTANT]
+====
+Если вы дадите таблице или представлению псевдоним (алиас), то вы должны везде использовать этот псевдоним, а не имя таблицы, при обращении к именам столбцов. 
+
+Корректное использование: 
+[source,sql]
+----
+
+SELECT PEARS
+FROM FRUIT
+ 
+SELECT FRUIT.PEARS 
+FROM FRUIT
+ 
+SELECT PEARS 
+FROM FRUIT F
+ 
+SELECT F.PEARS
+FROM FRUIT F
+----
+
+Некорректное использование: 
+[source,sql]
+----
+
+SELECT FRUIT.PEARS
+FROM FRUIT F
+----
+====
+
+[[_fblangref_dml_select_from_sp]]
+==== Выборка из селективной хранимой процедуры
+
+Селективная хранимая процедура (т.е.
+с возможностью выборки) должна удовлетворять следующим условиям:
+
+* Содержать, по крайней мере, один выходной параметр;
+* Использовать ключевое слово SUSPEND таким образом, чтобы вызывающий запрос могу выбирать выходные строки одну за другой, также как выбираются строки таблицы или представления.
+
+Выходные параметры селективной хранимой процедуры с точки зрения команды SELECT соответствуют полям обычной таблицы.
+
+Выборка из хранимой процедуры без входных параметров осуществляется точно так же, как обычная выборка из таблицы: 
+[source,sql]
+----
+
+SELECT * 
+FROM suspicious_transactions
+WHERE assignee = 'Dmitrii'
+----
+
+Если хранимая процедура требует входные параметры, то они должны быть указаны в скобках после имени процедуры: 
+[source,sql]
+----
+
+SELECT name, az, alt 
+FROM visible_stars('Brugge', current_date, '22:30')
+WHERE alt >= 20
+ORDER BY az, alt
+----
+
+Значения для опциональных параметров (то есть, параметров, для которых определены значения по умолчанию) могут быть указаны или опущены. 
+
+_Однако если параметры задаются частично, то
+                        пропущенные параметры должны быть в конце перечисления внутри
+                        скобок._
+
+Если предположить, что процедура visible_stars из предыдущего примера имеет два опциональных параметра spectral_class (varchar(12)) и min_magn (numeric(3,1)), то следующие команды будут корректными: 
+[source,sql]
+----
+
+SELECT name, az, alt 
+FROM visible_stars('Brugge', current_date, '22:30')
+ 
+SELECT name, az, alt 
+FROM visible_stars('Brugge', current_date, '22:30', 4.0)
+----
+
+А вот этот запрос не будет корректным: 
+[source,sql]
+----
+
+SELECT name, az, alt 
+FROM visible_stars('Brugge', current_date, 4.0)
+----
+
+Алиас для селективной хранимой процедуры указывается после списка параметров: 
+[source,sql]
+----
+
+SELECT 
+  number,
+  (SELECT name FROM contestants c 
+   WHERE c.number = gw.number)
+FROM get_winners('#34517', 'AMS') gw
+----
+
+Если вы указываете поле (выходной параметр) с полным именем процедуры, не включайте в это имя список параметров процедуры: 
+[source,sql]
+----
+
+SELECT number,
+  (SELECT name FROM contestants c 
+   WHERE c.number = get_winners.number)
+FROM get_winners('#34517', 'AMS')
+----
+
+.См. также:
+<<_fblangref_psql_procedure,Хранимые процедуры>>, <<_fblangref_ddl_procedure_create,CREATE PROCEDURE>>. 
+
+[[_fblangref_dml_select_from_devired_table]]
+==== Выборка из производной таблицы (derived table)
+
+Производная таблица -- это корректная команда SELECT, заключённая в круглые скобки, опционально обозначенная псевдонимом таблицы и псевдонимами полей. 
+
+.Синтаксис:
+
+[source]
+----
+
+<derived table> ::= (select-query) [[AS] derived-table-alias] [(<derived-column-aliases>)]       
+
+<derived-column-aliases> := column-alias [, column-alias ...]
+
+<lateral-derived-table> ::= LATERAL <derived-table>
+----
+
+Возвращаемый набор данных такого оператора представляет собой виртуальную таблицу, к которой можно составлять запросы, так как будто это обычная таблица. 
+
+Производная таблица в запросе ниже выводит список имён таблиц в базе данных и количество столбцов в них.
+Запрос к производной таблице выводит количество полей, и количество таблиц с таким количеством полей. 
+[source,sql]
+----
+
+SELECT
+  FIELDCOUNT,
+  COUNT(RELATION) AS NUM_TABLES
+FROM (SELECT
+        R.RDB$RELATION_NAME RELATION,
+        COUNT(*) AS FIELDCOUNT
+      FROM RDB$RELATIONS R 
+        JOIN RDB$RELATION_FIELDS RF 
+          ON RF.RDB$RELATION_NAME = R.RDB$RELATION_NAME
+      GROUP BY RELATION)
+GROUP BY FIELDCOUNT
+----
+
+Тривиальный пример, демонстрирующий использование псевдонима производной таблицы и списка псевдонимов столбцов (оба опциональные): 
+[source,sql]
+----
+
+SELECT
+  DBINFO.DESCR, DBINFO.DEF_CHARSET
+FROM (SELECT *
+      FROM RDB$DATABASE) DBINFO (DESCR, REL_ID, SEC_CLASS, DEF_CHARSET)
+----
+
+.Примечания:
+[NOTE]
+====
+
+
+* Производные таблицы могут быть вложенными;
+* Производные таблицы могут быть объединениями и использоваться в объединениях. Они могут содержать агрегатные функции, подзапросы и соединения, и сами по себе могут быть использованы в агрегатных функциях, подзапросах и соединениях. Они также могут быть хранимыми процедурами или запросами из них. Они могут иметь предложения WHERE, ORDER BY и GROUP BY, указания FIRST, SKIP или ROWS и т.д.;
+* Каждый столбец в производной таблице должен иметь имя. Если этого нет по своей природе (например, потому что это -- константа), то надо в обычном порядке присвоить псевдоним или добавить список псевдонимов столбцов в спецификации производной таблицы;
+* Список псевдонимов столбцов опциональный, но если он присутствует, то должен быть полным (т.е. он должен содержать псевдоним для каждого столбца производной таблицы);
+* Оптимизатор может обрабатывать производные таблицы очень эффективно. Однако если производная таблица включена во внутреннее соединение и содержит подзапрос, то никакой порядок соединения не может быть использован оптимизатором;
+* Ключевое слово LATERAL позволяет производной таблице ссылаться на поля из ранее перечисленных таблиц в текущем [replaceable]``<table reference list>``. Подробнее смотрите в разделе <<_fblangref_dml_select_joins_lateral,Соединение с LATERAL производными таблицами>>.
+
+====
+
+Приведём пример того, как использование производных таблиц может упростить решение некоторой задачи. 
+
+Предположим, что у нас есть таблица COEFFS, которая содержит коэффициенты для ряда квадратных уравнений, которые мы собираемся решить.
+Она может быть определена примерно так: 
+[source,sql]
+----
+
+CREATE TABLE coeffs (
+  a DOUBLE PRECISION NOT NULL,
+  b DOUBLE PRECISION NOT NULL,
+  c DOUBLE PRECISION NOT NULL,
+  CONSTRAINT chk_a_not_zero CHECK (a <> 0)
+)
+----
+
+В зависимости от значений коэффициентов a, b и c, каждое уравнение может иметь ноль, одно или два решения.
+Мы можем найти эти решения с помощью одноуровневого запроса к таблице COEFFS, однако код такого запроса будет громоздким, а некоторые значения (такие, как дискриминанты) будут вычисляться несколько раз в каждой строке.
+
+Если использовать производную таблицу, то запрос можно сделать гораздо более элегантным: 
+[source,sql]
+----
+
+SELECT
+  IIF (D >= 0, (-b - sqrt(D)) / denom, NULL) AS sol_1,
+  IIF (D > 0, (-b + sqrt(D)) / denom, NULL) AS sol_2
+FROM
+  (SELECT b, b*b - 4*a*c, 2*a FROM coeffs) (b, D, denom)
+----
+
+Если мы захотим показывать коэффициенты рядом с решениями уравнений, то мы можем модифицировать запрос следующим образом: 
+[source,sql]
+----
+
+SELECT
+  a, b, c,
+  IIF (D >= 0, (-b - sqrt(D)) / denom, NULL) sol_1,
+  IIF (D > 0, (-b + sqrt(D)) / denom, NULL) sol_2
+FROM
+  (SELECT a, b, c, b*b - 4*a*c AS D, 2*a AS denom
+   FROM coeffs)
+----
+
+Обратите внимание, что в первом запросе мы назначили алиасы для всех полей производной таблицы в виде списка после таблицы, а во втором, по мере необходимости, добавляем алиасы внутри запроса производной таблицы.
+Оба этих метода корректны, так как при правильном применении гарантируют, что каждое поле производной таблицы имеет уникальное имя.
+
+[NOTE]
+====
+На самом деле все столбцы, вычисляемые в производной таблице, будут перевычислены столько раз, сколько раз они указываются в основном запросе.
+Это важно может привести к неожиданным результатам при использовании недетерминированных функций.
+Следующий пример показывает сказанное: 
+[source,sql]
+----
+                           
+SELECT
+    UUID_TO_CHAR(X) AS C1,
+    UUID_TO_CHAR(X) AS C2,
+    UUID_TO_CHAR(X) AS C3
+FROM (SELECT GEN_UUID() AS X
+      FROM RDB$DATABASE) T;
+----
+результатом этого запроса будет 
+----
+
+C1                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+C2                              C1214CD3-423C-406D-B5BD-95BF432ED3E3
+C3                              EB176C10-F754-4689-8B84-64B666381154
+----
+
+Для материализации результата функции GEN_UUID вы можете воспользоваться следующим способом: 
+[source,sql]
+----
+                            
+SELECT
+    UUID_TO_CHAR(X) AS C1,
+    UUID_TO_CHAR(X) AS C2,
+    UUID_TO_CHAR(X) AS C3
+FROM (SELECT GEN_UUID() AS X
+      FROM RDB$DATABASE
+      UNION ALL
+      SELECT NULL FROM RDB$DATABASE WHERE 1=0) T;
+----
+результатом этого запроса будет 
+----
+
+C1                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+C2                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+C3                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+----
+или завернуть функцию GEN_UUID в подзапрос 
+[source,sql]
+----
+                          
+SELECT
+    UUID_TO_CHAR(X) AS C1,
+    UUID_TO_CHAR(X) AS C2,
+    UUID_TO_CHAR(X) AS C3
+FROM (SELECT
+          (SELECT GEN_UUID() FROM RDB$DATABASE) AS X
+      FROM RDB$DATABASE) T;
+----
+
+Эта особенность текущей реализации и она может быть изменена в следующих версиях сервера.
+====
+
+[[_fblangref_dml_select_from_lateral_devired_table]]
+==== Латеральные производные таблицы
+
+Производная таблица, определенная с помощью ключевого слова LATERAL, называется латеральной производной таблицей.
+Если производная таблица определена как латеральная, то разрешается ссылаться на другие таблицы в том же предложении FROM, но только на те, которые были объявлены до этого в предложении FROM.
+
+.Примеры запрос с латеральными производными таблицами
+====
+
+[source]
+----
+
+select dt.population, dt.city_name, c.country_name
+from (select distinct country_name from cities) AS c,
+LATERAL (select first 1 city_name, population
+         from cities
+         where cities.country_name = c.country_name
+         order by population desc) AS dt;
+----
+
+
+[source]
+----
+
+select salespeople.name,
+       max_sale.amount,
+       customer_of_max_sale.customer_name
+from salespeople,
+LATERAL ( select max(amount) as amount from all_sales
+          where all_sales.salesperson_id = salespeople.id
+         ) as max_sale,
+LATERAL ( select customer_name from all_sales
+          where all_sales.salesperson_id = salespeople.id
+            and all_sales.amount = max_sale.amount
+        ) as customer_of_max_sale;
+----
+====
+
+[[_fblangref_dml_select_from_cte]]
+==== Выборка из общих табличных выражений (CTE)
+
+Общие табличные выражения являются более сложной и более мощной вариацией производных таблиц.
+CTE состоят из преамбулы, начинающейся с ключевого слова WITH, которая определяет одно или более общих табличных выражений (каждое из которых может иметь список алиасов полей). Основной запрос, который следует за преамбулой, может обращаться к CTE так, как будто обычные таблицы.
+CTE доступны любой части запроса ниже точки своего объявления. 
+
+Подробно CTE описываются в разделе <<_fblangref_dml_select_cte,Общие
+                        табличные выражения CTE (WITH ... AS ... SELECT)>>, а здесь приведены лишь некоторые примеры использования.
+
+Следующий запрос представляет наш пример с производной таблицей в варианте для общих табличных выражений: 
+[source,sql]
+----
+
+WITH vars (b, D, denom) AS (
+  SELECT b, b*b - 4*a*c, 2*a 
+  FROM coeffs
+)
+SELECT
+  IIF (D >= 0, (-b - sqrt(D)) / denom, NULL) AS sol_1,
+  IIF (D > 0, (-b + sqrt(D)) / denom, NULL) AS sol_2
+FROM vars
+----
+
+Это не слишком большое улучшение по сравнению с вариантом с производными таблицами (за исключением того, что вычисления проводятся до основного запроса). Мы можем ещё улучшить запрос, исключив двойное вычисление sqrt(D) для каждой строки: 
+[source,sql]
+----
+
+WITH vars (b, D, denom) AS (
+  SELECT b, b*b - 4*a*c, 2*a 
+  FROM coeffs
+),
+vars2 (b, D, denom, sqrtD) AS (
+  SELECT 
+    b, D, denom, 
+    IIF (D >= 0, sqrt(D), NULL) 
+  FROM vars
+)
+SELECT
+  IIF (D >= 0, (-b - sqrtD) / denom, NULL) AS sol_1,
+  IIF (D > 0, (-b + sqrtD) / denom, NULL) AS sol_2
+FROM vars2
+----
+
+Текст запроса выглядит более сложным, но он стал более эффективным (предполагая, что исполнение функции SQRT занимает больше времени, чем передача значений переменных b, d и denom через дополнительное CTE).
+
+[NOTE]
+====
+На самом деле все столбцы, вычисляемые в CTE, будут перевычислены столько раз, сколько раз они указываются в основном запросе.
+Это важно может привести к неожиданным результатам при использовании недетерминированных функций.
+Следующий пример показывает сказанное: 
+[source,sql]
+----
+
+WITH T(X)
+AS (SELECT GEN_UUID()
+    FROM RDB$DATABASE)
+SELECT
+    UUID_TO_CHAR(X) as c1,
+    UUID_TO_CHAR(X) as c2,
+    UUID_TO_CHAR(X) as c3
+FROM T
+----
+результатом этого запроса будет 
+----
+
+C1                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+C2                              C1214CD3-423C-406D-B5BD-95BF432ED3E3
+C3                              EB176C10-F754-4689-8B84-64B666381154
+----
+
+Для материализации результата функции GEN_UUID вы можете воспользоваться следующим способом: 
+[source,sql]
+----
+
+WITH T(X)
+AS (SELECT GEN_UUID()
+    FROM RDB$DATABASE
+    UNION ALL
+    SELECT NULL FROM RDB$DATABASE WHERE 1=0)
+SELECT
+    UUID_TO_CHAR(X) as c1,
+    UUID_TO_CHAR(X) as c2,
+    UUID_TO_CHAR(X) as c3
+FROM T;
+----
+результатом этого запроса будет 
+----
+
+C1                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+C2                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+C3                              80AAECED-65CD-4C2F-90AB-5D548C3C7279
+----
+или завернуть функцию GEN_UUID в подзапрос 
+[source,sql]
+----
+                          
+WITH T(X)
+AS (SELECT (SELECT GEN_UUID() FROM RDB$DATABASE)
+    FROM RDB$DATABASE)
+SELECT
+    UUID_TO_CHAR(X) as c1,
+    UUID_TO_CHAR(X) as c2,
+    UUID_TO_CHAR(X) as c3
+FROM T;
+----
+
+Эта особенность текущей реализации и она может быть изменена в следующих версиях сервера.
+====
+
+Конечно, мы могли бы добиться такого результата и с помощью производных таблиц, но это потребовало бы вложить запросы один в другой.
+
+.См. также:
+<<_fblangref_dml_select_cte,Общие табличные выражения CTE (WITH ... AS
+                            ... SELECT)>>. 
+
+[[_fblangref_dml_select_joins]]
+=== Соединения (JOINS)
+
+Соединения объединяют данные из двух источников в один набор данных.
+Соединение данных осуществляется для каждой строки и обычно включает в себя проверку условия соединения (join condition) для того, чтобы определить, какие строки должны быть объединены и оказаться в результирующем наборе данных.
+
+Результат соединения также может быть соединён с другим набором данных с помощью следующего соединения.
+
+Существует несколько типов (INNER, OUTER) и классов (квалифицированные, натуральные, и др.) соединений, каждый из которых имеет свой синтаксис и правила.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT
+...
+FROM <source>
+[<joins>]
+[...] 
+
+<source> ::= {   
+    table 
+  | view  
+  | selectable-stored-procedure [(args)] 
+  | derived-table
+  | lateral-derived-table
+  | common-table-expression 
+} [[AS] alias] 
+
+<joins> ::= <join> [<join> ...] 
+
+<join> ::= 
+    [<join-type>] JOIN <source> <join-condition>           
+  | NATURAL [<join-type>] JOIN <source> 
+  | {CROSS JOIN | ,} <source> 
+
+<join-type> ::= INNER | {LEFT | RIGHT | FULL} [OUTER] 
+
+<join-condition> ::= ON condition | USING (column-list)
+----
+
+
+
+.Параметры предложения JOIN
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``table``
+|
+
+Таблица.
+
+|[replaceable]``view``
+|
+
+Представление.
+
+|[replaceable]``selectable-stored-procedure``
+|
+
+Селективная хранимая процедура.
+
+|[replaceable]``args``
+|
+
+Аргументы селективной хранимой процедуры.
+
+|[replaceable]``derived-table``
+|
+
+Производная таблица.
+
+|[replaceable]``common-table-expression``
+|
+
+Общее табличное выражение (CTE).
+
+|[replaceable]``alias``
+|
+
+Псевдоним (алиас) для одного из источников данных (таблицы, представления, процедуры, CTE, производной таблицы).
+
+|[replaceable]``condition``
+|
+
+Условие соединения.
+
+|[replaceable]``column-list``
+|
+
+Список столбцов по которым происходит эквисоединение.
+|===
+
+[[_fblangref_dml_select_joins_inner_and_outer]]
+==== Внутренние (INNER) и внешние (OUTER) соединения
+(((SELECT,JOIN,INNER JOIN)))
+(((SELECT,JOIN,FULL [OUTER] JOIN)))
+
+Соединение всегда соединяет строки из двух наборов данных (которые обычно называются "`левый`" и "`правый`"). По умолчанию, только строки, которые удовлетворяет условию соединения (те, которым соответствует хотя бы одна строка из другого набора строк согласно применяемому условию) попадают в результирующий набор данных.
+Такой тип соединения (который является типом по умолчанию) называется внутренним (INNER JOIN).
+
+Предположим, у нас есть 2 таблицы:
+
+Таблица А: 
+
+[cols="1,1", frame="all", options="header"]
+|===
+| ID
+| S
+
+
+|87
+|Just some text
+
+|35
+|Silence
+|===
+
+Таблица B: 
+
+[cols="1,1", frame="all", options="header"]
+|===
+| CODE
+| X
+
+
+|-23
+|56.7735
+
+|87
+|416.0
+|===
+
+Если мы соединим эти таблицы с помощью вот такого запроса: 
+[source,sql]
+----
+
+SELECT *
+FROM A
+JOIN B ON A.id = B.code
+----
+то результат будет:
+
+[cols="1,1,1,1", frame="all", options="header"]
+|===
+| ID
+| S
+| CODE
+| X
+
+
+|87
+|Just some text
+|87
+|416.0
+|===
+
+То есть, первая строка таблицы А была соединена со второй строкой таблицы B, потому что вместе они удовлетворяют условию соединения "A.id = B.code". Другие строки не имеют соответствия и поэтому не включаются в соединение.
+Помните, что умолчанию соединение всегда внутреннее (INNER).
+
+Мы можем сделать это явным, указав тип соединения: 
+[source,sql]
+----
+
+SELECT *
+FROM A
+INNER JOIN B ON A.id = B.code
+----
+но обычно слово INNER опускается. 
+
+Разумеется, возможны случаи, когда строке в левом наборе данных соответствует несколько строк в правом наборе данных (или наоборот).
+
+В таких случаях все комбинации включаются в результирующих набор данных, и мы можем получить результат вроде этого:
+
+[cols="1,1,1,1", frame="all", options="header"]
+|===
+| ID
+| S
+| CODE
+| X
+
+
+|87
+|Just some text
+|87
+|416.0
+
+|87
+|Just some text
+|87
+|-1.0
+
+|-23
+|Don't know
+|-23
+|56.7735
+
+|-23
+|Still don't know
+|-23
+|56.7735
+
+|-23
+|I give up
+|-23
+|56.7735
+|===
+
+Иногда необходимо включить в результат все записи из левого или правого набора данных, вне зависимости от того, есть ли для них соответствующая запись в парном наборе данных.
+В этом случае необходимо использовать внешние соединения. 
+
+Внешнее левое соединение (LEFT OUTER) включает все записи из левого набора данных, и те записи из правого набора, которые удовлетворяют условию соединения.
+
+Внешнее правое соединение (RIGHT OUTER) включает все записи из правого набора данных и те записи из левого набора данных, которые удовлетворяют условию соединения.
+
+Полное внешнее соединение (FULL OUTER) включает все записи из обоих наборов данных.
+
+Во всех внешних соединениях, "дыры" (то есть поля набора данных, в которых нет соответствующей записи) заполняются NULL.
+
+Для обозначения внешнего соединения используются ключевые слова LEFT, RIGHT или FULL с необязательным ключевым словом OUTER.
+
+Рассмотрим различные внешние соединения на примере запросов с указанными выше таблицами A и B: 
+[source,sql]
+----
+
+SELECT *
+FROM A
+LEFT OUTER JOIN B ON A.id = B.code
+----
+то же самое 
+[source,sql]
+----
+
+SELECT *
+FROM A
+LEFT JOIN B ON A.id = B.code
+----
+
+[cols="1,1,1,1", frame="all", options="header"]
+|===
+| ID
+| S
+| CODE
+| X
+
+
+|87
+|Just some text
+|87
+|416.0
+
+|235
+|Silence
+|<null>
+|<null>
+|===
+[source,sql]
+----
+
+SELECT *
+FROM A
+RIGHT OUTER JOIN B ON A.id = B.code
+----
+то же самое 
+[source,sql]
+----
+
+SELECT *
+FROM A
+RIGHT JOIN B ON A.id = B.code
+----
+
+[cols="1,1,1,1", frame="all", options="header"]
+|===
+| ID
+| S
+| CODE
+| X
+
+
+|<null>
+|<null>
+|-23
+|56.7735
+
+|87
+|Just some text
+|87
+|416.0
+|===
+[source,sql]
+----
+
+SELECT *
+FROM A
+FULL OUTER JOIN B ON A.id = B.code
+----
+то же самое 
+[source,sql]
+----
+
+SELECT *
+FROM A
+FULL JOIN B ON A.id = B.code
+----
+
+[cols="1,1,1,1", frame="all", options="header"]
+|===
+| ID
+| S
+| CODE
+| X
+
+
+|<null>
+|<null>
+|-23
+|56.7735
+
+|87
+|Just some text
+|87
+|416.0
+
+|235
+|Silence
+|<null>
+|<null>
+|===
+
+[[_fblangref_dml_select_joins_qualified]]
+==== Обычные соединения
+
+Явный синтаксис соединения требует указания условия соединения записей.
+Это условие указывается явно в предложении ON или неявно при помощи предложения USING. 
+
+.Синтаксис:
+
+[source]
+----
+ 
+<qualified-join> ::= [<join-type>] JOIN <source> <join-condition>       
+
+<join-type> ::= INNER | {LEFT | RIGHT | FULL} [OUTER]       
+
+<join-condition> ::= ON condition | USING (column-list)
+----
+
+[[_fblangref_dml_select_joins_qualified_explicit_cond]]
+===== Соединения с явными условиями
+
+В синтаксисе явного соединения есть предложение ON, с условием соединения, в котором может быть указано любое логическое выражение, но, как правило, оно содержит условие сравнения между двумя участвующими источниками. 
+
+Довольно часто, это условие -- проверка на равенство (или ряд проверок на равенство объединённых оператором AND) использующая оператор "=". Такие соединения называются эквисоединениями.
+(Примеры в главе Внутренние (INNER) и внешние (OUTER) соединения были эквисоединениями).
+
+Примеры соединений с явными условиями: 
+[source,sql]
+----
+
+/*
+ * Выборка всех заказчиков из города Детройт, которые
+ * сделали покупку.
+ */
+SELECT * 
+FROM customers c
+JOIN sales s ON s.cust_id = c.id
+WHERE c.city = 'Detroit'
+ 
+/* 
+ * Тоже самое, но включает в выборку заказчиков, которые 
+ * не совершали покупки.
+ */
+SELECT * 
+FROM customers c
+LEFT JOIN sales s ON s.cust_id = c.id
+WHERE c.city = 'Detroit'
+ 
+/* 
+ * Для каждого мужчины выбрать женщин, которые выше него.
+ * Мужчины, для которых такой женщины не существуют, 
+ * не будут выключены в выборку. 
+ */
+SELECT 
+    m.fullname AS man, 
+    f.fullname AS woman
+FROM males m
+JOIN females f ON f.height > m.height
+ 
+/* 
+ * Выборка всех учеников, их класса и наставника.
+ * Ученики без наставника буду включены в выборку.
+ * Ученики без класса не будут включены в выборку. 
+ */
+SELECT 
+    p.firstname, 
+    p.middlename, 
+    p.lastname,
+    c.name, 
+    m.name
+FROM pupils p
+JOIN classes c ON c.id = p.class
+LEFT JOIN mentors m ON m.id = p.mentor
+----
+
+[[_fblangref_dml_select_joins_qualified_named_columns]]
+===== Соединения именованными столбцами
+
+Эквисоединения часто сравнивают столбцы, которые имеют одно и то же имя в обеих таблицах.
+Для таких соединений мы можем использовать второй тип явных соединений, называемый соединением именованными столбцами (Named Columns Joins). Соединение именованными столбцами осуществляются с помощью предложения USING, в котором перечисляются только имена столбцов.
+
+[NOTE]
+====
+Соединения именованными столбцами доступны только в диалекте 3. 
+====
+
+Таким образом, следующий пример: 
+[source,sql]
+----
+
+SELECT * 
+FROM flotsam f
+  JOIN jetsam j 
+    ON f.sea = j.sea AND f.ship = j.ship
+----
+можно переписать так: 
+[source,sql]
+----
+
+SELECT * 
+FROM flotsam
+JOIN jetsam USING (sea, ship)
+----
+что значительно короче.
+Результирующий набор несколько отличается, по крайней мере, при использовании "SELECT *":
+
+* Результат соединения с явным условием соединения в предложении ON будет содержать каждый из столбцов SEA и SHIP дважды: один раз для таблицы FLOTSAM и один раз для таблицы JETSAM. Очевидно, что они будут иметь они и те же значения;
+* Результат соединения именованными столбцами, с помощью предложения USING, будет содержать эти столбцы один раз.
+
+Если вы хотите получить в результате соединения именованными столбцами все столбцы, перепишите запрос следующим образом: 
+[source,sql]
+----
+
+SELECT f.*, j.*
+FROM flotsam f
+JOIN jetsam j USING (sea, ship)
+----
+
+Для внешних (OUTER) соединений именованными столбцами, существуют дополнительные нюансы, при использовании "SELECT *" или неполного имени столбца.
+Если столбец строки из одного источника не имеет совпадений со столбцом строки из другого источника, но все равно должен быть включён результат из-за инструкций LEFT, RIGHT или FULL, то объединяемый столбец получит не NULL значение.
+Это достаточно справедливо, но теперь вы не можете сказать из какого набора левого, правого или обоих пришло это значение.
+Это особенно обманывает, когда значения пришли из правой части набора данных, потому что "*" всегда отображает для комбинированных столбцов значения из левой части набора данных, даже если используется RIGHT соединение. 
+
+Является ли это проблемой, зависит от ситуации.
+Если это так, используйте "f.*, j.*" подход, продемонстрированный выше, где f и j имена или алиасы двух источников.
+Или лучше вообще избегать "*" в серьёзных запросах и перечислять все имена столбцов для соединяемых множеств.
+Такой подход имеет дополнительное преимущество, заставляя вас думать, о том какие данные вы хотите получить и откуда.
+
+Вся ответственность за совместимость типов столбцов между соединяемыми источниками, имена которых перечислены в предложении USING, лежит на вас.
+Если типы совместимы, но не равны, то Firebird преобразует их в тип с более широким диапазоном значений перед сравнением.
+Кроме того, это будет типом данных объединённого столбца, который появится в результирующем наборе, если используются "SELECT *" или неполное имя столбца.
+Полные имена столбцов всегда будут сохранять свой первоначальный тип данных.
+
+[TIP]
+====
+Если при соединении именованными столбцами вы используете столбцы соединения в условии отбора WHERE, то всегда используйте уточнённые имена столбцов.
+В противном случае индекс по этому столбцу не будет задействован. 
+[source,sql]
+----
+
+SELECT 1 FROM t1 a JOIN t2 b USING(x) WHERE x = 0;
+PLAN JOIN (A NATURAL, B INDEX (RDB$2))
+----
+однако 
+[source,sql]
+----
+
+SELECT 1 FROM t1 a JOIN t2 b USING(x) WHERE a.x = 0; -- или 'b.x'
+PLAN JOIN (A INDEX (RDB$1), B INDEX (RDB$2))
+
+SELECT 1 FROM t1 a JOIN t2 b USING(x) WHERE b.x = 0;
+PLAN JOIN (A INDEX (RDB$1), B INDEX (RDB$2))
+----
+Дело в том, неуточнённый столбец в данном случае неявно заменяется на ``COALESCE(a.x, b.x)``.
+Этот хитрый трюк применяется для устранения неоднозначности имён столбцов, но он же мешает применению индекса. 
+====
+
+[[_fblangref_dml_select_joins_natural]]
+==== Естественные соединения (Natural Joins)
+
+Взяв за основу соединения именованными столбцами, следующим шагом будет естественное соединение, которое выполняет эквисоединение по всем одноименным столбцам правой и левой таблицы.
+Типы данных этих столбцов должны быть совместимыми.
+
+[NOTE]
+====
+Естественные соединения доступны только в диалекте 3. 
+====
+
+.Синтаксис:
+
+[source]
+----
+
+<natural-join> ::= NATURAL [<join-type>] JOIN <source>       
+
+<join-type> ::= INNER | {LEFT | RIGHT | FULL} [OUTER]
+----
+
+Даны две таблицы: 
+[source,sql]
+----
+
+CREATE TABLE TA (
+    a BIGINT,
+    s VARCHAR(12),
+    ins_date DATE
+);
+ 
+CREATE TABLE TB (
+    a BIGINT,
+    descr VARCHAR(12),
+    x FLOAT,
+    ins_date DATE
+);
+----
+
+Естественное соединение таблиц TA и TB будет происходить по столбцам a и ins_date и два следующих оператора дадут один и тот же результат: 
+[source,sql]
+----
+
+SELECT * 
+FROM TA
+NATURAL JOIN TB;
+ 
+SELECT * 
+FROM TA
+JOIN TB USING (a, ins_date);
+----
+
+Как и все соединения, естественные соединения являются внутренними соединениями по умолчанию, но вы можете превратить их во внешние соединения, указав LEFT, RIGHT или FULL перед ключевым словом JOIN.
+
+.Внимание
+[IMPORTANT]
+====
+Если в двух исходных таблицах не будут найдены одноименные столбцы, то будет выполнен CROSS JOIN.
+====
+
+[[_fblangref_dml_select_joins_implicit]]
+==== Неявные соединения
+
+В стандарте SQL-89 таблицы, участвующие в соединении, задаются списком с разделяющими запятыми в предложении FROM.
+Условия соединения задаются в предложении WHERE среди других условий поиска.
+Такие соединения называются неявными. 
+
+Синтаксис неявного соединения может осуществлять только внутренние соединения.
+
+Пример неявного соединения: 
+[source,sql]
+----
+
+/*
+ * Выборка всех заказчиков из города Детройт, которые
+ * сделали покупку.
+ */
+SELECT * 
+FROM customers c, sales s
+WHERE s.cust_id = c.id AND c.city = 'Detroit'
+----
+
+[IMPORTANT]
+====
+В настоящее время синтаксис неявных соединений не рекомендуется к использованию.
+====
+
+[[_fblangref_dml_select_joins_implicit_mix]]
+==== Смешивание явного и неявного соединения
+
+Смешивание явных и неявных соединений не рекомендуется, но позволяется.
+Некоторые виды смешивания запрещены в Firebird.
+
+Например, такой запрос вызовет ошибку "Column does not belong to referenced table" 
+[source,sql]
+----
+
+SELECT *
+FROM
+TA, TB
+JOIN TC ON TA.COL1 = TC.COL1
+WHERE TA.COL2 = TB.COL2
+----
+Это происходит потому, что явный JOIN не может видеть таблицу TA.
+Однако следующий запрос будет выполнен без ошибок, поскольку изоляция не нарушена. 
+[source,sql]
+----
+
+SELECT *
+FROM
+TA, TB
+JOIN TC ON TB.COL1 = TC.COL1
+WHERE TA.COL2 = TB.COL2
+----
+
+[[_fblangref_dml_select_joins_cross]]
+==== Перекрёстное соединение (CROSS JOIN)
+
+Перекрёстное соединение или декартово произведение.
+Каждая строка левой таблицы соединяется с каждой строкой правой таблицы.
+
+.Синтаксис:
+
+[source]
+----
+
+<cross-join> ::= {CROSS JOIN | , } <source>    
+----
+
+Обратите внимание, что синтаксис с использованием запятой является устаревшим.
+Он поддерживается только для поддержания работоспособности унаследованного программного кода и может быть удалён в будущих версиях. 
+
+Перекрёстное соединение двух наборов эквивалентно их соединению по условию тавтологии (условие, которое всегда верно).
+
+Следующие два запроса дадут один и тот же результат: 
+[source,sql]
+----
+
+SELECT * 
+FROM TA
+CROSS JOIN TB;
+ 
+SELECT * 
+FROM TA
+JOIN TB ON 1 = 1;
+----
+
+Перекрёстные соединения являются внутренними соединениями, потому что они отбирают строки, для которых есть соответствие -- так уж случилось, что каждая строка соответствует! Внешнее перекрёстное соединение, если бы оно существовало, ничего не добавило бы к результату, потому что внешние соединения добавляют записи, по которым нет соответствия, а они не существуют в перекрёстном соединении. 
+
+Перекрёстные соединения редко полезны, кроме случаев, когда вы хотите получить список всех возможных комбинаций двух или более переменных.
+Предположим, вы продаёте продукт, который поставляется в различных размерах, различных цветов и из различных материалов.
+Если для каждой переменной значения перечислены в собственной таблице, то этот запрос будет возвращать все комбинации: 
+[source,sql]
+----
+
+SELECT 
+    m.name, 
+    s.size, 
+    c.name
+FROM materials m
+CROSS JOIN sizes s
+CROSS JOIN colors c
+----
+
+[[_fblangref_dml_select_joins_ambiguous]]
+==== Неоднозначные имена полей в соединениях
+
+Firebird отвергает неполные имена полей в запросе, если эти имена полей существуют в более чем одном наборе данных, участвующих в объединении.
+Это также верно для внутренних эквисоединений, в которых имена полей фигурируют в предложении ON: 
+[source,sql]
+----
+
+SELECT a, b, c
+FROM TA
+JOIN TB ON TA.a = TB.a
+----
+
+Существует одно исключение из этого правила: соединения по именованным столбцам и естественные соединения, которые используют неполное имя поля в процессе подбора, могут использоваться законно.
+Это же относится и к одноименным объединяемым столбцам.
+Для соединений по именованным столбцам эти столбцы должны быть перечислены в предложении USING.
+Для естественных соединений это столбцы, имена которых присутствуют в обеих таблицах.
+Но снова замечу, что, особенно во внешних соединениях, плоское имя  colname является не всегда тем же самым что left.colname или right.colname.
+Типы данных могут отличаться, и один из полных столбцов может иметь значение NULL, в то время как другой нет.
+В этом случае значение в объединённом, неполном столбце может замаскировать тот факт, что одно из исходных значений отсутствует.
+ 
+
+[[_fblangref_dml_select_joins_sp]]
+==== Соединения с хранимыми процедурами
+
+Если соединение происходит с хранимой процедурой, которая не коррелирована с другими потоками данных через входные параметры, то нет никаких особенностей. 
+
+В противном случае, есть одна особенность: потоки, используемые во входных параметрах, должны быть описаны раньше соединения с хранимой процедурой: 
+[source,sql]
+----
+
+SELECT *
+FROM MY_TAB
+JOIN MY_PROC(MY_TAB.F) ON 1 = 1
+----
+Запрос же написанный следующим образом вызовет ошибку 
+[source,sql]
+----
+
+SELECT *
+FROM MY_PROC(MY_TAB.F)
+JOIN MY_TAB ON 1 = 1
+----
+
+[[_fblangref_dml_select_joins_lateral]]
+==== Соединения с LATERAL производными таблицами
+
+Производная таблица, определенная с помощью ключевого слова LATERAL, называется латеральной производной таблицей.
+Если производная таблица определена как латеральная, то разрешается ссылаться на другие таблицы в том же предложении FROM, но только на те, которые были объявлены раньше в предложении FROM.
+Без LATERAL каждый подзапрос выполняется независимо и поэтому не может обращаться к другим элементам FROM.
+
+Элемент LATERAL может находиться на верхнем уровне списка FROM или в дереве JOIN.
+В последнем случае он может также ссылаться на любые элементы в левой части JOIN, справа от которого он находится.
+
+Когда элемент FROM содержит ссылки LATERAL, то запрос выполняется следующим образом: сначала вычисляется значения всех столбцов о которых зависит производная таблица с ключевым словом LATERAL, затем вычисляется сама производная таблица с LATERAL для каждой полученной записи.
+Результирующие строки полученные из производной таблицы c LATERAL соединяются со строками из которых они получены.
+
+В качестве соединений допускается следующие CROSS JOIN и LEFT OUTER JOIN.
+Внутреннее соединение также допустимо, но не рекомендуется, поскольку могут возникнуть проблемы при вычислении условия соединения потоков.
+
+В качестве примера выведем результаты лошадей и их последние промеры.
+Если у лошади нет ни одного промера, то она не будет выведена: 
+[source,sql]
+----
+
+SELECT
+    HORSE.NAME,
+    M.BYDATE,
+    M.HEIGHT_HORSE,
+    M.LENGTH_HORSE
+FROM HORSE
+CROSS JOIN LATERAL(SELECT
+                       *
+                   FROM MEASURE
+                   WHERE MEASURE.CODE_HORSE = HORSE.CODE_HORSE
+                   ORDER BY MEASURE.BYDATE DESC
+                   FETCH FIRST ROW ONLY) M
+----
+другой вариант написание этого запроса 
+[source,sql]
+----
+
+SELECT
+    HORSE.NAME,
+    M.BYDATE,
+    M.HEIGHT_HORSE,
+    M.LENGTH_HORSE
+FROM HORSE,
+     LATERAL(SELECT
+                       *
+                   FROM MEASURE
+                   WHERE MEASURE.CODE_HORSE = HORSE.CODE_HORSE
+                   ORDER BY MEASURE.BYDATE DESC
+                   FETCH FIRST ROW ONLY) M
+----
+
+Если необходимо выводить лошадей, не зависимо есть ли у них хотя бы один промер, то необходимо заменить CROSS JOIN на LEFT JOIN: 
+[source,sql]
+----
+
+SELECT
+    HORSE.NAME,
+    M.BYDATE,
+    M.HEIGHT_HORSE,
+    M.LENGTH_HORSE
+FROM HORSE
+LEFT JOIN LATERAL(SELECT
+                       *
+                   FROM MEASURE
+                   WHERE MEASURE.CODE_HORSE = HORSE.CODE_HORSE
+                   ORDER BY MEASURE.BYDATE DESC
+                   FETCH FIRST ROW ONLY) M ON TRUE
+----
+
+[[_fblangref_dml_select_where]]
+=== WHERE
+
+Предложение WHERE предназначено для ограничения количества возвращаемых строк, теми которые нас интересуют.
+Условие после ключевого слова WHERE может быть простым, как проверка "AMOUNT = 3", так и сложным, запутанным выражением, содержащим подзапросы, предикаты, вызовы функций, математические и логические операторы, контекстные переменные и многое другое. 
+
+Условие в предложении WHERE часто называют условием поиска, выражением поиска или просто поиск.
+
+В DSQL и ESQL, выражение поиска могут содержать параметры.
+Это полезно, если запрос должен быть повторен несколько раз с разными значениями входных параметров.
+В строке SQL запроса, передаваемого на сервер, вопросительные знаки используются как заполнители для параметров.
+Их называют позиционными параметрами, потому что они не могут сказать ничего кроме как о позиции в строке.
+Библиотеки доступа часто поддерживают именованные параметры в виде :[replaceable]``id``, :[replaceable]``amount``, :[replaceable]``a`` и т.д.
+Это более удобно для пользователя, библиотека заботится о трансляции именованных параметров в позиционные параметры, прежде чем передать запрос на сервер.
+
+Условие поиска может также содержать локальные (PSQL) или хост (ESQL) имена переменных, предваряемых двоеточием.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT ... 
+FROM ... 
+[...] 
+WHERE <search-condition> 
+[...]
+----
+
+
+
+.Параметры предложения WHERE
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``search-condition``
+|
+
+Логическое выражение возвращающее TRUE, FALSE и возможно UNKNOWN (NULL).
+|===
+
+Только те строки, для которых условие поиска истинно будут включены в результирующий набор.
+Будьте осторожны с возможными получаемыми значениями NULL: если вы отрицаете выражение, дающее NULL с помощью NOT, то результат такого выражения все равно будет NULL и строка не пройдёт.
+Это демонстрируется в одном из ниже приведённых примеров.
+
+[float]
+===== Примеры
+
+
+[source,sql]
+----
+
+SELECT genus, species 
+FROM mammals
+WHERE family = 'Felidae'
+ORDER BY genus;
+ 
+SELECT * 
+FROM persons
+WHERE birthyear IN (1880, 1881)
+   OR birthyear BETWEEN 1891 AND 1898;
+ 
+SELECT name, street, borough, phone
+FROM schools s
+WHERE EXISTS (SELECT * FROM pupils p WHERE p.school = s.id)
+ORDER BY borough, street;
+ 
+SELECT * 
+FROM employees
+WHERE salary >= 10000 AND position <> 'Manager';
+ 
+SELECT name 
+FROM wrestlers
+WHERE region = 'Europe'
+  AND weight > ALL (SELECT weight FROM shot_putters
+                    WHERE region = 'Africa');
+ 
+SELECT id, name 
+FROM players
+WHERE team_id = (SELECT id FROM teams 
+                 WHERE name = 'Buffaloes');
+ 
+SELECT SUM (population) 
+FROM towns
+WHERE name LIKE '%dam'
+  AND province CONTAINING 'land';
+ 
+SELECT pass 
+FROM usertable
+WHERE username = current_user;
+----
+
+Следующий пример показывает, что может быть, если условие поиска вычисляется как NULL.
+
+Предположим у вас есть таблица, в которой находятся несколько детских имён и количество шариков, которыми они обладают. 
+
+
+
+[cols="1,1", frame="all", options="header"]
+|===
+| CHILD
+| MARBLES
+
+
+|Anita
+|23
+
+|Bob E. 
+|12
+
+|Chris 
+|<null>
+
+|Deirdre 
+|1
+
+|Eve 
+|17
+
+|Fritz 
+|0
+
+|Gerry 
+|21
+
+|Hadassah 
+|<null>
+
+|Isaac 
+|6
+|===
+
+Первое, обратите внимание на разницу между NULL и 0.
+Известно, что Fritz не имеет шариков вовсе, однако неизвестно количество шариков у Chris и Hadassah.
+
+Теперь, если ввести этот SQL оператор: 
+[source,sql]
+----
+
+SELECT LIST(child) FROM marbletable WHERE marbles > 10
+----
+вы получите имена Anita, Bob E., Eve и Gerry.
+Все эти дети имеют более чем 10 шариков. 
+
+Если вы отрицаете выражение: 
+[source,sql]
+----
+
+SELECT LIST(child) FROM marbletable WHERE NOT marbles > 10
+----
+запрос вернёт Deirdre, Fritz и Isaac.
+Chris и Hadassah не будут включены в выборку, так как не известно 10 у них шариков или меньше.
+Если вы измените последний запрос так: 
+[source,sql]
+----
+
+SELECT LIST(child) FROM  marbletable WHERE marbles <= 100
+----
+результат будет тем же самым, поскольку выражение NULL <= 10 даёт UNKNOWN.
+Это не то же самое что TRUE, поэтому Chris и Hadassah не отображены.
+Если вы хотите что бы в списке были перечислены все "бедные" дети, то измените запрос следующим образом: 
+[source,sql]
+----
+
+SELECT LIST(child) 
+FROM marbletable 
+WHERE marbles <= 10 OR marbles IS NULL
+----
+
+Теперь условие поиска становится истинным для Chris и Hadassah, потому что условие "marbles is null" возвращает TRUE в этом случае.
+Фактически, условие поиска не может быть NULL ни для одного из них.
+
+Наконец, следующие два примера SELECT запросов с параметрами в условии поиска.
+Как определяются параметры запроса и возможно ли это, зависит от приложения.
+Обратите внимание, что запросы подобные этим не могут быть выполнены немедленно, они должны быть предварительно подготовлены.
+После того как параметризированный запрос был подготовлен, пользователь (или вызывающий код) может подставить значения параметров и выполнить его многократно, подставляя перед каждым вызовом новые значения параметров.
+Как вводятся значения параметров, и проходят ли они предобработку зависит от приложения.
+В GUI средах пользователь, как правило, вводит значения параметров через одно и более текстовых полей, и щелкает на кнопку "Execute", "Run" или "Refresh". 
+[source,sql]
+----
+
+SELECT name, address, phone 
+FROM stores
+WHERE city = ? AND class = ?
+ 
+SELECT * 
+FROM pants
+WHERE model = :model AND size = :size AND color = :col
+----
+
+Последний запрос не может быть передан непосредственно к движку сервера, приложение должно преобразовать его в другой формат, отображая именованные параметры на позиционные параметры.
+
+[[_fblangref_dml_select_groupby]]
+=== GROUP BY
+(((SELECT,GROUP BY)))
+
+Предложение GROUP BY соединяет записи, имеющие одинаковую комбинацию значений полей, указанных в его списке, в одну запись.
+Агрегатные функции в списке выбора применяются к каждой группе индивидуально, а не для всего набора в целом.
+
+Если список выборки содержит только агрегатные столбцы или столбцы, значения которых не зависит от отдельных строк основного множества, то предложение GROUP BY необязательно.
+Когда предложение GROUP BY опущено, результирующее множество будет состоять из одной строки (при условии, что хотя бы один агрегатный столбец присутствует). 
+
+Если в списке выборки содержатся как агрегатные столбцы, так и столбцы, чьи значения зависит от выбираемых строк, то предложение GROUP BY становится обязательным.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT ... 
+FROM ... 
+GROUP BY <grouping-item> [, <grouping-item> ...] 
+[HAVING <grouped-row-condition>] ...       
+
+<grouping-item> ::= <non-aggr-select-item> | <non-aggr-expression>   
+
+<non-aggr-select-item> ::= column-copy | column-alias | column-position
+----
+
+
+
+.Параметры предложения GROUP BY
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``non-aggr-expression``
+|
+
+Любое не агрегатное выражение, которое не включено в список выборки, т.е.
+невыбираемые столбцы из набора источника или выражения, которые не зависит от набора данных вообще. 
+
+|[replaceable]``column-copy``
+|
+
+Дословная копия выражения из списка выбора, не содержащего агрегатной функции. 
+
+|[replaceable]``column-alias``
+|
+
+Псевдоним выражения (столбца) из списка выбора, не содержащего агрегатной функции. 
+
+|[replaceable]``column-position``
+|
+
+Номер позиции выражения (столбца) из списка выбора, не содержащего агрегатной функции. 
+|===
+
+Общее правило гласит, что каждый не агрегированный столбец в SELECT списке, должен быть так же включён в GROUP BY список.
+Вы можете это сделать тремя способами: 
+
+. Копировать выражение дословно из списка выбора, например "class" или "'D:' || upper(doccode)";
+. Указать псевдоним, если он существует; 
+. Задать положение столбца в виде целого числа, которое находится в диапазоне от 1 до количества столбцов в списке SELECT. Целые значения, полученные из выражений, параметров или просто инварианты будут использоваться в качестве таковых в группировке. Они не будут иметь никакого эффекта, поскольку их значение одинаково для каждой строки. 
+
+
+[IMPORTANT]
+====
+Если вы группируете по позиции столбца или алиасу, то выражение соответствующее этой позиции (алиасу) будет скопировано из списка выборки SELECT.
+Это касается и подзапросов, таким образом, подзапрос будет выполняться, по крайней мере, два раза.
+====
+
+В дополнении к требуемым элементам, список группировки так же может содержать: 
+
+* Столбцы исходной таблицы, которые не включены в список выборки SELECT, или неагрегатные выражения, основанные на таких столбцах. Добавление таких столбцов может дополнительно разбить группы. Но так как эти столбцы не в списке выборки SELECT, вы не можете сказать, какому значению столбца соответствует значение агрегированной строки. Таким образом, если вы заинтересованы в этой информации, вы так же должны включить этот столбец или выражение в список выборки SELECT, что возвращает вас к правилу "каждый не агрегированный столбце в списке выборки SELECT должен быть включён в список группировки GROUP BY";
+* Выражения, которые не зависят от данных из основного набора, т.е. константы, контекстные переменные, некоррелированные подзапросы, возвращающие единственное значение и т.д. Это упоминается только для полноты картины, т.к. добавление этих элементов является абсолютно бессмысленным, поскольку они не повлияют на группировку вообще. "Безвредные, но бесполезные" элементы так же могут фигурировать в списке выбора SELECT без их копирования в список группировки GROUP BY.
+
+
+[float]
+===== Примеры
+
+Когда в списке выбора SELECT содержатся только агрегатные столбцы, предложение GROUP BY необязательно: 
+[source,sql]
+----
+
+SELECT COUNT(*), AVG(age) 
+FROM students
+WHERE sex = 'M'
+----
+
+Этот запрос вернёт одну строку с указанием количества студентов мужского пола и их средний возраст.
+Добавление выражения, которое не зависит от строк таблицы STUDENTS, ничего не меняет: 
+[source,sql]
+----
+
+SELECT COUNT(*), AVG(age), current_date 
+FROM students
+WHERE sex = 'M'
+----
+
+Теперь строка результата будет иметь дополнительный столбец, отображающий текущую дату, но кроме этого, ничего фундаментального не изменилось.
+Группировка по-прежнему не требуется. 
+
+Тем не менее, в обоих приведённых выше примерах это разрешено.
+Это совершенно справедливо и для запроса: 
+[source,sql]
+----
+
+SELECT COUNT(*), AVG(age) 
+FROM students
+WHERE sex = 'M'
+GROUP BY class
+----
+и вернёт результат для каждого класса, в котором есть мальчики, перечисляя количество мальчиков и их средний возраст в этой конкретном классе.
+Если вы также оставите поле CURRENT_DATE, то это значение будет повторяться на каждой строке, что не интересно. 
+
+Этот запрос имеет существенный недостаток, хотя он даёт вам информацию о различных классах, но не говорит вам, какая строка к какому классу относится.
+Для того чтобы получить эту дополнительную часть информации, не агрегатный столбец CLASS должен быть добавлен в список выборки SELECT: 
+[source,sql]
+----
+
+SELECT class, COUNT(*), AVG(age) 
+FROM students
+WHERE sex = 'M'
+GROUP BY class
+----
+
+Теперь у нас есть полезный запрос.
+Обратите внимание, что добавление столбца CLASS делает предложение GROUP BY обязательным.
+Мы не можем удалить это предложение, так же мы не можем удалить столбец CLASS из списка столбцов.
+
+Результат последнего запроса будет выглядеть примерно так: 
+
+[cols="1,1,1", frame="all", options="header"]
+|===
+| CLASS
+| COUNT
+| AVG
+
+
+|2A
+|12
+|13.5
+
+|2B 
+|9 
+|13.9 
+
+|3A 
+|11 
+|14.6 
+
+|3B 
+|12 
+|14.4 
+
+|...
+|...
+|...
+|===
+
+Заголовки "COUNT" и "AVG" не очень информативны.
+В простейшем случае вы можете обойти это, но лучше, если мы дадим им значимые имена с помощью псевдонимов: 
+[source,sql]
+----
+
+SELECT 
+    class,
+    COUNT(*) AS num_boys,
+    AVG(age) AS boys_avg_age
+FROM students
+WHERE sex = 'M'
+GROUP BY class
+----
+
+Как вы помните из формального синтаксиса списка столбцов, ключевое слово AS не является обязательным. 
+
+Добавление большего не агрегированных (или точнее строчно зависимых) столбцов требуется добавления их в предложения GROUP BY тоже.
+Например, вы хотите видеть вышеуказанную информацию о девочках то же, и хотите видеть разницу между интернатами и студентами дневного отделения: 
+[source,sql]
+----
+
+SELECT 
+    class,
+    sex,
+    boarding_type,
+    COUNT(*) AS anumber,
+    AVG(age) AS avg_age
+FROM students
+GROUP BY class, sex, boarding_type
+----
+
+[cols="1,1,1,1,1", frame="all", options="header"]
+|===
+| CLASS
+| SEX
+| BOARDING_TYPE
+| ANUMBER
+| AVG_AGE
+
+
+|2A
+|F
+|BOARDING
+|9
+|13.3
+
+|2A 
+| F 
+|DAY 
+|6 
+|13.5 
+
+|2A 
+|M
+|BOARDING
+|7
+|13.6 
+
+|2A 
+|M
+|DAY
+|5
+|13.4 
+
+|2B 
+|F
+|BOARDING
+|11
+|13.7 
+
+|2B 
+|F
+|DAY
+|5
+|13.7 
+
+|2B 
+|M
+|BOARDING
+|6
+|13.8 
+
+|...
+|...
+|...
+|...
+|...
+|===
+
+Каждая строка в результирующем наборе соответствует одной конкретной комбинации переменных CLASS, SEX и BOARDING_TYPE.
+Агрегированные результаты -- количество и средний возраст -- приведены для каждой из конкретизированной группы отдельно.
+В результате запроса вы не можете увидеть обобщённые результаты для мальчиков отдельно или для студентов дневного отделения отдельно.
+Таким образом, вы должны найти компромисс.
+Чем больше вы добавляете неагрегатных столбцов, тем больше вы конкретизируете группы, и тем больше вы упускаете общую картину из виду.
+Конечно, вы все ещё можете получить "большие" агрегаты, с помощью отдельных запросов.
+
+[[_fblangref_dml_select_having]]
+==== HAVING
+
+Так же, как и предложение WHERE ограничивает строки в наборе данных, теми которые удовлетворяют условию поиска, с той разницей, что предложение HAVING накладывает ограничения на агрегированные строки сгруппированного набора.
+Предложение HAVING не является обязательным и может быть использовано только в сочетании с предложением GROUP BY.
+
+Условие(я) в предложении HAVING может ссылаться на:
+
+* Любой агрегированный столбец в списке выбора SELECT. Это наиболее широко используемый случай;
+* Любое агрегированное выражение, которое не находится в списке выбора SELECT, но разрешено в контексте запроса. Иногда это полезно;
+* Любой столбец в списке GROUP BY. Однако более эффективно фильтровать не агрегированные данные на более ранней стадии в предложении WHERE;
+* Любое выражение, значение которого не зависит от содержимого набора данных (например, константа или контекстная переменная). Это допустимо, но совершенно бессмысленно, потому что такое условие, не имеющее никакого отношения к самому набору данных, либо подавит весь набор, либо оставит его не тронутым.
+
+Предложение HAVING не может содержать:
+
+* Не агрегированные выражения столбца, которые не находятся в списке GROUP BY;
+* Позицию столбца. Целое число в предложении HAVING – просто целое число;
+* Псевдонимы столбца – даже, если они появляются в предложении GROUP BY.
+
+
+[float]
+===== Примеры
+
+Перестроим наши ранние примеры.
+Мы можем использовать предложение HAVING для исключения малых групп студентов: 
+[source,sql]
+----
+
+SELECT 
+    class,
+    COUNT(*) AS num_boys,
+    AVG(age) AS boys_avg_age
+FROM students
+WHERE sex = 'M'
+GROUP BY class
+HAVING COUNT(*) >= 5
+----
+
+Выберем только группы, которые имеют минимальный разброс по возрасту 1,2 года: 
+[source,sql]
+----
+
+SELECT 
+    class,
+    COUNT(*) AS num_boys,
+    AVG(age) AS boys_avg_age
+FROM students
+WHERE sex = 'M'
+GROUP BY class
+HAVING MAX(age) - MIN(age) > 1.2
+----
+
+Обратите внимание, что если вас действительно интересует эта информация, то неплохо бы включить в список выбора min(age) и max(age) или выражение max(age) – min(age).
+
+Следующий запрос отбирает только учеников 3 класса: 
+[source,sql]
+----
+
+SELECT 
+    class,
+    COUNT(*) AS num_boys,
+    AVG(age) AS boys_avg_age
+FROM students
+WHERE sex = 'M'
+GROUP BY class
+HAVING class STARTING WITH '3'
+----
+
+Однако гораздо лучше переместить это условие в предложение WHERE: 
+[source,sql]
+----
+
+SELECT 
+    class,
+    COUNT(*) AS num_boys,
+    AVG(age) AS boys_avg_age
+FROM students
+WHERE sex = 'M' AND class STARTING WITH '3'
+GROUP BY class
+----
+
+[[_fblangref_dml_select_window]]
+=== WINDOW
+(((SELECT,WINDOW)))
+
+Предложение WINDOW предназначено для задания именованных окон, которые используются <<_fblangref_windowfuncs,оконными функциями>>.
+Поскольку выражение окна может быть довольно сложным и использоваться многократно такая функциональность бывает полезной.
+
+.Синтаксис:
+
+[source]
+----
+
+<query spec> ::=
+  SELECT
+    [<first clause>] [<skip clause>]
+    [<distinct clause>]
+    <select list>
+    <from clause>
+    [<where clause>]
+    [<group clause>]
+    [<having clause>]
+    [<named windows clause>]
+    [<order clause>]
+    [<rows clause>]
+    [<offset clause>] [<limit clause>]
+    [<plan clause>]
+
+<named windows clause> ::=
+  WINDOW <window definition> [, <window definition>] ...
+
+<window definition> ::=
+  <window name> AS <window specification> 
+                    
+<window specification> ::= 
+   ([<window name>] [<window partition>] [<window order>] [<window frame>])  
+ 
+                  
+<window partition> ::= PARTITION BY <expr> [, <expr> ...]
+
+<window order> ::= 
+  ORDER BY <expr> [<direction>] [<nulls placement>]  
+        [, <expr> [<direction>] [<nulls placement>] ...]
+
+<direction> ::= {ASC | DESC} 
+
+<nulls placement> ::= NULLS {FIRST | LAST} 
+                
+<window frame> ::= 
+  {ROWS | RANGE} <window frame extent>                
+
+<window frame extent> ::= 
+  <window frame preceding> | <window frame between> 
+
+<window frame preceding> ::= 
+  UNBOUNDED PRECEDING | <expr> PRECEDING | CURRENT ROW 
+
+<window frame between> ::= 
+  BETWEEN { UNBOUNDED PRECEDING | <expr> PRECEDING | <expr> FOLLOWING | CURRENT ROW } 
+      AND { UNBOUNDED FOLLOWING | <expr> PRECEDING | <expr> FOLLOWING | CURRENT ROW }
+----
+
+Имя окна может быть использовано в предложении OVER для ссылки на определение окна, кроме того оно может быть использовано в качестве базового окна для другого именованного или встроенного (в предложении OVER) окна.
+Окна с рамкой (с предложениями RANGE и ROWS) не могут быть использованы в качестве базового окна (но могут быть использованы в предложении OVER [replaceable]``<window
+                    name>``). Окно, которое использует ссылку на базовое окно, не может иметь предложение PARTITION BY и не может переопределять сортировку с помощью предложения ORDER BY.
+
+.Пример:
+
+
+.Использование именованных окон
+[example]
+
+[source,sql]
+----
+
+SELECT
+    id,
+    department,
+    salary,
+    count(*) OVER w1,
+    first_value(salary) OVER w2,
+    last_value(salary) OVER w2,
+    sum(salary) over (w2 ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS s
+FROM employee
+WINDOW w1 AS (PARTITION BY department),
+       w2 AS (w1 ORDER BY salary)
+ORDER BY department, salary;
+----
+
+.См. также:
+<<_fblangref_windowfuncs,Оконные (аналитические) функции>>. 
+
+[[_fblangref_dml_select_plan]]
+=== PLAN
+
+Предложение PLAN позволяет пользователю указать свой план выполнения запроса, который перекрывает тот план, который оптимизатор сгенерировал автоматически.
+
+.Синтаксис:
+
+[source]
+----
+
+PLAN <plan-expr> 
+
+<plan-expr> ::= 
+    (<plan-item> [, <plan-item> ...])               
+  | <sorted-item>               
+  | <joined-item>               
+  | <merged-item> 
+  | <hash-item>
+
+<sorted-item> ::= SORT (<plan-item>) 
+
+<joined-item> ::= JOIN (<plan-item>, <plan-item> [, <plan-item> ...]) 
+
+<merged-item> ::= 
+  [SORT] MERGE (<sorted-item>, <sorted-item> [, <sorted-item> ...]) 
+
+<hash-item> ::= HASH (<plan-item>, <plan-item> [, <plan-item> ...]) 
+
+<plan-item> ::= <basic-item> | <plan-expr>  
+
+<basic-item> ::= <relation> {
+    NATURAL                
+  | INDEX (<indexlist>)                
+  | ORDER index [INDEX (<indexlist>)]
+} 
+
+<relation> ::= table | view [table]  
+
+<indexlist> ::= index [, index ...]
+----
+
+
+
+.Параметры предложения PLAN
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``table``
+|
+
+Имя таблицы или её алиас.
+
+|[replaceable]``view``
+|
+
+Имя представления.
+
+|[replaceable]``index``
+|
+
+Имя индекса.
+|===
+
+Каждый раз, когда пользователь отправляет запрос ядру Firebird, оптимизатор вычисляет стратегию извлечения данных.
+Большинство клиентов Firebird имеют возможность отобразить пользователю план извлечения данных.
+В собственном инструменте [app]``isql`` это делается с помощью команды SET PLAN ON.
+Если вы хотите только изучить план запроса без его выполнения, то вам необходимо ввести команду SET PLANONLY ON, после чего будут извлекаться планы запросов без их выполнения.
+Для возврата [app]``isql`` в режим выполнения запросов введите команду SET PLANONLY OFF.
+
+[NOTE]
+====
+Более подробный план можно получить при включении расширенного плана.
+В [app]``isql`` это делается с помощью команды SET EXPLAIN ON.
+Этот план выводит более подробную информацию о методах доступа используемых оптимизатором, однако его нельзя включить в запрос.
+Описание расширенного плана выходит за рамки данного руководства.
+====
+
+В большинстве случаев, вы можете доверять тому, что Firebird выберет наиболее оптимальный план запроса.
+Однако если ваши запросы очень сложны и вам кажется, что они выполняются не эффективно, вам необходимо посмотреть план запроса и подумать можете ли вы улучшить его. 
+
+==== Простые планы
+
+Простейшие планы состоят только из имени таблицы и следующим за ним метода извлечения.
+Например, для неотсортированной выборки из единственной таблицы без предложения WHERE: 
+[source,sql]
+----
+
+SELECT * FROM students
+PLAN (students NATURAL)
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Table "STUDENTS" Full Scan
+----
+(((SELECT,PLAN,INDEX)))
+
+Если есть предложение WHERE вы можете указать индекс, который будет использоваться при нахождении совпадений: 
+[source,sql]
+----
+
+SELECT * 
+FROM students
+WHERE class = '3C'
+PLAN (students INDEX (ix_stud_class))
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Filter
+      -> Table "STUDENTS" Access By ID
+          -> Bitmap
+              -> Index "IX_STUD_CLASS" Range Scan (full match)
+----
+
+Директива INDEX может использоваться также для условий соединения (которые будут обсуждаться чуть позже). Она содержит список индексов, разделённых запятыми.
+
+Директива ORDER определяет индекс, который используется при сортировке набора данных, если присутствуют предложения ORDER BY или GROUP BY: 
+[source,sql]
+----
+
+SELECT * 
+FROM students
+PLAN (students ORDER pk_students)
+ORDER BY id
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Table "STUDENTS" Access By ID
+      -> Index "PK_STUDENTS" Full Scan
+----
+
+Инструкции ORDER и INDEX могут быть объединены: 
+[source,sql]
+----
+
+SELECT * 
+FROM students
+WHERE class >= '3'
+PLAN (students ORDER pk_students INDEX (ix_stud_class))
+ORDER BY id
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Filter
+      -> Table "STUDENTS" Access By ID
+          -> Index "PK_STUDENTS" Full Scan
+              -> Bitmap
+                  -> Index "IX_STUD_CLASS" Range Scan (lower bound: 1/1)
+----
+
+В инструкциях ORDER и INDEX разрешено указывать один и тот же индекс: 
+[source,sql]
+----
+
+SELECT * 
+FROM students
+WHERE class >= '3'
+PLAN (students ORDER ix_stud_class INDEX (ix_stud_class))
+ORDER BY class
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Filter
+      -> Table "STUDENTS" Access By ID
+          -> Index "IX_STUD_CLASS" Range Scan (lower bound: 1/1)
+              -> Bitmap
+                  -> Index "IX_STUD_CLASS" Range Scan (lower bound: 1/1)
+----
+
+Для сортировки наборов данных, когда невозможно использовать индекс (или вы хотите подавить его использование), уберите инструкцию ORDER и предварите выражение плана инструкцией SORT: 
+[source,sql]
+----
+
+SELECT * 
+FROM students
+PLAN SORT (students NATURAL)
+ORDER BY name
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Sort (record length: 128, key length: 56)
+      -> Table "STUDENTS" Full Scan
+----
+
+Или когда индекс используется для поиска: 
+[source,sql]
+----
+
+SELECT * 
+FROM students
+WHERE class >= '3'
+PLAN SORT (students INDEX (ix_stud_class))
+ORDER BY name
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Sort (record length: 136, key length: 56)
+      -> Filter
+          -> Table "STUDENTS" Access By ID
+              -> Bitmap
+                  -> Index "IX_STUD_CLASS" Range Scan (lower bound: 1/1)
+----
+
+Обратите внимание, что инструкция SORT, в отличие от ORDER, находится за пределами скобок.
+Это отражает тот факт, что строки данных извлекаются неотсортированными и сортируются впоследствии. 
+
+При выборке из представления указывается само представление и участвующее в нем таблица.
+Например, если у вас есть представление FRESHMEN, которое выбирает только студентов первокурсников: 
+[source,sql]
+----
+
+SELECT * 
+FROM freshmen
+PLAN (freshmen students NATURAL)
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Table "STUDENTS" as "FRESHMEN" Full Scan
+----
+
+Или, например: 
+[source,sql]
+----
+
+SELECT * 
+FROM freshmen
+WHERE id > 10
+PLAN SORT (freshmen students INDEX (pk_students))
+ORDER BY name DESC
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Sort (record length: 144, key length: 24)
+      -> Filter
+          -> Table "STUDENTS" as "FRESHMEN" Access By ID
+              -> Bitmap
+                  -> Index "PK_STUDENTS" Range Scan (lower bound: 1/1)
+----
+
+Обратите внимание: если вы назначили псевдоним таблице или представлению, то в предложении PLAN необходимо использовать псевдоним, а не оригинальное имя.
+
+==== Составные планы
+(((SELECT,PLAN,JOIN)))
+
+Если вы делаете соединение, то вы можете указать индекс, который будет использоваться для сопоставления.
+Кроме того, вы должны использовать директиву JOIN для двух потоков в плане: 
+[source,sql]
+----
+
+SELECT s.id, s.name, s.class, c.mentor
+FROM students s
+JOIN classes c ON c.name = s.class
+PLAN JOIN (s NATURAL, c INDEX (pk_classes))
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  ->  Nested Loop Join (inner)
+      -> Table "STUDENTS" as "S" Full Scan
+      -> Filter
+          -> Table "CLASSES" as "C" Access By ID
+              -> Bitmap
+                  -> Index "PK_CLASSES" Unique Scan
+----
+
+То же самое соединение, отсортированное по индексированному столбцу: 
+[source,sql]
+----
+
+SELECT s.id, s.name, s.class, c.mentor
+FROM students s
+JOIN classes c ON c.name = s.class
+PLAN JOIN (s ORDER pk_students, c INDEX (pk_classes))
+ORDER BY s.id
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  ->  Nested Loop Join (inner)
+      -> Table "STUDENTS" as "S" Access By ID
+          -> Index "PK_STUDENTS" Full Scan
+      -> Filter
+          -> Table "CLASSES" as "C" Access By ID
+              -> Bitmap
+                  -> Index "PK_CLASSES" Unique Scan
+----
+
+И соединение, отсортированное не по индексированному столбцу: 
+[source,sql]
+----
+
+SELECT s.id, s.name, s.class, c.mentor
+FROM students s
+JOIN classes c ON c.name = s.class
+PLAN SORT (JOIN (S NATURAL, c INDEX (pk_classes))))
+ORDER BY s.name
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Sort (record length: 152, key length: 12)
+      ->  Nested Loop Join (inner)
+          -> Table "STUDENTS" as "S" Full Scan
+          -> Filter
+              -> Table "CLASSES" as "C" Access By ID
+                  -> Bitmap
+                      -> Index "PK_CLASSES" Unique Scan
+----
+
+Соединение с добавленным условием поиска: 
+[source,sql]
+----
+
+SELECT s.id, s.name, s.class, c.mentor
+FROM students s
+JOIN classes c ON c.name = s.class
+WHERE s.class <= '2'
+PLAN SORT (JOIN (s INDEX (fk_student_class), c INDEX (pk_classes)))
+ORDER BY s.name
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Sort (record length: 152, key length: 12)
+     ->  Nested Loop Join (inner)
+         -> Filter
+            -> Table "STUDENTS" as "S" Access By ID
+               -> Bitmap
+                  -> Index "FK_STUDENT_CLASS" Range Scan (lower bound: 1/1)
+         -> Filter
+            -> Table "CLASSES" as "C" Access By ID
+               -> Bitmap
+                  -> Index "PK_CLASSES" Unique Scan
+----
+
+То же самое, но используется левое внешнее соединение: 
+[source,sql]
+----
+
+SELECT s.id, s.name, s.class, c.mentor
+FROM classes c
+LEFT JOIN students s ON c.name = s.class
+WHERE s.class <= '2'
+PLAN SORT (JOIN (c NATURAL, s INDEX (fk_student_class)))
+ORDER BY s.name
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+  -> Sort (record length: 192, key length: 56)
+      -> Filter
+         ->  Nested Loop Join (outer)
+             -> Table "CLASSES" as "C" Full Scan
+             -> Filter
+                -> Table "STUDENTS" as "S" Access By ID
+                   -> Bitmap
+                      -> Index "FK_STUDENT_CLASS" Range Scan (full match)
+----
+
+Если нет доступных индексов для условия соединения (или вы не хотите его использовать), то возможно соединение потоков с помощью метода HASH или MERGE.
+
+Для соединения методом HASH в плане вместо директивы JOIN используется директива HASH.
+В этом случае меньший (ведомый) поток целиком вычитывается во внутренний буфер.
+В процессе чтения к каждому ключу связи применяется хеш-функция и пара _{хеш, указатель в буфере}_ записывается в хеш-таблицу.
+После чего читается ведущий поток и его ключ связи апробируется в хеш-таблице.
+[source,sql]
+----
+
+SELECT * 
+FROM students s
+JOIN classes c ON c.cookie = s.cookie
+PLAN HASH (c NATURAL, s NATURAL)
+----
+План в EXPLAIN форме: 
+----
+
+Select Expression
+    -> Filter
+        -> Hash Join (inner)
+            -> Table "STUDENTS" as "S" Full Scan
+            -> Record Buffer (record length: 145)
+                -> Table "CLASSES" as "C" Full Scan
+----
+
+При выполнении соединения методом MERGE план должен сначала отсортировать оба потока по соединяемым столбцам и затем произвести слияние.
+Это достигается с помощью директив SORT (которую вы уже встречали) и MERGE используемую вместо JOIN. 
+[source,sql]
+----
+
+SELECT * 
+FROM students s
+JOIN classes c ON c.cookie = s.cookie
+PLAN MERGE (SORT (c NATURAL), SORT (s NATURAL))
+----
+
+Добавление предложения ORDER BY означает, что результат слияния также должен быть отсортирован: 
+[source,sql]
+----
+
+SELECT * 
+FROM students s
+JOIN classes c ON c.cookie = s.cookie
+PLAN SORT (MERGE (SORT (c NATURAL), SORT (s NATURAL)))
+ORDER BY c.name, s.id
+----
+
+И наконец, мы добавляем условие поиска на двух индексированных столбцах таблицы STUDENTS: 
+[source,sql]
+----
+
+SELECT * 
+FROM students s
+JOIN classes c ON c.cookie = s.cookie
+WHERE s.id < 10 AND s.class <= '2'
+PLAN SORT (MERGE (SORT (c NATURAL),
+                  SORT (s INDEX (pk_students, fk_student_class))))
+ORDER BY c.name, s.id
+----
+
+Как следует из формального определения синтаксиса, JOIN и MERGE могут объединять в плане более двух потоков.
+Кроме того, каждое выражение плана может использоваться в качестве элемента в охватывающем плане.
+Это означает, что планы некоторых сложных запросов могут иметь различные уровни вложенности. 
+
+Наконец, вместо MERGE вы можете писать SORT MERGE.
+Поскольку это не имеет абсолютно никакого значения и может создать путаницу с "настоящей" директивой SORT (которая действительно имеет значение), то вероятно лучше придерживаться простой директивы MERGE.
+
+Помимо плана для основного запроса вы можете указать план для каждого подзапроса.
+Например, следующий запрос с указанием планов будет абсолютно правильным.
+
+
+[source,sql]
+----
+
+SELECT *
+FROM COLOR
+WHERE EXISTS(
+             SELECT *
+             FROM HORSE
+             WHERE HORSE.CODE_COLOR = COLOR.CODE_COLOR
+             PLAN (HORSE INDEX (FK_HORSE_COLOR)))
+PLAN(COLOR NATURAL)
+----
+
+[[_fblangref_dml_select_union]]
+=== UNION
+(((SELECT,UNION)))
+
+Предложение UNION объединяет два и более набора данных, тем самым увеличивая общее количество строк, но не столбцов.
+Наборы данных, принимающие участие в UNION, должны иметь одинаковое количество столбцов.
+Однако столбцы в соответствующих позициях не обязаны иметь один и тот же тип данных, они могут быть абсолютно не связанными. 
+
+По умолчанию, объединение подавляет дубликаты строк.
+UNION ALL отображает все строки, включая дубликаты.
+Необязательное ключевое слово DISTINCT делает поведение по умолчанию явным.
+
+.Синтаксис:
+
+[source]
+----
+
+<union> ::= 
+  <individual-select>    
+  UNION [DISTINCT | ALL]               
+  <individual-select>               
+  [UNION [DISTINCT | ALL]               
+  <individual-select>  
+  [...]               
+  [<union-wide-clauses>]           
+
+<individual-select> ::= 
+  SELECT                          
+  [FIRST m] [SKIP n]                          
+  [DISTINCT | ALL] <columns>                          
+  FROM source [[AS] alias]                          
+  [<joins>]                          
+  [WHERE <condition>]                          
+  [GROUP BY <grouping-list>                          
+  [HAVING <aggregate-condition>]]                          
+  [PLAN <plan-expr>]       
+
+<union-wide-clauses> ::= 
+  [ORDER BY <ordering-list>] 
+  [ROWS m [TO n]] 
+  [FOR UPDATE [OF <forupdate-columns>]] 
+  [WITH LOCK]                           
+  [INTO <PSQL-varlist>]
+----
+
+Объединения получают имена столбцов из первого запроса на выборку.
+Если вы хотите дать псевдонимы объединяемым столбцам, то делайте это для списка столбцов в самом верхнем запросе на выборку.
+Псевдонимы в других участвующих в объединении выборках разрешены, и могут быть даже полезными, но они не будут распространяться на уровне объединения. 
+
+Если объединение имеет предложение ORDER BY, то единственно возможными элементами сортировки являются целочисленные литералы, указывающие на позиции столбцов, необязательно сопровождаемые ASC/DESC и/или NULLS FIRST/LAST директивами.
+Это так же означает, что вы не можете упорядочить объединение ничем, что не является столбцом объединения.
+(Однако вы можете завернуть его в производную таблицу, которая даст вам все обычные параметры сортировки.) 
+
+Объединения позволены в подзапросах любого вида и могут самостоятельно содержать подзапросы.
+Они также могут содержать соединения (joins), и могут принимать участие в соединениях, если завёрнуты в производную таблицу. 
+
+[float]
+===== Примеры
+
+Этот запрос представляет информацию из различных музыкальных коллекций в одном наборе данных с помощью объединений: 
+[source,sql]
+----
+
+SELECT id, title, artist, len, 'CD' AS medium
+FROM cds
+UNION
+SELECT id, title, artist, len, 'LP'
+FROM records
+UNION
+SELECT id, title, artist, len, 'MC'
+FROM cassettes
+ORDER BY 3, 2 -- artist, title
+----
+
+Если id, title, artist и length – единственные поля во всех участвующих таблицах, то запрос может быть записан так: 
+[source,sql]
+----
+
+SELECT c.*, 'CD' AS medium
+FROM cds c
+UNION
+SELECT r.*, 'LP'
+FROM records r
+UNION
+SELECT c.*, 'MC'
+FROM cassettes c
+ORDER BY 3, 2 -- artist, title
+----
+
+Квалификация "звёзд" необходима здесь, потому что они не являются единственным элементом в списке столбцов.
+Заметьте, что псевдонимы "c" в первой и третьей выборке не кусают друг друга.
+Они не имеют контекста объединения, а лишь применяются к отдельным запросам на выборку.
+(((SELECT,UNION,DISTINCT)))
+
+Следующий запрос получает имена и телефонные номера переводчиков и корректоров.
+Те переводчики, которые также работают корректорами, будут отображены только один раз в результирующем наборе, если номера их телефонов одинаковые в обеих таблицах.
+Тот же результат может быть получен без ключевого слова DISTINCT.
+Если вместо ключевого слова DISTINCT, будет указано ключевое слово ALL, эти люди будут отображены дважды. 
+[source,sql]
+----
+
+SELECT name, phone 
+FROM translators
+UNION DISTINCT
+SELECT name, telephone 
+FROM proofreaders
+----
+
+Пример использования UNION в подзапросе: 
+[source,sql]
+----
+
+SELECT name, phone, hourly_rate 
+FROM clowns
+WHERE hourly_rate < ALL
+  (SELECT hourly_rate FROM jugglers
+   UNION
+   SELECT hourly_rate FROM acrobats)
+ORDER BY hourly_rate
+----
+
+[[_fblangref_dml_select_orderby]]
+=== ORDER BY
+
+Результат выборки данных при выполнении оператора SELECT по умолчанию никак не упорядочивается (хотя довольно часто происходит упорядочение в хронологическом порядке помещёния строк в таблицу операторами INSERT). Предложение ORDER BY позволяет задать необходимый порядок при выборке данных.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT ... FROM ...
+...
+ORDER BY <ordering-item> [, <ordering-item> ...]
+ 
+<ordering-item> ::= 
+  {col-name | col-alias | col-position | expression}
+  [COLLATE collation-name]
+  [ASC[ENDING] | DESC[ENDING]]
+  [NULLS {FIRST | LAST}]
+----
+
+
+
+.Параметры предложения ORDER BY
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``col-name``
+|
+
+Полное имя столбца.
+
+|[replaceable]``col-alias``
+|
+
+Алиас (псевдоним) столбца.
+
+|[replaceable]``col-position``
+|
+
+Позиция столбца.
+
+|[replaceable]``expression``
+|
+
+Произвольное выражение.
+
+|[replaceable]``collation-name``
+|
+
+Имя сопоставления (порядка сортировки).
+|===
+
+В предложении через запятую перечисляются столбцы, по которым нужно упорядочить результирующий набор данных.
+Можно задавать имя столбца, псевдоним, присвоенный столбцу в списке выбора при помощи ключевого слова AS, или порядковый номер столбца в списке выбора.
+В одном предложении можно для разных столбцов смешивать форму записи.
+Например, один столбец в списке сортировки может быть задан своим именем, а другой порядковым номером.
+
+[IMPORTANT]
+====
+Если вы сортируете по позиции столбца или его алиасу, то выражение соответствующее этой позиции (алиасу) будет скопировано из списка выборки SELECT.
+Это касается и подзапросов, таким образом, подзапрос будет выполняться, по крайней мере, два раза.
+====
+
+[NOTE]
+====
+В случае сортировки по номеру столбца для запроса вида "SELECT *" сервер раскрывает звёздочку (*) для определения сортируемых столбцов.
+Однако использование данной особенности в ваших запросах является плохой практикой.
+====
+
+[[_fblangref_dml_select_orderby_direction]]
+==== Направление сортировки
+
+Ключевое слово ASCENDING задаёт упорядочение по возрастанию значений.
+Допустимо сокращение ASC.
+Применяется по умолчанию. 
+
+Ключевое слово DESCENDING задаёт упорядочение по убыванию значений.
+Допустимо сокращение DESC.
+
+В одном предложении упорядочение по одному столбцу может идти по возрастанию значений, а по другому -- по убыванию.
+
+[[_fblangref_dml_select_orderby_collation]]
+==== Порядок сравнения
+
+Ключевое слово COLLATE позволяет задать порядок сортировки строкового столбца, если нужен порядок, отличный от того, который был установлен для этого столбца (явно при описании столбца или по умолчанию, принятому для соответствующего набора символов). 
+
+[[_fblangref_dml_select_orderby_nulls]]
+==== Расположение NULL
+
+Ключевое слово NULLS определяет, где в отсортированном наборе данных будут находиться значения NULL соответствующего столбца – в начале выборки (FIRST) или в конце (LAST). По умолчанию принимается NULLS FIRST.
+
+[[_fblangref_dml_select_orderby_union]]
+==== Сортировка частей UNION
+
+Части выборок SELECT, участвующих в объединении UNION, не могут быть отсортированы с использованием предложения ORDER BY.
+Однако вы можете достичь желаемого результата с использованием производных таблиц или общих табличных выражений.
+Предложение ORDER BY, записанное последним в объединении, будет применено ко всей выборке в целом, а не к последней его части.
+Для объединений,  единственно возможными элементами сортировки являются целочисленные литералы, указывающие на позиции столбцов, необязательно сопровождаемые ASC / DESC и/или NULLS FIRST / LAST директивами. 
+
+[[_fblangref_dml_select_orderby_examples]]
+==== Примеры
+
+В описанном ниже запросе выборка будет отсортирована по возрастанию по столбцам RDB$CHARACTER_SET_ID, RDB$COLLATION_ID таблицы DB$COLLATIONS: 
+[source,sql]
+----
+
+SELECT
+    RDB$CHARACTER_SET_ID AS CHARSET_ID,
+    RDB$COLLATION_ID AS COLL_ID,
+    RDB$COLLATION_NAME AS NAME
+FROM RDB$COLLATIONS
+ORDER BY RDB$CHARACTER_SET_ID, RDB$COLLATION_ID
+----
+
+То же самое, но сортировка производится по псевдонимам столбцов: 
+[source,sql]
+----
+
+SELECT
+    RDB$CHARACTER_SET_ID AS CHARSET_ID,
+    RDB$COLLATION_ID AS COLL_ID,
+    RDB$COLLATION_NAME AS NAME
+FROM RDB$COLLATIONS
+ORDER BY CHARSET_ID, COLL_ID
+----
+
+В следующем запросе производится сортировка, по номерам столбцов: 
+[source,sql]
+----
+
+SELECT
+    RDB$CHARACTER_SET_ID AS CHARSET_ID,
+    RDB$COLLATION_ID AS COLL_ID,
+    RDB$COLLATION_NAME AS NAME
+FROM RDB$COLLATIONS
+ORDER BY 1, 2
+----
+
+Как было выше сказано, такая сортировка тоже допустима, но не рекомендуется: 
+[source,sql]
+----
+
+SELECT *
+FROM RDB$COLLATIONS
+ORDER BY 3, 2
+----
+
+В данном запросе сортировка происходит по второму столбцу таблицы BOOKS: 
+[source,sql]
+----
+
+SELECT
+    BOOKS.*,
+    FILMS.DIRECTOR
+FROM BOOKS, FILMS
+ORDER BY 2
+----
+
+[WARNING]
+====
+Обратите внимание на то, что выражения, результатом вычисления которых должны быть целые неотрицательные числа, будут интерпретироваться как номер столбца и вызовут исключение, если они не будут в диапазоне от 1 до числа столбцов.
+
+Пример: 
+[source,sql]
+----
+
+SELECT
+  X, Y, NOTE
+FROM PAIRS
+ORDER BY X+Y DESC
+----
+
+Примечания:
+
+* Число, возвращаемое функцией или процедурой из UDF или хранимой процедуры, непредсказуемо, независимо от того, определена сортировка самим выражением или номером столбца;
+* Только неотрицательные целые числа интерпретируются как номер столбца. Целое число, полученное однократным вычислением выражения или заменой параметра, запоминается как целочисленная постоянная величина, так как это значение одинаково для всех строк.
+
+====
+
+Сортировка по убыванию значений столбца PROCESS_TIME с размещёнием значений NULL в начале выборки: 
+[source,sql]
+----
+
+SELECT *
+FROM MSG
+ORDER BY PROCESS_TIME DESC NULLS FIRST
+----
+
+Сортировка выборки полученной объединением выборок из двух запросов.
+Выборка сортируется по убыванию значений второго столбца с размещёнием NULL значений в конце списка и возрастанием значений первого столбца с размещёнием NULL значений в начале списка. 
+[source,sql]
+----
+
+SELECT
+  DOC_NUMBER, DOC_DATE
+FROM PAYORDER
+UNION ALL
+SELECT
+  DOC_NUMBER, DOC_DATE
+FROM BUDGORDER
+ORDER BY 2 DESC NULLS LAST, 1 ASC NULLS FIRST
+----
+
+[[_fblangref_dml_select_rows]]
+=== ROWS
+
+.Назначение:
+Получение части строк из упорядоченного набора.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT
+...
+FROM ...
+...
+ROWS m [TO n]
+----
+
+
+
+.Параметры предложения ROWS
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``m``, [replaceable]``n``
+|
+
+Любые целочисленные выражения.
+|===
+
+Предложение ROWS было введено для совместимости с Interbase 6.5 и выше.
+
+В отличие от FIRST и SKIP, выражение ROWS принимает все типы целочисленных (integer) выражений в качестве аргумента – без скобок! Конечно, скобки могут требоваться для правильных вычислений внутри выражения, и вложенный запрос также должен быть обернут в скобки. 
+
+[IMPORTANT]
+====
+* Нумерация записей в наборе данных начинается с 1.
+* И FIRST/SKIP, и ROWS могут быть использованы без выражения ORDER BY, хотя это редко имеет смысл, за исключением случая, когда необходимо быстро взглянуть на данные таблицы – получаемые строки при этом будут чаще всего в случайном порядке. В этом случае запрос вроде "SELECT * FROM TABLE1 ROWS 20" вернёт 20 первых записей, а не целую таблицу (которая может очень большой).
+
+====
+
+Вызов ROWS [replaceable]``m`` приведёт к возвращению первых [replaceable]``m`` записей из набора данных. 
+
+[[_fblangref_dml_select_rows_1]]
+==== Особенности при использовании ROWS с одним аргументом
+
+
+
+* Если [replaceable]``m`` больше общего числа записей в возвращаемом наборе данных, то будет возвращён весь набор данных; 
+* Если [replaceable]``m`` = 0, то будет возвращён пустой набор данных;
+* Если [replaceable]``m`` < 0, выдаётся ошибка.
+
+В случае указания ROWS [replaceable]``m`` TO [replaceable]``n``, то будут возвращены записи с [replaceable]``m`` по [replaceable]``n`` из набора данных. 
+
+[[_fblangref_dml_select_rows_2]]
+==== Особенности при использовании ROWS с двумя аргументами
+
+
+
+* Если [replaceable]``m`` больше общего количества строк в наборе данных и [replaceable]``n`` >= [replaceable]``m``, то будет возвращён пустой набор данных;
+* Если число [replaceable]``m`` не превышает общего количества строк в наборе данных, а [replaceable]``n`` превышает, то выборка ограничивается строками, начиная с [replaceable]``m`` до конца набора данных;
+* Если [replaceable]``m`` < 1 и [replaceable]``n`` < 1, то оператор SELECT выдаст ошибку;
+* Если [replaceable]``n`` = [replaceable]``m`` -1, то будет возвращён пустой набор данных;
+* Если [replaceable]``n`` < [replaceable]``m`` -1, то оператор SELECT выдаст ошибку.
+
+
+[[_fblangref_dml_select_rows_replace]]
+==== Замена FIRST..SKIP
+
+В сущности, ROWS заменяет собой нестандартные выражения FIRST и SKIP, за исключением единственного случая, когда указывается только SKIP, т.е.
+когда возвращается весь набор данных за исключением пропуска указанного числа записей с начала. 
+
+Для того, что реализовать такое поведение с помощью ROWS, необходимо указать второй аргумент, заведомо больший, чем размер возвращаемого набора данных.
+Или запросить число записей в возвращаемом наборе через подзапрос. 
+
+[[_fblangref_dml_select_rows_mix]]
+==== Совместное использование FIRST..SKIP и ROWS
+
+Нельзя использовать ROWS вместе с FIRST/SKIP в одном и том же операторе SELECT, но можно использовать разный синтаксис в разных подзапросах.
+
+[[_fblangref_dml_select_rows_union]]
+==== Использование ROWS в UNION
+
+При использовании ROWS с выражением UNION, он будет применяться к объединённому набору данных, и должен быть помещён после последнего  SELECT. 
+
+При необходимости ограничить возвращаемые наборы данных одного или нескольких операторов SELECT внутри UNION, можно воспользоваться следующими вариантами:
+
+. Использовать FIRST/SKIP в этих операторах SELECT. Необходимо помнить, что нельзя локально использовать выражение ORDER BY в SELECT внутри UNION – только глобально, ко всему суммарному набору данных; 
+. Преобразовать SELECT в производные таблицы с выражениями ROWS. 
+
+
+[[_fblangref_dml_select_rows_examples]]
+==== Примеры
+
+Ниже приведены примеры, ранее использованные для демонстрации FIRST/SKIP.
+
+Следующий запрос вернёт первые 10 имён из таблицы PEOPLE (имена также будут отсортированы, см. <<_fblangref_dml_select_orderby,ORDER BY>>). 
+[source,sql]
+----
+
+SELECT id, name 
+FROM People
+ORDER BY name ASC
+ROWS 1 TO 10
+----
+или его эквивалент 
+[source,sql]
+----
+
+SELECT id, name 
+FROM People
+ORDER BY name ASC
+ROWS 10
+----
+
+Следующий запрос вернёт все записи из таблицы PEOPLE, за исключением первых 10 имён: 
+[source,sql]
+----
+
+SELECT id, name 
+FROM People
+ORDER BY name ASC
+ROWS 11 TO (SELECT COUNT(*) FROM People)
+----
+
+А этот запрос вернёт последние 10 записей (обратите внимание на скобки): 
+[source,sql]
+----
+
+SELECT id, name 
+FROM People
+ORDER BY name ASC
+ROWS (SELECT COUNT(*) - 9 FROM People)
+TO (SELECT COUNT(*) FROM People)
+----
+
+Этот запрос вернёт строки 81-100 из таблицы PEOPLE: 
+[source,sql]
+----
+
+SELECT id, name 
+FROM People
+ORDER BY name ASC
+ROWS 81 TO 100
+----
+
+.См. также:
+<<_fblangref_dml_select_fetch_offset,"FETCH, OFFSET">>, <<_fblangref_dml_select_first_skip,"FIRST, SKIP">>. 
+
+[[_fblangref_dml_select_fetch_offset]]
+=== FETCH, OFFSET
+(((SELECT,FETCH)))
+
+Предложения FETCH и OFFSET являются SQL:2008 совместимым эквивалентом предложениям FIRST/SKIP и альтернативой предложению ROWS.
+Предложение OFFSET указывает, какое количество строк необходимо пропустить.
+Предложение FETCH указывает, какое количество строк необходимо получить.
+
+Предложения OFFSET и FETCH могут применяться независимо уровня вложенности выражений запросов.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT ...
+FROM ...  
+[...]
+[ORDER BY <expr_order_list>]  
+[OFFSET <simple_value_expr> {ROW | ROWS}]   
+[FETCH {FIRST | NEXT} [<simple_value_expr>] {ROW | ROWS} ONLY]
+----
+
+
+
+.Параметры предложений OFFSET и FETCH
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``expr_order_list``
+|
+
+Список выражений сортировки.
+
+|[replaceable]``simple_value_expr``
+|
+
+Числовой литерал, SQL параметр (?) или PSQL параметр (:param).
+|===
+
+Примечания: 
+
+* Firebird не поддерживает указание FETCH в процентах, определённое в стандарте.
+* Firebird не поддерживает предложение FETCH с опцией WITH TIES, которая определена в стандарте.
+* FIRST ... SKIP и ROWS являются нестандартными альтернативами.
+* Предложения OFFSET и/или FETCH не могут быть объединены с предложениями ROWS или FIRST/SKIP в одном выражении запроса.
+* Выражения, ссылки на столбцы и т.д. недопустимы в любом из предложений.
+* В отличие от предложения ROWS, предложения OFFSET и FETCH допустимы только в операторе SELECT.
+
+_Примеры:_
+
+Следующий запрос возвращает все строки кроме первых 10, упорядоченных по столбцу COL1: 
+[source,sql]
+----
+
+SELECT * 
+FROM T1
+ORDER BY COL1
+OFFSET 10 ROWS
+----
+
+В этом примере возвращается первые 10 строк, упорядоченных по столбцу COL1: 
+[source,sql]
+----
+
+SELECT * 
+FROM T1
+ORDER BY COL1
+FETCH FIRST 10 ROWS ONLY
+----
+
+Использование предложений OFFSET и FETCH в производной таблице, результат которой ограничивается ещё раз во внешнем запросе. 
+[source,sql]
+----
+
+SELECT * 
+FROM (
+  SELECT * 
+  FROM T1
+  ORDER BY COL1 DESC
+  OFFSET 1 ROW
+  FETCH NEXT 10 ROWS ONLY
+) a
+ORDER BY a.COL1
+FETCH FIRST ROW ONLY
+----
+
+.См. также:
+<<_fblangref_dml_select_rows,ROWS>>, <<_fblangref_dml_select_first_skip,"FIRST, SKIP">>. 
+
+[[_fblangref_dml_select_for_update]]
+=== FOR UPDATE [OF]
+(((SELECT,FOR UPDATE)))
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT ... 
+FROM single_table 
+[WHERE ...] 
+[FOR UPDATE [OF <column-names>]]
+----
+
+Предложение FOR UPDATE не делает то, что от него ожидается.
+В настоящее время единственный эффект от его использования заключается лишь в отключении упреждающей выборки в буфер.
+
+[TIP]
+====
+Это, вероятно, изменится в будущем: план состоит в том, чтобы проверять курсоры, отмеченные как FOR UPDATE, действительно ли они обновляемые, и отклонять позиционированные обновления и удаления для курсоров, оцененных как необновляемый. 
+====
+
+Предложение OF не делает ничего вообще.
+
+[[_fblangref_dml_select_with_lock]]
+=== WITH LOCK
+
+.Назначение:
+Пессимистическая блокировка.
+
+Опция WITH LOCK, обеспечивает возможность ограниченной явной пессимистической блокировки для осторожного использования в затронутых наборах строк:
+
+* крайне малой выборки (в идеале из одной строки) и
+* при контроле из приложения.
+
+
+.Только для экспертов
+[CAUTION]
+====
+Пессимистическая блокировка редко требуется при работе с Firebird.
+Эту функцию можно использовать только хорошо понимая её. 
+
+Требуется хорошее знание различных уровней изоляции и других параметров транзакций прежде чем использовать явную блокировку в вашем приложении. 
+====
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT ... 
+FROM single_table 
+[WHERE ...] 
+[FOR UPDATE [OF <column-names>]] 
+WITH LOCK
+----
+
+При успешном выполнении предложения WITH LOCK будут заблокированы выбранные строки данных и таким образом запрещён доступ на их изменение в рамках других транзакций до момента завершения вашей транзакции.
+
+Предложение WITH LOCK доступно только для выборки данных (SELECT) из одной таблицы.
+Предложение WITH LOCK нельзя использовать: 
+
+* в подзапросах;
+* в запросах с объединением нескольких таблиц (JOIN);
+* с оператором DISTINCT, предложением GROUP BY и при использовании любых агрегатных функций;
+* при работе с представлениями;
+* при выборке данных из селективных хранимых процедур;
+* при работе с внешними таблицами.
+
+Сервер, в свою очередь, для каждой записи, подпадающей под явную блокировку, возвращает версию записи, которая является в настоящее время подтверждённой (актуальной), независимо от состояния базы данных, когда был выполнен оператор выборки данных, или исключение при попытке обновления заблокированной записи.
+
+Ожидаемое поведение и сообщения о конфликте зависят от параметров транзакции, определённых в TPB (Transaction Parameters Block):
+
+.Влияние параметров TPB на явную блокировку
+[cols="1,1", frame="all", options="header"]
+|===
+| 
+                                    Режим TPB
+                                
+| 
+                                    Поведение
+                                
+
+|isc_tpb_consistency
+|Явные блокировки переопределяются неявными или явными
+                                    блокировками табличного уровня и игнорируются.
+
+|
+
+isc_tpb_concurrency
+
++ isc_tpb_nowait
+|При подтверждении изменения записи в транзакции, стартовавшей
+                                    после транзакции, запустившей явную блокировку, немедленно
+                                    возникает исключение конфликта обновления.
+
+|
+
+isc_tpb_concurrency
+
++ isc_tpb_wait
+|
+
+При подтверждении изменения записи в транзакции, стартовавшей после транзакции, запустившей явную блокировку, немедленно возникает исключение конфликта обновления.
+
+Если в активной транзакции идёт редактирование записи (с использованием явной блокировки или нормальной оптимистической блокировкой записи), то транзакция, делающая попытку явной блокировки, ожидает окончания транзакции блокирования и, после её завершения, снова пытается получить блокировку записи.
+Это означает, что при изменении версии записи и подтверждении транзакции с блокировкой возникает исключение конфликта обновления. 
+
+|
+
+isc_tpb_read_committed
+
++ isc_tpb_nowait
+|Если есть активная транзакция, редактирующая запись (с
+                                    использованием явной блокировки или нормальной оптимистической
+                                    блокировкой записи), то сразу же возникает исключение конфликта
+                                    обновления. 
+
+|
+
+isc_tpb_read_committed
+
++ isc_tpb_wait
+|
+
+Если в активной транзакции идёт редактирование записи (с использованием явной блокировки или нормальной оптимистической блокировкой записи), то транзакция, делающая попытку явной блокировки, ожидает окончания транзакции блокирования и, после её завершения, снова пытается получить блокировку записи.
+
+Для этого режима TPB никогда не возникает конфликта обновления.
+|===
+
+[[_fblangref_dml_select_with_lock_for_update]]
+==== Использование предложения FOR UPDATE
+
+Если предложение FOR UPDATE предшествует предложению WITH LOCK, то буферизация выборки не используется.
+Таким образом, блокировка применяется к каждой строке, одна за другой, по мере извлечения записей.
+Это делает возможным ситуацию, в которой успешная блокировка данных _перестаёт
+                        работать_ при достижении в выборке строки, заблокированной другой транзакцией.
+
+[TIP]
+====
+Кроме того, некоторые компоненты доступа позволяют установить размер буфера выборки и уменьшить его до 1 записи.
+Это позволяет вам заблокировать и редактировать строку до выборки и блокировки следующей или обрабатывать ошибки, не отменяя действий вашей транзакции.
+====
+
+[NOTE]
+====
+Опциональное предложение "`OF <column-names>`" не делает ничего вообще.
+====
+
+[[_fblangref_dml_select_with_lock_how_work]]
+==== Как сервер работает с WITH LOCK
+
+Попытка редактирования записи с помощью оператора UPDATE, заблокированной другой транзакцией, приводит к вызову исключения конфликта обновления или ожиданию завершения блокирующей транзакции – в зависимости от режима TPB.
+Поведение сервера здесь такое же, как если бы эта запись уже была изменена блокирующей транзакцией.
+
+Нет никаких специальных кодов gdscode, возвращаемых для конфликтов обновления, связанных с пессимистической блокировкой.
+
+Сервер гарантирует, что все записи, возвращённые явным оператором блокировки, фактически заблокированы и действительно соответствуют условиям поиска, заданным в операторе WHERE, если эти условия не зависят ни от каких других таблиц, не имеется операторов соединения, подзапросов и т.п.
+Это также гарантирует то, что строки, не попадающие под условия поиска, не будут заблокированы.
+Это не даёт гарантии, что нет строк, которые попадают под условия поиска, и не заблокированы.
+
+[NOTE]
+====
+Такая ситуация может возникнуть, если в другой, параллельной транзакции  подтверждаются изменения в процессе выполнения текущего оператора блокировки.
+====
+
+Сервер блокирует строки по мере их выборки.
+Это имеет важные последствия, если вы блокируете сразу несколько строк.
+Многие методы доступа к базам данных Firebird по умолчанию используют для выборки данных пакеты из нескольких сотен строк (так называемый "буфер выборки"). Большинство компонентов доступа к данным не выделяют строки, содержащиеся в последнем принятом пакете, и для которых произошёл конфликт обновления. 
+
+[[_fblangref_dml_select_with_lock_caveats]]
+==== Предостережения при использовании WITH LOCK
+
+
+
+* Откат неявной или явной точки сохранения отменяет блокировку записей, которые изменялись в рамках её действий, но ожидающие окончания блокировки транзакции при этом не уведомляются. Приложения не должны зависеть от такого поведения, поскольку в будущем оно может быть изменено; 
+* Хотя явные блокировки могут использоваться для предотвращения и/или обработки необычных ошибок конфликтов обновления, объем ошибок обновления (deadlock) вырастет, если вы тщательно не разработаете свою стратегию блокировки и не будете ей строго управлять; 
+* Большинство приложений не требуют явной блокировки записей. Основными целями явной блокировки являются: 1) предотвращение дорогостоящей обработки ошибок конфликта обновления в сильно загруженных приложениях и 2) для поддержания целостности объектов, отображаемых из реляционной базы данных в кластеризируемой среде. Если использование вами явной блокировки не подпадает под одну из этих двух категорий, то это является неправильным способом решения задач в Firebird; 
+* Явная блокировка -- это расширенная функция; не злоупотребляйте её использованием! В то время как явная блокировка может быть очень важной для веб-сайтов, обрабатывающих тысячи параллельных пишущих транзакций или для систем типа ERP/CRM, работающих в крупных корпорациях, большинство прикладных программ не требуют её использования. 
+
+
+==== Примеры использования явной блокировки
+
+[lowerroman]
+. Одиночная:
++
+
+[source,sql]
+----
+
+SELECT * 
+FROM DOCUMENT
+WHERE DOCUMENT_ID=? WITH LOCK
+----
+. Несколько строк с последовательной их обработкой с курсором DSQL:
++
+
+[source,sql]
+----
+
+SELECT * 
+FROM DOCUMENT 
+WHERE PARENT_ID=?
+FOR UPDATE WITH LOCK
+----
+
+
+[[_fblangref_dml_select_into]]
+=== INTO
+(((SELECT,INTO)))
+
+.Назначение:
+Передача результатов SELECT в переменные.
+
+.Доступно в:
+PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+SELECT [...] <column-list>   
+FROM ...   
+[...]   
+[INTO <variable-list>]       
+
+<variable-list> ::= [:]psqlvar [, [:]psqlvar ...]
+----
+
+В PSQL (хранимых процедурах, триггерах и др.) результаты выборки команды SELECT могут быть построчно загружены в локальные переменные (число, порядок и типы локальных переменных должны соответствовать полям SELECT). Часто такая загрузка – единственный способ что-то сделать с возвращаемыми значениями. 
+
+Простой оператор SELECT может быть использован в PSQL, только если он возвращает не более одной строки, то есть, если это запрос типа singleton (одиночка). Для запросов, возвращающих несколько строк, PSQL предлагает использовать оператор <<_fblangref_psql_statements_forselect,FOR SELECT>>.
+ 
+
+[IMPORTANT]
+====
+В случае, когда запрос не возвращает данных (ноль строк), значения переменных в списке INTO [replaceable]``<variable-list>`` не изменяется.
+====
+
+Также, PSQL поддерживает оператор <<_fblangref_psql_statements_declare_cursor,DECLARE CURSOR>>, который связывает именованный курсор с определенной командой SELECT -- и этот курсор впоследствии может быть использован для навигации по возвращаемому набору данных.
+
+В PSQL выражение INTO должно появляться в самом конце команды SELECT.
+ 
+
+.Обратите внимание.
+[IMPORTANT]
+====
+В PSQL двоеточие перед именами переменных является опциональным.
+====
+
+[float]
+===== Примеры
+
+В PSQL, можно присвоить значения min_amt, avg_amt и max_amt заранее объявленным переменным или выходным параметрам: 
+[source,sql]
+----
+
+SELECT 
+  MIN(amount), 
+  AVG(CAST(amount AS float)), 
+  MAX(amount)
+FROM orders
+WHERE artno = 372218
+INTO min_amt, 
+     avg_amt, 
+     max_amt;
+----
+
+В данном запросе CAST служит для корректного вычисления среднего значения.
+Если не привести значение к float, то среднее значение будет обрезано до ближайшего целого значения.
+
+В триггере: 
+[source,sql]
+----
+
+SELECT LIST(name, ', ')
+FROM persons p
+WHERE p.id IN (new.father, new.mother)
+INTO new.parentnames;
+----
+
+[[_fblangref_dml_select_cte]]
+=== Общие табличные выражения CTE ("WITH ... AS ... SELECT")
+
+Общие табличные выражения (Common Table Expressions), сокращённо ``CTE``, описаны как виртуальные таблицы или представления, определённые в преамбуле основного запроса, которые участвуют в основном запросе.
+Основной запрос может ссылаться на любое CTE из определённых в преамбуле, как и при выборке данных из обычных таблиц или представлений.
+CTE могут быть рекурсивными, т.е.
+ссылающимися сами на себя, но не могут быть вложенными.
+
+.Синтаксис:
+
+[source]
+----
+
+<cte-construct> ::= 
+  <cte-defs>                      
+  <main-query>  
+
+<cte-defs> ::= WITH [RECURSIVE] <cte> [, <cte> ...]       
+
+<cte> ::= name [(<column-list>)] AS (<cte-stmt>)       
+
+<column-list> ::= column-alias [, column-alias ...]
+----
+
+
+
+.Параметры CTE
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``cte-stmt``
+|
+
+Любой оператор SELECT или UNION.
+
+|[replaceable]``main-query``
+|
+
+Основной оператор SELECT, который может ссылаться на любое CTE из найденных в преамбуле. 
+
+|[replaceable]``name``
+|
+
+Алиас табличного выражения.
+
+|[replaceable]``column-alias``
+|
+
+Алиас столбца табличного выражения.
+|===
+
+_Примеры:_
+
+.Запрос с использованием CTE
+[example]
+
+[source,sql]
+----
+  
+WITH DEPT_YEAR_BUDGET AS (
+  SELECT
+      FISCAL_YEAR,
+      DEPT_NO,
+      SUM(PROJECTED_BUDGET) BUDGET
+  FROM PROJ_DEPT_BUDGET
+  GROUP BY FISCAL_YEAR, DEPT_NO
+)
+SELECT
+    D.DEPT_NO, 
+    D.DEPARTMENT,
+    DYB_2008.BUDGET BUDGET_08,
+    DYB_2009.BUDGET AS BUDGET_09
+FROM DEPARTMENT D
+    LEFT JOIN DEPT_YEAR_BUDGET DYB_2008
+      ON D.DEPT_NO = DYB_2008.DEPT_NO AND
+         DYB_2008.FISCAL_YEAR = 2008
+    LEFT JOIN DEPT_YEAR_BUDGET DYB_2009
+      ON D.DEPT_NO = DYB_2009.DEPT_NO AND
+         DYB_2009.FISCAL_YEAR = 2009
+WHERE EXISTS (SELECT * 
+              FROM PROJ_DEPT_BUDGET B
+              WHERE D.DEPT_NO = B.DEPT_NO)
+----
+
+[float]
+===== Примечания
+
+
+
+* Определение CTE может содержать любой правильный оператор SELECT, если он не содержит преамбулы "WITH ..." (операторы WITH не могут быть вложенными);
+* CTE могут использовать друг друга, но ссылки не должны иметь циклов;
+* CTE могут быть использованы в любой части главного запроса или другого табличного выражения и сколько угодно раз;
+* Основной запрос может ссылаться на CTE несколько раз, но с разными алиасами;
+* CTE могут быть использованы в операторах INSERT, UPDATE и DELETE как подзапросы;
+* Если объявленое CTE не использовано, то будет выдано предупреждение "CTE [replaceable]``<cte>`` is not used in query". В более ранних версиях вместо прежупреждения выдавалась ошибка;
+* CTE могут быть использованы и в PSQL (FOR WITH ... SELECT ... INTO ...): 
++
+[source,sql]
+----
+
+FOR 
+  WITH MY_RIVERS AS (
+      SELECT *
+      FROM RIVERS
+      WHERE OWNER = 'me')
+  SELECT
+      NAME, 
+      LENGTH
+  FROM MY_RIVERS
+  INTO :RNAME, 
+       :RLEN 
+DO
+BEGIN
+  ...
+END
+----
+
+
+[[_fblangref_dml_select_cte_recursive]]
+==== Рекурсивные CTE
+(((SELECT,WITH,RECURSIVE)))
+
+Рекурсивное (ссылающееся само на себя) CTE это ОБЪЕДИНЕНИЕ, у которого должен быть, по крайней мере, один не рекурсивный элемент, к которому привязываются остальные элементы объединения.
+Не рекурсивный элемент помещается в CTE первым.
+Рекурсивные члены отделяются от не рекурсивных и друг от друга с помощью UNION ALL.
+Объединение не рекурсивных элементов может быть любого типа.
+
+Рекурсивное CTE требует наличия ключевого слова RECURSIVE справа от WITH.
+Каждый рекурсивный член объединения может сослаться на себя только один раз и это должно быть сделано в предложении FROM. 
+
+Главным преимуществом рекурсивных CTE является то, что они используют гораздо меньше памяти и процессорного времени, чем эквивалентные рекурсивные хранимые процедуры.
+
+[float]
+===== Выполнение рекурсивного CTE
+
+Выполнение рекурсивного CTE с точки зрения сервера Firebird можно описать следующим образом: 
+
+* Сервер начинает выполнение с не рекурсивного члена;
+* Для каждой выбранной строки из нерекурсивного части выполняется каждый рекурсивный член один за другим, используя текущие значения из предыдущей итерации как параметры;
+* Если во время выполнения экземпляр рекурсивного элемента не выдаёт строк, цикл выполнения переходит на предыдущий уровень и получает следующую строку от внешнего для него набора данных.
+
+Важно отметить, что если СТЕ объявлена, то где-то ниже она обязательно должна быть использована, иначе будет ошибка вида "`CTE "AAA" is not used in
+                        query`".
+
+[float]
+====== Примеры:
+
+.Рекурсивное CTE
+[example]
+
+[source,sql]
+----
+
+WITH RECURSIVE DEPT_YEAR_BUDGET AS (
+  SELECT
+      FISCAL_YEAR, 
+      DEPT_NO,
+      SUM(PROJECTED_BUDGET) BUDGET
+  FROM PROJ_DEPT_BUDGET
+  GROUP BY FISCAL_YEAR, DEPT_NO
+),
+DEPT_TREE AS (
+  SELECT
+      DEPT_NO, 
+      HEAD_DEPT, 
+      DEPARTMENT,
+      CAST('' AS VARCHAR(255)) AS INDENT
+  FROM DEPARTMENT
+  WHERE HEAD_DEPT IS NULL
+  UNION ALL
+  SELECT
+      D.DEPT_NO, 
+      D.HEAD_DEPT, 
+      D.DEPARTMENT,
+      H.INDENT || ' '
+  FROM DEPARTMENT D 
+    JOIN DEPT_TREE H ON H.HEAD_DEPT = D.DEPT_NO
+)
+SELECT
+    D.DEPT_NO, 
+    D.INDENT || D.DEPARTMENT DEPARTMENT,
+    DYB_2008.BUDGET AS BUDGET_08,
+    DYB_2009.BUDGET AS BUDGET_09
+FROM DEPT_TREE D
+    LEFT JOIN DEPT_YEAR_BUDGET DYB_2008 ON
+      (D.DEPT_NO = DYB_2008.DEPT_NO) AND
+      (DYB_2008.FISCAL_YEAR = 2008)
+    LEFT JOIN DEPT_YEAR_BUDGET DYB_2009 ON
+      (D.DEPT_NO = DYB_2009.DEPT_NO) AND
+      (DYB_2009.FISCAL_YEAR = 2009)
+----
+
+Следующий пример выводит родословную лошади.
+Основное отличие состоит в том, что рекурсия идёт сразу по двум веткам дерева родословной. 
+[source,sql]
+----
+
+WITH RECURSIVE PEDIGREE (
+    CODE_HORSE,
+    CODE_FATHER,
+    CODE_MOTHER,
+    NAME,
+    MARK,
+    DEPTH)
+AS (SELECT
+        HORSE.CODE_HORSE,
+        HORSE.CODE_FATHER,
+        HORSE.CODE_MOTHER,
+        HORSE.NAME,
+        CAST('' AS VARCHAR(80)),
+        0
+    FROM HORSE
+    WHERE
+        HORSE.CODE_HORSE = :CODE_HORSE
+    UNION ALL
+    SELECT
+        HORSE.CODE_HORSE,
+        HORSE.CODE_FATHER,
+        HORSE.CODE_MOTHER,
+        HORSE.NAME,
+        'F' || PEDIGREE.MARK,
+        PEDIGREE.DEPTH + 1
+    FROM HORSE
+        JOIN PEDIGREE 
+          ON HORSE.CODE_HORSE = PEDIGREE.CODE_FATHER
+    WHERE 
+        –- ограничение глубины рекурсии
+        PEDIGREE.DEPTH < :MAX_DEPTH 
+    UNION ALL
+    SELECT
+        HORSE.CODE_HORSE,
+        HORSE.CODE_FATHER,
+        HORSE.CODE_MOTHER,
+        HORSE.NAME,
+        'M' || PEDIGREE.MARK,
+        PEDIGREE.DEPTH + 1
+    FROM HORSE
+        JOIN PEDIGREE 
+          ON HORSE.CODE_HORSE = PEDIGREE.CODE_MOTHER
+    WHERE 
+        –- ограничение глубины рекурсии
+        PEDIGREE.DEPTH < :MAX_DEPTH
+)
+SELECT
+    CODE_HORSE,
+    NAME,
+    MARK,
+    DEPTH
+FROM
+    PEDIGREE
+----
+
+.Примечания для рекурсивного CTE:
+
+
+* В рекурсивных членах объединения не разрешается использовать агрегаты (DISTINCT, GROUP BY, HAVING) и агрегатные функции (SUM, COUNT, MAX и т.п.);
+* Рекурсивная ссылка не может быть участником внешнего объединения OUTER JOIN;
+* Максимальная глубина рекурсии составляет 1024;
+* Рекурсивный член не может быть представлен в виде производной таблицы.
+
+
+[[_fblangref_dml_insert]]
+== INSERT
+
+.Назначение:
+Вставка данных в таблицу.
+
+.Доступно в:
+DSQL, ESQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+INSERT INTO target  
+[OVERRIDE {SYSTEM | USER} VALUE]                  
+{DEFAULT VALUES | [(<column_list>)] <value_source>}     
+[RETURNING {<returning_list> | *} [INTO <variables>]]       
+
+<column_list> ::= colname [, colname ...]       
+
+<value_source> ::= VALUES (<value_list>) | <select_stmt>       
+
+<value_list> ::= {value | DEFAULT} [, {value | DEFAULT} ...]  
+
+<returning_list> ::= 
+  ret_value [[AS] ret_alias] [, ret_value [[AS] ret_alias] ...]      
+
+<variables> ::= [:]varname [, [:]varname ...]
+----
+
+
+
+.Параметры оператора INSERT
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``target``
+|
+
+Имя таблицы или представления, в которую происходит вставка новой записи или записей.
+
+|[replaceable]``colname``
+|
+
+Столбец таблицы или представления.
+
+|[replaceable]``value``
+|
+
+Выражение, значение которого используется для вставки в таблицу.
+
+|[replaceable]``ret_value``
+|
+
+Выражение, возвращаемое в предложении RETURNING.
+
+|[replaceable]``ret_alias``
+|
+
+Псевдоним для выражения, возвращаемого в предложении RETURNING.
+
+|[replaceable]``varname``
+|
+
+Имя PSQL переменной.
+|===
+
+Оператор INSERT добавляет строки в таблицу, или в одну или более таблиц представления.
+Если значения столбцов указаны в разделе VALUES, то будет вставлена одна строка.
+Значения столбцов также могут быть получены из оператора SELECT, в этом случае может быть вставлено от нуля и более строк.
+В случае DEFAULT VALUES, значения можно не указывать, и вставлена будет одна строка.
+
+[NOTE]
+====
+
+
+* Один столбец не может быть указан более одного раза в списке столбцов;
+* При возвращении значений столбцов вставленной записи с помощью INTO в контекстные переменные NEW.[replaceable]``columnname`` в триггерах не должен использоваться префикс двоеточия (":").
+
+====
+
+[[_fblangref_dml_insert_values]]
+=== INSERT ... VALUES
+
+В списке VALUES должны быть указаны значения для всех столбцов в списке столбцов в том же порядке и совместимые по типу.
+Если список столбцов отсутствует, то значения должны быть указаны для каждого столбца таблицы или представления (исключая вычисляемые столбцы).
+
+[NOTE]
+====
+<<_fblangref_commons_introducer_syntax,Вводный
+                        синтаксис>> даёт возможность определить набор символов для значений строковых констант (литералов). Вводный синтаксис работаёт только с литералами строк: он не может быть применён к строковым переменным, параметрам, ссылкам на столбцы или значения, выражениям.
+====
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+INSERT INTO cars (make, model, byyear)
+VALUES ('Ford', 'T', 1908);
+
+INSERT INTO cars
+VALUES ('Ford', 'T', 1908, 'USA', 850);
+
+-- обратите внимание на префикс '_' (introducer syntax)
+INSERT INTO People
+VALUES (_ISO8859_1 'Hans-Jörg Schäfer');
+----
+
+[[_fblangref_dml_insert_values_default]]
+==== Ключевое слово DEFAULT
+(((INSERT,DEFAULT)))
+
+В списке VALUES вместо значения столбца можно использовать ключевое слово DEFAULT.
+В этом случае столбец получит значение по умолчанию, указанное при определении целевой таблицы.
+Если значение по умолчанию для столбца отсутствует, то столбец получит значение NULL.
+
+Если ключевое слово DEFAULT указано для столбца, определенного как GENERATED BY DEFAULT AS IDENTITY, то столбец получит следующее значение идентификации, так как будто этот столбец не был указан в запросе вовсе.
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+CREATE TABLE cars (
+  ID INTEGER GENERATED BY DEFAULT AS IDENTITY,
+  BYYEAR SMALLINT DEFAULT 1990 NOT NULL,
+  NAME VARCHAR(45),
+  CONSTRAINT pk_cars PRIMARY KEY (ID)
+);                                
+ 
+-- в столбец BYYEAR попадёт значение 1990 
+INSERT INTO cars (byyear, name)
+VALUES (DEFAULT, 'Ford Focus');
+           
+-- в столбец id попадёт значение 2, как будто мы не указывали значение для id
+INSERT INTO cars (id, byyear, name)
+VALUES (DEFAULT, 1996, 'Ford Mondeo');
+----
+
+[[_fblangref_dml_insert_select]]
+=== INSERT ... SELECT
+
+В этом случае выходные столбцы оператора SELECT, должны предоставить значения для каждого целевого столбца в списке столбцов, в том же порядке и совместимого типа.
+Если список столбцов отсутствует, то значения должны быть предоставлены для каждого столбца таблицы или представления (исключая вычисляемые столбцы).
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+                    
+INSERT INTO cars (make, model, byyear)
+SELECT make, model, byyear 
+FROM new_cars;
+
+INSERT INTO cars
+SELECT * 
+FROM new_cars;
+
+INSERT INTO Members (number, name)
+SELECT number, name 
+FROM NewMembers 
+WHERE Accepted = 1
+UNION ALL
+SELECT number, name 
+FROM SuspendedMembers 
+WHERE Vindicated = 1
+
+INSERT INTO numbers(num)
+WITH RECURSIVE r(n) AS (
+  SELECT 1 FROM rdb$database
+  UNION ALL
+  SELECT n+1 FROM r where n < 100
+)
+SELECT n FROM r
+----
+
+Конечно, имена столбцов в таблице источнике не обязательно должны быть такими же, как и в таблице приёмнике.
+
+Любой тип оператора SELECT разрешён, пока его выходные столбцы точно соответствуют столбцам вставки по числу и типу.
+Типы не должны быть точно такими же, но они должны быть совместимыми по присваиванию.
+
+[[_fblangref_dml_insert_defaultvalues]]
+=== INSERT ... DEFAULT VALUES
+(((INSERT,DEFAULT VALUES)))
+
+Предложение DEFAULT VALUES позволяет вставлять записи без указания значений вообще, ни непосредственно (в предложении VALUES), ни из оператора SELECT.
+Это возможно, только если для каждого NOT NULL поля и полей, на которые наложены другие ограничения, или имеются допустимые объявленные значения по умолчанию, или эти значения устанавливаются в BEFORE INSERT триггере.
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+                    
+INSERT INTO journal 
+DEFAULT VALUES
+RETURNING entry_id
+----
+
+[[_fblangref_dml_insert_overriding]]
+=== Директива OVERRIDING
+
+Значения столбцов идентификации (GENERATED BY DEFAULT AS IDENTITY) могут быть переопределены в операторах INSERT, UPDATE OR INSERT, MERGE.
+Для этого просто достаточно указать значение столбца в списке значений.
+Однако для столбцов определённых как GENERATED ALWAYS это недопустимо.
+Директива OVERRIDING SYSTEM VALUE позволяет заменить сгенерированное системой значение на значение указанное пользователем.
+Директива OVERRIDING SYSTEM VALUE вызовет ошибку, если в таблице нет столбцов идентификации или если они определены как GENERATED BY DEFAULT AS IDENTITY.
+
+.Пример:
+
+
+[example]
+
+[source,sql]
+----
+                    
+CREATE TABLE objects (
+  id INT GENERATED ALWAYS AS IDENTITY, 
+  name CHAR(50));
+	
+-- будет вставлено значение с кодом 11	
+INSERT INTO objects (id, name) 
+OVERRIDING SYSTEM VALUE 
+VALUES (11, 'Laptop');
+----
+
+Директива OVERRIDE USER VALUE выполняет обратную задачу, т.е.
+заменяет значение указанное пользователем на значение сгенерированное системой, если столбец идентификации определён как GENERATED BY DEFAULT AS IDENTITY.
+Директива OVERRIDING USER VALUE вызовет ошибку, если в таблице нет столбцов идентификации или если они определены как GENERATED ALWAYS AS IDENTITY.
+
+.Пример:
+
+
+[example]
+
+[source,sql]
+----
+                    
+CREATE TABLE objects (
+  id INT GENERATED BY DEFAULT AS IDENTITY, 
+  name CHAR(50));
+	
+-- значение 12 будет проигнорировано	
+INSERT INTO objects (id, name) 
+OVERRIDING SYSTEM VALUE 
+VALUES (12, 'Laptop');
+----
+
+.См. также:
+<<_fblangref_ddl_table_create_column_identity,Столбцы идентификации
+                        (автоинкремент)>>. 
+
+[[_fblangref_dml_insert_returning]]
+=== RETURNING
+(((INSERT,RETURNING)))
+
+Оператор INSERT вставляющий только одну строку может включать необязательное предложение RETURNING для возврата значений из вставленной строки.
+Если предложение указано, то оно может содержать любые столбцы, указанные в операторе, или другие столбцы и выражения.
+Вместо списка столбцов вы можете указать звёздочку (*) для возврата всех значений столбцов таблицы.
+Возвращаемые значения содержат все изменения, произведённые в триггерах BEFORE.
+
+[IMPORTANT]
+====
+В DSQL, оператор с RETURNING всегда возвращает только одну строку.
+Если указано предложение RETURNING, и обнаружено более одной совпадающей строки, выдаётся сообщение об ошибке.
+Это поведение может быть изменено в последующих версиях Firebird.
+====
+
+.Примеры:
+
+
+.Использование предложения RETURNING в операторе INSERT
+[example]
+
+[source,sql]
+----
+                    
+INSERT INTO Scholars (
+  firstname, 
+  lastname, 
+  address, 
+  phone, 
+  email)
+VALUES (
+  'Henry', 
+  'Higgins', 
+  '27A Wimpole Street', 
+  '3231212', 
+  NULL)
+RETURNING lastname, fullname, id;
+
+INSERT INTO Dumbbells (first_name, last_name, iq)
+SELECT fname, lname, iq 
+FROM Friends 
+ORDER BY iq ROWS 1
+RETURNING id, first_name, iq 
+INTO :id, :fname, :iq;
+----
+
+.Замечания:
+
+
+* Предложение RETURNING поддерживается только для INSERT .. VALUES и одиночных INSERT .. SELECT.
+* В DSQL оператор с использованием RETURNING всегда возвращает ровно одну строку. Если запись не была вставлена на самом деле, то все поля в возвращаемой строке будут меть значения NULL. Это поведение может быть изменено позже. В PSQL, если ни одна строка не вставлена, то ничего не возвращается и все целевые переменные сохраняют свои прежние значения.
+
+
+=== Вставка столбцов BLOB
+
+Вставка в столбцы BLOB только возможна при следующих обстоятельствах:
+
+. Клиентское приложение вставляет BLOB посредством Firebird API. В этом случае все зависит от приложения, и не рассматривается в этом руководстве;
+. Длина строкового литерала не может превышать 32767 байт.
+. Если источником данных является столбец BLOB или выражение, возвращающее BLOB.
+
+
+[[_fblangref_dml_update]]
+== UPDATE
+
+.Назначение:
+Обновление данных в таблице.
+
+.Доступно в:
+DSQL, ESQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+UPDATE target [[AS] alias]   
+SET col = {newval | DEFAULT} [, col = {newval | DEFAULT} ...]   
+[WHERE {search-conditions | CURRENT OF cursorname}]   
+[PLAN plan_items]   
+[ORDER BY sort_items]   
+[ROWS m [TO n]]   
+[RETURNING {<returning_list> | [{OLD. | NEW.}]*} [INTO <variables>]]  
+
+<returning_list> ::= 
+  ret_value [[AS] ret_alias] [, ret_value [[AS] ret_alias] ...]        
+
+<variables> ::= [:]varname [, [:]varname ...]
+----
+
+
+
+.Параметры оператора UPDATE
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``target``
+|
+
+Имя таблицы или представления, в которой происходит обновление записей.
+
+|[replaceable]``alias``
+|
+
+Псевдоним таблицы или представления.
+
+|[replaceable]``col``
+|
+
+Столбец таблицы или представления.
+
+|[replaceable]``newval``
+|
+
+Новые значения обновляемых столбцов в таблице (представлении).
+
+|[replaceable]``search-conditions``
+|
+
+Условие поиска, ограничивающее набор обновляемых строк.
+
+|[replaceable]``cursorname``
+|
+
+Имя курсора, по которому позиционируется обновляемая запись.
+
+|[replaceable]``plan_items``
+|
+
+Предложение плана.
+
+|[replaceable]``sort_items``
+|
+
+Предложение сортировки.
+
+|[replaceable]``m``, [replaceable]``n``
+|
+
+Целочисленные выражения для ограничения количества обновляемых строк.
+
+|[replaceable]``ret_value``
+|
+
+Выражение, возвращаемое в предложении RETURNING.
+
+|[replaceable]``ret_alias``
+|
+
+Псевдоним для выражения, возвращаемого в предложении RETURNING.
+
+|[replaceable]``varname``
+|
+
+Имя PSQL переменной.
+|===
+
+Изменяет значения в одной таблице или в большем количестве таблиц в представлении.
+
+Если вы назначаете псевдоним таблице или представлению, вы обязаны использовать псевдоним для уточнения столбцов таблицы.
+
+[[_fblangref_dml_update_set]]
+=== SET
+
+Изменяемые столбцы указываются в предложении SET.
+Столбцы и их значения перечисляются через запятую.
+Слева имя столбца, и справа значение или выражение. 
+
+Разрешено использовать имена столбцов в выражениях справа.
+При этом использоваться будет всегда старое значение столбца, даже если присваивание этому столбцу уже произошло ранее в перечислении SET.
+Один столбец может быть использован только один раз в конструкции SET. 
+
+.Пример:
+
+
+[example]
+Данные в таблице TSET: 
+[listing]
+....
+
+A B
+----
+1 0
+2 0
+.... После выполнения оператора 
+[source,sql]
+----
+
+update tset set a = 5, b = a
+----
+[listing]
+....
+
+A B
+----
+5 1
+5 2
+.... Обратите внимание, что старые значения (1 и 2) используются для обновления столбца b, даже после того как столбцу a были назначено новое значение (5). 
+
+[[_fblangref_dml_update_set_default]]
+==== Ключевое слово DEFAULT
+(((UPDATE,DEFAULT)))
+
+В предложении SET вместо значения столбца можно использовать ключевое слово DEFAULT.
+В этом случае столбец получит значение по умолчанию, указанное при определении целевой таблицы.
+Если значение по умолчанию для столбца отсутствует, то столбец получит значение NULL.
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+CREATE TABLE cars (
+  ID INTEGER NOT NULL,
+  BYYEAR SMALLINT DEFAULT 1990 NOT NULL,
+  NAME VARCHAR(45),
+  CONSTRAINT pk_cars PRIMARY KEY (ID)
+);                                
+ 
+INSERT INTO cars (1, byyear, name)
+VALUES (1, 1985, 'Ford Focus');
+           
+-- столбцу BYYEAR будет присвоено значение 1990 
+UPDATE cars
+SET BYYEAR = DEFAULT
+WHERE ID = 1;
+----
+
+[[_fblangref_dml_update_where]]
+=== WHERE
+
+Предложение WHERE ограничивает набор обновляемых записей заданным условием, или – в PSQL – текущей строкой именованного курсора, если указано предложение WHERE CURRENT OF.
+
+[NOTE]
+====
+Предложение WHERE CURRENT OF используется только в PSQL, т.к.
+в DSQL нет оператора DSQL для создания курсора. 
+====
+
+Строковые литералы могут предваряться именем набора символов, для того чтобы Firebird понимал, как интерпретировать данные. 
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+UPDATE addresses
+SET city = 'Saint Petersburg', citycode = 'PET'
+WHERE city = 'Leningrad';
+                
+UPDATE employees
+SET salary = 2.5 * salary
+WHERE title = 'CEO';
+    
+
+-- обратите внимание на префикс '_'            
+UPDATE People
+SET name = _ISO8859_1 'Hans-Jörg Schäfer' 
+WHERE id = 53662;
+
+UPDATE employee e
+SET salary = salary * 1.05
+WHERE EXISTS(
+  SELECT *
+  FROM employee_project ep
+  WHERE e.emp_no = ep.emp_no);
+----
+
+[[_fblangref_dml_update_plan]]
+=== PLAN
+
+Предложение PLAN позволяет вручную указать план для оптимизатора.
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+UPDATE company c SET c.company_name = 
+    ( SELECT k.contact_name 
+      FROM contact k 
+      WHERE k.id = c.contact_id
+      PLAN (K INDEX (CONTACT_ID)))
+WHERE c.company_name IS NULL OR c.company_name = ''
+PLAN (C NATURAL)
+----
+
+[[_fblangref_dml_update_orderby]]
+=== ORDER BY и ROWS
+
+Предложение ORDER BY позволяет задать порядок обновления записей.
+Это может иметь значение в некоторых случаях.
+
+Предложение ROWS имеет смысл только вместе с предложением ORDER BY.
+Однако его можно использовать отдельно.
+
+При одном аргументе [replaceable]``m``, ROWS ограничивает update первыми [replaceable]``m`` строками.
+Особенности: 
+
+* Если [replaceable]``m`` > количества обрабатываемых строк, то обновляется весь набор строк;
+* Если [replaceable]``m`` = 0, ни одна строка не обновляется;
+* Если [replaceable]``m`` < 0, выдаётся ошибка.
+
+При двух аргументах [replaceable]``m`` и [replaceable]``n``, ROWS ограничивает update до строк от [replaceable]``m`` до [replaceable]``n`` включительно.
+Оба аргумента – целочисленные, и начинаются с 1.
+Особенности: 
+
+* Если [replaceable]``m`` > количества обрабатываемых строк, ни одна строка не обновляется;
+* Если [replaceable]``n`` больше количества строк, то обновляются строки от [replaceable]``m`` до конца набора;
+* Если [replaceable]``m`` < 1 или [replaceable]``n`` < 1, выдаётся ошибка;
+* Если [replaceable]``n`` = [replaceable]``m`` - 1, ни одна строка не обновляется;
+* Если [replaceable]``n`` < [replaceable]``m`` - 1, выдаётся ошибка.
+
+
+.Примеры:
+
+
+.Использование предложения ROWS в операторе UPDATE
+[example]
+
+[source,sql]
+----
+
+-- дать надбавку 20ти сотрудникам с наименьшей зарплатой 
+UPDATE employees
+SET salary = salary + 50
+ORDER BY salary ASC
+ROWS 20;
+----
+
+[[_fblangref_dml_update_returning]]
+=== RETURNING
+
+Оператор UPDATE, обновляющий максимум одну строку, может включать RETURNING для возврата значений из обновляемой строки.
+В RETURNING могут включаться любые строки, необязательно только те, которые обновляются.
+
+Возвращаемые значения содержат изменения, произведённые в триггерах BEFORE, но не в триггерах AFTER. `OLD.[replaceable]``fieldname``` и `NEW.[replaceable]``fieldname``` могут быть использованы в качестве имён столбцов.
+Если `OLD.` или `NEW.` не указано, возвращаются новые значения столбцов (NEW.).
+
+Вместо списка столбцов вы можете указать звёздочку (*). В этом случае будут возвращены все значения столбцов таблицы.
+Звёздочку можно применять со спецификаторами NEW или OLD.
+
+[NOTE]
+====
+В DSQL оператор с RETURNING всегда возвращает только одну строку.
+Если записи не были обновлены оператором, то возвращаемые значения содержат NULL.
+Это поведение может быть изменено в последующих версиях Firebird.
+====
+
+[[_fblangref_dml_update_returning_into]]
+==== INTO
+
+Предложение INTO предназначено для передачи значений в локальные переменные.
+Оно доступно только в PSQL.
+Если записи не было обновлены, ничего не возвращается, и переменные, указанные в RETURING, сохранят свои прежние значения.
+
+.Использование предложения RETURNING в операторе UPDATE
+[example]
+
+[source,sql]
+----
+
+UPDATE Scholars
+SET first_name = 'Hugh', last_name = 'Pickering'
+WHERE first_name = 'Henry' AND last_name = 'Higgins'
+RETURNING id, old.last_name, new.last_name;
+----
+
+.Использование * в предложении RETURNING в операторе UPDATE
+[example]
+
+[source,sql]
+----
+
+UPDATE Scholars
+SET first_name = 'Hugh', last_name = 'Pickering'
+WHERE first_name = 'Henry' AND last_name = 'Higgins'
+RETURNING old.*;
+----
+
+=== Обновление столбцов BLOB
+
+Обновление столбцов BLOB всегда полностью меняет их содержимое.
+Даже идентификатор BLOB (ID), который является ссылкой на данные BLOB и хранится в столбце, меняется.
+BLOB могут быть изменены, если:
+
+. Клиентское приложение меняет BLOB посредством Firebird API. В этом случае все зависит от приложения, и не рассматривается в этом руководстве;
+. Длина строкового литерала не может превышать 65535 байт;
+. Если источником данных является столбец BLOB или выражение, возвращающее BLOB.
+
+
+[[_fblangref_dml_upsert]]
+== UPDATE OR INSERT
+(((UPDATE OR INSERT)))
+
+.Назначение:
+Добавление новой или обновление существующей записи в таблице.
+
+.Доступно в:
+DSQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+UPDATE OR INSERT INTO target [(<column_list>)] 
+VALUES (<value_list>)  
+[MATCHING (<column_list>)]       
+[RETURNING {<returning_list> | [{OLD. | NEW.}]*} [INTO <variables>]]       
+
+<column_list> ::= colname [, colname ...]       
+
+<value_list> ::= {value | DEFAULT} [, {value | DEFAULT} ...] 
+
+<returning_list> ::= 
+  ret_value [[AS] ret_alias] [, ret_value [[AS] ret_alias] ...]       
+
+<variables> ::= [:]varname [, [:]varname ...]
+----
+
+
+
+.Параметры оператора UPDATE OR INSERT
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``target``
+|
+
+Имя таблицы или представления, запись в которой будет обновлена или произойдет вставка новой записи.
+
+|[replaceable]``colname``
+|
+
+Столбец таблицы или представления.
+
+|[replaceable]``value``
+|
+
+Выражение, значение которого используется для вставки или обновления таблицы.
+
+|[replaceable]``ret_value``
+|
+
+Выражение, возвращаемое в предложении RETURNING.
+
+|[replaceable]``ret_alias``
+|
+
+Псевдоним для выражения, возвращаемого в предложении RETURNING.
+
+|[replaceable]``varname``
+|
+
+Имя PSQL переменной.
+|===
+
+Оператор UPDATE OR INSERT вставляет или обновляет одну или более существующих записей.
+Производимое действие зависит от значений столбцов в предложении MATCHING (или, если оно не указано, то от значений столбцов первичного ключа -- PK). Если найдены записи, совпадающие с указанными значениями, то они обновляются.
+Если нет, то вставляется новая запись. 
+
+Совпадением считается полное совпадение значений столбцов MATCHING или PK.
+Совпадение проверяется с использованием IS NOT DISTINCT, поэтому NULL совпадает с NULL.
+
+.Ограничения
+[NOTE]
+====
+
+
+* Если у таблицы нет первичного ключа, то указание MATCHING считается обязательным;
+* В списке MATCHING, так же как и в списке столбцов update/insert, каждый столбец может быть упомянут только один раз;
+* Предложение INTO доступно только в PSQL.
+* У столбцов, возвращаемых в контекстные переменные NEW в триггере, перед именем не должно использоваться двоеточие.
+
+====
+
+[[_fblangref_dml_upsert_default]]
+=== Ключевое слово DEFAULT
+(((UPDATE OR INSERT,DEFAULT)))
+
+В списке VALUES вместо значения столбца можно использовать ключевое слово DEFAULT.
+В этом случае столбец получит значение по умолчанию, указанное при определении целевой таблицы.
+Если значение по умолчанию для столбца отсутствует, то столбец получит значение NULL.
+
+.Ограничение
+[NOTE]
+====
+Столбец для которого вместо значения использовано ключевое слово DEFAULT не может быть использован предложении MATCHING.
+====
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+CREATE TABLE cars (
+  ID INTEGER GENERATED BY DEFAULT AS IDENTITY,
+  BYYEAR SMALLINT DEFAULT 1990 NOT NULL,
+  NAME VARCHAR(45),
+  CONSTRAINT pk_cars PRIMARY KEY (ID)
+);                                
+ 
+-- в столбец BYYEAR попадёт значение 1990 
+UPDATE OR INSERT INTO cars (byyear, name)
+VALUES (DEFAULT, 'Ford Focus')
+MATCHING (name);
+----
+
+[[_fblangref_dml_tbl_upsert_returning]]
+=== RETURNING
+
+Предложение RETURNING может содержать любые столбцы, указанные в операторе, или другие столбцы и выражения.
+Возвращаемые значения содержат все изменения, произведённые в триггерах BEFORE, но не в триггерах AFTER. `OLD.[replaceable]``fieldname``` и `NEW.[replaceable]``fieldname``` могут быть использованы в качестве возвращаемых значений.
+Для обычных имён столбцов возвращаются новые значения.
+
+Вместо списка столбцов вы можете указать звёздочку (*). В этом случае будут возвращены все значения столбцов таблицы.
+Звёздочку можно применять со спецификаторами NEW или OLD.
+
+[NOTE]
+====
+В DSQL, оператор с RETURNING всегда возвращает только одну строку.
+Если присутствует предложение RETURNING, и обнаружено более одной совпадающей строки, выдаётся сообщение об ошибке.
+Это поведение может быть изменено в последующих версиях Firebird.
+====
+
+.Примеры:
+Использование оператора UPDATE OR INSERT 
+
+[example]
+
+[source,sql]
+----
+
+UPDATE OR INSERT INTO Cows (Name, Number, Location)
+VALUES ('Suzy Creamcheese', 3278823, 'Green Pastures')
+MATCHING (Number)
+RETURNING rec_id 
+INTO :id;
+----
+
+[[_fblangref_dml_delete]]
+== DELETE
+(((DELETE)))
+
+.Назначение:
+Удаление данных из таблицы.
+
+.Доступно в:
+DSQL, ESQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+DELETE
+FROM target [[AS] alias]
+[WHERE {search-conditions | CURRENT OF cursorname}]
+[PLAN plan_items]
+[ORDER BY sort_items]
+[ROWS m [TO n]]
+[RETURNING {<returning_list> | *} [INTO <variables>]]
+ 
+<returning_list> ::= ret_value [[AS] alias_val] [, ret_value [[AS] alias_val] ...]
+
+<variables> ::= [:]varname [, [:]varname ...]
+----
+
+
+
+.Параметры оператора DELETE
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``target``
+|
+
+Имя таблицы или представления, из которой удаляются записи.
+
+|[replaceable]``alias``
+|
+
+Псевдоним таблицы или представления.
+
+|[replaceable]``search-conditions``
+|
+
+Условие поиска, ограничивающее набор удаляемых строк.
+
+|[replaceable]``cursorname``
+|
+
+Имя курсора, по которому позиционируется удаляемая запись.
+
+|[replaceable]``plan_items``
+|
+
+Предложение плана.
+
+|[replaceable]``sort_items``
+|
+
+Предложение сортировки.
+
+|[replaceable]``m``, [replaceable]``n``
+|
+
+Целочисленные выражения для ограничения количества удаляемых строк.
+
+|[replaceable]``ret_value``
+|
+
+Выражение, возвращаемое в предложении RETURNING.
+
+|[replaceable]``alias_val``
+|
+
+Псевдоним для выражения, возвращаемого в предложении RETURNING.
+
+|[replaceable]``varname``
+|
+
+Имя PSQL переменной.
+|===
+
+Оператор DELETE удаляет строки из таблицы или из одной и более таблиц представления. 
+
+Если для таблицы указан псевдоним, то он должен использоваться для всех столбцов таблицы.
+
+[[_fblangref_dml_delete_where]]
+=== WHERE
+(((DELETE,WHERE)))
+
+Условие в предложении WHERE ограничивает набор удаляемых строк.
+Удаляются только те строки, которые удовлетворяют условию поиска, или только текущей строке именованного курсора.
+
+Удаление с помощью WHERE CURRENT OF называется _позиционированным удалением_ (positioned delete), потому что удаляется запись в текущей позиции.
+Удаление при помощи "WHERE условие" называется _поисковым удалением_ (searched delete), поскольку Firebird ищет записи, соответствующие условию.
+
+[NOTE]
+====
+В чистом DSQL выражение WHERE CURRENT OF не имеет смысла, т.к.
+в DSQL нет оператора для создания курсора. 
+====
+
+_Примеры:_
+
+.Использование предложения WHERE в операторе DELETE
+[example]
+
+[source,sql]
+----
+
+DELETE FROM People 
+WHERE first_name <> 'Boris' AND last_name <> 'Johnson';
+----
+[source,sql]
+----
+
+DELETE FROM employee e
+WHERE NOT EXISTS(
+  SELECT *
+  FROM employee_project ep
+  WHERE e.emp_no = ep.emp_no);
+----
+[source,sql]
+----
+
+DELETE FROM Cities 
+WHERE CURRENT OF Cur_Cities; -- только в PSQL
+----
+
+[[_fblangref_dml_delete_plan]]
+=== PLAN
+
+Предложение PLAN позволяет вручную указать план для оптимизатора.
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+DELETE FROM Submissions
+WHERE date_entered < '1-Jan-2002'
+PLAN (Submissions INDEX ix_subm_date)
+----
+
+[[_fblangref_dml_delete_orderby]]
+=== ORDER BY и ROWS
+(((DELETE,ORDER BY)))
+
+Предложение ORDER BY упорядочивает набор перед его удалением.
+Что может быть важно в некоторых случаях. 
+
+Предложение ROWS позволяет ограничить количество удаляемых строк.
+Имеет смысл только в комбинации с предложением ORDER BY, но допустимо и без него.
+
+.Синтаксис:
+
+[source]
+----
+
+ROWS <m> [TO <n>]
+----
+
+В качестве [replaceable]``m`` и [replaceable]``n`` могут выступать любые целочисленные выражения.
+
+При одном аргументе [replaceable]``m``, удаляются первые [replaceable]``m`` строк.
+Порядок строк без ORDER BY не определён (случаен).
+
+Замечания:
+
+* Если [replaceable]``m`` больше общего числа строк в наборе, то весь набор удаляется;
+* Если [replaceable]``m`` = 0, то удаление не происходит;
+* Если [replaceable]``m`` < 0, то выдаётся сообщение об ошибке.
+
+Если указаны аргументы [replaceable]``m`` и [replaceable]``n``, удаление ограничено количеством строк от [replaceable]``m`` до [replaceable]``n``, включительно.
+Нумерация строк начинается с 1. 
+
+Замечания по использованию двух аргументов:
+
+* Если [replaceable]``m`` > общего числа строк в наборе, ни одна строка не удаляется; 
+* Если [replaceable]``m`` > 0 и <= числа строк в наборе, а [replaceable]``n`` вне этих значений, то удаляются строки от m до конца набора;
+* Если [replaceable]``m`` < 1 или n < 1, выдаётся сообщение об ошибке;
+* Если [replaceable]``n`` = [replaceable]``m`` – 1, ни одна строка не удаляется;
+* Если [replaceable]``n`` < [replaceable]``m`` – 1, выдаётся сообщение об ошибке.
+
+
+.Примеры:
+
+
+[quote]
+Удаление самой старой покупки 
+[source,sql]
+----
+DELETE FROM Purchases ORDER BY ByDate ROWS 1
+----
+Удаление заказов для 10 клиентов с самыми большими номерами 
+[source,sql]
+----
+DELETE FROM Sales ORDER BY custno DESC ROWS 1 TO 10
+----
+Удаляет все записи из sales, поскольку не указано ROWS 
+[source,sql]
+----
+DELETE FROM Sales ORDER BY custno DESC
+----
+Удаляет одну запись "с конца", т.е.
+от Z... 
+[source,sql]
+----
+DELETE FROM popgroups ORDER BY name DESC ROWS 1
+----
+Удаляет пять самых старых групп 
+[source,sql]
+----
+DELETE FROM popgroups ORDER BY formed ROWS 5
+----
+Сортировка (ORDER BY) не указана, поэтому будут удалены 8 обнаруженных записей, начиная с пятой. 
+[source,sql]
+----
+DELETE FROM popgroups ROWS 5 TO 12
+----
+
+[[_fblangref_dml_delete_returning]]
+=== RETURNING
+(((DELETE,RETURNING)))
+
+Оператор DELETE, удаляющий не более одной строки, может содержать конструкцию RETURNING для возвращения значений удаляемой строки.
+В RETURNING могут быть указаны любые столбцы, не обязательно все, а также другие столбцы и выражения.
+Вместо списка столбцов может быть указана звёздочка (*), в этом случае будут возвращаены все столбцы удалённой записи.
+
+[NOTE]
+====
+
+
+* В DSQL, оператор с RETURNING всегда возвращает только одну строку. Если записи не были удалены, то возвращаемые столбцы содержат NULL. Это поведение может быть изменено в последующих версиях Firebird;
+* В PSQL, если строка не была удалена, ничего не возвращается, и целевые переменные сохраняют свои значения;
+* Предложение INTO доступно только в PSQL.
+
+====
+
+.Примеры:
+
+[source,sql]
+----
+
+DELETE FROM Scholars
+WHERE first_name = 'Henry' AND last_name = 'Higgins'
+RETURNING last_name, fullname, id
+ 
+DELETE FROM Dumbbells
+ORDER BY iq DESC
+ROWS 1
+RETURNING last_name, iq 
+INTO :lname, :iq;
+ 
+DELETE FRMO TempSales ts
+WHERE ts.id = tempid
+RETURNING ts.qty 
+INTO new.qty;
+----
+
+[[_fblangref_dml_merge]]
+== MERGE
+
+.Назначение:
+Слияние записей источника в целевую таблицу (или обновляемое представление). 
+
+.Доступно в:
+DSQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+MERGE INTO target [[AS] target_alias]    
+USING <source> [[AS] source_alias] 
+ON <join condition>   
+<merge when> [<merge when> ...]   
+[RETURNING {<returning_list> | [{OLD. | NEW.}]* } [INTO <variable_list>]]       
+
+<merge when> ::= 
+    <merge when matched> 
+  | <merge when not matched>       
+
+<merge when matched> ::= 
+  WHEN MATCHED [ AND <condition> ] 
+  THEN { UPDATE SET <assignment_list> | DELETE }       
+
+<merge when not matched> ::=   
+  WHEN NOT MATCHED [ AND <condition> ] 
+  THEN INSERT [ (<column_list>) ] 
+  VALUES (<value_list>)       
+
+<assignment_list> ::= 
+  colname = {value | DEFAULT} [, colname = {value | DEFAULT} ...]       
+
+<column_list> ::= colname [, colname ...]       
+
+<value_list> ::= {value | DEFAULT} [, {value | DEFAULT} ...]     
+
+<returning_list> ::= 
+  ret_value [[AS] ret_alias] [, ret_value [[AS] ret_alias] ...]    
+
+<variable_list> ::= [:]varname [, [:]varname ...]
+----
+
+
+
+.Параметры оператора MERGE
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``target``
+|
+
+Целевая таблица или обновляемое представление.
+
+|[replaceable]``source``
+|
+
+Источник данных.
+Может быть таблицей, представлением, хранимой процедурой или производной таблицей.
+
+|[replaceable]``target_alias``
+|
+
+Псевдоним целевой таблицы или представления.
+
+|[replaceable]``source_alias``
+|
+
+Псевдоним источника.
+
+|[replaceable]``join condition``
+|
+
+Условие соединения целевой таблицы и источника.
+
+|[replaceable]``condition``
+|
+
+Дополнительные условия проверки в предложениях WHEN MATCHED или WHEN NOT MATCHED.
+
+|[replaceable]``colname``
+|
+
+Столбец целевой таблицы или представления.
+
+|[replaceable]``value``
+|
+
+Значение, присваиваемое столбцу целевой таблицы.
+Выражение, которое может содержать литералы, PSQL переменные, столбцы из источника.
+
+|[replaceable]``ret_value``
+|
+
+Выражение, возвращаемое в предложении RETURNING.
+
+|[replaceable]``ret_alias``
+|
+
+Псевдоним для выражения, возвращаемого в предложении RETURNING.
+
+|[replaceable]``varname``
+|
+
+Имя PSQL переменной.
+|===
+
+Оператор MERGE производит слияние записей источника в целевую таблицу (или обновляемое представление). Источником может быть таблица, представление, хранимой процедурой или производной таблицей.
+Каждая запись источника используется для обновления (предложение UPDATE) или удаления (предложение DELETE) одной или более записей цели, или вставки (предложение INSERT) записи в целевую таблицу, или ни для того, ни для другого.
+Условие обычно содержит сравнение столбцов в таблицах источника и цели.
+(((MERGE,DEFAULT)))
+
+В списке VALUES предложения INSERT и списке SET предложения UPDATE вместо значения столбца можно использовать ключевое слово DEFAULT.
+В этом случае столбец получит значение по умолчанию, указанное при определении целевой таблицы.
+Если значение по умолчанию для столбца отсутствует, то столбец получит значение NULL.
+(((MERGE,WHEN NOT MATCHED)))
+
+Допускается указывать несколько предложений WHEN MATCHED и WHEN NOT MATCHED.
+
+Предложения WHEN проверяются в указанном порядке.
+Если условие в предложении WHEN не выполняется, то мы пропускаем его и переходим к следующему предложению.
+Так будет происходить до тех пор, пока условие для одного из предложений WHEN не будет выполнено.
+В этом случае выполняется действие, связанное с предложением WHEN, и осуществляется переход на следующую строку источника.
+Для каждой строки источника выполняется только одно действие.
+
+[NOTE]
+====
+WHEN NOT MATCHED оценивается с точки зрения источника, т.е.
+таблицы или набора данных указанного в предложения USING.
+Так сделано потому, что если запись источника не имеет совпадения с записью цели, то выполняется INSERT.
+Разумеется, если запись цели не соответствует записи в источнике, то никакие действия не производятся.
+
+На данный момент переменная ROW_COUNT возвращает значение 1, даже если было модифицировано или вставлено более 1 записи.
+См. http://tracker.firebirdsql.org/browse/CORE-4400[CORE-4400].
+====
+
+[WARNING]
+====
+Если условие WHEN MATCHED присутствует, и несколько записей совпадают с записями в целевой таблице, UPDATE выполнится для всех совпадающих записей источника, и каждое последующее обновление перезапишет предыдущее.
+Это нестандартное поведение: стандарт SQL-2003 требует, чтобы в этой ситуации выдавалось исключение (ошибка). 
+====
+
+.Примеры:
+
+
+[example]
+
+[source,sql]
+----
+
+MERGE INTO books b
+USING purchases p
+ON p.title = b.title AND p.booktype = 'bk'
+WHEN MATCHED THEN
+  UPDATE SET b.descr = b.descr || '; ' || p.descr
+WHEN NOT MATCHED THEN
+  INSERT (title, descr, bought) 
+  VALUES (p.title, p.descr, p.bought);
+ 
+-- с использованием производной таблицы 
+MERGE INTO customers c
+USING (SELECT * FROM customers_delta WHERE id > 10) cd
+ON (c.id = cd.id)
+WHEN MATCHED THEN 
+  UPDATE SET name = cd.name
+WHEN NOT MATCHED THEN 
+  INSERT (id, name) VALUES (cd.id, cd.name);
+
+-- совместно с рекурсивным CTE
+MERGE INTO numbers
+USING (
+  WITH RECURSIVE r(n) AS (
+    SELECT 1 FROM rdb$database
+    UNION ALL
+    SELECT n+1 FROM r WHERE n < 200
+  )
+  SELECT n FROM r
+) t
+ON numbers.num = t.n
+WHEN NOT MATCHED THEN
+  INSERT(num) VALUES(t.n);
+  
+-- с использованием предложения DELETE
+MERGE INTO SALARY_HISTORY
+USING (
+  SELECT EMP_NO
+  FROM EMPLOYEE
+  WHERE DEPT_NO = 120) EMP
+ON SALARY_HISTORY.EMP_NO = EMP.EMP_NO
+WHEN MATCHED THEN DELETE
+----
+
+[example]
+В следующем примере происходит ежедневное обновление таблицы PRODUCT_IVENTORY на основе заказов, обработанных в таблице SALES_ORDER_LINE.
+Если количество заказов на продукт таково, что уровень запасов продукта опускается до нуля или становится ещё ниже, то строка этого продукта удаляется из таблицы PRODUCT_IVENTORY. 
+[source,sql]
+----
+
+MERGE INTO PRODUCT_IVENTORY AS TARGET
+USING (
+  SELECT
+    SL.ID_PRODUCT,
+    SUM(SL.QUANTITY)
+  FROM SALES_ORDER_LINE SL
+    JOIN SALES_ORDER S ON S.ID = SL.ID_SALES_ORDER
+  WHERE S.BYDATE = CURRENT_DATE
+  GROUP BY 1
+) AS SRC(ID_PRODUCT, QUANTITY)
+ON TARGET.ID_PRODUCT = SRC.ID_PRODUCT
+WHEN MATCHED AND TARGET.QUANTITY - SRC.QUANTITY <= 0 THEN
+  DELETE
+WHEN MATCHED THEN
+  UPDATE SET
+    TARGET.QUANTITY = TARGET.QUANTITY - SRC.QUANTITY,
+    TARGET.BYDATE = CURRENT_DATE
+----
+
+.См. также:
+<<_fblangref_dml_select,SELECT>>, <<_fblangref_dml_insert,INSERT>>, <<_fblangref_dml_update,UPDATE>>, <<_fblangref_dml_delete,DELETE>>. 
+
+=== RETURNING
+
+Оператор MERGE, затрагивающий не более одной строки, может содержать конструкцию RETURNING для возвращения значений добавленной, модифицируемой или удаляемой строки.
+В RETURNING могут быть указаны любые столбцы из целевой таблицы (обновляемого представления), не обязательно все, а также другие столбцы и выражения.
+
+Возвращаемые значения содержат изменения, произведённые в триггерах BEFORE.
+
+Имена столбцов могут быть уточнены с помощью префиксов NEW и OLD для определения, какое именно значение вы хотите столбца вы хотите получить до модификации или после.
+
+Вместо списка столбцов может быть указана звёздочка (*), в этом случае будут возвращены все столбцы целевой таблицы.
+Префиксы NEW и OLD могут быть сипользованы совместно с звёздочкой.
+
+Для предложений WHEN MATCHED UPDATE и MERGE WHEN NOT MATCHED неуточнённые имена столбцов или уточнённые именами таблиц или их псевдонимами понимаются как столбцы с префиксом NEW, для предложений MERGE WHEN MATCHED DELETE --с префиксом OLD.
+
+.Использование оператора MERGE с предложением RETURNING
+[example]
+Немного модифицируем наш предыдущий пример, чтобы он затрагивал только одну строку, и добавим в него инструкцию RETURNING возвращающего старое и новое количество товара и разницу между этими значениями. 
+[source,sql]
+----
+
+MERGE INTO PRODUCT_IVENTORY AS TARGET
+USING (
+  SELECT
+    SL.ID_PRODUCT,
+    SUM(SL.QUANTITY)
+  FROM SALES_ORDER_LINE SL
+    JOIN SALES_ORDER S ON S.ID = SL.ID_SALES_ORDER
+  WHERE S.BYDATE = CURRENT_DATE
+    AND SL.ID_PRODUCT = :ID_PRODUCT
+  GROUP BY 1
+) AS SRC(ID_PRODUCT, QUANTITY)
+ON TARGET.ID_PRODUCT = SRC.ID_PRODUCT
+WHEN MATCHED AND TARGET.QUANTITY - SRC.QUANTITY <= 0 THEN
+  DELETE
+WHEN MATCHED THEN
+  UPDATE SET
+    TARGET.QUANTITY = TARGET.QUANTITY - SRC.QUANTITY,
+    TARGET.BYDATE = CURRENT_DATE
+RETURNING OLD.QUANTITY, NEW.QUANTITY, SRC.QUANTITY
+INTO :OLD_QUANTITY, :NEW_QUANTITY, :DIFF_QUANTITY
+----
+
+[[_fblangref_dml_execproc]]
+== EXECUTE PROCEDURE
+(((EXECUTE PROCEDURE)))
+
+.Назначение:
+Выполнение хранимой процедуры.
+
+.Доступно в:
+DSQL, ESQL, PSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+EXECUTE PROCEDURE procname
+   [{ <inparam-list> | ( <inparam-list> ) }]
+   [RETURNING_VALUES { <outvar-list> | ( <outvar-list> ) }]                
+                
+<inparam-list> ::=
+  <inparam> [, <inparam> ...]
+
+<outvar-list> ::=
+  <outvar> [, <outvar> ...]
+ 
+<outvar> ::= [:]varname
+----
+
+
+
+.Параметры оператора EXECUTE PROCEDURE
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``procname``
+|
+
+Имя хранимой процедуры.
+
+|[replaceable]``inparam``
+|
+
+Выражение совместимое по типу с входным параметром хранимой процедуры.
+
+|[replaceable]``varname``
+|
+
+PSQL переменная, в которую возвращается значение выходного параметра процедуры.
+|===
+
+Оператор EXECUTE PROCEDURE выполняет хранимую процедуру, получая список из одного или нескольких входных параметров, если они определены, и возвращает однострочный набор значений, если он определён.
+
+[[_fblangref_dml_execproc_executable]]
+=== "Выполняемые" хранимые процедуры
+
+Оператор EXECUTE PROCEDURE является наиболее часто используемым стилем вызова хранимой процедуры, которая написана для модификации некоторых данных, код которой не содержит оператора SUSPEND.
+Такие хранимые процедуры могут возвратить набор данных, состоящий не более чем из одной строки.
+Этот набор может быть передан в переменные другой (вызывающей) процедуры с помощью предложения RETURNING_VALUES.
+Клиентские интерфейсы, как правило, имеют обертку API, которые могут извлекать выходные значения в однострочный буфер при вызове процедуры через EXECUTE PROCEDURE в DSQL.
+
+При вызове с помощью EXECUTE PROCEDURE процедур другого типа (селективных процедур) будет возвращена только первая запись из результирующего набора, несмотря на то, что эта процедура скорее всего должна возвращать многострочный результат.
+"Селективные" хранимые процедуры должны вызываться с помощью оператора SELECT, в этом случае они ведут себя как виртуальные таблицы.
+
+[NOTE]
+====
+
+
+* В PSQL И DSQL входными параметрами могут быть любые совместимые по типу выражения;
+* Несмотря на то, что скобки для отделения списка передаваемых параметров необязательны после имени хранимой процедуры, желательно их использовать;
+* Предложение RETURNING_VALUES доступно только в PSQL.
+
+====
+
+.Примеры:
+
+
+____
+В PSQL (с опциональными двоеточиями): 
+[source,sql]
+----
+
+                
+EXECUTE PROCEDURE MakeFullName(:First_Name, :Middle_Name, :Last_Name)
+RETURNING_VALUES :FullName;
+----
+
+В утилите командной строки [app]``isql`` (с литералами в качестве параметров): 
+[source,sql]
+----
+
+                
+EXECUTE PROCEDURE MakeFullName
+  'J', 'Edgar', 'Hoover';
+----
+
+С выражениями в качестве параметров: 
+[source,sql]
+----
+
+                
+EXECUTE PROCEDURE MakeFullName
+   ('Mr./Mrs. ' || First_Name, Middle_Name, upper(Last_Name))
+RETURNING_VALUES FullName;
+----
+____
+
+[[_fblangref_dml_execblock]]
+== EXECUTE BLOCK
+(((EXECUTE BLOCK)))
+
+.Назначение:
+Выполнение анонимного PSQL блока.
+
+.Доступно в:
+DSQL.
+
+.Синтаксис:
+
+[source]
+----
+
+EXECUTE BLOCK [(<inparams>)] [RETURNS (<outparams>)]   
+AS   
+  [<declarations>]   
+BEGIN   
+  [<PSQL statements>]   
+END       
+
+<inparams> ::= <param_decl> = ? [, <inparams> ]       
+
+<outparams> ::= <param_decl> [, <outparams>]       
+
+<param_decl> ::= paramname <type> [NOT NULL] [COLLATE collation]    
+  
+<type> ::= 
+    <non_array_datatype>             
+  | [TYPE OF] domain             
+  | TYPE OF COLUMN rel.col  
+
+<non_array_datatype> ::= 
+    <scalar_datatype> | <blob_datatype>                   
+                    
+<scalar_datatype> ::=  См. Синтаксис скалярных типов данных
+                    
+<blob_datatype> ::= См. Синтаксис типа данных BLOB          
+                                    
+                
+<declarations> ::= <declare_item> [<declare_item> ...]
+
+<declare_item> ::=      
+    <declare_var>; 
+  | <declare_cursor>; 
+  | <subroutine declaration>;
+  | <subroutine implimentation>  
+
+<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
+
+<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl>
+----
+
+
+
+.Параметры оператора EXECUTE BLOCK
+[cols="1,1", frame="all", options="header"]
+|===
+| Параметр
+| Описание
+
+|[replaceable]``param_decl``
+|
+
+Описание входного или выходного параметра.
+
+|[replaceable]``declarations``
+|
+
+Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
+
+|[replaceable]``declare_var``
+|
+
+Объявление локальной переменной. 
+
+|[replaceable]``declare_cursor``
+|
+
+Объявление именованного курсора. 
+
+|[replaceable]``subfunc_decl``
+|
+
+Объявление подпрограммы – функции.
+
+|[replaceable]``subproc_decl``
+|
+
+Объявление подпрограммы – процедуры. 
+
+|[replaceable]``subfunc_impl``
+|
+
+Реализация подпрограммы – функции.
+
+|[replaceable]``subproc_impl``
+|
+
+Реализация подпрограммы – процедуры. 
+
+|[replaceable]``paramname``
+|
+
+Имя входного или выходного параметра процедуры.
+Может содержать до 63 символов.
+Имя параметра должно быть уникальным среди входных и  выходных параметров процедуры, а также её локальных переменных. 
+
+|[replaceable]``non_array_datatype``
+|
+
+Тип данных SQL за исключение массивов.
+
+|[replaceable]``collation``
+|
+
+Порядок сортировки.
+
+|[replaceable]``domain``
+|
+
+Домен.
+
+|[replaceable]``rel``
+|
+
+Имя таблицы или представления. 
+
+|[replaceable]``col``
+|
+
+Имя столбца таблицы или представления.
+|===
+
+Выполняет блок PSQL кода, так как будто это хранимая процедура, возможно с входными и выходными параметрами и локальными переменными.
+Это позволяет пользователю выполнять "на лету" PSQL в контексте DSQL.
+
+.Примеры:
+
+
+[quote]
+Этот пример вводит цифры от 0 до 127 и соответствующие им ASCII символов в таблицу ASCIITABLE: 
+[source,sql]
+----
+
+                
+EXECUTE BLOCK
+AS
+  DECLARE i INT = 0;
+BEGIN
+  WHILE (i < 128) DO
+  BEGIN
+    INSERT INTO AsciiTable VALUES (:i, ascii_char(:i));
+    i = i + 1;
+  END
+END
+----
+
+____
+Следующий пример вычисляет среднее геометрическое двух чисел и возвращает его пользователю: 
+[source,sql]
+----
+
+                
+EXECUTE BLOCK (
+  x DOUBLE PRECISION = ?, 
+  y DOUBLE PRECISION = ?)
+RETURNS (gmean DOUBLE PRECISION)
+AS
+BEGIN
+  gmean = sqrt(x*y);
+  SUSPEND;
+END
+----
+
+Поскольку этот блок имеет входные параметры, он должен быть предварительно подготовлен.
+После чего можно установить параметры и выполнить блок.
+Как это будет сделано, и вообще возможно ли это сделать, зависит от клиентского программного обеспечения.
+Смотрите примечания ниже. 
+____
+
+____
+Наш последний пример принимает два целочисленных значений, smallest и largest.
+Для всех чисел в диапазоне smallest..largest, блок выводит само число, его квадрат, куб и четвертую степень. 
+[source,sql]
+----
+
+                
+EXECUTE BLOCK (smallest INT = ?, largest INT = ?)
+RETURNS (
+  number INT, 
+  square BIGINT, 
+  cube BIGINT, 
+  fourth BIGINT)
+AS
+BEGIN
+  number = smallest;
+  WHILE (number <= largest) DO
+  BEGIN
+    square = number * number;
+    cube = number * square;
+    fourth = number * cube;
+    SUSPEND;
+    number = number + 1;
+  END
+END
+----
+
+Опять же, как вы можете установить значения параметров, зависит от программного обеспечения клиента.
+____
+
+.См. также:
+<<_fblangref_psql_statements,Операторы языка PSQL>>. 
+
+[[_fblangref_dml_execblock_inoutparams]]
+=== Входные и выходные параметры
+
+Выполнение блока без входных параметров должно быть возможным с любым клиентом Firebird, который позволяет пользователю вводить свои собственные DSQL операторы.
+Если есть входные параметры, все становится сложнее: эти параметры должны получить свои значения после подготовки оператора, но перед его выполнением.
+Это требует специальных возможностей, которыми располагает не каждое клиентское приложение (Например, [app]``isql`` такой возможности не предлагает). 
+
+Сервер принимает только вопросительные знаки ("?") в качестве заполнителей для входных значений, а не ":[replaceable]``а``", ":[replaceable]``MyParam``" и т.д., или литеральные значения.
+Клиентское программное обеспечение может поддерживать форму ":[replaceable]``ххх``", в этом случае будет произведена предварительная обработка запроса перед отправкой его на сервер.
+
+Если блок имеет выходные параметры, вы должны использовать SUSPEND, иначе ничего не будет возвращено. 
+
+Выходные данные всегда возвращаются в виде набора данных, так же как и в случае с оператором SELECT.
+Вы не можете использовать RETURNING_VALUES или выполнить блок, вернув значения в некоторые переменные, используя INTO, даже если возвращается всего одна строка. 
+
+Для получения дополнительной информации о параметрах и объявлениях переменных, [TYPE OF] [replaceable]``domain``, TYPE OF COLUMN и т.д.
+обратитесь к главе <<_fblangref_psql_statements_declare_var,DECLARE VARIABLE>>.
+
+[[_fblangref_dml_execblock_term]]
+=== Терминатор оператора
+
+Некоторые редакторы SQL-операторов -- в частности утилита [app]``isql``, которая идёт в комплекте с Firebird, и возможно некоторые сторонние редакторы -- используют внутреннее соглашение, которое требует, чтобы все операторы были завершены с точкой с запятой.
+
+Это создает конфликт с синтаксисом PSQL при кодировании в этих средах.
+Если вы не знакомы с этой проблемой и ее решением, пожалуйста, изучать детали в главе PSQL в разделе, озаглавленном <<_fblangref_psql_setterm,Изменение терминатора в [app]``isql``>>.
+
+ifdef::backend-docbook[]
+[index]
+== Index
+// Generated automatically by the DocBook toolchain.
+endif::backend-docbook[]

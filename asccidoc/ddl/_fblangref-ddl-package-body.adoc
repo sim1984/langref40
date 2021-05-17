@@ -1,0 +1,425 @@
+[[fblangref-ddl-package-body]]
+= PACKAGE BODY
+
+[[fblangref-ddl-package-body-create]]
+== CREATE PACKAGE BODY
+
+.Назначение
+Создание тела пакета.
+
+.Доступно в
+DSQL
+
+[[fblangref-ddl-pkg-body-create-syntax]]
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE PACKAGE BODY _package_name_
+AS
+BEGIN
+  [<package_item> ...]
+  [<package_body_item> ...]
+END
+
+<package_item> ::=
+    <function_decl>;
+  | <procedure_decl>;
+
+<function_decl> ::=
+  FUNCTION _func_name_ [(<in_params>)]
+  RETURNS <type> [COLLATE _collation_]
+  [DETERMINISTIC]
+
+<procedure_decl> ::=
+  PROCEDURE _proc_name_ [(<in_params>)]
+  [RETURNS (<out_params>)]
+
+<package_body_item> ::=
+    <function_impl>
+  | <procedure_impl>
+
+<function_impl> ::=
+  FUNCTION _func_name_ [(<in_impl_params>)]
+  RETURNS <type> [COLLATE _collation_]
+  [DETERMINISTIC]
+  <routine body>
+
+<procedure_impl> ::=
+  PROCEDURE _proc_name_ [(<in_impl_params>)]
+  [RETURNS (<out_params>)]
+  <routine body>
+
+<in_params> ::= <inparam> [, <inparam> ...]
+
+<inparam> ::= <param_decl> [{= | DEFAULT} <value>]
+
+<in_impl_params> ::= <param_decl> [, <param_decl> ...]
+
+<value> ::=  {_literal_ | NULL | _context_var_}
+
+<out_params> ::= <outparam> [, <outparam> ...]
+
+<outparam>  ::=  <param_decl>
+
+<param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
+
+<type> ::= <datatype> | [TYPE OF] _domain_name_ | TYPE OF COLUMN _rel_._col_
+
+<datatype> ::=
+    <scalar_datatype> | <blob_datatype> | <array_datatype>
+
+<scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
+
+<blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
+
+<array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
+
+<routine body> ::= <sql routine body> | <external body reference>
+
+<sql routine body> ::=
+  AS
+    [<declarations>]
+  BEGIN
+    [<PSQL_statements>]
+  END
+
+<declarations> ::= <declare_item> [<declare_item> ...]
+
+<declare_item> ::=
+    <declare_var>;
+  | <declare_cursor>;
+  | <subroutine declaration>;
+  | <subroutine implimentation>
+
+<subroutine declaration> ::= <subfunc_decl> | <subproc_decl>
+
+<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl>
+
+<external body reference> ::=
+  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]
+
+<extname> ::= '<module name>!<routine name>[!<misc info>]'
+----
+
+[[fblangref-ddl-tbl-createpkgbdy]]
+.Параметры оператора CREATE PACKAGE BODY
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|package_name
+|Имя пакета.
+Может содержать до 63 символов.
+
+|function_decl
+|Объявление функции.
+
+|procedure_decl
+|Объявление процедуры.
+
+|function_impl
+|Реализация функции.
+
+|procedure_impl
+|Реализация процедуры.
+
+|proc_name
+|Имя процедуры.
+Может содержать до 63 символов.
+
+|func_name
+|Имя функции.
+Может содержать до 63 символов.
+
+|inparam
+|Описание входного параметра.
+
+|outparam
+|Описание выходного параметра.
+
+|declarations
+|Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
+
+|declare_var
+|Объявление локальной переменной.
+
+|declare_cursor
+|Объявление именованного курсора.
+
+|subfunc_decl
+|Объявление подпрограммы–функции.
+
+|subproc_decl
+|Объявление подпрограммы–процедуры.
+
+|subfunc_impl
+|Реализация подпрограммы–функции.
+
+|subproc_impl
+|Реализация подпрограммы–процедуры.
+
+|module name
+|Имя внешнего модуля, в котором расположена процедура/функция.
+
+|routine name
+|Внутреннее имя процедуры/функции внутри внешнего модуля.
+
+|misc info
+|Определяемая пользователем информация для передачи в функцию внешнего модуля.
+
+|extbody
+|Тело внешней процедуры или функции. Строковый литерал который
+может использоваться UDR для различных целей.
+
+|engine
+|Имя движка для использования внешних функций.
+Обычно указывается имя UDR.
+
+|literal
+|Литерал, совместимый по типу с параметром.
+
+|context_var
+|Любая контекстная переменная, тип которой совместим с типом параметра.
+
+|paramname
+|Имя входного или выходного параметра процедуры/функции.
+Может содержать до 63 символов.
+Имя параметра должно быть уникальным среди входных и выходных параметров процедуры/функции, а также её локальных переменных.
+
+|datatype
+|Тип данных SQL.
+
+|collation
+|Порядок сортировки.
+
+|domain_name
+|Имя домена.
+
+|rel
+|Имя таблицы или представления.
+
+|col
+|Имя столбца таблицы или представления.
+|===
+
+Оператор CREATE PACKAGE BODY создаёт новое тело пакета.
+Тело пакета может быть создано только после того как будет создан заголовок пакета.
+Если заголовка пакета с именем [replaceable]``package_name`` не существует, то будет выдана соответствующая ошибка.
+
+Все процедуры и функции, объявленные в заголовке пакета, должны быть реализованы в теле пакета.
+Кроме того, должны быть реализованы и все процедуры и функции, объявленные в теле пакета.
+Процедуры и функции, определенные в теле пакета, но не объявленные в заголовке пакета, не видны вне тела пакета.
+
+Имена процедур и функций, объявленные в теле пакета, должны быть уникальны среди имён процедур и функций, объявленных в заголовке и теле пакета.
+
+[NOTE]
+====
+Желательно чтобы имена хранимых процедур и функций пакета не пересекались с именами хранимых процедур и функций из глобального пространства имен, хотя это и допустимо.
+Дело в том, что в настоящее время вы не сможете вызвать функцию/процедуру из глобального пространства имён внутри пакета, если в пакете объявлена одноименная функция/процедура.
+В этом случае всегда будет вызвана процедура/функция пакета.
+====
+
+.Правила:
+
+* В теле пакеты должны быть реализованы все подпрограммы, стой же сигнатурой, что и объявленные в заголовке и в начале тела пакета.
+* Значения по умолчанию для параметров процедур не могут быть переопределены (которые указываются в [replaceable]``<package_item>``). Это означает, что они могут быть в [replaceable]``<package_body_item>`` только для частных процедур, которые не были объявлены.
+
+
+[NOTE]
+====
+UDF деклараций (`DECLARE` внешняя функция) в настоящее время не поддерживается внутри пакетов.
+====
+
+[[fblangref-ddl-package-body-create-who]]
+=== Кто может создать тело пакета?
+
+Выполнить оператор `CREATE PACKAGE BODY` могут:
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец пакета;
+* Пользователи с привилегией `ALTER ANY PACKAGE`.
+
+
+[[fblangref-ddl-package-body-create-examples]]
+=== Примеры
+
+.Создание тела пакета
+[example]
+====
+[source,sql]
+----
+
+CREATE PACKAGE BODY APP_VAR
+AS
+BEGIN
+  -- Возвращает дату начала периода
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC
+  AS
+  BEGIN
+    RETURN RDB$GET_CONTEXT('USER_SESSION', 'DATEBEGIN');
+  END
+  -- Возвращает дату окончания периода
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC
+  AS
+  BEGIN
+    RETURN RDB$GET_CONTEXT('USER_SESSION', 'DATEEND');
+  END
+  -- Устанавливает диапазон дат рабочего периода
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE)
+  AS
+  BEGIN
+    RDB$SET_CONTEXT('USER_SESSION', 'DATEBEGIN', ADATEBEGIN);
+    RDB$SET_CONTEXT('USER_SESSION', 'DATEEND', ADATEEND);
+  END
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-body-drop,DROP PACKAGE BODY>>, <<fblangref-ddl-package-create,CREATE PACKAGE>>.
+
+[[fblangref-ddl-package-body-drop]]
+== DROP PACKAGE BODY
+
+.Назначение
+Удаление тела пакета.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes"]
+----
+DROP PACKAGE BODY _package_name_
+----
+
+.Параметры оператора DROP PACKAGE BODY
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|package_name
+|Имя пакета.
+|===
+
+Оператор `DROP PACKAGE BODY` удаляет тело пакета.
+
+[[fblangref-ddl-package-body-drop-who]]
+=== Кто может удалить тело пакета?
+
+Выполнить оператор `DROP PACKAGE BODY` могут:
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец пакета;
+* Пользователи с привилегией `ALTER ANY PACKAGE`.
+
+
+[[fblangref-ddl-package-body-drop-examples]]
+=== Примеры
+
+.Удаление тела пакета
+[example]
+====
+[source,sql]
+----
+DROP PACKAGE BODY APP_VAR;
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-body-create,CREATE PACKAGE BODY>>, <<fblangref-ddl-package-drop,DROP PACKAGE>>.
+
+[[fblangref-ddl-package-body-recreate]]
+== RECREATE PACKAGE BODY
+
+.Назначение
+Создание нового и пересоздание существующего тела пакета.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+RECREATE PACKAGE BODY _package_name_
+AS
+BEGIN
+  [<package_item> ...]
+  [<package_body_item> ...]
+END
+
+<package_item> ::=
+    <function_decl>;
+  | <procedure_decl>;
+
+<function_decl> ::=
+  FUNCTION _func_name_ [(<in_params>)]
+  RETURNS <type> [COLLATE _collation_]
+  [<function_options>]
+
+<procedure_decl> ::=
+  PROCEDURE _proc_name_ [(<in_params>)]
+  [RETURNS (<out_params>)]
+  [<procedure_options>]
+
+<package_body_item> ::=
+    <function_impl>
+  | <procedure_impl>
+
+<function_impl> ::=
+  FUNCTION _func_name_ [(<in_impl_params>)]
+  RETURNS <type> [COLLATE _collation_]
+  [DETERMINISTIC]
+  <routine body>
+
+<procedure_impl> ::=
+  PROCEDURE _proc_name_ [(<in_impl_params>)]
+  [RETURNS (<out_params>)]
+  <routine body>
+
+Подробнее см. <<fblangref-ddl-pkg-body-create-syntax,CREATE PACKAGE BODY>>.
+----
+
+Оператор `RECREATE PACKAGE BODY` создаёт новое или пересоздаёт существующее тело пакета.
+Если тело пакета с таким именем уже существует, то оператор попытается удалить его и создать новое тело пакета.
+После пересоздания тела пакета привилегии на выполнение подпрограмм пакета и привилегии самого пакета сохраняются.
+
+[[fblangref-ddl-package-body-recreate-examples]]
+=== Примеры
+
+.Пересоздание тела пакета
+[example]
+====
+[source,sql]
+----
+RECREATE PACKAGE BODY APP_VAR
+AS
+BEGIN
+  -- Возвращает дату начала периода
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC
+  AS
+  BEGIN
+    RETURN RDB$GET_CONTEXT('USER_SESSION', 'DATEBEGIN');
+  END
+  -- Возвращает дату окончания периода
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC
+  AS
+  BEGIN
+    RETURN RDB$GET_CONTEXT('USER_SESSION', 'DATEEND');
+  END
+  -- Устанавливает диапазон дат рабочего периода
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE)
+  AS
+  BEGIN
+    RDB$SET_CONTEXT('USER_SESSION', 'DATEBEGIN', ADATEBEGIN);
+    RDB$SET_CONTEXT('USER_SESSION', 'DATEEND', ADATEEND);
+  END
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-body-create,CREATE PACKAGE BODY>>,
+<<fblangref-ddl-package-body-drop,DROP PACKAGE BODY>>.

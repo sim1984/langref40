@@ -46,6 +46,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# PDF and HTML
+.pdf
+.html
+
 # output documents
-/out/*
+/docbook/out/*
 

@@ -1,0 +1,186 @@
+<!DOCTYPE appendix>
+<appendix xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-syspackage" xml:lang="ru">
+    <info>
+        <title>Системные пакеты</title>
+    </info>
+
+    <section xml:id="fblangref-syspackage-timezoneutil">
+        <info>
+            <title>RDB$TIME_ZONE_UTIL</title>
+            <keywordset>
+                <keyword>RDB$TIME_ZONE_UTIL</keyword>
+            </keywordset>
+        </info>
+        <indexterm><primary>RDB$TIME_ZONE_UTIL</primary></indexterm>
+
+        <para>Данный пакет содержит процедуры и функции для работы с часовыми поясами.</para>
+
+        <section xml:id="fblangref-syspackage-timezoneutil-databaseversion">
+            <info>
+                <title>Функция DATABASE_VERSION</title>
+            </info>
+            <indexterm>
+                <primary>RDB$TIME_ZONE_UTIL</primary>
+                <secondary>DATABASE_VERSION</secondary>
+            </indexterm>
+
+            <para>Функция <code>RDB$TIME_ZONE_UTIL.DATABASE_VERSION</code> возвращает версию базы
+                данных часовых поясов (из библиотеки icu).</para>
+
+            <formalpara>
+                <title>Тип возвращаемого результата:</title>
+                <para>VARCHAR(10) CHARACTER SET ASCII</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Пример:</title>
+                <para>
+                    <example>
+                        <title>Использование функции RDB$TIME_ZONE_UTIL.DATABASE_VERSION</title>
+                        <para><programlisting language="sql">
+SELECT rdb$time_zone_util.database_version()
+FROM rdb$database;                  
+                </programlisting></para>
+                        <para>
+                            <screen>
+DATABASE_VERSION
+================
+2020d                                
+                            </screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+
+        <section xml:id="fblangref-syspackage-timezoneutil-transitions">
+            <info>
+                <title>Процедура TRANSITIONS</title>
+            </info>
+            <indexterm>
+                <primary>RDB$TIME_ZONE_UTIL</primary>
+                <secondary>TRANSITIONS</secondary>
+            </indexterm>
+
+            <para>Процедура <code>RDB$TIME_ZONE_UTIL.TRANSITIONS</code> возвращает набор правил для
+                часового пояса между начальной и конечной временной меткой.</para>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Входные параметры процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS</title>
+                    <tgroup cols="3">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.0*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Тип</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><code>RDB$TIME_ZONE_NAME</code></entry>
+                                <entry><code>CHAR(63)</code></entry>
+                                <entry>
+                                    <para>Наименование часового пояса</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><code>RDB$FROM_TIMESTAMP</code></entry>
+                                <entry><code>TIMESTAMP WITH TIME ZONE</code></entry>
+                                <entry><para>Начало интервала дат</para></entry>
+                            </row>
+                            <row>
+                                <entry><code>RDB$TO_TIMESTAMP</code></entry>
+                                <entry><code>TIMESTAMP WITH TIME ZONE</code></entry>
+                                <entry><para>Окончание интервала дат</para></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Выходные параметры процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS</title>
+                    <tgroup cols="3">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="1.0*" align="left"/>
+                        <colspec colname="c3" colnum="3" colwidth="1.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Тип</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><code>RDB$START_TIMESTAMP</code></entry>
+                                <entry><code>TIMESTAMP WITH TIME ZONE</code></entry>
+                                <entry>
+                                    <para>Дата начала действия правила</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><code>RDB$END_TIMESTAMP</code></entry>
+                                <entry><code>TIMESTAMP WITH TIME ZONE</code></entry>
+                                <entry>Дата окончания действия правила</entry>
+                            </row>
+                            <row>
+                                <entry><code>RDB$ZONE_OFFSET</code></entry>
+                                <entry><code>SMALLINT</code></entry>
+                                <entry><para>Смещение времени в минутах для заданного часового
+                                        пояса</para></entry>
+                            </row>
+                            <row>
+                                <entry><code>RDB$DST_OFFSET</code></entry>
+                                <entry><code>SMALLINT</code></entry>
+                                <entry><para>Летнее смещение времени в минутах для заданного часового пояса</para></entry>
+                            </row>
+                            <row>
+                                <entry><code>RDB$EFFECTIVE_OFFSET</code></entry>
+                                <entry><code>SMALLINT</code></entry>
+                                <entry><para>Эффективное смещение, вычисляется как <code>RDB$ZONE_OFFSET + RDB$DST_OFFSET</code></para></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <formalpara>
+                <title>Пример:</title>
+                <para>
+                    <example>
+                        <title>Использование процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS</title>
+                        <para><programlisting language="sql">
+SELECT 
+  RDB$START_TIMESTAMP,
+  RDB$END_TIMESTAMP,
+  RDB$ZONE_OFFSET AS ZONE_OFF,
+  RDB$DST_OFFSET AS DST_OFF,
+  RDB$EFFECTIVE_OFFSET AS OFF
+FROM rdb$time_zone_util.transitions(
+    'America/Sao_Paulo',
+    timestamp '2017-01-01',
+    timestamp '2019-01-01');                  
+                </programlisting></para>
+                        <para>
+                            <screen>
+         RDB$START_TIMESTAMP            RDB$END_TIMESTAMP ZONE_OFF DST_OFF  OFF
+============================ ============================ ======== ======= ====
+2016-10-16 03:00:00.0000 GMT 2017-02-19 01:59:59.9999 GMT     -180      60 -120
+2017-02-19 02:00:00.0000 GMT 2017-10-15 02:59:59.9999 GMT     -180       0 -180
+2017-10-15 03:00:00.0000 GMT 2018-02-18 01:59:59.9999 GMT     -180      60 -120
+2018-02-18 02:00:00.0000 GMT 2018-10-21 02:59:59.9999 GMT     -180       0 -180
+2018-10-21 03:00:00.0000 GMT 2019-02-17 01:59:59.9999 GMT     -180      60 -120                             
+                            </screen>
+                        </para>
+                    </example>
+                </para>
+            </formalpara>
+        </section>
+
+    </section>
+</appendix>

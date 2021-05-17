@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-charset">
+    <info>
+        <title>CHARACTER SET</title>
+        <keywordset>
+            <keyword>CHARACTER SET</keyword>
+        </keywordset>
+    </info>
+
+    <section xml:id="fblangref-ddl-charset-alter">
+        <info>
+            <title>ALTER CHARACTER SET</title>
+            <keywordset>
+                <keyword>ALTER CHARACTER SET</keyword>
+                <keyword>SET DEFAULT COLLATION</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER CHARACTER SET</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Установка сортировки по умолчанию для набора символов.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL.</para>
+        </formalpara>
+        <formalpara>
+            <title>Синтаксис:</title>
+
+            <para>
+                <programlisting>
+ALTER CHARACTER SET <replaceable>charset</replaceable> 
+SET DEFAULT COLLATION <replaceable>collation</replaceable>;
+                </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора ALTER CHARACTER SET</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>charset</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Набор символов.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>collation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Сортировка.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор ALTER CHARACTER SET изменяет сортировку по умолчанию для указанного набора
+            символов. Это повлияет на использование набора символов в будущем, кроме случаев, когда
+            явно переопределена сортировка COLLATE. Сортировка существующих доменов, столбцов и
+            переменных PSQL при этом не будет изменена. </para>
+        <note>
+            <para>Если сортировка по умолчанию была изменена для набора символов базы данных (тот,
+                что был указан при создании базы данных), то также изменяется и сортировка по
+                умолчанию для базы данных. </para>
+            <para>Если сортировка по умолчанию была изменена для набора символов, который был указан
+                при подключении, строковые константы будут интерпретироваться в соответствии с
+                новыми параметрами сортировки (если набор символов и/или сортировка не
+                переопределяются). </para>
+        </note>
+        <section xml:id="fblangref-ddl-charset-alter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Установка сортировки UNICODE_CI_AI по умолчанию для кодировки UTF8</title>
+                <para>
+                    <programlisting language="sql">
+ALTER CHARACTER SET UTF8 SET DEFAULT COLLATION UNICODE_CI_AI;
+                </programlisting>
+                </para>
+            </example>
+        </section>
+    </section>
+</section>

@@ -1,0 +1,621 @@
+[[fblangref-ddl-procedure]]
+= PROCEDURE
+
+Хранимая процедура (ХП) -- это программный модуль, который может быть вызван с клиента, из другой процедуры, функции, выполнимого блока (executable block) или триггера.
+Хранимые процедуры, хранимые функции, исполняемые блоки и триггеры пишутся на процедурном языке SQL (PSQL). Большинство операторов SQL доступно и в PSQL, иногда с ограничениями или расширениями.
+Заметными исключениями являются DDL и операторы управления транзакциями.
+
+Хранимые процедуры могут принимать и возвращать множество параметров.
+
+[[fblangref-ddl-procedure-create]]
+== CREATE PROCEDURE
+
+.Назначение
+Создание новой хранимой функции.
+
+.Доступно в
+DSQL, ESQL
+
+[[fblangref-ddl-proc-create-syntax]]
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
+RETURNS (<outparam> [, <outparam> ...])
+<routine body> 
+  
+<inparam> ::= <param_decl> [{= | DEFAULT} <value>]  
+
+<outparam>  ::=  <param_decl>  
+                    
+<value> ::=  {_literal_ | NULL | _context_var_}
+                    
+<param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
+                    
+<extname> ::= '<module name>!<routine name>[!<misc info>]'    
+
+<type> ::= <datatype> | [TYPE OF] _domain_name_ | TYPE OF COLUMN _rel_._col_
+                    
+<datatype> ::= 
+    <scalar_datatype> | <blob_datatype> | <array_datatype>                   
+                    
+<scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
+
+<blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
+
+<array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
+
+<routine body> ::=
+    <SQL routine spec>
+  | <external body reference>
+                    
+<SQL routine spec> ::=
+  [<rights clause>] <SQL routine body>                    
+
+
+<rights clause> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
+
+
+<SQL routine body> ::=  
+  AS
+    [<declarations>]
+  BEGIN
+    [<PSQL_statements>]
+  END                      
+
+<declarations> ::= <declare_item> [<declare_item> ...]
+
+<declare_item> ::=
+    <declare_var>; 
+  | <declare_cursor>; 
+  | <subroutine declaration>;
+  | <subroutine implimentation>  
+
+<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
+
+<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl> 
+
+<external body reference> ::=
+  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>] 
+
+<extname> ::= '<module name>!<routine name>[!<misc info>]'
+----
+
+[[fblangref-ddl-proc-createproc]]
+.Параметры оператора CREATE PROCEDURE
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|procname
+|Имя хранимой процедуры.
+Может содержать до 63 символов.
+
+|inparam
+|Описание входного параметра.
+
+|outparam
+|Описание выходного параметра.
+
+|declarations
+|Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
+
+|declare_var
+|Объявление локальной переменной.
+
+|declare_cursor
+|Объявление именованного курсора.
+
+|subfunc_decl
+|Объявление подпрограммы – функции.
+
+|subproc_decl
+|Объявление подпрограммы – процедуры.
+
+|subfunc_impl
+|Реализация подпрограммы – функции.
+
+|subproc_impl
+|Реализация подпрограммы – процедуры.
+
+|literal
+|Литерал, совместимый по типу с параметром.
+
+|context_var
+|Любая контекстная переменная, тип которой совместим с типом параметра.
+
+|paramname
+|Имя входного или выходного параметра процедуры.
+Может содержать до 63 символов.
+Имя параметра должно быть уникальным среди входных и выходных параметров процедуры, а также её локальных переменных.
+
+|extbody
+|Тело внешней процедуры.
+Строковый литерал который может использоваться UDR для различных целей.
+
+|module name
+|Имя внешнего модуля, в котором расположена функция.
+
+|routine name
+|Внутреннее имя функции внутри внешнего модуля.
+
+|misc info
+|Определяемая пользователем информация для передачи в функцию внешнего модуля.
+
+|engine
+|Имя движка для использования внешних функций.
+Обычно указывается имя UDR. 
+
+|datatype
+|Тип данных SQL.
+
+|collation
+|Порядок сортировки.
+
+|domain_name
+|Имя домена.
+
+|rel
+|Имя таблицы или представления.
+
+|col
+|Имя столбца таблицы или представления.
+|===
+
+Оператор `CREATE PROCEDURE` создаёт новую хранимую процедуру.
+Имя хранимой процедуры должно быть уникальным среди имён всех хранимых процедур, таблиц и представлений базы данных. 
+
+[NOTE]
+====
+Желательно также, чтобы имя хранимой процедуры было уникальным и среди имён процедур расположенных в PSQL пакетах (package), хотя это и допустимо.
+Дело в том, что в настоящее время вы не сможете вызвать функцию/процедуру из глобального пространства имён внутри пакета, если в пакете объявлена одноименная функция/процедура.
+В этом случае всегда будет вызвана процедура/функция пакета. 
+====
+
+`CREATE PROCEDURE` является составным оператором, состоящий из заголовка и тела.
+
+Заголовок определяет имя хранимой процедуры и объявляет входные и выходные параметры, если они должны быть возвращены процедурой.
+
+Тело процедуры состоит из необязательных объявлений локальных переменных, подпрограмм и именованных курсоров, и одного или нескольких операторов, или блоков операторов, заключённых во внешнем блоке, который начинается с ключевого слова `BEGIN`, и завершается ключевым словом `END`.
+Объявления локальных переменных и именованных курсоров, а также внутренние операторы должны завершаться точкой с запятой (;).
+
+[[_fblangref_ddl_procedure_term]]
+=== Терминатор оператора
+
+Некоторые редакторы SQL-операторов -- в частности утилита [app]``isql``, которая идёт в комплекте с Firebird,
+и возможно некоторые сторонние редакторы -- используют внутреннее соглашение, которое требует, чтобы все операторы были завершены с точкой с запятой.
+
+Это создает конфликт с синтаксисом PSQL при кодировании в этих средах.
+Если вы не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в разделе,
+озаглавленном <<fblangref-psql-setterm,Изменение терминатора в [app]``isql``>>.
+
+[[fblangref-ddl-procedure-create-params]]
+=== Параметры
+
+У каждого параметра указывается тип данных.
+Кроме того, для параметра можно указать ограничение `NOT NULL`, тем самым запретив передавать в него значение `NULL`.
+
+Для параметра строкового типа существует возможность задать порядок сортировки с помощью предложения `COLLATE`.
+
+[[fblangref-ddl-procedure-create-params-in]]
+==== Входные параметры
+
+Входные параметры заключаются в скобки после имени хранимой процедуры.
+Они передаются в процедуру по значению, то есть любые изменения входных параметров внутри процедуры никак не повлияет на значения этих параметров в вызывающей программе.
+
+Входные параметры могут иметь значение по умолчанию.
+Параметры, для которых заданы значения, должны располагаться в конце списка параметров.
+
+[[fblangref-ddl-procedure-create-params-out]]
+==== Выходные параметры
+
+Необязательное предложение `RETURNS` позволяет задать список выходных параметров хранимой процедуры.
+
+[[fblangref-ddl-procedure-create-params-domain]]
+==== Использование доменов при объявлении параметров
+
+В качестве типа параметра можно указать имя домена.
+В этом случае параметр будет наследовать все характеристики домена.
+
+Если перед названием домена дополнительно используется предложение `TYPE OF`, то используется только тип данных домена -- не проверяется (не используется) его ограничение (если оно есть в домене) на `NOT NULL`, `CHECK` ограничения и/или значения по умолчанию.
+Если домен текстового типа, то всегда используется его набор символов и порядок сортировки.
+
+[[fblangref-ddl-procedure-create-params-typeofcolumn]]
+==== Использование типа столбца при объявлении параметров
+
+Входные и выходные параметры можно объявлять, используя тип данных столбцов существующих таблиц и представлений.
+Для этого используется предложение `TYPE OF COLUMN`, после которого указывается имя таблицы или представления и через точку имя столбца.
+
+При использовании `TYPE OF COLUMN` наследуется только тип данных, а в случае строковых типов ещё и набор символов, и порядок сортировки.
+Ограничения и значения по умолчанию столбца никогда не используются. 
+
+[[fblangref-ddl-procedure-create-sql-security]]
+=== Привилегии выполнения
+
+Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется хранимая процедура.
+Если выбрана опция `INVOKER`, то хранимая процедура выполняется с привилегиями вызывающего пользователя.
+Если выбрана опция `DEFINER`, то хранимая процедура выполняется с привилегиями определяющего пользователя (владельца ХП). Эти привилегии будут дополнены привилегиями выданные самой хранимой процедуре с помощью оператора `GRANT`.
+По умолчанию хранимая процедура выполняется с привилегиями вызывающего пользователя.
+
+[TIP]
+====
+Привилегии выполнения по умолчанию для вновь создаваемых объектов метаданных можно изменить с помощью оператора
+
+[listing]
+----
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+----
+====
+
+[[fblangref-ddl-procedure-create-body]]
+=== Тело хранимой процедуры
+
+После ключевого слова `AS` следует тело хранимой процедуры.
+
+[[fblangref-ddl-procedure-create-declare]]
+==== Объявление локальных переменных, курсоров и подпрограмм
+
+В необязательной секции [replaceable]``declarations`` описаны локальные переменные процедуры, подпрограммы и именованные курсоры.
+В отношении спецификации типа данных локальные переменные подчиняются тем же правилам, что и входные и выходные параметры процедуры.
+Подробности вы можете посмотреть в главе "`Процедурный язык PSQL`" в разделах
+<<fblangref-psql-statements-declare-var,DECLARE VARIABLE>> и
+<<fblangref-psql-statements-declare-cursor,DECLARE CURSOR>>,
+<<fblangref-psql-statements-declare-procedure,DECLARE PROCEDURE>>,
+<<fblangref-psql-statements-declare-function,DECLARE FUNCTION>>.
+
+После необязательной секции деклараций обязательно следует составной оператор.
+Составной оператор состоит из одного или нескольких PSQL операторов, заключенных между ключевыми словами `BEGIN` и `END`.
+Составной оператор может содержать один или несколько других составных операторов.
+Вложенность ограничена 512 уровнями.
+Любой из `BEGIN ... END` блоков может быть пустым, в том числе и главный блок.
+
+[[fblangref-ddl-procedure-create-external]]
+=== Внешние хранимые процедуры
+
+Хранимая процедура может быть расположена во внешнем модуле.
+В этом случае вместо тела процедуры указывается место её расположения во внешнем модуле с помощью предложения `EXTERNAL NAME`.
+Аргументом этого предложения является строка, в которой через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и определённая пользователем информация.
+В предложении `ENGINE` указывается имя движка для обработки подключения внешних модулей.
+В Firebird для работы с внешними модулями используется движок UDR.
+После ключевого слова `AS` может быть указан строковый литерал -- "тело" внешней процедуры, оно может быть использовано внешним модулем для различных целей.
+
+[[fblangref-ddl-procedure-create_who]]
+=== Кто может создать хранимую процедуру?
+
+Выполнить оператор `CREATE PROCEDURE` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Пользователи с привилегией `CREATE PROCEDURE`.
+
+Пользователь, создавший хранимую процедуру, становится её владельцем.
+
+[[fblangref-ddl-procedure-create-examples]]
+=== Примеры
+
+.Создание хранимой процедуры
+[example]
+====
+
+[source,sql]
+----
+
+CREATE PROCEDURE ADD_BREED (
+  NAME D_BREEDNAME, /* Наследуются характеристики домена */
+  NAME_EN TYPE OF D_BREEDNAME, /* Наследуется только тип домена */
+  SHORTNAME TYPE OF COLUMN BREED.SHORTNAME, /* Наследуется тип столбца таблицы */
+  REMARK VARCHAR(120) CHARACTER SET WIN1251 COLLATE PXW_CYRL,
+  CODE_ANIMAL INT NOT NULL DEFAULT 1
+)
+RETURNS (
+  CODE_BREED INT
+)
+AS
+BEGIN
+  INSERT INTO BREED (
+    CODE_ANIMAL, NAME, NAME_EN, SHORTNAME, REMARK)
+  VALUES (
+    :CODE_ANIMAL, :NAME, :NAME_EN, :SHORTNAME, :REMARK)
+  RETURNING CODE_BREED INTO CODE_BREED;
+END
+----
+
+То же самое, но процедура будет выполняться с правами определяющего пользователя (владельца процедуры).
+
+[source,sql]
+----
+
+CREATE PROCEDURE ADD_BREED (
+  NAME D_BREEDNAME, /* Наследуются характеристики домена */
+  NAME_EN TYPE OF D_BREEDNAME, /* Наследуется только тип домена */
+  SHORTNAME TYPE OF COLUMN BREED.SHORTNAME, /* Наследуется тип столбца таблицы */
+  REMARK VARCHAR(120) CHARACTER SET WIN1251 COLLATE PXW_CYRL,
+  CODE_ANIMAL INT NOT NULL DEFAULT 1
+)
+RETURNS (
+  CODE_BREED INT
+)
+SQL SECURITY DEFINER
+AS
+BEGIN
+  INSERT INTO BREED (
+    CODE_ANIMAL, NAME, NAME_EN, SHORTNAME, REMARK)
+  VALUES (
+    :CODE_ANIMAL, :NAME, :NAME_EN, :SHORTNAME, :REMARK)
+  RETURNING CODE_BREED INTO CODE_BREED;
+END
+----
+====
+
+.Создание внешней хранимой процедуры
+====
+[example]
+Создание процедуры находящейся во внешнем модуле (UDR). Реализация процедуры расположена во внешнем модуле udrcpp_example.
+Имя процедуры внутри модуля -- gen_rows.
+
+[source,sql]
+----
+
+CREATE PROCEDURE gen_rows (
+    start_n INTEGER NOT NULL,
+    end_n INTEGER NOT NULL
+) RETURNS (
+    n INTEGER NOT NULL
+)
+    EXTERNAL NAME 'udrcpp_example!gen_rows'
+    ENGINE udr;
+----
+====
+
+.См. также:
+<<fblangref-ddl-procedure-createoralter,CREATE OR ALTER PROCEDURE>>,
+<<fblangref-ddl-procedure-alter,ALTER PROCEDURE>>,
+<<fblangref-ddl-procedure-recreate,RECREATE PROCEDURE>>,
+<<fblangref-ddl-procedure-drop,DROP PROCEDURE>>.
+
+[[fblangref-ddl-procedure-alter]]
+== ALTER PROCEDURE
+
+.Назначение
+Изменение существующей хранимой процедуры.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+ALTER PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
+RETURNS (<outparam> [, <outparam> ...])
+<routine body>
+
+Подробнее см. <<fblangref-ddl-proc-create-syntax,CREATE PROCEDURE>>.
+----
+
+Оператор `ALTER PROCEDURE` позволяет изменять состав и характеристики входных и выходных параметров, локальных переменных, именованных курсоров и тело хранимой процедуры.
+Для внешних процедур (UDR) вы можете изменить точку входа и имя движка.
+После выполнения существующие привилегии и зависимости сохраняются. 
+
+[WARNING]
+====
+Будьте осторожны при изменении количества и типов входных и выходных параметров хранимых процедур.
+Существующий код приложения может стать неработоспособным из-за того, что формат вызова процедуры несовместим с новым описанием параметров.
+Кроме того, PSQL модули, использующие изменённую хранимую процедуру, могут стать некорректными.
+Информация о том, как это обнаружить, находится в приложении <<fblangref-appx-supp-rdb-validblr,Поле RDB$VALID_BLR>>.
+====
+
+[[fblangref-ddl-procedure-alter-who]]
+=== Кто может изменить хранимую процедуру?
+
+Выполнить оператор `ALTER PROCEDURE` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец хранимой процедуры; 
+* Пользователи с привилегией `ALTER ANY PROCEDURE`.
+
+
+[[fblangref-ddl-procedure-alter-examples]]
+=== Примеры
+
+.Изменение хранимой процедуры
+[example]
+====
+[source,sql]
+----
+ALTER PROCEDURE GET_EMP_PROJ (
+    EMP_NO SMALLINT)
+RETURNS (
+    PROJ_ID VARCHAR(20))
+AS
+BEGIN
+  FOR SELECT
+          PROJ_ID
+      FROM
+          EMPLOYEE_PROJECT
+      WHERE
+          EMP_NO = :emp_no
+      INTO :proj_id
+  DO
+    SUSPEND;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-procedure-create,CREATE PROCEDURE>>,
+<<fblangref-ddl-procedure-createoralter,CREATE OR ALTER PROCEDURE>>,
+<<fblangref-ddl-procedure-recreate,RECREATE PROCEDURE>>,
+<<fblangref-ddl-procedure-drop,DROP PROCEDURE>>.
+
+[[fblangref-ddl-procedure-createoralter]]
+== CREATE OR ALTER PROCEDURE
+
+.Назначение
+Создание новой или изменение существующей хранимой процедуры.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE OR ALTER PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
+RETURNS (<outparam> [, <outparam> ...])
+<routine body>
+
+Подробнее см. <<fblangref-ddl-proc-create-syntax,CREATE PROCEDURE>>.
+----
+
+Оператор `CREATE OR ALTER PROCEDURE` создаёт новую или изменяет существующую хранимую процедуру.
+Если хранимая процедура не существует, то она будет создана с использованием предложения `CREATE PROCEDURE`.
+Если она уже существует, то она будет изменена и откомпилирована, при этом существующие привилегии и зависимости сохраняются. 
+
+[[fblangref-ddl-procedure-createoralter-examples]]
+=== Примеры
+
+.Создание или изменение хранимой процедуры 
+[example]
+====
+[source,sql]
+----
+CREATE OR ALTER PROCEDURE GET_EMP_PROJ (
+    EMP_NO SMALLINT)
+RETURNS (
+    PROJ_ID VARCHAR(20))
+AS
+BEGIN
+  FOR SELECT
+          PROJ_ID
+      FROM
+          EMPLOYEE_PROJECT
+      WHERE
+          EMP_NO = :emp_no
+      INTO :proj_id
+  DO
+    SUSPEND;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-procedure-create,CREATE PROCEDURE>>,
+<<fblangref-ddl-procedure-alter,ALTER PROCEDURE>>,
+<<fblangref-ddl-procedure-recreate,RECREATE PROCEDURE>>,
+<<fblangref-ddl-procedure-drop,DROP PROCEDURE>>.
+
+[[fblangref-ddl-procedure-drop]]
+== DROP PROCEDURE
+
+.Назначение
+Удаление существующей хранимой процедуры.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes"]
+----
+DROP PROCEDURE _procname_
+----
+
+.Параметры оператора DROP PROCEDURE
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|procname
+|Имя хранимой процедуры.
+|===
+
+Оператор `DROP PROCEDURE` удаляет существующую хранимую процедуру.
+Если от хранимой процедуры существуют зависимости, то при попытке удаления такой процедуру будет выдана соответствующая ошибка. 
+
+[[fblangref-ddl-procedure-drop-who]]
+=== Кто может удалить хранимую процедуру?
+
+Выполнить оператор `DROP PROCEDURE` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец хранимой процедуры; 
+* Пользователи с привилегией `DROP ANY PROCEDURE`.
+
+
+[[fblangref-ddl-procedure-drop-examples]]
+=== Примеры
+
+.Удаление хранимой процедуры 
+[example]
+====
+[source,sql]
+----
+DROP PROCEDURE GET_EMP_PROJ;
+----
+====
+
+.См. также:
+<<fblangref-ddl-procedure-create,CREATE PROCEDURE>>, <<fblangref-ddl-procedure-recreate,RECREATE PROCEDURE>>.
+
+[[fblangref-ddl-procedure-recreate]]
+== RECREATE PROCEDURE
+
+.Назначение
+Создание новой или пересоздание существующей хранимой процедуры.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+RECREATE PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
+RETURNS (<outparam> [, <outparam> ...])
+<routine body>
+
+Подробнее см. <<fblangref-ddl-proc-create-syntax,CREATE PROCEDURE>>.
+----
+
+Оператор `RECREATE PROCEDURE` создаёт новую или пересоздаёт существующую хранимую процедуру.
+Если процедура с таким именем уже существует, то оператор попытается удалить её и создать новую процедуру.
+Операция закончится неудачей при подтверждении транзакции, если процедура имеет зависимости.
+
+[NOTE]
+====
+Имейте в виду, что ошибки зависимостей не обнаруживаются до фазы подтверждения транзакции.
+====
+
+После пересоздания процедуры привилегии на выполнение хранимой процедуры и привилегии самой хранимой процедуры не сохраняются. 
+
+[[fblangref-ddl-procedure-recreate-examples]]
+=== Примеры
+
+.Создание новой или пересоздание существующей хранимой процедуры
+[example]
+====
+[source,sql]
+----
+RECREATE PROCEDURE GET_EMP_PROJ (
+    EMP_NO SMALLINT)
+RETURNS (
+    PROJ_ID VARCHAR(20))
+AS
+BEGIN
+  FOR SELECT
+          PROJ_ID
+      FROM
+          EMPLOYEE_PROJECT
+      WHERE
+          EMP_NO = :emp_no
+      INTO :proj_id
+  DO
+    SUSPEND;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-procedure-create,CREATE PROCEDURE>>,
+<<fblangref-ddl-procedure-createoralter,CREATE OR ALTER PROCEDURE>>,
+<<fblangref-ddl-procedure-drop,DROP PROCEDURE>>.
+

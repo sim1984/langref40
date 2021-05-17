@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude" xml:lang="ru" xml:id="fblangref">
+    <info>
+        <title>Руководство по языку SQL СУБД Firebird 4.0</title>
+        <subtitle>Firebird 4.0</subtitle>
+        <edition>16 мая 2021 — v.0001-1</edition>
+      
+        <authorgroup>
+            <author>
+                <personname><firstname>Денис</firstname><surname>Симонов</surname></personname>
+            </author>
+            <author>
+                <personname><firstname>Пол</firstname><surname>Винкенуг</surname></personname>
+            </author>
+            <author>
+                <personname><firstname>Дмитрий</firstname><surname>Филиппов</surname></personname>
+            </author>
+            <author>
+                <personname><firstname>Дмитрий</firstname><surname>Еманов</surname></personname>
+            </author>
+            <author>
+                <personname><firstname>Александр</firstname><surname>Карпейкин</surname></personname>
+            </author>
+            <author>
+                <personname><firstname>Дмитрий</firstname><surname>Кузьменко</surname></personname>
+            </author>
+            <author>
+                <personname><firstname>Алексей</firstname><surname>Ковязин</surname></personname>
+            </author>
+        </authorgroup>
+
+        <publisher>
+            <publishername>Firebird Project</publishername>
+        </publisher>
+        <copyright>
+            <year>2021</year>
+            <holder>Firebird Project и все авторы, в соответствии с лицензией <link
+                    xlink:href="http://www.firebirdsql.org/manual/pdl.html">Public Documentation
+                    License Version 1.0</link>. Смотри <link linkend="fblangref-license">Лицензионное
+                    соглашение в Приложении</link>. </holder>
+        </copyright>
+
+        <editor>
+            <personname>Симонов Денис</personname>
+        </editor>       
+    </info>
+    
+    
+    <xi:include href="fblangref-intro.xml" xpointer="element(/1)"/>    
+    <xi:include href="fblangref-structure.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-datatypes.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-commons.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-ddl.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-dml.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-psql.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-functions-scalar.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-functions-aggregate.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-functions-window.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-context-var.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-transaction.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-security.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-session.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx01-supplement.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx02-errorcodes.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx03-reskeywords.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx04-systable.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx05-montables.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx06-sectables.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx07-syspackage.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx08-charsets.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-appx09-license.xml" xpointer="element(/1)"/> 
+    
+    <index xml:lang="ru">
+        <info>
+            <title>Алфавитный указатель</title>
+        </info>
+    </index>
+    
+</book>

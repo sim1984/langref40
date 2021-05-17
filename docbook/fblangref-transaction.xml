@@ -1,0 +1,1344 @@
+<!DOCTYPE chapter>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-transaction" xml:lang="ru">
+    <info>
+        <title>Управление транзакциями</title>
+    </info>
+    <para>Всё в Firebird выполняется в рамках транзакций. Транзакция — логическая единица
+        изолированной работы группы последовательных операций над базой данных. Изменения над
+        данными остаются обратимыми до тех пор, пока клиентское приложение не выдаст серверу
+        инструкцию <code>COMMIT</code>.</para>
+    <section xml:id="fblangref-transaction-statements">
+        <title>Операторы управления транзакциями</title>
+        <para>Firebird имеет небольшое количество SQL операторов, которые могут использоваться
+            клиентскими приложениями для старта, управления, подтверждения или отмены транзакций, но
+            достаточное для всех задач над базой данных: <itemizedlist>
+                <listitem>
+                    <para><link linkend="fblangref-transaction-set_transaction">SET TRANSACTION</link> —
+                        задание параметров транзакции и её старт;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="fblangref-transaction-commit">COMMIT</link> — завершение транзакции и
+                        сохранение изменений;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="fblangref-transaction-rollback">ROLLBACK</link> — отмена изменений
+                        произошедший в рамках транзакции;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="fblangref-transaction-savepoint">SAVEPOINT</link> — установка точки
+                        сохранения для частичного отката изменений, если это необходимо;</para>
+                </listitem>
+                <listitem>
+                    <para><link linkend="fblangref-transaction-realese_savepoint">RELEASE SAVEPOINT</link> —
+                        удаление точки сохранения.</para>
+                </listitem>
+            </itemizedlist></para>
+
+        <section xml:id="fblangref-transaction-set_transaction">
+            <info>
+                <title>SET TRANSACTION</title>
+                <keywordset>
+                    <keyword>SET TRANSACTION</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SET TRANSACTION</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Задаёт параметры транзакции и стартует её.</para>
+            </formalpara>
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+SET TRANSACTION
+  [NAME <replaceable>tr_name</replaceable>]
+  [READ WRITE | READ ONLY]
+  [[ISOLATION LEVEL] <replaceable>&lt;isolation level&gt;</replaceable>]
+  [NO WAIT | WAIT [LOCK TIMEOUT <replaceable>seconds</replaceable>]]
+  [NO AUTO UNDO]
+  [IGNORE LIMBO]
+  [RESTART REQUESTS]
+  [AUTO COMMIT]
+  [RESERVING <replaceable>&lt;tables&gt;</replaceable> | USING <replaceable>&lt;dbhandles&gt;</replaceable>]
+
+<replaceable>&lt;isolation level&gt;</replaceable> ::=
+    SNAPSHOT [TABLE [STABILITY]]
+  | SNAPSHOT AT NUMBER <replaceable>&lt;snapshot number&gt;</replaceable>
+  | READ COMMITTED [{[NO] RECORD_VERSION | READ CONSISTENCY}]
+ 
+<replaceable>&lt;tables&gt;</replaceable> ::= <replaceable>&lt;table_spec&gt;</replaceable> [, <replaceable>&lt;table_spec&gt;</replaceable> ...]
+
+<replaceable>&lt;table_spec&gt;</replaceable> ::= <replaceable>tablename</replaceable> [, <replaceable>tablename</replaceable> ...]
+  [FOR [SHARED | PROTECTED] {READ | WRITE}]
+
+<replaceable>&lt;dbhandles&gt;</replaceable> ::= <replaceable>dbhandle</replaceable> [, <replaceable>dbhandle</replaceable> ...]              
+                </programlisting>
+                </para>
+            </formalpara>
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET TRANSACTION</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>tr_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя транзакции. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>seconds</replaceable></entry>
+                                <entry>
+                                    <para>Время ожидания оператора (statement) в секундах при
+                                        возникновении конфликта.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>tables</replaceable></entry>
+                                <entry>
+                                    <para>Список таблиц для резервирования.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>dbhandles</replaceable></entry>
+                                <entry>
+                                    <para>Список баз данных, к которым база данных может получить
+                                        доступ. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>table_spec</replaceable></entry>
+                                <entry>
+                                    <para>Спецификация резервирования таблицы.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>tablename</replaceable></entry>
+                                <entry>
+                                    <para>Имя таблицы для резервирования.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>dbhandle</replaceable></entry>
+                                <entry>
+                                    <para>Хендл базы данных, к которой транзакция может получить
+                                        доступ. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>snapshot number</replaceable></entry>
+                                <entry><para>Номер снимка другой транзакци, данные снимка базы
+                                        данных которой должны быть общими с новой
+                                        транзакцией.</para></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>SET TRANSACTION</code> задаёт параметры транзакции и стартует её.
+                Старт транзакции осуществляется только клиентскими приложениями, но не сервером (за
+                исключением автономных транзакций и некоторых фоновых системных потоков/процессов,
+                например, таких как sweep). </para>
+            <para>Каждое клиентское приложение может запускать произвольное количество одновременно
+                выполняющихся транзакций. Фактически есть ограничение на общее количество
+                выполняемых транзакций во всех клиентских приложениях, работающих с одной конкретной
+                базой данных с момента последнего восстановления базы данных с резервной копии или с
+                момента первоначального создания базы данных. Это количество равняется числу
+                    2<superscript>48</superscript> - 1, то есть ~ 2,8 x
+                    10<superscript>14</superscript>. В API и MON$ таблицах номер транзакции
+                представляет собой 64 битное число.</para>
+            <para>Все предложения в операторе <code>SET TRANSACTION</code> являются необязательными.
+                Если в операторе запуска транзакции на выполнение не задано никакого предложения, то
+                предполагается старт транзакции со значениями всех характеристик по умолчанию (режим
+                доступа, режим разрешения блокировок и уровень изолированности).</para>
+            <para>По умолчанию транзакция стартует со следующими характеристиками.
+                <programlisting language="sql"> 
+SET TRANSACTION
+READ WRITE
+WAIT ISOLATION LEVEL SNAPSHOT;                
+            </programlisting>
+            </para>
+            <para>При старте со стороны клиента любой транзакции (заданной явно или по умолчанию)
+                сервер передаёт клиенту дескриптор транзакции (целое число). На стороне сервера
+                транзакциям последовательно присваиваются номера. Этот номер средствами SQL можно
+                получить, используя контекстную переменную <code>CURRENT_TRANSACTION</code>.</para>
+
+            <section xml:id="fblangref-transaction-set_transaction-params">
+                <title>Параметры транзакции</title>
+                <para>Основными характеристиками транзакции являются: <itemizedlist>
+                        <listitem>
+                            <para>режим доступа к данным (<code>READ WRITE</code>, <code>READ
+                                    ONLY</code>);</para>
+                        </listitem>
+                        <listitem>
+                            <para>режим разрешения блокировок (<code>WAIT</code>, <code>NO
+                                    WAIT</code>) с возможным дополнительным уточнением <code>LOCK
+                                    TIMEOUT</code>;</para>
+                        </listitem>
+                        <listitem>
+                            <para>уровень изоляции (<code>READ COMMITTED</code>,
+                                    <code>SNAPSHOT</code>, <code>TABLE STABILITY</code>);</para>
+                        </listitem>
+                        <listitem>
+                            <para>средства резервирования или освобождения таблиц (предложение
+                                    <code>RESERVING</code>).</para>
+                        </listitem>
+                    </itemizedlist></para>
+                <section xml:id="fblangref-transaction-set_transaction-name">
+                    <title>Имя транзакции</title>
+                    <para>Необязательное предложение <code>NAME</code> задаёт имя транзакции.
+                        Предложение <code>NAME</code> доступно только в Embedded SQL. Если
+                        предложение NAME не указано, то оператор <code>SET TRANSACTION</code>
+                        применяется к транзакции по умолчанию. За счёт именованных транзакций
+                        позволяется одновременный запуск нескольких активных транзакций в одном
+                        приложении. При этом должна быть объявлена и инициализирована одноименная
+                        переменная базового языка. В DSQL, это ограничение предотвращает
+                        динамическую спецификацию имён транзакций.</para>
+                </section>
+
+                <section xml:id="fblangref-transaction-set_transaction-access_mode">
+                    <title>Режим доступа</title>
+                    <para>Для транзакций существует два режима доступа к данным базы данных:
+                            <code>READ WRITE</code> и <code>READ ONLY</code>.</para>
+
+                    <itemizedlist>
+                        <listitem>
+                            <indexterm>
+                                <primary>SET TRANSACTION</primary>
+                                <secondary>READ WRITE</secondary>
+                            </indexterm>
+                            <para>При режиме доступа <code>READ WRITE</code> операции в контексте
+                                данной транзакции могут быть как операциями чтения, так и операциями
+                                изменения данных. Это режим по умолчанию.</para>
+                        </listitem>
+                        <listitem>
+                            <indexterm>
+                                <primary>SET TRANSACTION</primary>
+                                <secondary>READ ONLY</secondary>
+                            </indexterm>
+                            <para>В режиме <code>READ ONLY</code> в контексте данной транзакции
+                                могут выполняться только операции выборки данных
+                                <code>SELECT</code>. Любая попытка изменения данных в контексте
+                                такой транзакции приведёт к исключениям базы данных. Однако это не
+                                относиться к глобальным временным таблицам (GTT), которые разрешено
+                                модифицировать в <code>READ ONLY</code> транзакциях.</para>
+                        </listitem>
+                    </itemizedlist>
+
+                    <para>В Firebird API для режимов доступа предусмотрены следующие константы:
+                            <code>isc_tpb_write</code> соответствует режиму <code>READ WRITE</code>,
+                            <code>isc_tpb_read</code> — <code>READ ONLY</code>.</para>
+                </section>
+
+                <section xml:id="fblangref-transaction-set_transaction-lock_resolution_mode">
+                    <title>Режим разрешения блокировок</title>
+                    <para>При работе с одной и той же базой данных нескольких клиентских приложений
+                        могут возникать блокировки. Блокировки могут возникать, когда одна
+                        транзакция вносит неподтверждённые изменения в строку таблицы или удаляет
+                        строку, а другая транзакция пытается изменять или удалять эту же строку.
+                        Такие блокировки называются конфликтом обновления.</para>
+                    <para>Блокировки также могут возникнуть и в других ситуациях при использовании
+                        некоторых уровней изоляции транзакций.</para>
+                    <para>Существуют два режима разрешения блокировок: <code>WAIT</code> и <code>NO
+                            WAIT</code>.</para>
+
+                    <section xml:id="fblangref-transaction-set_transaction-wait_mode">
+                        <title>Режим WAIT</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>WAIT</secondary>
+                        </indexterm>
+                        <para>В режиме <code>WAIT</code> (режим по умолчанию) при появлении
+                            конфликта с параллельными транзакциями, выполняющими конкурирующие
+                            обновления данных в той же базе данных, такая транзакция будет ожидать
+                            завершения конкурирующей транзакции путём её подтверждения
+                                (<code>COMMIT</code>) или отката (<code>ROLLBACK</code>). Иными
+                            словами, клиентское приложение будет переведено в режим ожидания до
+                            момента разрешения конфликта.</para>
+                        <para>Если для режима <code>WAIT</code> задать предложение <code>LOCK
+                                TIMEOUT</code>, то ожидание будет продолжаться только указанное в
+                            этом предложении количество секунд. По истечении этого срока будет
+                            выдано сообщение об ошибке: &quot;Lock time-out on wait
+                            transaction&quot; (Истечение времени ожидания блокировки для транзакции
+                                <code>WAIT</code>).</para>
+                        <para>Этот режим даёт несколько отличные формы поведения в зависимости от
+                            уровня изоляции транзакций.</para>
+                        <para>В Firebird API режиму <code>WAIT</code> соответствует константа
+                                <code>isc_tpb_wait</code>.</para>
+                    </section>
+                    <section xml:id="fblangref-transaction-set_transaction-no_wait_mode">
+                        <title>Режим NO WAIT</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>NO WAIT</secondary>
+                        </indexterm>
+                        <para>Если установлен режим разрешения блокировок <code>NO WAIT</code>, то
+                            при появлении конфликта блокировки данная транзакция немедленно вызовет
+                            исключение базы данных.</para>
+                        <para>В Firebird API режиму <code>NO WAIT</code> соответствует константа
+                                <code>isc_tpb_nowait</code>.</para>
+                    </section>
+                </section>
+                <section xml:id="fblangref-transaction-set_transaction-isolation_level">
+                    <title>ISOLATION LEVEL</title>
+
+                    <para>Уровень изолированности транзакций — значение, определяющее уровень, при
+                        котором в транзакции допускаются несогласованные данные, то есть степень
+                        изолированности одной транзакции от другой. Изменения, внесённые некоторым
+                        оператором, будут видны всем последующим операторам, запущенным в рамках
+                        этой же транзакции, независимо от её уровня изолированности. Изменения
+                        произведённые в рамках другой транзакции остаются невидимыми для текущей
+                        транзакции до тех пор пока они не подтверждены. Уровень изолированности, а
+                        иногда, другие атрибуты, определяет, как транзакции будут взаимодействовать
+                        с другой транзакцией, которая хочет подтвердить изменения.</para>
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>ISOLATION LEVEL</secondary>
+                    </indexterm>
+                    <para>Необязательное предложение <code>ISOLATION LEVEL</code> задаёт уровень
+                        изолированности запускаемой транзакции. Это самая важная характеристика
+                        транзакции, которая определяет её поведение по отношению к другим
+                        одновременно выполняющимся транзакциям.</para>
+
+                    <para>Существует три уровня изолированности транзакции: <itemizedlist>
+                            <listitem>
+                                <para><code>SNAPSHOT</code></para>
+                            </listitem>
+                            <listitem>
+                                <para><code>SNAPSHOT TABLE STABILITY</code></para>
+                            </listitem>
+                            <listitem>
+                                <para><code>READ COMMITTED</code> с уточнениями (<code>NO
+                                        RECORD_VERSION</code> или <code>RECORD_VERSION</code> или
+                                        <code>READ CONSISTENCY</code>)</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <section xml:id="fblangref-transaction-isolation_level-snapshot">
+                        <title>Уровень изолированности SNAPSHOT</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>ISOLATION LEVEL</secondary>
+                            <tertiary>SNAPSHOT</tertiary>
+                        </indexterm>
+                        <para>Уровень изолированности <code>SNAPSHOT</code> (уровень изолированности
+                            по умолчанию) означает, что этой транзакции видны лишь те изменения,
+                            фиксация которых произошла не позднее момента старта этой транзакции.
+                            Любые подтверждённые изменения, сделанные другими конкурирующими
+                            транзакциями, не будут видны в такой транзакции в процессе ее активности
+                            без её перезапуска. Чтобы увидеть эти изменения, нужно завершить
+                            транзакцию (подтвердить её или выполнить полный откат, но не откат на
+                            точку сохранения) и запустить транзакцию заново. </para>
+                        <note>
+                            <para>Изменения, вносимые автономными транзакциями, также не будут видны
+                                в контексте той (&quot;внешней&quot;) транзакции, которая запустила
+                                эти автономные транзакции, если она работает в режиме
+                                    <code>SNAPSHOT</code>. </para>
+                        </note>
+                        <para>В Firebird API режиму изолированности <code>SNAPSHOT</code>
+                            соответствует константа <code>isc_tpb_concurrency</code>.</para>
+                        <section xml:id="fblangref-transaction-isolation_level-snapshot-atnumber">
+                            <title>Предложение AT NUMBER</title>
+                            <para>Транзакцию с уровнем изолированности <code>SNAPSHOT</code> можно
+                                запустить на основе другой транзакции, если известен номер её
+                                снимка. В этом случае эта новая транзакция может видеть те же самые
+                                данные, что и транзакция на основе которой она запущена.</para>
+                            <para>Эта функциональность позволяет создать параллельные процессы (в
+                                разных подключениях), считывающие согласованные данные из базы
+                                данных. Например, процесс резервного копирования может создавать
+                                несколько потоков, параллельно считывающих данные из базы данных.
+                                Или веб-служба работать с распередёленными вспомогательными
+                                службами, выполняя некоторую обработку.</para>
+                            <para>Это достигается созданием транзакции с использованием синтаксиса
+                                <programlisting>
+SET TRANSACTION SNAPSHOT  AT NUMBER <replaceable>&lt;snapshot number&gt;</replaceable>                       
+                            </programlisting>
+                                или через API с использованием константы
+                                    <code>isc_tpb_consistency</code>. </para>
+
+                            <para>В Firebird API режиму изолированности <code>SNAPSHOT TABLE
+                                    STABILITY</code> соответствует константа
+                                    <code>isc_tpb_at_snapshot_number</code>.</para>
+                            <para><replaceable>&lt;snapshot number&gt;</replaceable> из первой
+                                транзакции можно получить используя
+                                <programlisting>
+RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
+         </programlisting>
+                                или через API информации о транзакции с константой
+                                    <code>fb_info_tra_snapshot_number</code>. </para>
+
+                            <note>
+                                <para>Обратите внимание, <replaceable>&lt;snapshot
+                                        number&gt;</replaceable> должен быть номером снимка активной
+                                    транзакции.</para>
+                            </note>
+                        </section>
+                    </section>
+                    <section xml:id="fblangref-transaction-isolation_level-snapshot_table_stability">
+                        <title>Уровень изолированности SNAPSHOT TABLE STABILITY</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>ISOLATION LEVEL</secondary>
+                            <tertiary>SNAPSHOT TABLE STABILITY</tertiary>
+                        </indexterm>
+                        <para>Уровень изоляции транзакции <code>SNAPSHOT TABLE STABILITY</code>
+                            позволяет, как и в случае <code>SNAPSHOT</code>, также видеть только те
+                            изменения, фиксация которых произошла не позднее момента старта этой
+                            транзакции. При этом после старта такой транзакции в других клиентских
+                            транзакциях невозможно выполнение изменений ни в каких таблицах этой
+                            базы данных, уже каким-либо образом измененных первой транзакцией. Все
+                            такие попытки в параллельных транзакциях приведут к исключениям базы
+                            данных. Просматривать любые данные другие транзакции могут совершенно
+                            свободно.</para>
+                        <para>При помощи предложения резервирования <code>RESERVING</code> можно
+                            разрешить другим транзакциям изменять данные в некоторых таблицах. </para>
+                        <para>Если на момент старта клиентом транзакции с уровнем изоляции
+                                <code>SNAPSHOT TABLE STABILITY</code> какая-нибудь другая транзакция
+                            выполнила неподтверждённое изменение данных любой таблицы базы данных,
+                            то запуск транзакции с таким уровнем изоляции приведёт к ошибке базы
+                            данных. </para>
+                    </section>
+                    <section xml:id="fblangref-transaction-isolation_level-read_commited">
+                        <title>Уровень изолированности READ COMMITTED</title>
+                        <indexterm>
+                            <primary>SET TRANSACTION</primary>
+                            <secondary>ISOLATION LEVEL</secondary>
+                            <tertiary>READ COMMITTED</tertiary>
+                        </indexterm>
+                        <para>Уровень изолированности <code>READ COMMITTED</code> позволяет в
+                            транзакции без её перезапуска видеть все подтверждённые изменения данных
+                            базы данных, выполненные в других параллельных транзакциях.
+                            Неподтверждённые изменения не видны в транзакциях этого уровня
+                            изолированности.</para>
+                        <para>Для получения обновлённого списка строк интересующей таблицы
+                            необходимо лишь повторное выполнение оператора <code>SELECT</code> в
+                            рамках активной транзакции <code>READ COMMITTED</code> без её
+                            перезапуска.</para>
+                        <para>В Firebird API режиму изолированности <code>READ COMMITTED</code>
+                            соответствует константа <code>isc_tpb_read_committed</code>.</para>
+
+                        <section xml:id="fblangref-transaction-isolation_level-read_commited-record_version">
+                            <title>RECORD_VERSION</title>
+                            <para>Для этого уровня изолированности можно указать один из двух
+                                значений дополнительной характеристики в зависимости от желаемого
+                                способа разрешения конфликтов: <code>RECORD_VERSION</code> и
+                                    <code>NO RECORD_VERSION</code>. Как видно из их имён они
+                                являются взаимоисключающими.</para>
+
+                            <para><itemizedlist>
+                                    <listitem>
+                                        <para><code>NO RECORD_VERSION</code> является в некотором
+                                            роде механизмом двухфазной блокировки. В этом случае
+                                            транзакция не может прочитать любую запись, которая была
+                                            изменена параллельной активной (неподтвержденной)
+                                            транзакцией.</para>
+                                        <para>Если указана стратегия разрешения блокировок <code>NO
+                                                WAIT</code>, то будет немедленно выдано
+                                            соответствующее исключение.</para>
+                                        <para>Если указана стратегия разрешения блокировок
+                                                <code>WAIT</code>, то это приведёт к ожиданию
+                                            завершения или откату конкурирующей транзакции. Если
+                                            конкурирующая транзакция откатывается, или, если она
+                                            завершается и её идентификатор старее (меньше), чем
+                                            идентификатор текущей транзакции, то изменения в текущей
+                                            транзакции допускаются. Если конкурирующая транзакция
+                                            завершается и её идентификатор новее (больше), чем
+                                            идентификатор текущей транзакции, то будет выдана ошибка
+                                            конфликта блокировок.</para>
+                                        <para>В Firebird API для способа разрешения конфликтов
+                                                <code>NO RECORD_VERSION</code> соответствует
+                                            константа <code>isc_tpb_no_rec_version</code>.</para>
+                                    </listitem>
+                                    <listitem>
+                                        <para>При задании <code>RECORD_VERSION</code> транзакция
+                                            всегда читает последнюю подтверждённую версию записей
+                                            таблиц, независимо от того, существуют ли изменённые и
+                                            ещё не подтверждённые версии этих записей. В этом случае
+                                            режим разрешения блокировок (<code>WAIT</code> или
+                                                <code>NO WAIT</code>) никак не влияет на поведение
+                                            транзакции при её старте.</para>
+                                        <para>В Firebird API для способа разрешения конфликтов
+                                                <code>RECORD_VERSION</code> соответствует константа
+                                                <code>isc_tpb_rec_version</code>.</para>
+                                    </listitem>
+                                </itemizedlist></para>
+                            <warning>
+                                <para>Начиная с Firebird 4.0 эти опции являются устаревшими. По
+                                    умолчанию они игнорируются и запускается транзакция <code>READ
+                                        COMMITTED READ CONSISTENCY</code>. Это можно изменить
+                                    установив параметр <parameter>ReadConsistency</parameter> (см.
+                                        <filename>firebird.conf</filename>) в 0. В этом случае опции
+                                    не игнорируются и работают точно так же как в предыдущих
+                                    версиях. В будущих версиях этот параметр в
+                                        <filename>firebird.conf</filename> может быть удалён.</para>
+                            </warning>
+                        </section>
+                        <section xml:id="fblangref-transaction-isolation_level-read_commited-read_consistency">
+                            <title>READ CONSISTENCY</title>
+
+                            <para>Если указана эта опция, то транзакция с режимом изолированности
+                                    <code>READ COMMITED</code> делает стабильный снимок базы данных
+                                на время выполнения оператора. Каждый новый оператор верхнего уровня
+                                создает собственный моментальный снимок базы данных, чтобы видеть
+                                последние потверждённые данные. Вложенные операторы (триггеры,
+                                вложенные хранимые процедуры и функции, динамические операторы и т.
+                                д.) используют тот же самый моментальный снимок базы данных,
+                                созданный оператором верхнего уровня. Таким образом обеспечивается
+                                согласованное чтение на момент начала выполнения оператора верхнего
+                                уровня. В Firebird 4.0 этот режим используется по умолчанию для
+                                транзакций с режимом изолированности <code>READ
+                                COMMITED</code>.</para>
+
+                            <para>В Firebird API для стабильного снимка на уровне SQL оператора
+                                    <code>READ CONSISTENCY</code> соответствует константа
+                                    <code>isc_tpb_read_consistency</code>.</para>
+
+                            <section>
+                                <title>Обработка конфликта обновлений</title>
+
+                                <para>Когда оператор выполняется в транзакции с режимом
+                                    изолированности <code>READ COMMITTED READ CONSISTENCY</code> вид
+                                    базы данных неизменен (подобно транзакции
+                                    <code>SNAPSHOT</code>). Поэтому бесполезно ждать фиксации
+                                    параллельной транзакции в надежде перечитать новую версию
+                                    зафиксированной записи. При чтении поведение похоже на
+                                    транзакцию <code>READ COMMITTED RECORD_VERSION</code> — оператор
+                                    не ждёт завершения активной транзакции и обходит цепочку
+                                    бекверсий, в которой ищет версию записи видимую для текущего
+                                    моментального снимка.</para>
+
+                                <para>Для режима изолированности <code>READ COMMITTED READ
+                                        CONSISTENCY</code> обработка конфликтов обновлений Firebird
+                                    значительно изменяется. При обнаружении конфликта обновления
+                                    выполняется следующее: <orderedlist numeration="loweralpha">
+                                        <listitem>
+                                            <para>режим изолированности транзакции временно
+                                                переключается в режим READ COMMITTED NO RECORD
+                                                VERSION</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>Firebird устанавливает блокировку записи на
+                                                конфликтную запись</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>Firebird продолжает оценивать оставшиеся записи
+                                                для удаления/обновления в курсоре, а также
+                                                продолжает ставить на них блокировки</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>когда больше нет записей для извлечения,
+                                                запускается механизм для отмены всех выполненных
+                                                действий, выполненных оператором верхнего уровня, и
+                                                сохраняются все установленные блокировки для каждой
+                                                обновлённой/удалённой/заблокированной записи, все
+                                                вставленные записи удаляются</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>затем Firebird восстанавливает режим
+                                                изолированности транзакции как READ COMMITTED READ
+                                                CONSISTENCY, создает новый снимок уровня оператора и
+                                                перезапускает выполнение оператора верхнего
+                                                уровня.</para>
+                                        </listitem>
+                                    </orderedlist></para>
+                                <para>Такой алгоритм позволяет гарантировать, что после перезапуска
+                                    уже обновленные записи останутся заблокированными, они будут
+                                    видны новому снимку и могут быть обновлены снова без дальнейших
+                                    конфликтов. Кроме того, из-за режима согласованности чтения
+                                    набор измененных записей остается согласованным.</para>
+
+                                <simplesect>
+                                    <title>Замечания</title>
+
+                                    <itemizedlist>
+                                        <listitem>
+                                            <para>Приведенный выше алгоритм перезапуска применяется
+                                                к операторам UPDATE, DELETE, SELECT WITH LOCK и
+                                                MERGE, с предложением RETURNING и без него,
+                                                выполняемым непосредственно из пользовательского
+                                                приложения или в составе некоторого объекта PSQL
+                                                (хранимая процедура, функция, триггер, EXECUTE BLOCK
+                                                и т. д.)</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>если оператор UPDATE/DELETE расположена на
+                                                каком-то явном курсоре (WHERE CURRENT OF), то
+                                                Firebird пропускает шаг (c) выше, то есть не
+                                                извлекает и не устанавливает блокировки записи для
+                                                оставшихся записей курсора</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>если оператор верхнего уровня SELECT (или EXECUTE
+                                                BLOCK возвращающий набор данных) и конфликт
+                                                обновления происходит после того, как одна или
+                                                несколько записей были возвращены приложению, то
+                                                ошибка конфликта обновления сообщается как обычно, и
+                                                перезапуск не инициируется</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>рестарт не инициируется для операторов в
+                                                автономных блоках (<code>IN AUTONOMOUS TRANSACTION
+                                                  DO ...</code>)</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>после 10 попыток Firebird прерывает алгоритм
+                                                перезапуска, снимает все блокировки записи,
+                                                восстанавливает режим изоляции транзакции как
+                                                  <code>READ COMMITTED READ CONSISTENCY</code> и
+                                                сообщает о конфликте обновления</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>любая не обработанная ошибка на шаге (c) выше
+                                                останавливает алгоритм перезапуска, и Firebird
+                                                продолжает обработку обычным способом, например,
+                                                ошибка может быть перехвачена и обработана блоком
+                                                PSQL WHEN или сообщена приложению, если она не
+                                                обработана</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>триггеры UPDATE/DELETE сработают многократно для
+                                                одной и той же записи, если выполнение оператора
+                                                было перезапущено и запись обновлена/удалена
+                                                снова</para>
+                                        </listitem>
+                                        <listitem>
+                                            <para>по историческим причинам
+                                                  <code>isc_update_conflict</code> сообщается как
+                                                вторичный код ошибки с первичным кодом ошибки
+                                                  <code>isc_deadlock</code>.</para>
+                                        </listitem>
+                                    </itemizedlist>
+                                </simplesect>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+                <section xml:id="fblangref-transaction-no_auto_undo">
+                    <title>NO AUTO UNDO</title>
+
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>NO AUTO UNDO</secondary>
+                    </indexterm>
+                    <para>При использовании опции <code>NO AUTO UNDO</code> оператор
+                            <code>ROLLBACK</code> только помечает транзакцию как отменённую без
+                        удаления созданных в этой транзакции версий, которые будут удалены позднее в
+                        соответствии с выбранной политикой сборки мусора (см. параметр
+                            <parameter>GCPolicy</parameter> в
+                        <filename>firebird.conf</filename>).</para>
+                    <para> Эта опция может быть полезна при выполнении транзакции, в рамках которой
+                        производится много отдельных операторов, изменяющих данные, и при этом есть
+                        уверенность, что эта транзакция будет чаще всего завершаться успешно, а не
+                        откатываться. </para>
+                    <para>Для транзакций, в рамках которых не выполняется никаких изменений, опция
+                            <code>NO AUTO UNDO</code> игнорируется.</para>
+                </section>
+                <section xml:id="fblangref-transaction-ignore_limbo">
+                    <title>IGNORE LIMBO</title>
+
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>IGNORE LIMBO</secondary>
+                    </indexterm>
+                    <para>При указании опции <code>IGNORE LIMBO</code> игнорируются записи,
+                        создаваемые &quot;потерянными&quot; (т.е. не завершёнными) транзакциями
+                        (limbo transaction). Транзакции считается &quot;потерянной&quot;, если не
+                        завершён второй этап двухфазного подтверждения (two-phase commit).</para>
+                </section>
+                <section xml:id="fblangref-transaction-auto_commit">
+                    <title>AUTO COMMIT</title>
+
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>IGNORE LIMBO</secondary>
+                    </indexterm>
+                    <para>При указании опции <code>AUTO COMMIT</code> транзакция автоматически
+                        подтверждается после успешного выполнения любого оператора. Если в процессе
+                        выполнения оператора произойдёт ошибка, то транзакция будет откачена. После
+                        подтверждения или отката транзакция продолжает оставаться активной, сохраняя
+                        свой идентификатор.</para>
+                    <important>
+                        <para>Опция <code>AUTO COMMIT</code> использует <quote>мягкое</quote>
+                            подтверждение (<code>COMMIT RETAIN</code>) и <quote>мягкий</quote> откат
+                                (<code>ROLLBACK RETAIN</code>) транзакции. Мягкое подтверждение не
+                            освобождает ресурсов сервера и удерживает сборку мусора, что может
+                            негативно отразится на производительности.</para>
+                    </important>
+                </section>
+                <section xml:id="fblangref-transaction-set_transaction-reserving">
+                    <info>
+                        <title>RESERVING</title>
+                    </info>
+                    <indexterm>
+                        <primary>SET TRANSACTION</primary>
+                        <secondary>RESERVING</secondary>
+                    </indexterm>
+                    <para>Предложение <code>RESERVING</code> в операторе <code>SET
+                            TRANSACTION</code> резервирует указанные в списке таблицы.
+                        Резервирование запрещает другим транзакциям вносить в эти таблицы изменения
+                        или (при определённых установках характеристик предложения резервирования)
+                        даже читать данные из этих таблиц, в то время как выполняется данная
+                        транзакция. Либо, наоборот, в этом предложении можно указать список таблиц,
+                        в которые параллельные транзакции могут вносить изменения, даже если
+                        запускается транзакция с уровнем изоляции <code>SNAPSHOT TABLE
+                            STABILITY</code>.</para>
+                    <para>В одном предложении резервирования можно указать произвольное количество
+                        резервируемых таблиц используемой базы данных.</para>
+                    <para>Если опущено одно из ключевых слов <code>SHARED</code> или
+                            <code>PROTECTED</code>, то предполагается <code>SHARED</code>. Если
+                        опущено все предложение <code>FOR</code>, то предполагается <code>FOR SHARED
+                            READ</code>. Варианты осуществления резервирования таблиц по их
+                        названиям не являются очевидными. </para>
+                    <para>
+                        <table frame="all">
+                            <title>Совместимости различных блокировок</title>
+                            <?dbfo keep-together='auto'?>
+                            <tgroup cols="5">
+                                <thead>
+                                    <row>
+                                        <entry align="center"> </entry>
+                                        <entry align="center"> SHARED READ </entry>
+                                        <entry align="center"> SHARED WRITE </entry>
+                                        <entry align="center"> PROTECTED READ </entry>
+                                        <entry align="center"> PROTECTED WRITE </entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry align="center"> SHARED READ </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                    </row>
+                                    <row>
+                                        <entry align="center"> SHARED WRITE </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> нет </entry>
+                                    </row>
+                                    <row>
+                                        <entry align="center"> PROTECTED READ </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                    </row>
+                                    <row>
+                                        <entry align="center"> PROTECTED WRITE </entry>
+                                        <entry align="center"> да </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> нет </entry>
+                                        <entry align="center"> нет</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </para>
+                    <para>Для транзакции запущенной в режиме изолированности <code>SNAPSHOT</code>
+                        для таблиц, указанных в предложении <code>RESERVING</code>, в параллельных
+                        транзакциях в зависимости от их уровня изоляции допустимы при различных
+                        способах их резервирования следующие варианты поведения: <itemizedlist
+                            spacing="compact">
+                            <listitem>
+                                <para><code>SHARED READ</code> — не оказывает никакого влияния на
+                                    выполнение параллельных транзакций;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>SHARED WRITE</code> — на поведение параллельных
+                                    транзакций с уровнями изолированности <code>SNAPSHOT</code> и
+                                        <code>READ COMMITTED</code> не оказывает никакого влияния,
+                                    для транзакций с уровнем изолированности <code>SNAPSHOT TABLE
+                                        STABILITY</code> запрещает не только запись, но также и
+                                    чтение данных из указанных таблиц;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>PROTECTED READ</code> — допускает только чтение данных
+                                    из резервируемых таблиц для параллельных транзакций с любым
+                                    уровнем изолированности, попытка внесения изменений приводит к
+                                    исключению базы данных;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>PROTECTED WRITE</code> — для параллельных транзакций с
+                                    уровнями изолированности <code>SNAPSHOT</code> и <code>READ
+                                        COMMITTED</code> запрещает запись в указанные таблицы, для
+                                    транзакций с уровнем изолированности <code>SNAPSHOT TABLE
+                                        STABILITY</code> запрещает также и чтение данных из
+                                    резервируемых таблиц.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>Для транзакции запущенной в режиме изолированности <code>SNAPSHOT TABLE
+                            STABILITY</code> для таблиц, указанных в предложении
+                            <code>RESERVING</code>, в параллельных транзакциях в зависимости от их
+                        уровня изолированности допустимы при различных способах их резервирования
+                        следующие варианты поведения: <itemizedlist spacing="compact">
+                            <listitem>
+                                <para><code>SHARED READ</code> — позволяет всем параллельным
+                                    транзакциям независимо от их уровня изолированности не только
+                                    читать, но и выполнять любые изменения в резервируемых таблицах
+                                    (если параллельная транзакция имеет режим доступа <code>READ
+                                        WRITE</code>);</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>SHARED WRITE</code> — для всех параллельных транзакций с
+                                    уровнем доступа <code>READ WRITE</code> и с уровнями
+                                    изолированности <code>SNAPSHOT</code> и <code>READ
+                                        COMMITTED</code> позволяет читать данные из таблиц и писать
+                                    данные в указанные таблицы, для транзакций с уровнем
+                                    изолированности <code>SNAPSHOT TABLE STABILITY</code> запрещает
+                                    не только запись, но также и чтение данных из указанных
+                                    таблиц;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>PROTECTED READ</code> — допускает только лишь чтение
+                                    данных из резервируемых таблиц для параллельных транзакций с
+                                    любым уровнем изолированности;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>PROTECTED WRITE</code> — для параллельных транзакций с
+                                    уровнями изолированности <code>SNAPSHOT</code> и <code>READ
+                                        COMMITTED</code> запрещает запись в указанные таблицы, для
+                                    транзакций с уровнем изолированности <code>SNAPSHOT TABLE
+                                        STABILITY</code> запрещает также и чтение данных из
+                                    резервируемых таблиц.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>Для транзакции запущенной в режиме изолированности <code>READ
+                            COMMITTED</code> для таблиц, указанных в предложении
+                            <code>RESERVING</code>, в параллельных транзакциях в зависимости от их
+                        уровня изоляции допустимы при различных способах их резервирования следующие
+                        варианты поведения: <itemizedlist spacing="compact">
+                            <listitem>
+                                <para><code>SHARED READ</code> — позволяет всем параллельным
+                                    транзакциям независимо от их уровня изолированности не только
+                                    читать, но и выполнять любые изменения в резервируемых таблицах
+                                    (при уровне доступа <code>READ WRITE</code>);</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>SHARED WRITE</code> — для всех транзакций с уровнем
+                                    доступа <code>READ WRITE</code> и с уровнями изолированности
+                                        <code>SNAPSHOT</code> и <code>READ COMMITTED</code>
+                                    позволяет читать и писать данные в указанные таблицы, для
+                                    транзакций с уровнем изолированности <code>SNAPSHOT TABLE
+                                        STABILITY</code> запрещает не только запись, но также и
+                                    чтение данных из указанных таблиц;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>PROTECTED READ</code> — допускает только чтение данных
+                                    из резервируемых таблиц для параллельных транзакций с любым
+                                    уровнем изолированности;</para>
+                            </listitem>
+                            <listitem>
+                                <para><code>PROTECTED WRITE</code> — для параллельных транзакций с
+                                    уровнями изолированности <code>SNAPSHOT</code> и <code>READ
+                                        COMMITTED</code> разрешает только чтение данных и запрещает
+                                    запись в указанные в данном списке таблицы, для транзакций с
+                                    уровнем изолированности <code>SNAPSHOT TABLE STABILITY</code>
+                                    запрещает не только изменение данных, но и чтение данных из
+                                    резервируемых таблиц.</para>
+                            </listitem>
+                        </itemizedlist>
+                    </para>
+                    <tip>
+                        <para>Предложение <code>USING</code> может быть использовано для сохранения
+                            системных ресурсов за счёт ограничения количества баз данных, к которым
+                            имеет доступ транзакция. Доступно только в Embedded SQL.</para>
+                    </tip>
+                    <formalpara>
+                        <title>См. также:</title>
+
+                        <para>
+                            <link linkend="fblangref-transaction-commit">COMMIT</link>, <link
+                                linkend="fblangref-transaction-rollback">ROLLBACK</link>. </para>
+                    </formalpara>
+                </section>
+            </section>
+        </section>
+        <section xml:id="fblangref-transaction-commit">
+            <info>
+                <title>COMMIT</title>
+                <keywordset>
+                    <keyword>COMMIT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>COMMIT</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Подтверждение транзакции.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+COMMIT [WORK] [TRANSACTION <replaceable>tr_name</replaceable>] 
+  [RELEASE] [RETAIN [SNAPSHOT]];                                                    
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <title>Параметры оператора COMMIT</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>tr_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя транзакции. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>COMMIT</code> подтверждает все изменения в данных, выполненные в
+                контексте данной транзакции (добавления, изменения, удаления). Новые версии записей
+                становятся доступными для других транзакций, и если предложение <code>RETAIN</code>
+                не используется освобождаются все ресурсы сервера, связанные с выполнением данной
+                транзакции.</para>
+            <para>Если в процессе подтверждения транзакции возникли ошибки в базе данных, то
+                транзакция не подтверждается. Пользовательская программа должна обработать ошибочную
+                ситуацию и заново подтвердить транзакцию или выполнить ее откат.</para>
+            <para>Необязательное предложение <code>TRANSACTION</code> задаёт имя транзакции.
+                Предложение <code>TRANSACTION</code> доступно только в Embedded SQL. Если
+                предложение <code>TRANSACTION</code> не указано, то оператор <code>COMMIT</code>
+                применяется к транзакции по умолчанию.</para>
+            <note>
+                <para>За счёт именованных транзакций позволяется одновременный запуск нескольких
+                    активных транзакций в одном приложении. При этом должна быть объявлена и
+                    инициализирована одноименная переменная базового языка. В DSQL, это ограничение
+                    предотвращает динамическую спецификацию имён транзакций.</para>
+            </note>
+            <para>Необязательное ключевое слово <code>WORK</code> может быть использовано лишь для
+                совместимости с другими системами управления реляционными базами данных.</para>
+            <para>Ключевое слово <code>RELEASE</code> доступно только в Embedded SQL. Оно позволяет
+                отключиться ото всех баз данных после завершения текущей транзакции.
+                    <code>RELEASE</code> поддерживается только для обратной совместимости со старыми
+                версиями Interbase. В настоящее время вместо него используется оператор ESQL
+                    <code>DISCONNECT</code>.</para>
+            <para>Если используется предложение <code>RETAIN [SNAPSHOT]</code>, то выполняется так
+                называемое мягкое (soft) подтверждение. Выполненные действия в контексте данной
+                транзакции фиксируются в базе данных, а сама транзакция продолжает оставаться
+                активной, сохраняя свой идентификатор, а также состояние курсоров, которое было до
+                мягкой фиксации транзакции. В этом случае нет необходимости опять стартовать
+                транзакцию и заново выполнять оператор <code>SELECT</code> для получения
+                данных.</para>
+            <para>Если уровень изоляции такой транзакции <code>SNAPSHOT</code> или <code>SNAPSHOT
+                    TABLE STABILITY</code>, то после мягкого подтверждения транзакция продолжает
+                видеть то состояние базы данных, которое было при первоначальном запуске транзакции,
+                то есть клиентская программа не видит новых подтверждённых результатов изменения
+                данных других транзакций. Кроме того, мягкое подтверждение не освобождает ресурсов
+                сервера (открытые курсоры не закрываются).</para>
+            <tip>
+                <para>Для транзакций, которые выполняют только чтение данных из базы данных,
+                    рекомендуется также использовать оператор <code>COMMIT</code>, а не
+                        <code>ROLLBACK</code>, поскольку этот вариант требует меньшего количества
+                    ресурсов сервера и улучшает производительность всех последующих
+                    транзакций.</para>
+            </tip>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-transaction-set_transaction">SET TRANSACTION</link>, <link
+                        linkend="fblangref-transaction-rollback">ROLLBACK</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-transaction-rollback">
+            <info>
+                <title>ROLLBACK</title>
+                <keywordset>
+                    <keyword>ROLLBACK</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>ROLLBACK</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Откат транзакции.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL, ESQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+ROLLBACK [WORK] [TRANSACTION <replaceable>tr_name</replaceable>] 
+  [RETAIN [SNAPSHOT] | TO SAVEPOINT sp_name] [RELEASE];                                                    
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <title>Параметры оператора ROLLBACK</title>
+                    <?dbfo keep-together='auto'?>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>tr_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя транзакции. Доступно только в ESQL.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>sp_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя точки сохранения. Доступно только в DSQL.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>ROLLBACK</code> отменяет все изменения данных базы данных
+                (добавление, изменение, удаление), выполненные в контексте этой транзакции. Оператор
+                    <code>ROLLBACK</code> никогда не вызывает ошибок. Если не указано предложение
+                    <code>RETAIN</code>, то при его выполнении освобождаются все ресурсы сервера,
+                связанные с выполнением данной транзакции.</para>
+            <para>Необязательное предложение <code>TRANSACTION</code> задаёт имя транзакции.
+                Предложение <code>TRANSACTION</code> доступно только в Embedded SQL. Если
+                предложение <code>TRANSACTION</code> не указано, то оператор <code>ROLLBACK</code>
+                применяется к транзакции по умолчанию.</para>
+            <note>
+                <para>За счёт именованных транзакций позволяется одновременный запуск нескольких
+                    активных транзакций в одном приложении. При этом должна быть объявлена и
+                    инициализирована одноименная переменная базового языка. В DSQL, это ограничение
+                    предотвращает динамическую спецификацию имён транзакций.</para>
+            </note>
+            <para>Необязательное ключевое слово <code>WORK</code> может быть использовано лишь для
+                совместимости с другими системами управления реляционными базами данных.</para>
+            <para>Ключевое слово <code>RETAIN</code> указывает, что все действия по изменению данных
+                в контексте этой транзакции, отменяются, а сама транзакция продолжает оставаться
+                активной, сохраняя свой идентификатор, а также состояние курсоров, которое было до
+                мягкой фиксации транзакции. Таким образом, выделенные ресурсы для транзакции не
+                освобождаются.</para>
+            <para>Для уровней изоляции <code>SNAPSHOT</code> и <code>SNAPSHOT TABLE STABILITY</code>
+                состояние базы данных остаётся в том виде, которое база данных имела при
+                первоначальном старте такой транзакции, однако в случае уровня изоляции <code>READ
+                    COMMITTED</code> база данных будет иметь вид, соответствующий новому состоянию
+                на момент выполнения оператора <code>ROLLBACK RETAIN</code>. В случае отмены
+                транзакции с сохранением её контекста нет необходимости заново выполнять оператор
+                    <code>SELECT</code> для получения данных из таблицы.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-transaction-set_transaction">SET TRANSACTION</link>, <link
+                        linkend="fblangref-transaction-commit">COMMIT</link>. </para>
+            </formalpara>
+            <section xml:id="fblangref-transaction-rollback-to_savepoint">
+                <info>
+                    <title>ROLLBACK TO SAVEPOINT</title>
+                    <keywordset>
+                        <keyword>ROLLBACK TO SAVEPOINT</keyword>
+                    </keywordset>
+                </info>
+                <indexterm>
+                    <primary>ROLLBACK</primary>
+                    <secondary>TO SAVEPOINT</secondary>
+                </indexterm>
+                <para>Необязательное предложение <code>TO SAVEPOINT</code> в операторе
+                        <code>ROLLBACK</code> задаёт имя точки сохранения, на которую происходит
+                    откат. В этом случае отменяются все изменения, произошедшие в рамках транзакции,
+                    начиная с созданной точки сохранения (<code>SAVEPOINT</code>).</para>
+                <para>Оператор <code>ROLLBACK TO SAVEPOINT</code> выполняет следующие операции:
+                        <itemizedlist spacing="compact">
+                        <listitem>
+                            <para>Все изменения в базе данных, выполненные в рамках транзакции
+                                начиная с созданной точки сохранения, отменяются. Пользовательские
+                                переменные, заданные с помощью функции
+                                    <code>RDB$SET_CONTEXT()</code> остаются неизменными;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Все точки сохранения, создаваемые после названной, уничтожаются.
+                                Все более ранние точки сохранения, как сама точка сохранения,
+                                остаются. Это означает, что можно откатываться к той же точке
+                                сохранения несколько раз;</para>
+                        </listitem>
+                        <listitem>
+                            <para>Все явные и неявные блокированные записи, начиная с точки
+                                сохранения, освобождаются. Другие транзакции, запросившие ранее
+                                доступ к строкам, заблокированным после точки сохранения, должны
+                                продолжать ожидать, пока транзакция не фиксируется или откатывается.
+                                Другие транзакции, которые ещё не запрашивали доступ к этим строкам,
+                                могут запросить и сразу же получить доступ к разблокированным
+                                строкам.</para>
+                        </listitem>
+                    </itemizedlist>
+                </para>
+                <formalpara>
+                    <title>См. также:</title>
+
+                    <para>
+                        <link linkend="fblangref-transaction-savepoint">SAVEPOINT</link>. </para>
+                </formalpara>
+            </section>
+        </section>
+        <section xml:id="fblangref-transaction-savepoint">
+            <info>
+                <title>SAVEPOINT</title>
+                <keywordset>
+                    <keyword>SAVEPOINT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>SAVEPOINT</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Создание точки сохранения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+SAVEPOINT <replaceable>sp_name</replaceable>                                                    
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SAVEPOINT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>sp_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя точки сохранения. Должно быть уникальным в рамках
+                                        транзакции.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>SAVEPOINT</code> создаёт SQL 99 совместимую точку сохранения, к
+                которой можно позже откатывать работу с базой данных, не отменяя все действия,
+                выполненные с момента старта транзакции. Механизмы точки сохранения также известны
+                под термином &quot;вложенные транзакции&quot; (&quot;nested
+                transactions&quot;).</para>
+            <para>Если имя точки сохранения уже существует в рамках транзакции, то существующая
+                точка сохранения будет удалена, и создаётся новая с тем же именем.</para>
+            <para>Для отката изменений к точке сохранения используется оператор <link
+                    linkend="fblangref-transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>. </para>
+            <note>
+                <para>Внутренний механизм точек сохранения может использовать большие объёмы памяти,
+                    особенно если вы обновляете одни и те же записи многократно в одной транзакции.
+                    Если точка сохранения уже не нужна, но вы ещё не готовы закончить транзакцию, то
+                    можно ее удалить оператором <link linkend="fblangref-transaction-realese_savepoint"
+                        >RELEASE SAVEPOINT</link>, тем самым освобождая ресурсы.</para>
+            </note>
+            <para><emphasis>Примеры:</emphasis></para>
+            <example>
+                <title>DSQL сессия с использованием точек сохранения</title>
+                <para><programlisting language="sql">
+CREATE TABLE TEST (ID INTEGER);
+COMMIT;
+INSERT INTO TEST VALUES (1);
+COMMIT;
+INSERT INTO TEST VALUES (2);
+SAVEPOINT Y;
+DELETE FROM TEST;
+SELECT * FROM TEST; -- возвращает пустую строку
+ROLLBACK TO Y;
+SELECT * FROM TEST; -- возвращает две строки
+ROLLBACK;
+SELECT * FROM TEST; -- возвращает одну строку                 
+                </programlisting></para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-transaction-rollback-to_savepoint">ROLLBACK TO SAVEPOINT</link>,
+                        <link linkend="fblangref-transaction-realese_savepoint">RELEASE SAVEPOINT</link>.
+                </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-transaction-realese_savepoint">
+            <info>
+                <title>RELEASE SAVEPOINT</title>
+                <keywordset>
+                    <keyword>RELEASE SAVEPOINT</keyword>
+                </keywordset>
+            </info>
+            <indexterm><primary>RELEASE SAVEPOINT</primary></indexterm>
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Удаление точки сохранения.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Доступно в:</title>
+
+                <para>DSQL.</para>
+            </formalpara>
+            <formalpara>
+                <title>Синтаксис:</title>
+
+                <para>
+                    <programlisting> 
+RELEASE SAVEPOINT <replaceable>sp_name</replaceable> [ONLY]                                                   
+                </programlisting>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора RELEASE SAVEPOINT</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>sp_name</replaceable></entry>
+                                <entry>
+                                    <para>Имя точки сохранения.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Оператор <code>RELEASE SAVEPOINT</code> удаляет именованную точку сохранения,
+                освобождая все связанные с ней ресурсы. По умолчанию удаляются также все точки
+                сохранения, создаваемые после указанной. Если указано предложение <code>ONLY</code>,
+                то удаляется только точка сохранения с заданным именем.</para>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-transaction-savepoint">SAVEPOINT</link>. </para>
+            </formalpara>
+        </section>
+        <section xml:id="fblangref-transaction-savepoint-inner">
+            <info>
+                <title>Внутренние точки сохранения</title>
+            </info>
+            <para>По умолчанию сервер использует автоматическую системную точку сохранения уровня
+                транзакции для выполнения её отката. При выполнении оператора <code>ROLLBACK</code>,
+                все изменения, выполненные в транзакции, откатываются до системной точки сохранения
+                и после этого транзакция подтверждается.</para>
+            <para>Когда объем изменений, выполняемых под системной точкой сохранения уровня
+                транзакции, становится большим (затрагивается порядка 50000 записей) сервер
+                освобождает системную точку сохранения и, при необходимости отката транзакции,
+                использует механизм TIP.</para>
+            <tip>
+                <para>Если вы ожидаете, что объем изменений в транзакции будет большим, то можно
+                    задать опцию <code>NO AUTO UNDO</code> в операторе <code>SET TRANSACTION</code>,
+                    или — если используется API — установить флаг TPB
+                        <code>isc_tpb_no_auto_undo</code>. В обеих вариантах предотвращается
+                    создание системной точки сохранения уровня транзакции.</para>
+            </tip>
+        </section>
+        <section xml:id="fblangref-transaction-savepoint-psql">
+            <info>
+                <title>Точки сохранения и PSQL</title>
+            </info>
+            <para>Использование операторов управления транзакциями в PSQL не разрешается, так как
+                это нарушит атомарность оператора, вызывающего процедуру. Но Firebird поддерживает
+                вызов и обработку исключений в PSQL, так, чтобы действия, выполняемые в хранимых
+                процедурах и триггерах, могли быть выборочно отменены без полного отката всех
+                действий в них. Внутренне автоматические точки сохранения используется для:
+                    <itemizedlist spacing="compact">
+                    <listitem>
+                        <para>отмены всех действий внутри блока <code>BEGIN ... END</code>, где
+                            происходит исключение;</para>
+                    </listitem>
+                    <listitem>
+                        <para>отмены всех действий, выполняемых в хранимой процедуре/триггере (или,
+                            в случае селективной хранимой процедуры, всех действий, выполненных с
+                            момента последнего оператора <code>SUSPEND</code>), если они завершаются
+                            преждевременно из-за непредусмотренной ошибки или исключения.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Каждый блок обработки исключений PSQL также ограничен автоматическими точками
+                сохранения сервера.</para>
+            <note>
+                <para>Сами по себе блок <code>BEGIN ... END</code> не создаёт автоматическую точку
+                    сохранения. Она создаётся только в блоках, которых присутствует блок
+                        <code>WHEN</code> для обработки исключений или ошибок.</para>
+            </note>
+        </section>
+    </section>
+</chapter>

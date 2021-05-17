@@ -1,0 +1,177 @@
+
+[[fblangref-ddl-comment]]
+= COMMENTS
+
+Объекты базы данных и сама база данных могут содержать примечания.
+Это удобное средство документирования во время разработки базы данных и её поддержки.
+
+[[fblangref-ddl-commenton]]
+== COMMENT ON
+
+.Назначение
+Документирование метаданных.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+COMMENT ON <object> IS {'_sometext_' | NULL}
+<object> ::= 
+    DATABASE 
+  | <basic-type> _objectname_
+  | COLUMN _relationname_._fieldname_
+  | [PROCEDURE | FUNCTION] PARAMETER
+    [_package_name_.] _routinename_._paramname_
+  | {PROCEDURE | [EXTERNAL] FUNCTION} 
+    [_package_name_.]_routinename_
+
+<basic-type> ::= 
+    CHARACTER SET 
+  | COLLATION 
+  | DOMAIN 
+  | EXCEPTION 
+  | FILTER 
+  | GENERATOR 
+  | INDEX 
+  | PACKAGE 
+  | ROLE 
+  | SEQUENCE 
+  | TABLE 
+  | TRIGGER 
+  | VIEW    
+  
+COMMENT ON USER <username> [USING PLUGIN <plugin_name>] IS {'_sometext_' | NULL}
+----
+
+[[fblangref-ddl-tbl-commenton]]
+.Параметры оператора COMMENT ON
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|sometext
+|Текст комментария.
+
+|basic-type
+|Тип объекта метаданных.
+
+|objectname
+|Имя объекта метаданных.
+
+|relationname
+|Имя таблицы или представления.
+
+|filedname
+|Имя поля таблицы или представления.
+
+|routinename
+|Имя хранимой процедуры или функции.
+
+|paramname
+|Имя параметра хранимой процедуры или функции.
+
+|package_name
+|Имя пакета.
+
+|username
+|Имя пользователя.
+
+|plugin_name
+|Имя плагина управления пользователями.
+|===
+
+Оператор `COMMENT ON` добавляет комментарии для объектов базы данных (метаданных). Комментарии при этом сохраняются в текстовые поля `RDB$DESCRIPTION` типа `BLOB` соответствующей системной таблицы (из этих полей клиентское приложение может просмотреть комментарии).
+
+При добавлении комментария для пользователя вы можете уточнить в каком плагине управления пользователями он находится с помощью необязательного предложения `USING PLUGIN`.
+Если это предложение отсутствует, то предполагает что пользователь создан в плагине управления по умолчанию, то есть первого плагина указанного в параметре UserManager в файле [path]_firebird.conf_ или [path]_databases.conf_.
+
+[NOTE]
+====
+Если вы вводите пустой комментарий (''), то он будет сохранен в базе данных как `NULL`.
+====
+
+[[_fblangref_ddl_comment-who]]
+=== Кто может добавить комментарий?
+
+Выполнить оператор `COMMENT ON` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец объекта, для которого добавляется комментарий;
+* Пользователи с привилегией `ALTER ANY <object_type>`.
+
+
+[[fblangref-ddl-commenton-examples]]
+=== Примеры
+
+.Добавление комментария для текущей базы данных.
+[example]
+====
+[source,sql]
+----
+COMMENT ON DATABASE IS 'Это тестовая (''my.fdb'') БД';
+----
+====
+
+.Добавление комментария для таблицы.
+[example]
+====
+[source,sql]
+----
+COMMENT ON TABLE METALS IS 'Справочник металлов';
+----
+====
+
+.Добавление комментария для поля таблицы.
+[example]
+====
+[source,sql]
+----
+COMMENT ON COLUMN METALS.ISALLOY 
+IS '0 = чистый металл, 1 = сплав';
+----
+====
+
+.Добавление комментария для параметра процедуры.
+[example]
+====
+[source,sql]
+----
+COMMENT ON PARAMETER ADD_EMP_PROJ.EMP_NO 
+IS 'Код сотрудника';
+----
+====
+
+.Добавление комментария для пакета, его процедур и функций, и их параметров.
+[example]
+====
+[source,sql]
+----
+COMMENT ON PACKAGE APP_VAR IS 'Переменные приложения';
+
+COMMENT ON FUNCTION APP_VAR.GET_DATEBEGIN 
+IS 'Возвращает дату начала периода';
+
+COMMENT ON PROCEDURE APP_VAR.SET_DATERANGE 
+IS 'Установка диапазона дат';
+
+COMMENT ON 
+PROCEDURE PARAMETER APP_VAR.SET_DATERANGE.ADATEBEGIN 
+IS 'Дата начала';
+----
+====
+
+.Добавление комментария для пользователя.
+[example]
+====
+[source,sql]
+----
+COMMENT ON USER BOB35 IS 'Это Боб из плагина по умолчанию';  
+
+COMMENT ON USER JHON USING PLUGIN Legacy_UserManager 
+IS 'Это Джон из плагина Legacy_UserManager';
+----
+====
+

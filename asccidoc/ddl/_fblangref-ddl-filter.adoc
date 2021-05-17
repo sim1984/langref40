@@ -1,0 +1,198 @@
+[[fblangref-ddl-filter]]
+= FILTER
+
+BLOB фильтр -- объект базы данных, являющийся, по сути, специальным видом внешних функций с единственным назначением: получение объекта BLOB одного формата и преобразования его в объект BLOB другого формата.
+Форматы объектов BLOB задаются с помощью подтипов BLOB. 
+
+Внешние функции для преобразования BLOB типов хранятся в динамических библиотеках и загружаются по необходимости.
+
+Подробнее о подтипах BLOB см.
+в разделе <<fblangref-datatypes-binary,Бинарные типы данных>>.
+
+[[fblangref-ddl-filter-declare]]
+== DECLARE FILTER
+
+.Назначение
+Объявление в базе данных BLOB фильтра.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+DECLARE FILTER _filtername_
+INPUT_TYPE <sub_type> OUTPUT_TYPE <sub_type>
+ENTRY_POINT '_function_name_' MODULE_NAME '_library_name_';
+
+<sub_type> ::= _number_ | <mnemonic>
+
+<mnemonic> ::= binary | text | blr | acl | ranges | summary |
+               format | transaction_description |
+               external_file_description | user_defined
+----
+
+[[fblangref-ddl-tbl-declarefiltr]]
+.Параметры оператора DECLARE FILTER
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|filtername
+|Имя фильтра.
+Может содержать до 63 символов.
+
+|sub_type
+|Подтип BLOB.
+См. <<fblangref-datatypes-blob-subtype,Подтипы BLOB>>.
+
+|number
+|Номер подтипа BLOB.
+См. <<fblangref-datatypes-blob-subtype,Подтипы BLOB>>.
+
+|mnemonic
+|Мнемоника подтипа BLOB.
+См. <<fblangref-datatypes-blob-subtype,Подтипы BLOB>>.
+
+|function_name
+|Имя экспортируемой функции (точка входа).
+
+|library_name
+|Имя модуля, в котором расположен фильтр.
+
+|user_defined
+|Определяемая пользователем мнемоника подтипа BLOB.
+|===
+
+Оператор `DECLARE FILTER` делает доступным BLOB фильтр в базе данных.
+Имя BLOB фильтра должно быть уникальным среди имён BLOB фильтров. 
+
+[[fblangref-ddl-filter-declare-subtypes]]
+=== Задание подтипов
+
+Подтип может быть задан в виде номера подтипа или мнемоники подтипа.
+Пользовательские подтипы должны быть представлены отрицательными числами (от -1 до -32768). Не допускается создание двух и более фильтров BLOB с одинаковыми комбинациями входных и выходных типов.
+Объявление фильтра с уже существующими комбинациями входных и выходных типов BLOB приведёт к ошибке.
+
+Предложение `INPUT_TYPE` идентифицирует тип преобразуемого объекта (подтип BLOB).
+
+Предложение `OUTPUT_TYPE` идентифицирует тип создаваемого объекта.
+
+[NOTE]
+====
+Если вы хотите определить мнемоники для собственных подтипов BLOB, вы можете добавить их в системную таблицу RDB$TYPES, как показано ниже.
+После подтверждения транзакции мнемоники могут быть использованы для декларации при создании новых фильтров. 
+
+
+[source,sql]
+----
+INSERT INTO RDB$TYPES (RDB$FIELD_NAME, RDB$TYPE, RDB$TYPE_NAME)
+VALUES ('RDB$FIELD_SUB_TYPE', -33, 'MIDI');
+----
+
+Значение поля `rdb$field_name` всегда должно быть 'RDB$FIELD_SUB_TYPE'. Если вы определяете мнемоники в верхнем регистре, то можете использовать их без учёта регистра и без кавычек при объявлении фильтра.
+====
+
+[[fblangref-ddl-filter-declare-params]]
+=== Параметры DECLARE FILTER
+
+Предложение `ENTRY_POINT` указывает имя точки входа (имя экспортируемой функции) в модуле.
+
+Предложение `MODULE_NAME` задаёт имя модуля, в котором находится экспортируемая функция.
+По умолчанию модули должны располагаться в папке UDF корневого каталога сервера.
+Параметр [parameter]``UDFAccess`` в файле [path]_firebird.conf_ позволяет изменить ограничения доступа к библиотекам фильтров. 
+
+[[fblangref-ddl-filter-declare-who]]
+=== Кто может создать BLOB фильтр?
+
+Выполнить оператор `DECLARE FILTER` могут: 
+
+* <<_fblangref-security-administrators,Администраторы>>
+* Пользователи с привилегией `CREATE FILTER`.
+
+Пользователь, создавший BLOB фильтр, становится его владельцем.
+
+[[fblangref-ddl-filter-declare-examples]]
+=== Примеры
+
+.Создание BLOB фильтра с использованием номеров подтипов
+[example]
+====
+[source,sql]
+----
+DECLARE FILTER DESC_FILTER
+INPUT_TYPE 1
+OUTPUT_TYPE -4
+ENTRY_POINT 'desc_filter'
+MODULE_NAME 'FILTERLIB';
+----
+====
+
+.Создание BLOB фильтра с использованием мнемоник подтипов
+[example]
+====
+[source,sql]
+----
+DECLARE FILTER FUNNEL
+INPUT_TYPE blr OUTPUT_TYPE text
+ENTRY_POINT 'blr2asc' MODULE_NAME 'myfilterlib';
+----
+====
+
+.См. также:
+<<fblangref-ddl-filter-drop,DROP FILTER>>. 
+
+[[fblangref-ddl-filter-drop]]
+== DROP FILTER
+
+.Назначение
+Удаление объявления BLOB фильтра.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+DROP FILTER _filtername_
+----
+
+
+.Параметры оператора DROP FILTER
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|filtername
+|Имя BLOB фильтра.
+|===
+
+Оператор `DROP FILTER` удаляет объявление BLOB фильтра из базы данных.
+Удаление BLOB фильтра из базы данных делает его не доступным из базы данных, при этом динамическая библиотека, в которой расположена функция преобразования, остаётся не тронутой.
+
+[[fblangref-ddl-filter-drop-who]]
+=== Кто может удалить BLOB фильтр?
+
+Выполнить оператор `DROP FILTER` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец BLOB фильтра; 
+* Пользователи с привилегией `DROP ANY FILTER`.
+
+
+[[fblangref-ddl-filter-drop-examples]]
+=== Примеры
+
+.Удаление BLOB фильтра
+[example]
+====
+[source,sql]
+----
+DROP FILTER DESC_FILTER;
+----
+====
+
+.См. также:
+<<fblangref-ddl-filter-declare,DECLARE FILTER>>. 

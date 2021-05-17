@@ -1,0 +1,726 @@
+[[fblangref-ddl-function]]
+= FUNCTION
+
+Хранимая функция является программой, хранящейся в области метаданных базы данных и выполняющейся на стороне сервера.
+К хранимой функции могут обращаться хранимые процедуры, хранимые функции (в том числе и сама к себе), триггеры и клиентские программы.
+При обращении хранимой функции самой к себе такая хранимая функция называется рекурсивной. 
+
+В отличие от хранимых процедур хранимые функции всегда возвращают одно скалярное значение.
+Для возврата значения из хранимой функции используется оператор RETURN, который немедленно прекращает выполнение функции.
+
+[[fblangref-ddl-function-create]]
+== CREATE FUNCTION
+
+.Назначение
+Создание новой хранимой функции.
+
+.Доступно в
+DSQL
+
+[[fblangref-ddl-func-create-syntax]]
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE FUNCTION _funcname_
+[(<inparam> [, <inparam> ...])]   
+RETURNS <type> [COLLATE collation]  
+[DETERMINISTIC]
+<routine body> 
+  
+<inparam> ::= <param_decl> [{= | DEFAULT} <value>]  
+                    
+<value> ::=  {literal | NULL | context_var} 
+                    
+<param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE collation]
+                    
+<extname> ::= '<module name>!<routine name>[!<misc info>]'    
+
+<type> ::= <datatype> | [TYPE OF] _domain_ | TYPE OF COLUMN _rel_._col_
+                    
+<datatype> ::= 
+    <scalar_datatype> | <blob_datatype> | <array_datatype>                   
+                    
+<scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
+
+<blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
+
+<array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
+
+<routine body> ::=
+    <SQL routine spec>
+  | <external body reference>
+                    
+<SQL routine spec> ::=
+  [<rights clause>] <SQL routine body>                    
+
+
+<rights clause> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
+
+
+<SQL routine body> ::=  
+  AS
+    [<declarations>]
+  BEGIN
+    [<PSQL_statements>]
+  END                      
+
+<declarations> ::= <declare_item> [<declare_item> ...]
+
+<declare_item> ::=
+    <declare_var>; 
+  | <declare_cursor>; 
+  | <subroutine declaration>;
+  | <subroutine implimentation>  
+
+<subroutine declaration> ::= <subfunc_decl> | <subproc_decl> 
+
+<subroutine implimentation> ::= <subfunc_impl> | <subproc_impl> 
+
+<external body reference> ::=
+  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]  
+
+<extname> ::= '<module name>!<routine name>[!<misc info>]'
+----
+
+[[fblangref-ddl-tbl-createfunc]]
+.Параметры оператора CREATE FUNCTION
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|funcname
+|Имя хранимой функции.
+Может содержать до 63 символов.
+
+|inparam
+|Описание входного параметра.
+
+|declarations
+|Секция объявления локальных переменных, именованных курсоров, подпроцедур и подфункций.
+
+|declare_var
+|Объявление локальной переменной.
+
+|declare_cursor
+|Объявление именованного курсора.
+
+|subfunc_decl
+|Объявление подпрограммы – функции.
+
+|subproc_decl
+|Объявление подпрограммы – процедуры.
+
+|subfunc_impl
+|Реализация подпрограммы – функции.
+
+|subproc_impl
+|Реализация подпрограммы – процедуры. 
+
+|literal
+|Литерал, совместимый по типу с параметром.
+
+|context_var
+|Любая контекстная переменная, тип которой совместим с типом параметра.
+
+|paramname
+|Имя входного параметра функции.
+Может содержать до 63 символов.
+Имя параметра должно быть уникальным среди входных параметров функции, а также её локальных переменных. 
+
+|module name
+|Имя внешнего модуля, в котором расположена функция.
+
+|routine name
+|Внутреннее имя функции внутри внешнего модуля.
+
+|misc info
+|Определяемая пользователем информация для передачи в функцию внешнего модуля.
+
+|extbody
+|Тело внешней функции. Строковый литерал который может
+использоваться UDR для различных целей.
+
+|engine
+|Имя движка для использования внешних функций.
+Обычно указывается имя UDR. 
+
+|datatype
+|Тип данных SQL.
+
+|collation
+|Порядок сортировки.
+
+|domain_name
+|Имя домена.
+
+|rel
+|Имя таблицы или представления.
+
+|col
+|Имя столбца таблицы или представления.
+|===
+
+Оператор `CREATE FUNCTION` создаёт новую хранимую функцию.
+Имя хранимой функции должно быть уникальным среди имён всех хранимых функций и внешних (UDF) функций.
+Если только это не внутренняя функция ("`подпрограмма`"). Для внутренних функций достаточно уникальности только в рамках модулей, которые их "`охватывают`". 
+
+[NOTE]
+====
+Желательно также, чтобы имя хранимой функции было уникальным и среди имён функций расположенных в PSQL пакетах (package), хотя это и допустимо.
+Дело в том, что в настоящее время вы не сможете вызвать функцию/процедуру из глобального пространства имён внутри пакета, если в пакете объявлена одноименная функция/процедура.
+В этом случае всегда будет вызвана процедура/функция пакета. 
+====
+
+`CREATE FUNCTION` является составным оператором, состоящий из заголовка и тела.
+Заголовок определяет имя хранимой функции, объявляет входные параметры и тип возвращаемого значения. 
+
+Тело функции состоит из необязательных объявлений локальных переменных, подпрограмм и именованных курсоров, и одного или нескольких операторов, или блоков операторов, заключённых во внешнем блоке, который начинается с ключевого слова `BEGIN`, и завершается ключевым словом `END`.
+Объявления локальных переменных и именованных курсоров, а также внутренние операторы должны завершаться точкой с запятой (;).
+
+[[fblangref-ddl-function-term]]
+=== Терминатор оператора
+
+Некоторые редакторы SQL-операторов -- в частности утилита [app]``isql``, которая идёт в комплекте с Firebird, и возможно некоторые сторонние редакторы -- используют внутреннее соглашение, которое требует, чтобы все операторы были завершены с точкой с запятой.
+
+Это создает конфликт с синтаксисом PSQL при кодировании в этих средах.
+Если вы не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в разделе, озаглавленном
+<<fblangref-psql-setterm,Изменение терминатора в [app]``isql``>>.
+
+[[fblangref-ddl-function-create-params]]
+=== Входные параметры
+
+Входные параметры заключаются в скобки после имени хранимой функции.
+Они передаются в функцию по значению, то есть любые изменения входных параметров внутри функции никак не повлияет на значения этих параметров в вызывающей программе.
+
+У каждого параметра указывается тип данных.
+Кроме того, для параметра можно указать ограничение `NOT NULL`, тем самым запретив передавать в него значение `NULL`.
+
+Для параметра строкового типа существует возможность задать порядок сортировки с помощью предложения `COLLATE`.
+
+Входные параметры могут иметь значение по умолчанию.
+Параметры, для которых заданы значения, должны располагаться в конце списка параметров.
+
+[[fblangref-ddl-function-create-domain]]
+=== Использование доменов при объявлении параметров
+
+В качестве типа параметра можно указать имя домена.
+В этом случае параметр будет наследовать все характеристики домена.
+
+Если перед названием домена дополнительно используется предложение `TYPE OF`, то используется только тип данных домена -- не проверяется (не используется) его ограничение (если оно есть в домене) на `NOT NULL`, `CHECK` ограничения и/или значения по умолчанию.
+Если домен текстового типа, то всегда используется его набор символов и порядок сортировки.
+
+[[fblangref-ddl-function-create-typeofcolumn]]
+=== Использование типа столбца при объявлении параметров
+
+Входные и выходные параметры можно объявлять, используя тип данных столбцов существующих таблиц и представлений.
+Для этого используется предложение `TYPE OF COLUMN`, после которого указывается имя таблицы или представления и через точку имя столбца.
+
+При использовании `TYPE OF COLUMN` наследуется только тип данных, а в случае строковых типов ещё и набор символов, и порядок сортировки.
+Ограничения и значения по умолчанию столбца никогда не используются. 
+
+[[fblangref-ddl-function-create-return]]
+=== Возвращаемое значение
+
+Предложение `RETURNS` задаёт тип возвращаемого значения хранимой функции.
+Если функция возвращает значение строкового типа, то существует возможность задать порядок сортировки с помощью предложения `COLLATE`.
+В качестве типа выходного значения можно указать имя домена, ссылку на его тип (с помощью предложения `TYPE OF`) или ссылку на тип столбца таблицы (с помощью предложения `TYPE OF COLUMN`).
+
+[[fblangref-ddl-function-create_deterministic]]
+=== Детерминированные функции
+
+Необязательное предложение `DETERMINISTIC` указывает, что функция детерминированная.
+Детерминированные функции каждый раз возвращают один и тот же результат, если предоставлять им один и тот же набор входных значений.
+Недетерминированные функции могут возвращать каждый раз разные результаты, даже если предоставлять им один и тот же набор входных значений.
+Если для функции указано, что она является детерминированной, то такая функция не вычисляется заново, если она уже была вычислена однажды с данным набором входных аргументов, а берет свои значения из кэша метаданных (если они там есть). 
+
+[NOTE]
+====
+На самом деле в текущей версии Firebird, не существует кэша хранимых функций с маппингом входных аргументов на выходные значения. 
+
+Указание инструкции `DETERMINISTIC` на самом деле нечто вроде "`обещания`", что код функции будет возвращать одно и то же.
+В данный момент детерминистическая функция считается инвариантом и работает по тем же принципам, что и другие инварианты.
+Т.е.
+вычисляется и кэшируется на уровне текущего выполнения данного запроса. 
+
+Это легко демонстрируется таким примером:
+
+[source,sql]
+----
+CREATE FUNCTION FN_T
+RETURNS DOUBLE PRECISION DETERMINISTIC
+AS
+BEGIN
+  RETURN rand();
+END
+
+-- функция будет вычислена дважды и вернёт 2 разных значения
+SELECT fn_t() FROM rdb$database
+UNION ALL
+SELECT fn_t() FROM rdb$database
+
+-- функция будет вычислена единожды и вернёт 2 одинаковых значения
+WITH t(n) AS (
+  SELECT 1 FROM rdb$database
+  UNION ALL
+  SELECT 2 FROM rdb$database
+)
+SELECT n, fn_t() FROM t
+----
+====
+
+[[fblangref-ddl-function-create-sql-security]]
+=== Привилегии выполнения
+
+Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется хранимая функция.
+Если выбрана опция `INVOKER`, то хранимая функция выполняется с привилегиями вызывающего пользователя.
+Если выбрана опция `DEFINER`, то хранимая функция выполняется с привилегиями определяющего пользователя (владельца функции). Эти привилегии будут дополнены привилегиями выданные самой хранимой функции с помощью оператора `GRANT`.
+По умолчанию хранимая функция выполняется с привилегиями вызывающего пользователя.
+
+[TIP]
+====
+Привилегии выполнения по умолчанию для вновь создаваемых объектов метаданных можно изменить с помощью оператора
+
+[listing]
+----
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+----
+====
+
+[[fblangref-ddl-function-create-body]]
+=== Тело хранимой функции
+
+После ключевого слова `AS` следует тело хранимой функции.
+
+[[fblangref-ddl-function-create-declare]]
+==== Объявление локальных переменных, курсоров и подпрограмм
+
+В необязательной секции [replaceable]``declarations`` описаны локальные переменные функции, именованные курсоры и подпрограммы (подпроцедуры и подфункции). Локальные переменные подчиняются тем же правилам, что и входные параметры функции в отношении спецификации типа данных.
+Подробности вы можете посмотреть в главе "`Процедурный язык PSQL`"
+в разделах <<fblangref-psql-statements-declare-var,DECLARE VARIABLE>> и
+<<fblangref-psql-statements-declare-cursor,DECLARE CURSOR>>,
+<<fblangref-psql-statements-declare-procedure,DECLARE PROCEDURE>>,
+<<fblangref-psql-statements-declare-function,DECLARE FUNCTION>>.
+
+После необязательной секции деклараций обязательно следует составной оператор.
+Составной оператор состоит из одного или нескольких PSQL операторов, заключенных между ключевыми словами `BEGIN` и `END`.
+Составной оператор может содержать один или несколько других составных операторов.
+Вложенность ограничена 512 уровнями.
+Любой из `BEGIN ... END` блоков может быть пустым, в том числе и главный блок.
+
+[[fblangref-ddl-function-create_external]]
+=== Внешние функции
+
+Хранимая функция может быть расположена во внешнем модуле.
+В этом случае вместо тела функции указывается место расположения функции во внешнем модуле с помощью предложения `EXTERNAL NAME`.
+Аргументом этого предложения является строка, в которой через разделитель указано имя внешнего модуля, имя функции внутри модуля и определённая пользователем информация.
+В предложении `ENGINE` указывается имя движка для обработки подключения внешних модулей.
+В Firebird для работы с внешними модулями используется движок UDR.
+После ключевого слова `AS` может быть указан строковый литерал -- "тело" внешней функции, оно может быть использовано внешним модулем для различных целей.
+
+[WARNING]
+====
+Не следует путать внешние функции, объявленные как `DECLARE EXTERNAL FUNCTION`, так же известные как UDF, с функциями расположенными во внешних модулях объявленных как `CREATE FUNCTION ... EXTERNAL NAME`, называемых UDR (User Defined Routine). Первые являются унаследованными (Legacy) из предыдущих версий Firebird.
+Их возможности существенно уступают возможностям нового типа внешних функций.
+В Firebird 4.0 UDF объявлены устаревшими. 
+====
+
+[[fblangref-ddl-function-create-who]]
+=== Кто может создать функцию?
+
+Выполнить оператор `CREATE FUNCTION` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Пользователи с привилегией `CREATE FUNCTION`.
+
+Пользователь, создавший хранимую функцию, становится её владельцем.
+
+[[fblangref-ddl-function-create-examples]]
+=== Примеры
+
+.Создание хранимой функции
+[example]
+====
+[source,sql]
+----
+CREATE FUNCTION ADD_INT(A INT, B INT DEFAULT 0) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B;
+END
+----
+
+Вызов в запросе: 
+[source,sql]
+----
+SELECT ADD_INT(2, 3) AS R FROM RDB$DATABASE
+----
+
+Вызов внутри PSQL кода, второй необязательный параметр не указан:
+[source,sql]
+----
+MY_VAR = ADD_INT(A);
+----
+====
+
+.Создание детерминистической хранимой функции
+[example]
+====
+[source,sql]
+----
+
+CREATE FUNCTION FN_E() 
+RETURNS DOUBLE PRECISION DETERMINISTIC
+AS
+BEGIN
+  RETURN EXP(1);
+END
+----
+====
+
+.Создание хранимой функции с параметрами типа столбца таблицы
+[example]
+====
+Функция, возвращающая имя мнемоники по имени столбца и значения мнемоники.
+
+[source,sql]
+----
+CREATE FUNCTION GET_MNEMONIC ( 
+    AFIELD_NAME TYPE OF COLUMN RDB$TYPES.RDB$FIELD_NAME, 
+    ATYPE TYPE OF COLUMN RDB$TYPES.RDB$TYPE) 
+RETURNS TYPE OF COLUMN RDB$TYPES.RDB$TYPE_NAME 
+AS 
+BEGIN 
+  RETURN (SELECT RDB$TYPE_NAME 
+          FROM RDB$TYPES 
+          WHERE RDB$FIELD_NAME = :AFIELD_NAME 
+            AND RDB$TYPE = :ATYPE); 
+END
+----
+
+То же самое, но хранимая функция будет выполняться с привилегиями определяющего пользователя (владельца функции).
+
+[source,sql]
+----
+CREATE FUNCTION GET_MNEMONIC ( 
+    AFIELD_NAME TYPE OF COLUMN RDB$TYPES.RDB$FIELD_NAME, 
+    ATYPE TYPE OF COLUMN RDB$TYPES.RDB$TYPE) 
+RETURNS TYPE OF COLUMN RDB$TYPES.RDB$TYPE_NAME 
+SQL SECURITY DEFINER
+AS 
+BEGIN 
+  RETURN (SELECT RDB$TYPE_NAME 
+          FROM RDB$TYPES 
+          WHERE RDB$FIELD_NAME = :AFIELD_NAME 
+            AND RDB$TYPE = :ATYPE); 
+END
+----
+====
+
+.Создание внешней хранимой функции
+[example]
+====
+Создание функции находящейся во внешнем модуле (UDR). Реализация функции расположена во внешнем модуле udrcpp_example.
+Имя функции внутри модуля -- wait_event.
+
+[source,sql]
+----
+CREATE FUNCTION wait_event (
+   event_name varchar(63) CHARACTER SET ascii
+) RETURNS INTEGER
+EXTERNAL NAME 'udrcpp_example!wait_event'
+ENGINE udr
+----
+====
+
+.Создание хранимой функции содержащую подфункцию
+[example]
+====
+Создание функции для перевода числа в 16-ричный формат.
+
+[source,sql]
+----
+CREATE FUNCTION INT_TO_HEX (
+    ANumber BIGINT,
+    AByte_Per_Number SMALLINT = 8)
+RETURNS CHAR(66)
+AS
+DECLARE VARIABLE xMod SMALLINT;
+DECLARE VARIABLE xResult VARCHAR(64);
+DECLARE FUNCTION TO_HEX(ANum SMALLINT) RETURNS CHAR
+AS
+BEGIN
+  RETURN CASE ANum
+           WHEN 0 THEN '0'
+           WHEN 1 THEN '1'
+           WHEN 2 THEN '2'
+           WHEN 3 THEN '3'
+           WHEN 4 THEN '4'
+           WHEN 5 THEN '5'
+           WHEN 6 THEN '6'
+           WHEN 7 THEN '7'
+           WHEN 8 THEN '8'
+           WHEN 9 THEN '9'
+           WHEN 10 THEN 'A'
+           WHEN 11 THEN 'B'
+           WHEN 12 THEN 'C'
+           WHEN 13 THEN 'D'
+           WHEN 14 THEN 'E'
+           WHEN 15 THEN 'F'
+           ELSE NULL
+         END;
+END
+BEGIN
+  xMod = MOD(ANumber, 16);
+  ANumber = ANumber / 16;
+  xResult = TO_HEX(xMod);
+  WHILE (ANUMBER > 0) DO
+  BEGIN
+    xMod = MOD(ANumber, 16);
+    ANumber = ANumber / 16;
+    xResult = TO_HEX(xMod) || xResult;
+  END
+  RETURN '0x' || LPAD(xResult, AByte_Per_Number * 2, '0');
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-function-createoralter,CREATE OR ALTER FUNCTION>>,
+<<fblangref-ddl-function-alter,ALTER FUNCTION>>,
+<<fblangref-ddl-function-recreate,RECREATE FUNCTION>>,
+<<fblangref-ddl-function-drop,DROP FUNCTION>>.
+
+[[fblangref-ddl-function-alter]]
+== ALTER FUNCTION
+
+.Назначение
+Изменение существующей хранимой функции.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+ALTER FUNCTION _funcname_
+[(<inparam> [, <inparam> ...])]   
+RETURNS <type> [COLLATE collation]
+[DETERMINISTIC]
+<routine body>
+
+Подробнее см. <<fblangref-ddl-func-create-syntax,CREATE FUNCTION>>.
+----
+
+Оператор `ALTER FUNCTION` позволяет изменять состав и характеристики входных параметров, типа выходного значения, локальных переменных, именованных курсоров, подпрограмм и тело хранимой функции.
+Для внешних функций (UDR) вы можете изменить точку входа и имя движка.
+Внешние функции, объявленные как `DECLARE EXTERNAL FUNCTION`, так же известные как UDF, невозможно преобразовать в PSQL функции и наоборот.
+После выполнения существующие привилегии и зависимости сохраняются. 
+
+[NOTE]
+====
+Будьте осторожны при изменении количества и типов входных параметров хранимых функций.
+Существующий код приложения может стать неработоспособным из-за того, что формат вызова функции несовместим с новым описанием параметров.
+Кроме того, PSQL модули, использующие изменённую хранимую функцию, могут стать некорректными.
+Информация о том, как это обнаружить, находится в приложении <<fblangref-appx-supp-rdb-validblr,Поле RDB$VALID_BLR>>.
+====
+
+[WARNING]
+====
+Если у вас уже есть внешняя функция в Legacy стиле (`DECLARE EXTERNAL FUNCTION`), то оператор `ALTER FUNCTION` изменит её на обычную функцию без всяких предупреждений.
+Это было сделано умышлено для облегчения миграции на новый стиль написания внешних функций известных как UDR.
+====
+
+[[fblangref-ddl-function-alter-who]]
+=== Кто может изменить функцию?
+
+Выполнить оператор `ALTER FUNCTION` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец хранимой функции; 
+* Пользователи с привилегией `ALTER ANY FUNCTION`.
+
+
+[[fblangref-ddl-function-alter-examples]]
+=== Примеры
+
+.Изменение хранимой функции
+[example]
+====
+[source,sql]
+----
+ALTER FUNCTION ADD_INT(A INT, B INT, C INT) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B+C;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-function-create,CREATE FUNCTION>>,
+<<fblangref-ddl-function-createoralter,CREATE OR ALTER FUNCTION>>,
+<<fblangref-ddl-function-drop,DROP FUNCTION>>.
+
+[[fblangref-ddl-function-createoralter]]
+== CREATE OR ALTER FUNCTION
+
+.Назначение
+Создание новой или изменение существующей хранимой функции.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE OR ALTER FUNCTION _funcname_
+[(<inparam> [, <inparam> ...])]   
+RETURNS <type> [COLLATE collation]
+[DETERMINISTIC]
+<routine body>
+
+Подробнее см. <<fblangref-ddl-func-create-syntax,CREATE FUNCTION>>.
+----
+
+Оператор `CREATE OR ALTER FUNCTION` создаёт новую или изменяет существующую хранимую функцию.
+Если хранимая функция не существует, то она будет создана с использованием предложения `CREATE FUNCTION`.
+Если она уже существует, то она будет изменена и перекомпилирована, при этом существующие привилегии и зависимости сохраняются. 
+
+[WARNING]
+====
+Если у вас уже есть внешняя функция в Legacy стиле (`DECLARE EXTERNAL FUNCTION`), то оператор `CREATE OR ALTER FUNCTION` изменит её на обычную функцию без всяких предупреждений.
+Это было сделано умышлено для облегчения миграции на новый стиль написания внешних функций известных как UDR.
+====
+
+[[fblangref-ddl-function-createoralter-examples]]
+=== Примеры
+
+.Создание новой или изменение существующей хранимой функции
+[example]
+====
+[source,sql]
+----
+CREATE OR ALTER FUNCTION ADD_INT(A INT, B INT DEFAULT 0) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-function-create,CREATE FUNCTION>>, <<fblangref-ddl-function-alter,ALTER FUNCTION>>. 
+
+[[fblangref-ddl-function-drop]]
+== DROP FUNCTION
+
+.Назначение
+Удаление хранимой функции.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+
+[listing,subs="+quotes"]
+----
+DROP FUNCTION _funcname_
+----
+
+
+.Параметры оператора DROP FUNCTION
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|funcname
+|Имя хранимой функции.
+|===
+
+Оператор `DROP FUNCTION` удаляет существующую хранимую функцию.
+Если от хранимой функции существуют зависимости, то при попытке удаления такой функции будет выдана соответствующая ошибка. 
+
+[[fblangref-ddl-function-drop-who]]
+=== Кто может удалить функцию?
+
+Выполнить оператор `DROP FUNCTION` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец хранимой функции; 
+* Пользователи с привилегией `DROP ANY FUNCTION`.
+
+
+[[fblangref-ddl-function-drop-examples]]
+=== Примеры
+
+.Удаление хранимой функции
+[example]
+====
+[source,sql]
+----
+DROP FUNCTION ADD_INT;
+----
+====
+
+.См. также:
+<<fblangref-ddl-function-create,CREATE FUNCTION>>. 
+
+[[fblangref-ddl-function-recreate]]
+== RECREATE FUNCTION
+
+.Назначение
+Создание новой или пересоздание существующей хранимой функции.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+RECREATE FUNCTION _funcname_
+[(<inparam> [, <inparam> ...])]   
+RETURNS <type> [COLLATE collation]
+[DETERMINISTIC]
+<routine body>
+
+Подробнее см. <<fblangref-ddl-func-create-syntax,CREATE FUNCTION>>
+----
+
+Оператор `RECREATE FUNCTION` создаёт новую или пересоздаёт существующую хранимую функцию.
+Если функция с таким именем уже существует, то оператор попытается удалить её и создать новую функцию.
+Операция закончится неудачей при подтверждении транзакции, если функция имеет зависимости.
+
+[NOTE]
+====
+Имейте в виду, что ошибки зависимостей не обнаруживаются до фазы подтверждения транзакции.
+====
+
+После пересоздания функции привилегии на выполнение хранимой функции и привилегии самой хранимой функции не сохраняются. 
+
+[[fblangref-ddl-function-recreate_examples]]
+=== Примеры
+
+.Создание или пересоздание хранимой функции 
+[example]
+====
+[source,sql]
+----
+
+RECREATE FUNCTION ADD_INT(A INT, B INT DEFAULT 0) 
+RETURNS INT
+AS
+BEGIN
+  RETURN A+B;
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-function-create,CREATE FUNCTION>>, <<fblangref-ddl-function-drop,DROP FUNCTION>>. 
+

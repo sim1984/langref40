@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="ru"
+    xml:id="fblangref-ddl-procedure">
+    <info>
+        <title>PROCEDURE</title>
+        <keywordset>
+            <keyword>PROCEDURE</keyword>
+        </keywordset>
+    </info>
+    <para>Хранимая процедура (ХП) — это программный модуль, который может быть вызван с клиента, из
+        другой процедуры, функции, выполнимого блока (executable block) или триггера. Хранимые
+        процедуры, хранимые функции, исполняемые блоки и триггеры пишутся на процедурном языке SQL
+        (PSQL). Большинство операторов SQL доступно и в PSQL, иногда с ограничениями или
+        расширениями. Заметными исключениями являются DDL и операторы управления
+        транзакциями.</para>
+    <para>Хранимые процедуры могут принимать и возвращать множество параметров.</para>
+    <section xml:id="fblangref-ddl-procedure-create">
+        <info>
+            <title>CREATE PROCEDURE</title>
+            <keywordset>
+                <keyword>CREATE PROCEDURE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE PROCEDURE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой хранимой функции.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+CREATE PROCEDURE <replaceable>procname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])    
+<replaceable>&lt;routine body&gt;</replaceable> 
+  
+<replaceable>&lt;inparam&gt;</replaceable> ::= <replaceable>&lt;param_decl&gt;</replaceable> [{= | DEFAULT} <replaceable>&lt;value&gt;</replaceable>]  
+
+<replaceable>&lt;outparam&gt;</replaceable>  ::=  <replaceable>&lt;param_decl&gt;</replaceable>  
+                    
+<replaceable>&lt;value&gt;</replaceable> ::=  {<replaceable>literal</replaceable> | NULL | <replaceable>context_var</replaceable>} 
+                    
+<replaceable>&lt;param_decl&gt;</replaceable> ::= <replaceable>paramname</replaceable> <replaceable>&lt;type&gt;</replaceable> [NOT NULL] [COLLATE <replaceable>collation</replaceable>]
+                    
+<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]'    
+
+<replaceable>&lt;type&gt;</replaceable> ::= <replaceable>&lt;datatype&gt;</replaceable> | [TYPE OF] <replaceable>domain_name</replaceable> | TYPE OF COLUMN <replaceable>rel</replaceable>.<replaceable>col</replaceable> 
+                    
+<replaceable>&lt;datatype&gt;</replaceable> ::= 
+    <replaceable>&lt;scalar_datatype&gt;</replaceable> | <replaceable>&lt;blob_datatype&gt;</replaceable> | <replaceable>&lt;array_datatype&gt;</replaceable>                   
+                    
+<replaceable>&lt;scalar_datatype&gt;</replaceable> ::=  <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-scalar">См. Синтаксис скалярных типов данных</link>
+                    
+<replaceable>&lt;blob_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-blob">См. Синтаксис типа данных BLOB</link>          
+                    
+<replaceable>&lt;array_datatype&gt;</replaceable> ::= <link xmlns:xlink="http://www.w3.org/1999/xlink" linkend="fblangref-datatypes-declare-array">См. Синтаксис массивов</link>                      
+
+<replaceable>&lt;routine body&gt;</replaceable> ::=
+    <replaceable>&lt;SQL routine spec&gt;</replaceable>
+  | <replaceable>&lt;external body reference&gt;</replaceable>
+                    
+<replaceable>&lt;SQL routine spec&gt;</replaceable> ::=
+  [<replaceable>&lt;rights clause&gt;</replaceable>] <replaceable>&lt;SQL routine body&gt;</replaceable>                    
+
+
+<replaceable>&lt;rights clause&gt;</replaceable> ::=
+  SQL SECURITY {DEFINER | INVOKER}                    
+
+     
+<replaceable>&lt;SQL routine body&gt;</replaceable> ::=  
+  AS       
+    [<replaceable>&lt;declarations&gt;</replaceable>]       
+  BEGIN       
+    [<replaceable>&lt;PSQL_statements&gt;</replaceable>]       
+  END                      
+
+<replaceable>&lt;declarations&gt;</replaceable> ::= <replaceable>&lt;declare_item&gt;</replaceable> [<replaceable>&lt;declare_item&gt;</replaceable> ...]
+
+<replaceable>&lt;declare_item&gt;</replaceable> ::=      
+    <replaceable>&lt;declare_var&gt;</replaceable>; 
+  | <replaceable>&lt;declare_cursor&gt;</replaceable>; 
+  | <replaceable>&lt;subroutine declaration&gt;</replaceable>;
+  | <replaceable>&lt;subroutine implimentation&gt;</replaceable>  
+
+<replaceable>&lt;subroutine declaration&gt;</replaceable> ::= <replaceable>&lt;subfunc_decl&gt;</replaceable> | <replaceable>&lt;subproc_decl&gt;</replaceable> 
+
+<replaceable>&lt;subroutine implimentation&gt;</replaceable> ::= <replaceable>&lt;subfunc_impl&gt;</replaceable> | <replaceable>&lt;subproc_impl&gt;</replaceable> 
+
+<replaceable>&lt;external body reference&gt;</replaceable> ::=
+  EXTERNAL NAME '<replaceable>&lt;extname&gt;</replaceable>' ENGINE <replaceable>&lt;engine&gt;</replaceable> [AS <replaceable>&lt;extbody&gt;</replaceable>] 
+
+<replaceable>&lt;extname&gt;</replaceable> ::= '<replaceable>&lt;module name&gt;</replaceable>!<replaceable>&lt;routine name&gt;</replaceable>[!<replaceable>&lt;misc info&gt;</replaceable>]' 
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора CREATE PROCEDURE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>procname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя хранимой процедуры. Может содержать до 63 символов.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>inparam</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Описание входного параметра.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>outparam</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Описание выходного параметра.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declarations</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Секция объявления локальных переменных, именованных курсоров,
+                                    подпроцедур и подфункций.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declare_var</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление локальной переменной. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>declare_cursor</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление именованного курсора. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subfunc_decl</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление подпрограммы – функции.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subproc_decl</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Объявление подпрограммы – процедуры. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subfunc_impl</replaceable>
+                            </entry>
+                            <entry>Реализация подпрограммы – функции.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>subproc_impl</replaceable>
+                            </entry>
+                            <entry>Реализация подпрограммы – процедуры.</entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>literal</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Литерал, совместимый по типу с параметром. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>context_var</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Любая контекстная переменная, тип которой совместим с типом
+                                    параметра. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>paramname</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя входного или выходного параметра процедуры. Может
+                                    содержать до 63 символов. Имя параметра должно быть уникальным
+                                    среди входных и  выходных параметров процедуры, а также её
+                                    локальных переменных. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>extbody</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тело внешней процедуры. Строковый литерал который может
+                                    использоваться UDR для различных целей.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>module name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя внешнего модуля, в котором расположена функция.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>routine name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Внутреннее имя функции внутри внешнего модуля. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>misc info</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Определяемая пользователем информация для передачи в функцию
+                                    внешнего модуля. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>engine</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя движка для использования внешних функций. Обычно
+                                    указывается имя UDR. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>datatype</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Тип данных SQL.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>collation</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Порядок сортировки.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>domain_name</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя домена.</para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>rel</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя таблицы или представления. </para>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>
+                                <replaceable>col</replaceable>
+                            </entry>
+                            <entry>
+                                <para>Имя столбца таблицы или представления.</para>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор CREATE PROCEDURE создаёт новую хранимую процедуру. Имя хранимой процедуры
+            должно быть уникальным среди имён всех хранимых процедур, таблиц и представлений базы
+            данных. </para>
+        <note>
+            <para>Желательно также, чтобы имя хранимой процедуры было уникальным и среди имён
+                процедур расположенных в PSQL пакетах (package), хотя это и допустимо. Дело в том,
+                что в настоящее время вы не сможете вызвать функцию/процедуру из глобального
+                пространства имён внутри пакета, если в пакете объявлена одноименная
+                функция/процедура. В этом случае всегда будет вызвана процедура/функция пакета.
+            </para>
+        </note>
+        <para>CREATE PROCEDURE является составным оператором, состоящий из заголовка и тела. </para>
+        <para>Заголовок определяет имя хранимой процедуры и объявляет входные и выходные параметры,
+            если они должны быть возвращены процедурой.</para>
+        <para>Тело процедуры состоит из необязательных объявлений локальных переменных, подпрограмм
+            и именованных курсоров, и одного или нескольких операторов, или блоков операторов,
+            заключённых во внешнем блоке, который начинается с ключевого слова BEGIN, и завершается
+            ключевым словом END. Объявления локальных переменных и именованных курсоров, а также
+            внутренние операторы должны завершаться точкой с запятой (;).</para>
+        <section xml:id="fblangref-ddl-procedure-term">
+            <title>Терминатор оператора</title>
+
+            <para>Некоторые редакторы SQL-операторов — в частности утилита
+                    <application>isql</application>, которая идёт в комплекте с Firebird, и возможно
+                некоторые сторонние редакторы — используют внутреннее соглашение, которое требует,
+                чтобы все операторы были завершены с точкой с запятой.</para>
+            <para>Это создает конфликт с синтаксисом PSQL при кодировании в этих средах. Если вы не
+                знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в
+                разделе, озаглавленном <link linkend="fblangref-psql-setterm">Изменение терминатора
+                    в <application>isql</application></link>.</para>
+
+        </section>
+        <section xml:id="fblangref-ddl-procedure-create-params">
+            <title>Параметры</title>
+            <para>У каждого параметра указывается тип данных. Кроме того, для параметра можно
+                указать ограничение NOT NULL, тем самым запретив передавать в него значение
+                NULL.</para>
+            <para>Для параметра строкового типа существует возможность задать порядок сортировки с
+                помощью предложения COLLATE.</para>
+
+            <section xml:id="fblangref-ddl-procedure-create-params-in">
+                <title>Входные параметры</title>
+                <para>Входные параметры заключаются в скобки после имени хранимой процедуры. Они
+                    передаются в процедуру по значению, то есть любые изменения входных параметров
+                    внутри процедуры никак не повлияет на значения этих параметров в вызывающей
+                    программе.</para>
+                <para>Входные параметры могут иметь значение по умолчанию. Параметры, для которых
+                    заданы значения, должны располагаться в конце списка параметров.</para>
+            </section>
+
+            <section xml:id="fblangref-ddl-procedure-create-params-out">
+                <title>Выходные параметры</title>
+                <para>Необязательное предложение RETURNS позволяет задать список выходных параметров
+                    хранимой процедуры.</para>
+            </section>
+
+            <section xml:id="fblangref-ddl-procedure-create-params-domain">
+                <title>Использование доменов при объявлении параметров</title>
+                <para>В качестве типа параметра можно указать имя домена. В этом случае параметр
+                    будет наследовать все характеристики домена.</para>
+                <para>Если перед названием домена дополнительно используется предложение
+                        <database>TYPE OF</database>, то используется только тип данных домена — не
+                    проверяется (не используется) его ограничение (если оно есть в домене) на NOT
+                    NULL, CHECK ограничения и/или значения по умолчанию. Если домен текстового типа,
+                    то всегда используется его набор символов и порядок сортировки.</para>
+            </section>
+            <section xml:id="fblangref-ddl-procedure-create-params-typeofcolumn">
+                <title>Использование типа столбца при объявлении параметров</title>
+                <para>Входные и выходные параметры можно объявлять, используя тип данных столбцов
+                    существующих таблиц и представлений. Для этого используется предложение
+                        <database>TYPE OF COLUMN</database>, после которого указывается имя таблицы
+                    или представления и через точку имя столбца.</para>
+                <para>При использовании <database>TYPE OF COLUMN</database> наследуется только тип
+                    данных, а в случае строковых типов ещё и набор символов, и порядок сортировки.
+                    Ограничения и значения по умолчанию столбца никогда не используются. </para>
+            </section>
+        </section>
+        <section xml:id="fblangref-ddl-procedure-create-sql_security">
+            <title>Привилегии выполнения</title>
+            <indexterm>
+                <primary>CREATE PROCEDURE</primary>
+                <secondary>SQL SECURITY</secondary>
+            </indexterm>
+            <para>Необязательное предложение SQL SECURITY позволяет задать с какими привилегиями
+                выполняется хранимая процедура. Если выбрана опция INVOKER, то хранимая процедура
+                выполняется с привилегиями вызывающего пользователя. Если выбрана опция DEFINER, то
+                хранимая процедура выполняется с привилегиями определяющего пользователя (владельца
+                ХП). Эти привилегии будут дополнены привилегиями выданные самой хранимой процедуре с
+                помощью оператора GRANT. По умолчанию хранимая процедура выполняется с привилегиями
+                вызывающего пользователя.</para>
+            <tip>
+                <para>Привилегии выполнения по умолчанию для вновь создаваемых объектов метаданных
+                    можно изменить с помощью оператора
+                    <programlisting>
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+                </programlisting>
+                </para>
+            </tip>
+        </section>
+        <section xml:id="fblangref-ddl-procedure-create-body">
+            <title>Тело хранимой процедуры</title>
+            <para>После ключевого слова AS следует тело хранимой процедуры.</para>
+            <section xml:id="fblangref-ddl-procedure-create-declare">
+                <title>Объявление локальных переменных, курсоров и подпрограмм</title>
+                <para>В необязательной секции <replaceable>declarations</replaceable> описаны
+                    локальные переменные процедуры, подпрограммы и именованные курсоры. В отношении
+                    спецификации типа данных локальные переменные подчиняются тем же правилам, что и
+                    входные и выходные параметры процедуры. Подробности вы можете посмотреть в главе
+                        <quote>Процедурный язык PSQL</quote> в разделах <link
+                        linkend="fblangref-psql-statements-declare-var">DECLARE VARIABLE</link> и
+                        <link linkend="fblangref-psql-statements-declare-cursor">DECLARE
+                        CURSOR</link>, <link linkend="fblangref-psql-statements-declare-procedure"
+                        >DECLARE PROCEDURE</link>, <link
+                        linkend="fblangref-psql-statements-declare-function">DECLARE
+                    FUNCTION</link>.</para>
+                <para>После необязательной секции деклараций обязательно следует составной оператор.
+                    Составной оператор состоит из одного или нескольких PSQL операторов, заключенных
+                    между ключевыми словами BEGIN и END. Составной оператор может содержать один или
+                    несколько других составных операторов. Вложенность ограничена 512 уровнями.
+                    Любой из BEGIN ... END блоков может быть пустым, в том числе и главный
+                    блок.</para>
+            </section>
+        </section>
+        <section xml:id="fblangref-ddl-procedure-create-external">
+            <title>Внешние хранимые процедуры</title>
+
+            <indexterm>
+                <primary>CREATE PROCEDURE</primary>
+                <secondary>EXTERNAL NAME</secondary>
+            </indexterm>
+            <indexterm>
+                <primary>CREATE PROCEDURE</primary>
+                <secondary>ENGINE</secondary>
+            </indexterm>
+            <para>Хранимая процедура может быть расположена во внешнем модуле. В этом случае вместо
+                тела процедуры указывается место её расположения во внешнем модуле с помощью
+                предложения EXTERNAL NAME. Аргументом этого предложения является строка, в которой
+                через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и
+                определённая пользователем информация. В предложении ENGINE указывается имя движка
+                для обработки подключения внешних модулей. В Firebird для работы с внешними модулями
+                используется движок UDR. После ключевого слова AS может быть указан строковый
+                литерал — "тело" внешней процедуры, оно может быть использовано внешним модулем для
+                различных целей.</para>
+        </section>
+        <section xml:id="fblangref-ddl-procedure-create-who">
+            <title>Кто может создать хранимую процедуру?</title>
+
+            <para>Выполнить оператор <database>CREATE PROCEDURE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>CREATE PROCEDURE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+            <para>Пользователь, создавший хранимую процедуру, становится её владельцем.</para>
+        </section>
+        <section xml:id="fblangref-ddl-procedure-create-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание хранимой процедуры</title>
+                <para>
+                    <programlisting language="sql">
+CREATE PROCEDURE ADD_BREED (
+  NAME D_BREEDNAME, /* Наследуются характеристики домена */
+  NAME_EN TYPE OF D_BREEDNAME, /* Наследуется только тип домена */
+  SHORTNAME TYPE OF COLUMN BREED.SHORTNAME, /* Наследуется тип столбца таблицы */
+  REMARK VARCHAR(120) CHARACTER SET WIN1251 COLLATE PXW_CYRL,
+  CODE_ANIMAL INT NOT NULL DEFAULT 1
+)
+RETURNS (
+  CODE_BREED INT
+)
+AS
+BEGIN
+  INSERT INTO BREED (
+    CODE_ANIMAL, NAME, NAME_EN, SHORTNAME, REMARK)
+  VALUES (
+    :CODE_ANIMAL, :NAME, :NAME_EN, :SHORTNAME, :REMARK)
+  RETURNING CODE_BREED INTO CODE_BREED;
+END                  
+                </programlisting>
+                </para>
+                <para>То же самое, но процедура будет выполняться с правами определяющего
+                    пользователя (владельца процедуры).</para>
+                <para>
+                    <programlisting language="sql">
+CREATE PROCEDURE ADD_BREED (
+  NAME D_BREEDNAME, /* Наследуются характеристики домена */
+  NAME_EN TYPE OF D_BREEDNAME, /* Наследуется только тип домена */
+  SHORTNAME TYPE OF COLUMN BREED.SHORTNAME, /* Наследуется тип столбца таблицы */
+  REMARK VARCHAR(120) CHARACTER SET WIN1251 COLLATE PXW_CYRL,
+  CODE_ANIMAL INT NOT NULL DEFAULT 1
+)
+RETURNS (
+  CODE_BREED INT
+)
+SQL SECURITY DEFINER
+AS
+BEGIN
+  INSERT INTO BREED (
+    CODE_ANIMAL, NAME, NAME_EN, SHORTNAME, REMARK)
+  VALUES (
+    :CODE_ANIMAL, :NAME, :NAME_EN, :SHORTNAME, :REMARK)
+  RETURNING CODE_BREED INTO CODE_BREED;
+END                  
+                </programlisting>
+                </para>
+            </example>
+            <example>
+                <title>Создание внешней хранимой процедуры</title>
+                <para>Создание процедуры находящейся во внешнем модуле (UDR). Реализация процедуры
+                    расположена во внешнем модуле udrcpp_example. Имя процедуры внутри модуля —
+                    gen_rows.<programlisting language="sql">
+CREATE PROCEDURE gen_rows (
+    start_n INTEGER NOT NULL,
+    end_n INTEGER NOT NULL
+) RETURNS (
+    n INTEGER NOT NULL
+)
+    EXTERNAL NAME 'udrcpp_example!gen_rows'
+    ENGINE udr;           
+                </programlisting></para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-procedure-createoralter">CREATE OR ALTER
+                        PROCEDURE</link>, <link linkend="fblangref-ddl-procedure-alter">ALTER
+                        PROCEDURE</link>, <link linkend="fblangref-ddl-procedure-recreate">RECREATE
+                        PROCEDURE</link>, <link linkend="fblangref-ddl-procedure-drop">DROP
+                        PROCEDURE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-procedure-alter">
+        <info>
+            <title>ALTER PROCEDURE</title>
+            <keywordset>
+                <keyword>ALTER PROCEDURE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>ALTER PROCEDURE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Изменение существующей хранимой процедуры.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+ALTER PROCEDURE <replaceable>procname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])                           
+<replaceable>&lt;routine body&gt;</replaceable>  
+                       </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Подробнее см.</title>
+
+            <para>
+                <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>. </para>
+        </formalpara>
+
+        <para>Оператор ALTER PROCEDURE позволяет изменять состав и характеристики входных и выходных
+            параметров, локальных переменных, именованных курсоров и тело хранимой процедуры. Для
+            внешних процедур (UDR) вы можете изменить точку входа и имя движка. После выполнения
+            существующие привилегии и зависимости сохраняются. </para>
+        <warning>
+            <para>Будьте осторожны при изменении количества и типов входных и выходных параметров
+                хранимых процедур. Существующий код приложения может стать неработоспособным из-за
+                того, что формат вызова процедуры несовместим с новым описанием параметров. Кроме
+                того, PSQL модули, использующие изменённую хранимую процедуру, могут стать
+                некорректными. Информация о том, как это обнаружить, находится в приложении <link
+                    linkend="fblangref-appx-supp-rdb-validblr">Поле RDB$VALID_BLR</link>. </para>
+        </warning>
+        <section xml:id="fblangref-ddl-procedure-alter-who">
+            <title>Кто может изменить хранимую процедуру?</title>
+
+            <para>Выполнить оператор <database>ALTER PROCEDURE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец хранимой процедуры; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>ALTER ANY PROCEDURE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-procedure-alter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Изменение хранимой процедуры</title>
+                <para>
+                    <programlisting language="sql">
+ALTER PROCEDURE GET_EMP_PROJ (
+    EMP_NO SMALLINT)
+RETURNS (
+    PROJ_ID VARCHAR(20))
+AS
+BEGIN
+  FOR SELECT
+          PROJ_ID
+      FROM
+          EMPLOYEE_PROJECT
+      WHERE
+          EMP_NO = :emp_no
+      INTO :proj_id
+  DO
+    SUSPEND;
+END                
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
+                        linkend="fblangref-ddl-procedure-createoralter">CREATE OR ALTER
+                        PROCEDURE</link>, <link linkend="fblangref-ddl-procedure-recreate">RECREATE
+                        PROCEDURE</link>, <link linkend="fblangref-ddl-procedure-drop">DROP
+                        PROCEDURE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-procedure-createoralter">
+        <info>
+            <title>CREATE OR ALTER PROCEDURE</title>
+            <keywordset>
+                <keyword>CREATE OR ALTER PROCEDURE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>CREATE OR ALTER PROCEDURE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой или изменение существующей хранимой процедуры.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+CREATE OR ALTER PROCEDURE <replaceable>procname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])                        
+<replaceable>&lt;routine body&gt;</replaceable>   
+                       </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Подробнее см.</title>
+
+            <para>
+                <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>. </para>
+        </formalpara>
+
+        <para>Оператор CREATE OR ALTER PROCEDURE создаёт новую или изменяет существующую хранимую
+            процедуру. Если хранимая процедура не существует, то она будет создана с использованием
+            предложения CREATE PROCEDURE. Если она уже существует, то она будет изменена и
+            откомпилирована, при этом существующие привилегии и зависимости сохраняются. </para>
+
+        <section xml:id="fblangref-ddl-procedure-createoralter-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание или изменение хранимой процедуры </title>
+                <para>
+                    <programlisting language="sql">
+CREATE OR ALTER PROCEDURE GET_EMP_PROJ (
+    EMP_NO SMALLINT)
+RETURNS (
+    PROJ_ID VARCHAR(20))
+AS
+BEGIN
+  FOR SELECT
+          PROJ_ID
+      FROM
+          EMPLOYEE_PROJECT
+      WHERE
+          EMP_NO = :emp_no
+      INTO :proj_id
+  DO
+    SUSPEND;
+END                
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
+                        linkend="fblangref-ddl-procedure-alter">ALTER PROCEDURE</link>, <link
+                        linkend="fblangref-ddl-procedure-recreate">RECREATE PROCEDURE</link>, <link
+                        linkend="fblangref-ddl-procedure-drop">DROP PROCEDURE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-procedure-drop">
+        <info>
+            <title>DROP PROCEDURE</title>
+            <keywordset>
+                <keyword>DROP PROCEDURE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>DROP PROCEDURE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Удаление существующей хранимой процедуры.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+DROP PROCEDURE <replaceable>procname</replaceable>  
+                       </programlisting>
+            </para>
+        </formalpara>
+        <para>
+            <table frame="all">
+                <title>Параметры оператора DROP PROCEDURE</title>
+                <?dbfo keep-together='auto'?>
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                    <thead>
+                        <row>
+                            <entry align="center">Параметр</entry>
+                            <entry align="center">Описание</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>
+                                <replaceable>procname</replaceable>
+                            </entry>
+                            <entry>Имя хранимой процедуры.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+
+        <para>Оператор DROP PROCEDURE удаляет существующую хранимую процедуру. Если от хранимой
+            процедуры существуют зависимости, то при попытке удаления такой процедуру будет выдана
+            соответствующая ошибка. </para>
+        <section xml:id="fblangref-ddl-procedure-drop-who">
+            <title>Кто может удалить хранимую процедуру?</title>
+
+            <para>Выполнить оператор <database>DROP PROCEDURE</database> могут: <itemizedlist
+                    spacing="compact">
+                    <listitem>
+                        <para><link linkend="fblangref-security-administrators"
+                                >Администраторы</link></para>
+                    </listitem>
+                    <listitem>
+                        <para>Владелец хранимой процедуры; </para>
+                    </listitem>
+                    <listitem>
+                        <para>Пользователи с привилегией <database>DROP ANY PROCEDURE</database>.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+        <section xml:id="fblangref-ddl-procedure-drop-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Удаление хранимой процедуры </title>
+                <para>
+                    <programlisting language="sql">
+DROP PROCEDURE GET_EMP_PROJ;               
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
+                        linkend="fblangref-ddl-procedure-recreate">RECREATE PROCEDURE</link>.
+                </para>
+            </formalpara>
+        </section>
+    </section>
+    <section xml:id="fblangref-ddl-procedure-recreate">
+        <info>
+            <title>RECREATE PROCEDURE</title>
+            <keywordset>
+                <keyword>RECREATE PROCEDURE</keyword>
+            </keywordset>
+        </info>
+        <indexterm>
+            <primary>RECREATE PROCEDURE</primary>
+        </indexterm>
+        <formalpara>
+            <title>Назначение:</title>
+
+            <para>Создание новой или пересоздание существующей хранимой процедуры.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Доступно в:</title>
+
+            <para>DSQL, ESQL.</para>
+        </formalpara>
+
+        <formalpara>
+            <title>Синтаксис:</title>
+            <para>
+                <programlisting>
+RECREATE PROCEDURE <replaceable>procname</replaceable> [(<replaceable>&lt;inparam&gt;</replaceable> [, <replaceable>&lt;inparam&gt;</replaceable> ...])]   
+RETURNS (<replaceable>&lt;outparam&gt;</replaceable> [, <replaceable>&lt;outparam&gt;</replaceable> ...])                        
+<replaceable>&lt;routine body&gt;</replaceable> 
+                       </programlisting>
+            </para>
+        </formalpara>
+        <formalpara>
+            <title>Подробнее см.</title>
+
+            <para>
+                <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>. </para>
+        </formalpara>
+
+        <para>Оператор RECREATE PROCEDURE создаёт новую или пересоздаёт существующую хранимую
+            процедуру. Если процедура с таким именем уже существует, то оператор попытается удалить
+            её и создать новую процедуру. Операция закончится неудачей при подтверждении транзакции,
+            если процедура имеет зависимости.</para>
+        <note>
+            <para>Имейте в виду, что ошибки зависимостей не обнаруживаются до фазы подтверждения
+                транзакции.</para>
+        </note>
+        <para>После пересоздания процедуры привилегии на выполнение хранимой процедуры и привилегии
+            самой хранимой процедуры не сохраняются. </para>
+
+        <section xml:id="fblangref-ddl-procedure-recreate-examples">
+            <title>Примеры</title>
+            <example>
+                <title>Создание новой или пересоздание существующей хранимой процедуры</title>
+                <para>
+                    <programlisting language="sql">
+RECREATE PROCEDURE GET_EMP_PROJ (
+    EMP_NO SMALLINT)
+RETURNS (
+    PROJ_ID VARCHAR(20))
+AS
+BEGIN
+  FOR SELECT
+          PROJ_ID
+      FROM
+          EMPLOYEE_PROJECT
+      WHERE
+          EMP_NO = :emp_no
+      INTO :proj_id
+  DO
+    SUSPEND;
+END              
+                </programlisting>
+                </para>
+            </example>
+            <formalpara>
+                <title>См. также:</title>
+
+                <para>
+                    <link linkend="fblangref-ddl-procedure-create">CREATE PROCEDURE</link>, <link
+                        linkend="fblangref-ddl-procedure-createoralter">CREATE OR ALTER
+                        PROCEDURE</link>, <link linkend="fblangref-ddl-procedure-drop">DROP
+                        PROCEDURE</link>. </para>
+            </formalpara>
+        </section>
+    </section>
+</section>

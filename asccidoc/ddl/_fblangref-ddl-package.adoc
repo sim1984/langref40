@@ -1,0 +1,532 @@
+[[fblangref-ddl-package]]
+= PACKAGE
+
+Пакет -- группа процедур и функций, которая представляет собой один объект базы данных. 
+
+Пакеты Firebird состоят из двух частей: заголовка (ключевое слово PACKAGE) и тела (ключевые слова PACKAGE BODY). Такое разделение очень сильно напоминает модули Delphi, заголовок соответствует интерфейсной части, а тело -- части реализации.
+
+Сначала создаётся заголовок (CREATE PACKAGE), а затем -- тело (<<fblangref-ddl-package-body-create,CREATE PACKAGE BODY>>).
+
+
+[[fblangref-ddl-package-create]]
+== CREATE PACKAGE
+
+.Назначение
+Создание заголовка пакета.
+
+.Доступно в
+DSQL
+
+[[fblangref-ddl-pkg-create-syntax]]
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE PACKAGE _package_name_
+[<rights clause>]                            
+AS
+BEGIN
+  [<package_item> ...]
+END
+
+<rights clause> ::=
+  SQL SECURITY {DEFINER | INVOKER}  
+
+<package_item> ::=
+    <function_decl>; 
+  | <procedure_decl>;
+                            
+<function_decl> ::=
+  FUNCTION _func_name_ [(<in_params>)]
+  RETURNS <type> [COLLATE collation] 
+  [DETERMINISTIC]   
+                            
+<procedure_decl> ::=
+  PROCEDURE _proc_name_ [(<in_params>)]
+  [RETURNS (<out_params>)]                           
+
+<in_params> ::= <inparam> [, <inparam> ...]
+
+<inparam> ::= <param_decl> [{= | DEFAULT} <value>]  
+                                                        
+<value> ::=  {_literal_ | NULL | _context_var_}
+
+<out_params> ::= <outparam> [, <outparam> ...]
+
+<outparam>  ::=  <param_decl> 
+                    
+<param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
+
+<type> ::= <datatype> | [TYPE OF] _domain_name_ | TYPE OF COLUMN _rel_._col_
+                    
+<datatype> ::= 
+    <scalar_datatype> | <blob_datatype> | <array_datatype>                   
+                    
+<scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
+
+<blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
+
+<array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
+----
+
+[[fblangref-ddl-tbl-createpkg]]
+.Параметры оператора CREATE PACKAGE
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|package_name
+|Имя пакета.
+Может содержать до 63 символов.
+
+|function_decl
+|Объявление функции.
+
+|procedure_decl
+|Объявление процедуры.
+
+|proc_name
+|Имя процедуры.
+Может содержать до 63 символов.
+
+|func_name
+|Имя функции.
+Может содержать до 63 символов.
+
+|inparam
+|Описание входного параметра.
+
+|outparam
+|Описание выходного параметра.
+
+|literal
+|Литерал, совместимый по типу с параметром.
+
+|context_var
+|Любая контекстная переменная, тип которой совместим с типом параметра.
+
+|paramname
+|Имя входного или выходного параметра процедуры/функции.
+Может содержать до 63 символов.
+Имя параметра должно быть уникальным среди входных и выходных параметров процедуры/функции, а также её локальных переменных.
+
+|datatype
+|Тип данных SQL.
+
+|collation
+|Порядок сортировки.
+
+|domain_name
+|Имя домена.
+
+|rel
+|Имя таблицы или представления.
+
+|col
+|Имя столбца таблицы или представления.
+|===
+
+Оператор CREATE PACKAGE создаёт новый заголовок пакета.
+Имя пакета должно быть уникальным среди имён всех пакетов.
+
+Процедуры и функции, объявленные в заголовке пакета, доступны вне тела пакета через полный идентификатор имён процедур и функций (`_package_name_._procedure_name_` и `_package_name_._function_name_`). Процедуры и функции, определенные в теле пакета, но не объявленные в заголовке пакета, не видны вне тела пакета.
+
+Имена процедур и функций, объявленные в заголовке пакета, должны быть уникальны среди имён процедур и функций, объявленных в заголовке и теле пакета.
+
+[NOTE]
+====
+Желательно чтобы имена хранимых процедур и функций пакета не пересекались с именами хранимых процедур и функций из глобального пространства имен, хотя это и допустимо.
+Дело в том, что в настоящее время вы не сможете вызвать функцию/процедуру из глобального пространства имён внутри пакета, если в пакете объявлена одноименная функция/процедура.
+В этом случае всегда будет вызвана процедура/функция пакета. 
+====
+
+[[fblangref-ddl-package-create-sql-security]]
+=== Привилегии выполнения
+
+Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется процедуры и функции пакета.
+Если выбрана опция `INVOKER`, то процедуры и функции пакета выполняются с привилегиями вызывающего пользователя.
+Если выбрана опция `DEFINER`, то процедуры и функции пакета выполняется с привилегиями определяющего пользователя (владельца пакета). Эти привилегии будут дополнены привилегиями выданные самому пакету с помощью оператора GRANT.
+По умолчанию процедуры и функции пакета выполняются с привилегиями вызывающего пользователя.
+Переопределять привилегии выполнения для процедур и функций пакета запрещено.
+
+[TIP]
+====
+Привилегии выполнения по умолчанию для вновь создаваемых объектов метаданных можно изменить с помощью оператора
+
+[listing]
+----
+ALTER DATABASE SET DEFAULT SQL SECURITY {DEFINER | INVOKER}
+----
+====
+
+[[fblangref-ddl-package-term]]
+=== Терминатор оператора
+
+Некоторые редакторы SQL-операторов -- в частности утилита [app]``isql``, которая идёт в комплекте с Firebird, и возможно некоторые сторонние редакторы -- используют внутреннее соглашение, которое требует, чтобы все операторы были завершены с точкой с запятой.
+
+Это создает конфликт с синтаксисом PSQL при кодировании в этих средах.
+Если вы не знакомы с этой проблемой и её решением, пожалуйста, изучите детали в главе PSQL в разделе, озаглавленном
+<<fblangref-psql-setterm,Изменение терминатора в [app]``isql``>>.
+
+[[fblangref-ddl-package-create_params]]
+=== Параметры процедур и функций
+
+У каждого параметра указывается тип данных.
+Кроме того, для параметра можно указать ограничение `NOT NULL`, тем самым запретив передавать в него значение `NULL`.
+
+Для параметра строкового типа существует возможность задать порядок сортировки с помощью предложения `COLLATE`.
+
+[[fblangref-ddl-package-create-params-in]]
+==== Входные параметры
+
+Входные параметры заключаются в скобки после имени хранимой процедуры.
+Они передаются в процедуру по значению, то есть любые изменения входных параметров внутри процедуры никак не повлияет на значения этих параметров в вызывающей программе.
+
+Входные параметры могут иметь значение по умолчанию.
+Параметры, для которых заданы значения, должны располагаться в конце списка параметров.
+
+[[fblangref-ddl-package-create-params-out]]
+==== Выходные параметры
+
+Для хранимых процедур список выходных параметров задаётся в необязательное предложение `RETURNS`.
+
+Для хранимых функций в обязательном предложении `RETURNS` задаётся тип возвращаемого значения.
+
+[[fblangref-ddl-package-create-params-domain]]
+==== Использование доменов при объявлении параметров
+
+В качестве типа параметра можно указать имя домена.
+В этом случае параметр будет наследовать все характеристики домена.
+
+Если перед названием домена дополнительно используется предложение `TYPE OF`, то используется только тип данных домена -- не проверяется (не используется) его ограничение (если оно есть в домене) на `NOT NULL`, `CHECK` ограничения и/или значения по умолчанию.
+Если домен текстового типа, то всегда используется его набор символов и порядок сортировки.
+
+[[fblangref-ddl-package-create-params-typeofcolumn]]
+==== Использование типа столбца при объявлении параметров
+
+Входные и выходные параметры можно объявлять, используя тип данных столбцов существующих таблиц и представлений.
+Для этого используется предложение `TYPE OF COLUMN`, после которого указывается имя таблицы или представления и через точку имя столбца.
+
+При использовании `TYPE OF COLUMN` наследуется только тип данных, а в случае строковых типов ещё и набор символов, и порядок сортировки.
+Ограничения и значения по умолчанию столбца никогда не используются. 
+
+[[fblangref-ddl-package-create-func-determ]]
+=== Детерминированные функции
+
+Необязательное предложение `DETERMINISTIC` в объявлении функции указывает, что функция детерминированная.
+Детерминированные функции каждый раз возвращают один и тот же результат, если предоставлять им один и тот же набор входных значений.
+Недетерминированные функции могут возвращать каждый раз разные результаты, даже если предоставлять им один и тот же набор входных значений.
+Если для функции указано, что она является детерминированной, то такая функция не вычисляется заново, если она уже была вычислена однажды с данным набором входных аргументов, а берет свои значения из кэша метаданных (если они там есть).
+
+[NOTE]
+====
+На самом деле в текущей версии Firebird, не существует кэша хранимых функций с маппингом входных аргументов на выходные значения.
+
+Указание инструкции `DETERMINISTIC` на самом деле нечто вроде "`обещания`", что код функции будет возвращать одно и то же.
+В данный момент детерминистическая функция считается инвариантом и работает по тем же принципам, что и другие инварианты.
+Т.е.
+вычисляется и кэшируется на уровне текущего выполнения данного запроса.
+====
+
+[[fblangref-ddl-package-create-who]]
+=== Кто может создать пакет?
+
+Выполнить оператор `CREATE PACKAGE` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Пользователи с привилегией `CREATE PACKAGE`.
+
+Пользователь, создавший заголовок пакета становится владельцем пакета.
+
+[[fblangref-ddl-package-create-examples]]
+=== Примеры
+
+.Создание заголовка пакета
+[example]
+====
+[source,sql]
+----
+CREATE PACKAGE APP_VAR
+AS
+BEGIN
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC;
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC;
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE DEFAULT CURRENT_DATE);
+END
+----
+
+То же самое, но процедуры и функции пакета будут выполняться с правами определяющего пользователя (владельца пакета).
+
+[source,sql]
+----
+
+CREATE PACKAGE APP_VAR
+SQL SECURITY DEFINER
+AS
+BEGIN
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC;
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC;
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE DEFAULT CURRENT_DATE);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-body-create,CREATE PACKAGE BODY>>,
+<<fblangref-ddl-package-alter,ALTER PACKAGE>>,
+<<fblangref-ddl-package-drop,DROP PACKAGE>>.
+
+[[fblangref-ddl-package-alter]]
+== ALTER PACKAGE
+
+.Назначение
+Изменение заголовка пакета.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+ALTER PACKAGE _package_name_
+[<rights clause>]                             
+AS
+BEGIN
+  [<package_item> ...]
+END
+
+<package_item> ::=
+    <function_decl>; 
+  | <procedure_decl>;
+                            
+<function_decl> ::=
+  FUNCTION _func_name_ [(<in_params>)]
+  RETURNS <type> [COLLATE _collation_]
+  [DETERMINISTIC]     
+                            
+<procedure_decl> ::=
+  PROCEDURE _proc_name_ [(<in_params>)]
+  [RETURNS (<out_params>)]
+
+Подробнее см. <<fblangref-ddl-pkg-create-syntax,CREATE PACKAGE>>
+----
+
+Оператор `ALTER PACKAGE` изменяет заголовок пакета.
+Позволяется изменять количество и состав процедур и функций, их входных и выходных параметров.
+При этом исходный код тела пакета сохраняется.
+Состояние соответствия тела пакета его заголовку отображается в столбце `RDB$PACKAGES.RDB$VALID_BODY_FLAG`.
+
+[[fblangref-ddl-package-alter_who]]
+=== Кто может изменить заголовок пакета?
+
+Выполнить оператор `ALTER PACKAGE` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец пакета; 
+* Пользователи с привилегией `ALTER ANY PACKAGE`.
+
+
+[[fblangref-ddl-package-alter_examples]]
+==== Примеры
+
+.Изменение заголовка пакета
+[example]
+====
+[source,sql]
+----
+ALTER PACKAGE APP_VAR
+AS
+BEGIN
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC;
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC;
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE DEFAULT CURRENT_DATE);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-alter,CREATE PACKAGE>>,
+<<fblangref-ddl-package-drop,DROP PACKAGE>>,
+<<fblangref-ddl-package-body_recreate,RECREATE PACKAGE BODY>>.
+
+[[fblangref-ddl-package-createoralter]]
+== CREATE OR ALTER PACKAGE
+
+.Назначение
+Создание нового или изменение существующего заголовка пакета.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+CREATE OR ALTER PACKAGE _package_name_
+[<rights clause>]                             
+AS
+BEGIN
+  [<package_item> ...]
+END
+
+<package_item> ::=
+    <function_decl>; 
+  | <procedure_decl>;
+                            
+<function_decl> ::=
+  FUNCTION _func_name_ [(<in_params>)]
+  RETURNS <type> [COLLATE collation] 
+  [DETERMINISTIC]   
+                            
+<procedure_decl> ::=
+  PROCEDURE _proc_name_ [(<in_params>)]
+  [RETURNS (<out_params>)]
+
+Подробнее см. <<fblangref-ddl-pkg-create-syntax,CREATE PACKAGE>>
+----
+
+Оператор `CREATE OR ALTER PACKAGE` создаёт новый или изменяет существующий заголовок пакета.
+Если заголовок пакета не существует, то он будет создан с использованием предложения `CREATE PACKAGE`.
+Если он уже существует, то он будет изменен и перекомпилирован, при этом существующие привилегии и зависимости сохраняются. 
+
+[[fblangref-ddl-package-createoralter-examples]]
+=== Примеры
+
+.Создание нового или изменение существующего заголовка пакета
+[example]
+====
+[source,sql]
+----
+CREATE OR ALTER PACKAGE APP_VAR
+AS
+BEGIN
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC;
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC;
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE DEFAULT CURRENT_DATE);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-alter,CREATE PACKAGE>>,
+<<fblangref-ddl-package-alter,ALTER PACKAGE>>,
+<<fblangref-ddl-package-body-recreate,RECREATE PACKAGE BODY>>.
+
+[[fblangref-ddl-package-drop]]
+== DROP PACKAGE
+
+.Назначение
+Удаление заголовка пакета.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes"]
+----
+DROP PACKAGE _package_name_
+----
+
+.Параметры оператора DROP PACKAGE
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|package_name
+|Имя пакета.
+|===
+
+Оператор `DROP PACKAGE` удаляет существующий заголовок пакета.
+Перед удалением заголовка пакета (`DROP PACKAGE`), необходимо выполнить удаление тела пакета (`DROP PACKAGE BODY`), иначе будет выдана ошибка.
+Если от заголовка пакета существуют зависимости, то при попытке удаления такого заголовка будет выдана соответствующая ошибка.
+
+[[fblangref-ddl-package-drop-who]]
+=== Кто может удалить заголовок пакета?
+
+Выполнить оператор `DROP PACKAGE` могут: 
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец пакета; 
+* Пользователи с привилегией `DROP ANY PACKAGE`.
+
+
+[[fblangref-ddl-package-drop-examples]]
+=== Примеры
+
+.Удаление заголовка пакета
+[example]
+====
+[source,sql]
+----
+DROP PACKAGE APP_VAR;
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-alter,CREATE PACKAGE>>,
+<<fblangref-ddl-package-alter,ALTER PACKAGE>>,
+<<fblangref-ddl-package-body-drop,DROP PACKAGE BODY>>.
+
+[[fblangref-ddl-package-recreate]]
+== RECREATE PACKAGE
+
+.Назначение
+Создание нового или пересоздание существующего заголовка пакета.
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing,subs="+quotes,macros"]
+----
+RECREATE PACKAGE _package_name_
+[<rights clause>]                             
+AS
+BEGIN
+  [<package_item> ...]
+END
+
+<package_item> ::=
+    <function_decl>; 
+  | <procedure_decl>;
+                            
+<function_decl> ::=
+  FUNCTION _func_name_ [(<in_params>)]
+  RETURNS <type> [COLLATE _collation_]
+  [DETERMINISTIC]    
+                            
+<procedure_decl> ::=
+  PROCEDURE _proc_name_ [(<in_params>)]
+  [RETURNS (<out_params>)]
+
+Подробнее см. <<fblangref-ddl-pkg-create-syntax,CREATE PACKAGE>>
+----
+
+Оператор `RECREATE PACKAGE` создаёт новый или пересоздаёт существующий заголовок пакета.
+Если заголовок пакета с таким именем уже существует, то оператор попытается удалить его и создать новый заголовок пакета.
+Пересоздать заголовок пакета невозможно, если у существующей заголовка пакета имеются зависимости или существует тело этого пакета.
+После пересоздания заголовка пакета привилегии на выполнение подпрограмм пакета и привилегии самого пакета не сохраняются. 
+
+[[fblangref-ddl-package-recreate-examples]]
+=== Примеры
+
+.Создание нового или пересоздание существующего заголовка пакета
+[example]
+====
+[source,sql]
+----
+RECREATE PACKAGE APP_VAR
+AS
+BEGIN
+  FUNCTION GET_DATEBEGIN() RETURNS DATE DETERMINISTIC;
+  FUNCTION GET_DATEEND() RETURNS DATE DETERMINISTIC;
+  PROCEDURE SET_DATERANGE(ADATEBEGIN DATE, ADATEEND DATE DEFAULT CURRENT_DATE);
+END
+----
+====
+
+.См. также:
+<<fblangref-ddl-package-alter,CREATE PACKAGE>>,
+<<fblangref-ddl-package-drop,DROP PACKAGE>>,
+<<fblangref-ddl-package-body-recreate,RECREATE PACKAGE BODY>>.
+

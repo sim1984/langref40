@@ -1,0 +1,43 @@
+:revnumber: v1.0
+:revdate: 16.05.2021
+:doctype: book
+:encoding: utf-8
+:lang: ru
+:icons: font
+:numbered:
+:sectnums:
+:sectanchors:
+:experimental:
+:toc: left
+:toclevels: 4
+:outlinelevels: 6:0
+:imagesdir: images
+:source-highlighter: coderay
+:stylesdir: {asciidoctorconfigdir}/theme/firebird-html
+:stylesheet: firebird.css
+:pdf-fontsdir: {asciidoctorconfigdir}/theme/fonts
+:pdf-themesdir: {asciidoctorconfigdir}/theme/firebird-pdf
+:pdf-theme: firebird
+:appendix-caption: Приложение
+:appendix-refsig: {appendix-caption}
+:caution-caption: Внимание
+:chapter-label: Глава
+:chapter-refsig: {chapter-label}
+:example-caption: Пример
+:figure-caption: Рисунок
+:important-caption: Важно
+:last-update-label: Последнее обновление
+ifdef::listing-caption[:listing-caption: Листинг]
+ifdef::manname-title[:manname-title: Название]
+:note-caption: Примечание
+:part-label: Часть
+:part-refsig: {part-label}
+ifdef::preface-title[:preface-title: Предисловие]
+:section-refsig: Раздел
+:table-caption: Таблица
+:tip-caption: Подсказка
+:toc-title: Содержание
+:untitled-label: Без названия
+:version-label: Версия
+:warning-caption: Предупреждение
+
