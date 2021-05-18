@@ -32,6 +32,8 @@ include::ddl/_fblangref-ddl-filter.adoc[leveloffset=+1]
 
 include::ddl/_fblangref-ddl-sequence.adoc[leveloffset=+1]
 
+include::ddl/_fblangref-ddl-exception.adoc[leveloffset=+1]
+
 include::ddl/_fblangref-ddl-collation.adoc[leveloffset=+1]
 
 include::ddl/_fblangref-ddl-charset.adoc[leveloffset=+1]
