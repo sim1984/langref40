@@ -17,7 +17,7 @@
 В данном разделе описываются вопросы создания, модификации (установка значения последовательности) и удаления последовательностей.
 
 [[fblangref-ddl-sequence-create]]
-== CREATE SEQUENCE
+== `CREATE SEQUENCE`
 
 .Назначение
 Создание новой последовательности (генератора).
@@ -33,7 +33,7 @@ CREATE {SEQUENCE | GENERATOR} _seq_name_
 ----
 
 [[fblangref-ddl-tbl-crtseq]]
-.Параметры оператора CREATE SEQUENCE
+.Параметры оператора `CREATE SEQUENCE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -128,7 +128,7 @@ CREATE SEQUENCE EMP_NO_GEN START WITH 5 INCREMENT BY 10;
 <<fblangref-ddl-sequence-alter,ALTER SEQUENCE>>, <<fblangref-ddl-sequence-setgen,SET GENERATOR>>, <<fblangref-ddl-sequence-drop,DROP SEQUENCE>>, <<fblangref-commons-nxtvlufor,NEXT VALUE FOR>>, <<fblangref-ddl-sequence-drop,GEN_ID>>.
 
 [[fblangref-ddl-sequence-alter]]
-== ALTER SEQUENCE
+== `ALTER SEQUENCE`
 
 .Назначение
 Изменение последовательности (генератора).
@@ -145,7 +145,7 @@ ALTER {SEQUENCE | GENERATOR} _seq_name_
 ----
 
 [[fblangref-ddl-tbl-alterseq]]
-.Параметры оператора ALTER SEQUENCE
+.Параметры оператора `ALTER SEQUENCE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -232,7 +232,7 @@ ALTER SEQUENCE EMP_NO_GEN INCREMENT BY 10;
 <<fblangref-ddl-sequence-setgen,SET GENERATOR>>, <<fblangref-ddl-sequence-create,CREATE SEQUENCE>>, <<fblangref-ddl-sequence-drop,DROP SEQUENCE>>, <<fblangref-commons-nxtvlufor,NEXT VALUE FOR>>, <<fblangref-ddl-sequence-drop,GEN_ID>>.
 
 [[fblangref-ddl-sequence-createoralter]]
-== CREATE OR ALTER SEQUENCE
+== `CREATE OR ALTER SEQUENCE`
 
 .Назначение
 Создание новой или изменение существующей последовательности (генератора).
@@ -249,7 +249,7 @@ CREATE OR ALTER {SEQUENCE | GENERATOR} _seq_name_
 ----
 
 [[fblangref-ddl-sequence-crtoralt-tbl]]
-.Параметры оператора CREATE OR ALTER SEQUENCE
+.Параметры оператора `CREATE OR ALTER SEQUENCE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -293,7 +293,7 @@ INCREMENT BY 1;
 <<fblangref-ddl-sequence-create,CREATE SEQUENCE>>, <<fblangref-ddl-sequence-alter,ALTER SEQUENCE>>, <<fblangref-ddl-sequence-setgen,SET GENERATOR>>. 
 
 [[fblangref-ddl-sequence-drop]]
-== DROP SEQUENCE
+== `DROP SEQUENCE`
 
 .Назначение
 Удаление последовательности (генератора).
@@ -308,7 +308,7 @@ DROP {SEQUENCE | GENERATOR} _seq_name_
 ----
 
 [[fblangref-ddl-tbl-dropseq]]
-.Параметры оператора DROP SEQUENCE
+.Параметры оператора `DROP SEQUENCE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -348,7 +348,7 @@ DROP SEQUENCE EMP_NO_GEN;
 <<fblangref-ddl-sequence-create,CREATE SEQUENCE>>, <<fblangref-ddl-sequence-alter,ALTER SEQUENCE>>, <<fblangref-ddl-sequence-recreate,RECREATE SEQUENCE>>. 
 
 [[fblangref-ddl-sequence-recreate]]
-== RECREATE SEQUENCE
+== `RECREATE SEQUENCE`
 
 .Назначение
 Создание или пересоздание последовательности (генератора).
@@ -365,7 +365,7 @@ RECREATE {SEQUENCE | GENERATOR} _seq_name_
 ----
 
 [[fblangref-ddl-sequence-recr-tbl]]
-.Параметры оператора RECREATE SEQUENCE
+.Параметры оператора `RECREATE SEQUENCE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -401,7 +401,7 @@ INCREMENT BY 1;
 ====
 
 [[fblangref-ddl-sequence-setgen]]
-== SET GENERATOR
+== `SET GENERATOR`
 
 .Назначение
 Устанавливает значение последовательности или генератора в заданное значение. 
@@ -416,7 +416,7 @@ SET GENERATOR _seq_name_ TO _new_val_
 ----
 
 [[fblangref-ddl-tbl-setgen]]
-.Параметры оператора SET GENERATOR
+.Параметры оператора `SET GENERATOR`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

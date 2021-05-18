@@ -10,7 +10,7 @@
 Метаданные представлений доступны для генерации двоичного кода хранимых процедур, функций, пакетов и триггеров так, как будто они являются обычной таблицей, хранящей постоянные данные.
 
 [[fblangref-ddl-view-create]]
-== CREATE VIEW
+== `CREATE VIEW`
 
 .Назначение
 Создание нового представления.
@@ -29,7 +29,7 @@ AS <select_statement>
 ----
 
 [[fblangref-ddl-view-createview-tbl]]
-.Параметры оператора CREATE VIEW
+.Параметры оператора `CREATE VIEW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -95,7 +95,7 @@ AS <select_statement>
 
 
 [[fblangref-ddl-view-checkoptions]]
-=== WITH CHECK OPTIONS
+=== `WITH CHECK OPTIONS`
 
 Необязательное предложение `WITH CHECK OPTIONS` задаёт для изменяемого представления требования проверки вновь введённых или модифицируемых данных условию, указанному в предложении WHERE оператора выборки `SELECT`.
 При попытке вставки новой записи или модификации записи проверяется, выполняется ли для этой записи условие в предложении `WHERE`, если условие не выполняется, то вставка/модификация не выполняется и будет выдано соответствующее диагностическое сообщение.
@@ -282,7 +282,7 @@ VALUES('007 coordinates skyfall', 'pif-paf!', 'oh! waw!');
 <<fblangref-ddl-view-alter,ALTER VIEW>>, <<fblangref-ddl-view-createoralter,CREATE OR ALTER VIEW>>, <<fblangref-ddl-view-recreate,RECREATE VIEW>>, <<fblangref-ddl-view-drop,DROP VIEW>>.
 
 [[fblangref-ddl-view-alter]]
-== ALTER VIEW
+== `ALTER VIEW`
 
 .Назначение
 Изменение существующего представления.
@@ -301,7 +301,7 @@ AS <select_statement>
 ----
 
 [[fblangref-ddl-view-alterview-tbl]]
-.Параметры оператора ALTER VIEW
+.Параметры оператора `ALTER VIEW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -367,7 +367,7 @@ FROM PRICE;
 <<fblangref-ddl-view-create,CREATE VIEW>>, <<fblangref-ddl-view-createoralter,CREATE OR ALTER VIEW>>, <<fblangref-ddl-view-recreate,RECREATE VIEW>>.
 
 [[fblangref-ddl-view-createoralter]]
-== CREATE OR ALTER VIEW
+== `CREATE OR ALTER VIEW`
 
 .Назначение
 Создание нового или изменение существующего представления.
@@ -386,7 +386,7 @@ AS <select_statement>
 ----
 
 [[fblangref-ddl-view-crtalterview-tbl]]
-.Параметры оператора CREATE OR ALTER VIEW
+.Параметры оператора `CREATE OR ALTER VIEW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -435,7 +435,7 @@ FROM PRICE;
 <<fblangref-ddl-view-create,CREATE VIEW>>, <<fblangref-ddl-view-alter,ALTER VIEW>>, <<fblangref-ddl-view-recreate,RECREATE VIEW>>.
 
 [[fblangref-ddl-view-drop]]
-== DROP VIEW
+== `DROP VIEW`
 
 .Назначение
 Удаление существующего представления.
@@ -450,7 +450,7 @@ DROP VIEW _viewname_
 ----
 
 [[fblangref-ddl-view-dropview-tbl]]
-.Параметры оператора DROP VIEW
+.Параметры оператора `DROP VIEW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -489,7 +489,7 @@ DROP VIEW PRICE_WITH_MARKUP;
 <<fblangref-ddl-view-create,CREATE VIEW>>, <<fblangref-ddl-view-recreate,RECREATE VIEW>>.
 
 [[fblangref-ddl-view-recreate]]
-== RECREATE VIEW
+== `RECREATE VIEW`
 
 .Назначение
 Создание нового или пересоздание существующего представления.
@@ -508,7 +508,7 @@ AS <select_statement>
 ----
 
 [[fblangref-ddl-tbl-view-recreate]]
-.Параметры оператора RECREATE VIEW
+.Параметры оператора `RECREATE VIEW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

@@ -10,7 +10,7 @@ BLOB фильтр -- объект базы данных, являющийся, �
 в разделе <<fblangref-datatypes-binary,Бинарные типы данных>>.
 
 [[fblangref-ddl-filter-declare]]
-== DECLARE FILTER
+== `DECLARE FILTER`
 
 .Назначение
 Объявление в базе данных BLOB фильтра.
@@ -33,7 +33,7 @@ ENTRY_POINT '_function_name_' MODULE_NAME '_library_name_';
 ----
 
 [[fblangref-ddl-tbl-declarefiltr]]
-.Параметры оператора DECLARE FILTER
+.Параметры оператора `DECLARE FILTER`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -144,7 +144,7 @@ ENTRY_POINT 'blr2asc' MODULE_NAME 'myfilterlib';
 <<fblangref-ddl-filter-drop,DROP FILTER>>. 
 
 [[fblangref-ddl-filter-drop]]
-== DROP FILTER
+== `DROP FILTER`
 
 .Назначение
 Удаление объявления BLOB фильтра.
@@ -159,7 +159,7 @@ DROP FILTER _filtername_
 ----
 
 
-.Параметры оператора DROP FILTER
+.Параметры оператора `DROP FILTER`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

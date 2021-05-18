@@ -2,7 +2,7 @@
 = CHARACTER SET
 
 [[fblangref-ddl-charset-alter]]
-== ALTER CHARACTER SET
+== `ALTER CHARACTER SET`
 
 .Назначение
 Установка сортировки по умолчанию для набора символов.
@@ -18,7 +18,7 @@ SET DEFAULT COLLATION _collation_
 ----
 
 [[fblangref-ddl-tbl-charsetalter]]
-.Параметры оператора ALTER CHARACTER SET
+.Параметры оператора `ALTER CHARACTER SET`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

@@ -11,7 +11,7 @@
 Под сравнением (сортировкой) (COLLATION) принято понимать такой объект схемы, который определяет упорядочивающую последовательность (или последовательность сортировки).
 
 [[fblangref-ddl-collation-create]]
-== CREATE COLLATION
+== `CREATE COLLATION`
 
 .Назначение
 Добавление новой сортировки (сравнения) для набора символов поддерживаемого в базе данных.
@@ -36,7 +36,7 @@ FOR _charset_
 ----
 
 [[fblangref-ddl-tbl-collatcrt]]
-.Параметры оператора CREATE COLLATION
+.Параметры оператора `CREATE COLLATION`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -239,7 +239,7 @@ CREATE TABLE wares(id int primary key, articul dm_nums ...);
 <<fblangref-ddl-collation-drop,DROP COLLATION>>. 
 
 [[fblangref-ddl-collation-drop]]
-== DROP COLLATION
+== `DROP COLLATION`
 
 .Назначение
 Удаление существующей сортировки.
@@ -254,7 +254,7 @@ DROP COLLATION _collname_
 ----
 
 [[fblangref-ddl-tbl-collatdrp]]
-.Параметры оператора DROP COLLATION
+.Параметры оператора `DROP COLLATION`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

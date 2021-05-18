@@ -6,7 +6,7 @@
 Это удобное средство документирования во время разработки базы данных и её поддержки.
 
 [[fblangref-ddl-commenton]]
-== COMMENT ON
+== `COMMENT ON`
 
 .Назначение
 Документирование метаданных.
@@ -46,7 +46,7 @@ COMMENT ON USER <username> [USING PLUGIN <plugin_name>] IS {'_sometext_' | NULL}
 ----
 
 [[fblangref-ddl-tbl-commenton]]
-.Параметры оператора COMMENT ON
+.Параметры оператора `COMMENT ON`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

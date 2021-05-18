@@ -5,7 +5,7 @@
 В данном разделе описываются вопросы создания базы данных, подключения к существующей базе данных, изменения структуры файлов, перевод базы данных в состояние, необходимое для безопасного резервного копирования, и обратно и удаления базы данных. 
 
 [[fblangref-ddl-database-create]]
-== CREATE DATABASE
+== `CREATE DATABASE`
 
 .Назначение
 Создание новой базы данных.
@@ -13,6 +13,7 @@
 .Доступно в
 DSQL, ESQL
 
+[[fblangref-ddl-db-create-syntax]]
 .Синтаксис
 [listing,subs="+quotes,attributes"]
 ----
@@ -55,7 +56,7 @@ CREATE {DATABASE | SCHEMA} <filespec>
 Каждый _db_initial_option_ и _db_config_option_ может встречаться не более одного раза, за исключением _sec_file_, который может встречаться ноль или более раз.
 ====
 
-.Параметры оператора CREATE DATABASE
+.Параметры оператора `CREATE DATABASE`
 [[fblangref-ddl-tbl-createdatabase]]
 [cols="<1,<3", options="header",stripes="none"]
 |===
@@ -203,7 +204,7 @@ XNET:: локальный протокол.
 ----
 
 [[fblangref-ddl-database-create-optionals]]
-=== Необязательные параметры CREATE DATABASE
+=== Необязательные параметры `CREATE DATABASE`
 
 `USER` и `PASSWORD`::
 Необязательные предложения `USER` и `PASSWORD` задают, соответственно, имя и пароль пользователя присутствующего в базе данных безопасности ([path]_security4.fdb_ или той, что указана в параметре [parameter]``SecurityDatabase``). Пользователя и пароль можно не указывать, если установлены переменные окружения [var]``ISC_USER`` и [var]``ISC_PASSWORD``.
@@ -300,12 +301,11 @@ USER "wizard" PASSWORD 'player' ROLE 'RDB$ADMIN'
 PAGE_SIZE = 4096
 DEFAULT CHARACTER SET UTF8 COLLATION UNICODE_CI_AI;
 ----
+====
 
 [IMPORTANT]
 ====
 В данном случае при создании базы данных будет учитываться регистр символов для имени пользователя, потому что оно указано в двойных кавычках.
-====
-
 ====
 
 .Создание базы данных на удалённом сервере
@@ -426,7 +426,7 @@ STARTING AT PAGE 20001;
 <<_fblangref_ddl_database_alter,ALTER DATABASE>>, <<_fblangref_ddl_database_drop,DROP DATABASE>>. 
 
 [[_fblangref_ddl_database_alter]]
-== ALTER DATABASE
+== `ALTER DATABASE`
 
 .Назначение
 Изменение структуры файлов базы данных, переключение её в состояние "`безопасное для копирования`" или изменение некоторых свойств базы данных. 
@@ -460,7 +460,7 @@ ALTER {DATABASE | SCHEMA}
 ----
 
 [[fblangref-ddl-tbl-alterdatabase]]
-.Параметры оператора ALTER DATABASE
+.Параметры оператора `ALTER DATABASE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^|Параметр
@@ -640,7 +640,7 @@ ALTER DATABASE SET DEFAULT SQL SECURITY DEFINER;
 ====
 
 [[fblangref-ddl-database-alter-linger]]
-=== LINGER
+=== `LINGER`
 
 Предложение `SET LINGER` позволяет установить задержку закрытия базы данных.
 Этот механизм позволяет Firebird в режиме SuperServer, сохранять базу данных в открытом состоянии в течение некоторого времени после того как последние соединение закрыто, т.е.
@@ -821,7 +821,7 @@ ALTER DATABASE EXCLUDE TABLE t1, t2 FROM PUBLICATION
 Это регулярные выражения, которые применяются к именам таблиц и определяют правила для включения таблиц в набор репликации или исключения их из набора репликации.
 
 [[fblangref-ddl-database-alter-who]]
-=== Кто может выполнить ALTER DATABASE?
+=== Кто может выполнить `ALTER DATABASE`?
 
 Выполнить оператор `ALTER DATABASE` могут: 
 
@@ -834,7 +834,7 @@ ALTER DATABASE EXCLUDE TABLE t1, t2 FROM PUBLICATION
 <<fblangref-ddl-database-create,CREATE DATABASE>>, <<fblangref-ddl-database-drop,DROP DATABASE>>.
 
 [[fblangref-ddl-database-drop]]
-== DROP DATABASE
+== `DROP DATABASE`
 
 .Назначение
 Удаление текущей базы данных. 

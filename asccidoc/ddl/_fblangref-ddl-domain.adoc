@@ -7,7 +7,7 @@
 Подробное описание доменов и их использования можно прочесть в главе <<fblangref-datatypes-domain,Пользовательские типы данных -- домены>>.
 
 [[fblangref-ddl-domain-create]]
-== CREATE DOMAIN
+== `CREATE DOMAIN`
 
 .Назначение
 Создание нового домена.
@@ -18,7 +18,6 @@ DSQL, ESQL.
 .Синтаксис
 [listing,subs="+quotes,macros"]
 ----
-
 CREATE DOMAIN _name_ [AS] <datatype>
   [DEFAULT {<literal> | NULL | <context_var>}]
   [NOT NULL] [CHECK (<dom_condition>)]
@@ -78,7 +77,7 @@ CREATE DOMAIN _name_ [AS] <datatype>
 
 
 [[fblangref-ddl-tbl-createdomn]]
-.Параметры оператора CREATE DOMAIN
+.Параметры оператора `CREATE DOMAIN`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^|Параметр
@@ -259,7 +258,7 @@ NUMERIC(18, 3) [2];
 <<fblangref-ddl-domain-alter,ALTER DOMAIN>>, <<fblangref-ddl-domain-drop,DROP DOMAIN>>.
 
 [[fblangref-ddl-domain-alter]]
-== ALTER DOMAIN
+== `ALTER DOMAIN`
 
 .Назначение
 Изменение текущих характеристик домена или его переименование.
@@ -330,7 +329,7 @@ ALTER DOMAIN _domain_name_
 ----
 
 [[fblangref-ddl-tbl-alterdomn]]
-.Параметры оператора ALTER DOMAIN
+.Параметры оператора `ALTER DOMAIN`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^|Параметр
@@ -427,7 +426,7 @@ ALTER DOMAIN _domain_name_
 Предложение `DROP NOT NULL` удаляет ограничение `NOT NULL` для домена.
 
 [[fblangref_ddl-domain-alter-cannot]]
-=== Что не может изменить ALTER DOMAIN
+=== Что не может изменить `ALTER DOMAIN`
 
 * Если домен был объявлен как массив, то изменить ни его тип, ни размерность нельзя. Также нет возможности изменить любой другой тип на тип массив.
 * Не существует способа изменить сортировку по умолчанию. В этом случае необходимо удалить домен и пересоздать его с новыми атрибутами.
@@ -512,7 +511,7 @@ ALTER DOMAIN FIRSTNAME SET NOT NULL;
 <<fblangref-ddl-domain-create,CREATE DOMAIN>>, <<fblangref-ddl-domain-drop,DROP DOMAIN>>.
 
 [[fblangref-ddl-domain-drop]]
-== DROP DOMAIN
+== `DROP DOMAIN`
 
 .Назначение
 Удаление существующего домена.
@@ -527,7 +526,7 @@ DROP DOMAIN _domain_name_
 ----
 
 
-.Параметры оператора DROP DOMAIN
+.Параметры оператора `DROP DOMAIN`
 [cols="1,1", frame="all", options="header"]
 |===
 | Параметр

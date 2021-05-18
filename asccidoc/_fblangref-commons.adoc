@@ -578,7 +578,7 @@ IF (A > B OR (A > C AND A > D) AND NOT (C = D)) THEN
 ====
 
 [[fblangref-commons-at]]
-=== AT
+=== `AT`
 
 .Доступно в
 DSQL, PSQL.
@@ -600,7 +600,7 @@ DSQL, PSQL.
 Если используется ключевое слово `LOCAL`, то преобразование происходит в часовой пояс сессии.
 
 
-.Использование функции AT
+.Использование функции `AT`
 [example]
 ====
 [source,sql]
@@ -618,7 +618,7 @@ select timestamp '2018-01-01 12:00 GMT' at local
 ====
 
 [[fblangref-commons-nxtvlufor]]
-=== NEXT VALUE FOR
+=== `NEXT VALUE FOR`
 
 Доступно в
 DSQL, PSQL.
@@ -752,7 +752,7 @@ END;
 ====
 
 [[fblangref-commons-null-in-expr]]
-=== NULL в выражениях
+=== `NULL` в выражениях
 
 `NULL` не является значением -- это состояние, указывающее, что значение элемента неизвестно или не существует.
 Это не ноль, не пустота, не "`пустая строка`", и оно не ведёт себя как какое-то из этих значений.
@@ -767,9 +767,9 @@ END;
 ====
 
 [[fblangref-commons-returningnull]]
-==== Выражения возвращающие NULL
+==== Выражения возвращающие `NULL`
 
-Выражения в этом списке всегда возвратят NULL: 
+Выражения в этом списке всегда возвратят `NULL`:
 
 [source,sql]
 ----
@@ -784,7 +784,7 @@ not (NULL)
 Если вам трудно понять, почему, вспомните, что `NULL` -- значит "`неизвестно`".
 
 [[fblangref-commons-nullinlogical]]
-==== NULL в логических выражениях
+==== `NULL` в логических выражениях
 
 Мы уже рассмотрели, что `not (NULL)` даёт в результате `NULL`.
 Для операторов `AND` и `OR` взаимодействие несколько сложнее:
@@ -799,7 +799,7 @@ NULL and true -> NULL
 NULL and NULL -> NULL
 ----
 
-.NULL в логических выражениях
+.`NULL` в логических выражениях
 [example]
 ====
 [source,sql]
@@ -997,7 +997,7 @@ WHERE type = NULL AND price < 300;
 Другие предикаты сравнения состоят из ключевых слов.
 
 [[fblangref-commons-predbetween]]
-==== BETWEEN
+==== `BETWEEN`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1023,7 +1023,7 @@ DSQL, PSQL, ESQL.
 
 При использовании предиката `BETWEEN` в поисковых условиях DML запросов, оптимизатор Firebird может использовать индекс по искомому столбцу, если таковой доступен.
 
-.Использование предиката BETWEEN
+.Использование предиката `BETWEEN`
 [example]
 ====
 [source,sql]
@@ -1036,7 +1036,7 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
 ====
 
 [[fblangref-commons-predlike]]
-==== LIKE
+==== `LIKE`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1071,12 +1071,12 @@ DSQL, PSQL, ESQL.
 Если проверяемое значение соответствует образцу с учётом трафаретных символов, то предикат истинен.
 
 [[fblangref-commons-escapechar]]
-===== Использование управляющего символа в предложении ESCAPE
+===== Использование управляющего символа в предложении `ESCAPE`
 
 Если искомая строка содержит трафаретный символ, то следует задать управляющий символ в предложении `ESCAPE`.
 Этот управляющий символ должен использоваться в образце перед трафаретным символом, сообщая о том, что последний следует трактовать как обычный символ.
 
-===== Примеры использования предиката LIKE
+===== Примеры использования предиката `LIKE`
 
 .Поиск строк начинающихся с заданной подстроки с использованеим предиката LIKE
 [example]
@@ -1160,7 +1160,7 @@ WHERE RDB$RELATION_NAME LIKE '%#_%' ESCAPE '#'
 <<fblangref-commons-predstartwith,STARTING WITH>>, <<fblangref-commons-predcontaining,CONTAINING>>, <<fblangref-commons-predsimilarto,SIMILAR TO>>.
 
 [[fblangref-commons-predstartwith]]
-==== STARTING WITH
+==== `STARTING WITH`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1176,7 +1176,7 @@ DSQL, PSQL, ESQL.
 
 При использовании предиката `STARTING WITH` в поисковых условиях DML запросов, оптимизатор Firebird может использовать индекс по искомому столбцу, если он определён.
 
-.Использование предиката STARTING WITH
+.Использование предиката `STARTING WITH`
 [example]
 ====
 Поиск сотрудников, фамилия которых начинается с "`Jo`".
@@ -1195,7 +1195,7 @@ WHERE LAST_NAME STARTING WITH 'Jo'
 <<fblangref-commons-predlike,LIKE>>.
 
 [[fblangref-commons-predcontaining]]
-==== CONTAINING
+==== `CONTAINING`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1217,7 +1217,7 @@ DSQL, PSQL, ESQL.
 
 При использовании предиката `CONTAINING` в поисковых условиях DML запросов, оптимизатор Firebird не может использовать индекс по искомому столбцу.
 
-.Поиск подстроки с ипользованием предиката CONTAINING
+.Поиск подстроки с использованием предиката `CONTAINING`
 [example]
 ====
 Поиск проектов в именах, которых присутствует подстрока "`Map`":
@@ -1252,7 +1252,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 <<fblangref-commons-predlike,LIKE>>.
 
 [[fblangref-commons-predsimilarto]]
-==== SIMILAR TO
+==== `SIMILAR TO`
 
 .Доступно в
 DSQL, PSQL.
@@ -1590,7 +1590,7 @@ $$...$$ и управляющих символов (escaped character), если
 ----
 
 [[fblangref-commons-isnotdistinct]]
-==== IS DISTINCT FROM
+==== `IS DISTINCT FROM`
 
 .Доступно в
 DSQL, PSQL.
@@ -1662,7 +1662,7 @@ IF (NEW.JOB IS DISTINCT FROM OLD.JOB) THEN
 <<fblangref-commons-isnotboolean>>, <<fblangref-commons-isnotnull>>.
 
 [[fblangref-commons-isnotboolean]]
-==== Логический IS [NOT]
+==== Логический `IS [NOT]`
 
 .Доступно в
 DSQL, PSQL.
@@ -1714,7 +1714,7 @@ ID           BVAL
 ====
 
 [[fblangref-commons-isnotnull]]
-==== IS [NOT] NULL
+==== `IS [NOT] NULL`
 
 .Доступно в
 DSQL, PSQL.
@@ -1748,7 +1748,7 @@ WHERE SHIP_DATE IS NULL;
 Предикаты существования называются так потому, что они различными способами проверяют существование или отсутствие результатов подзапросов.
 
 [[fblangref-commons-exists]]
-==== EXISTS
+==== `EXISTS`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1767,7 +1767,7 @@ DSQL, PSQL, ESQL.
 
 Предикат `NOT EXISTS` возвращает `FALSE`, если результат подзапроса будет содержать хотя бы одну запись, в противном случае предикат вернёт `TRUE`.
 
-.Предикат EXISTS
+.Предикат `EXISTS`
 [example]
 ====
 Найти тех сотрудников, у которых есть проекты.
@@ -1804,7 +1804,7 @@ WHERE NOT EXISTS (SELECT *
 ====
 
 [[fblangref-commons-in]]
-==== IN
+==== `IN`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1948,7 +1948,7 @@ WHERE
 <<fblangref-commons-exists,EXISTS>>.
 
 [[fblangref-commons-singular]]
-==== SINGULAR
+==== `SINGULAR`
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1996,7 +1996,7 @@ WHERE SINGULAR (SELECT *
 ----
 
 [[fblangref-commons-quant_all]]
-==== ALL
+==== `ALL`
 
 .Доступно в
 DSQL, PSQL.
@@ -2037,7 +2037,7 @@ WHERE rating > ALL
 ====
 
 [[fblangref-commons-quant-anysome]]
-==== ANY и SOME
+==== `ANY` и `SOME`
 
 .Доступно в
 DSQL, PSQL.

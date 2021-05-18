@@ -219,14 +219,13 @@ FullName
 .Синтаксис
 [listing]
 ----
-
 <comment> ::= <block comment> | <single-line comment>
 
 <block comment> ::=
-  /* <character>[<character> …] */
+  /* <character>[<character> ...] */
 
 <single-line comment> ::=
-  -- <character>[<character> …]<end line>
+  -- <character>[<character> ...]<end line>
 ----
 
 Блочные комментарии начинаются с символов `/{asterisk}` и заканчиваются символам `{asterisk}/`.

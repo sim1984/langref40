@@ -22,5 +22,8 @@ include::_fblangref-dml.adoc[leveloffset=1]
 
 include::_fblangref-psql.adoc[leveloffset=1]
 
+include::_fblangref-functions-scalar.adoc[leveloffset=1]
+
+
 
 include::_fblangref-appx08-license.adoc[leveloffset=1]

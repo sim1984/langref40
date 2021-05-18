@@ -30,7 +30,7 @@ UDF принципиально небезопасны.
 ====
 
 [[fblangref-ddl-extfunc-declare]]
-== DECLARE EXTERNAL FUNCTION
+== `DECLARE EXTERNAL FUNCTION`
 
 .Назначение
 Объявление в базе данных функции определённой пользователем (UDF).
@@ -62,7 +62,7 @@ ENTRY_POINT '_entry_point_' MODULE_NAME '_library_name_';
 <blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
 ----
 
-.Параметры оператора DECLARE EXTERNAL FUNCTION
+.Параметры оператора `DECLARE EXTERNAL FUNCTION`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -219,7 +219,7 @@ ENTRY_POINT 'fbtruncate' MODULE_NAME 'fbudf';
 <<fblangref-ddl-function-create,CREATE FUNCTION>>.
 
 [[fblangref-ddl-extfunc-alter]]
-== ALTER EXTERNAL FUNCTION
+== `ALTER EXTERNAL FUNCTION`
 
 .Назначение
 Изменение точки входа и/или имени модуля для функции определённой пользователем (UDF).
@@ -235,7 +235,7 @@ ALTER EXTERNAL FUNCTION _funcname_
 [MODULE_NAME '_new_library_name_'];
 ----
 
-.Параметры оператора ALTER EXTERNAL FUNCTION
+.Параметры оператора `ALTER EXTERNAL FUNCTION`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -293,7 +293,7 @@ ALTER EXTERNAL FUNCTION invl MODULE_NAME 'fbudf2';
 <<fblangref-ddl-extfunc-drop,DROP EXTERNAL FUNCTION>>.
 
 [[fblangref-ddl-extfunc-drop]]
-== DROP EXTERNAL FUNCTION
+== `DROP EXTERNAL FUNCTION`
 
 .Назначение
 Удаление объявления функции определённой пользователем (UDF) из базы данных.
@@ -308,7 +308,7 @@ DROP EXTERNAL FUNCTION _funcname_
 ----
 
 
-.Параметры оператора DROP EXTERNAL FUNCTION
+.Параметры оператора `DROP EXTERNAL FUNCTION`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр

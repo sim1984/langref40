@@ -9,7 +9,7 @@
 
 
 [[fblangref-ddl-package-create]]
-== CREATE PACKAGE
+== `CREATE PACKAGE`
 
 .Назначение
 Создание заголовка пакета.
@@ -69,7 +69,7 @@ END
 ----
 
 [[fblangref-ddl-tbl-createpkg]]
-.Параметры оператора CREATE PACKAGE
+.Параметры оператора `CREATE PACKAGE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -277,7 +277,7 @@ END
 <<fblangref-ddl-package-drop,DROP PACKAGE>>.
 
 [[fblangref-ddl-package-alter]]
-== ALTER PACKAGE
+== `ALTER PACKAGE`
 
 .Назначение
 Изменение заголовка пакета.
@@ -347,10 +347,10 @@ END
 .См. также:
 <<fblangref-ddl-package-alter,CREATE PACKAGE>>,
 <<fblangref-ddl-package-drop,DROP PACKAGE>>,
-<<fblangref-ddl-package-body_recreate,RECREATE PACKAGE BODY>>.
+<<fblangref-ddl-package-body-recreate,RECREATE PACKAGE BODY>>.
 
 [[fblangref-ddl-package-createoralter]]
-== CREATE OR ALTER PACKAGE
+== `CREATE OR ALTER PACKAGE`
 
 .Назначение
 Создание нового или изменение существующего заголовка пакета.
@@ -412,7 +412,7 @@ END
 <<fblangref-ddl-package-body-recreate,RECREATE PACKAGE BODY>>.
 
 [[fblangref-ddl-package-drop]]
-== DROP PACKAGE
+== `DROP PACKAGE`
 
 .Назначение
 Удаление заголовка пакета.
@@ -426,7 +426,7 @@ DSQL
 DROP PACKAGE _package_name_
 ----
 
-.Параметры оператора DROP PACKAGE
+.Параметры оператора `DROP PACKAGE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -468,7 +468,7 @@ DROP PACKAGE APP_VAR;
 <<fblangref-ddl-package-body-drop,DROP PACKAGE BODY>>.
 
 [[fblangref-ddl-package-recreate]]
-== RECREATE PACKAGE
+== `RECREATE PACKAGE`
 
 .Назначение
 Создание нового или пересоздание существующего заголовка пакета.

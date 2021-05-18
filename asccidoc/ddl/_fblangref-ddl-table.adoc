@@ -9,7 +9,7 @@ Firebird -- это реляционная СУБД.
 В данном разделе рассматриваются вопросы создания, модификации и удаления таблиц базы данных. 
 
 [[fblangref-ddl-table-create]]
-== CREATE TABLE
+== `CREATE TABLE`
 
 .Назначение
 Создание новой таблицы.
@@ -237,7 +237,7 @@ CREATE [GLOBAL TEMPORARY] TABLE _tablename_
 Необязательное предложение `COLLATE` позволяет задать порядок сортировки для строковых типов данных (за исключением `BLOB`). Если порядок сортировки не указан, то по умолчанию принимается порядок сортировки по умолчанию для указанного набора сортировки.
 
 [[_fblangref_ddl_table_create_column_nullable]]
-=== Ограничение NOT NULL
+=== Ограничение `NOT NULL`
 
 По умолчанию столбец может принимать значение `NULL`.
 
@@ -1017,7 +1017,7 @@ VALUES('Thou art more lovely and more temperate');
 <<fblangref-ddl-table-alter,ALTER TABLE>>, <<fblangref-ddl-table-alter,DROP TABLE>>, <<fblangref-ddl-domain-create,CREATE DOMAIN>>.
 
 [[fblangref-ddl-table-alter]]
-== ALTER TABLE
+== `ALTER TABLE`
 
 .Назначение
 Изменение структуры таблицы.
@@ -1168,7 +1168,7 @@ ALTER TABLE tablename
 ----
 
 [[fblangref-ddl-tbl-altertbl]]
-.Параметры оператора ALTER TABLE
+.Параметры оператора `ALTER TABLE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^|Параметр
@@ -1278,7 +1278,7 @@ ALTER TABLE tablename
 Для сброса счётчика форматов необходимо сделать резервное копирование и восстановление базы данных (утилитой [app]``gbak``). 
 
 [[fblangref-ddl-table-alter-add]]
-=== Предложение ADD
+=== Предложение `ADD`
 
 Предложение `ADD` позволяет добавить новый столбец или новое ограничение таблицы.
 Синтаксис определения столбца и синтаксис описания ограничения таблицы полностью совпадают с синтаксисом, описанным в операторе <<fblangref-ddl-table-create,CREATE TABLE>>.
@@ -1297,7 +1297,7 @@ ADD CAPITAL VARCHAR(25);
 ----
 ====
 
-.Добавление столбца с ограничением NOT NULL
+.Добавление столбца с ограничением `NOT NULL`
 [example]
 ====
 [source,sql]
@@ -1346,7 +1346,7 @@ REFERENCES COUNTRY (COUNTRY);
 ====
 
 [[fblangref-ddl-table-alter-drop]]
-=== Предложение DROP
+=== Предложение `DROP`
 
 Предложение `DROP` удаляет указанный столбец таблицы.
 Столбец таблицы не может быть удалён, если от него существуют зависимости.
@@ -1361,7 +1361,7 @@ REFERENCES COUNTRY (COUNTRY);
 При каждом удалении столбца номер формата увеличивается на единицу. 
 
 [[fblangref-ddl-tablealter-drop-constraint]]
-=== Предложение DROP CONSTRAINT
+=== Предложение `DROP CONSTRAINT`
 
 Предложение `DROP CONSTRAINT` удаляет указанное ограничение столбца или таблицы.
 Ограничение первичного ключа или уникального ключа не могут быть удалены, если они используются в ограничении внешнего ключа другой таблицы.
@@ -1370,16 +1370,16 @@ REFERENCES COUNTRY (COUNTRY);
 Удаление ограничения столбца или ограничения таблицы не влечёт за собой увеличение номера формата. 
 
 [[fblangref-ddl-table-alter-drop-sql-security]]
-=== Предложение DROP SQL SECURITY
+=== Предложение `DROP SQL SECURITY`
 
 Предложение `DROP SQL SECURITY` удаляет привилегии выполнения для таблицы.
 После удаления привилегий выполнения вычисляемые столбцы таблицы будут вычисляться с привилегиями вызывающего пользователя.
 Триггеры также будут выполняться с привилегиями вызывающего пользователя, если их привилегии выполнения не переопределены в триггере явно.
 
 [[fblangref-ddl-table-alter-alter-column]]
-=== Предложение ALTER [COLUMN]
+=== Предложение `ALTER [COLUMN]`
 
-Предложение ALTER [COLUMN] позволяет изменить следующие характеристики существующих столбцов: 
+Предложение `ALTER [COLUMN]` позволяет изменить следующие характеристики существующих столбцов:
 
 * изменение имени (не изменяет номер формата);
 * изменение типа данных (увеличивает номер формата на единицу);
@@ -1617,7 +1617,7 @@ BY (OLD_SALARY * PERCENT_CHANGE / 100);
 На данный момент не существует возможности изменить сортировку по умолчанию. 
 
 [[fblangref-ddl-table-alter-sql-security]]
-=== Предложение ALTER SQL SECURITY
+=== Предложение `ALTER SQL SECURITY`
 
 Предложение `ALTER SQL SECURITY` позволяет изменить привилегии с которыми вычисляются вычисляемые столбцы.
 Если выбрана опция `INVOKER`, то вычисляемые столбцы вычисляются с привилегиями вызывающего пользователя.
@@ -1661,7 +1661,7 @@ ENABLE PUBLICATION;
 <<fblangref-ddl-table-create,CREATE TABLE>>, <<fblangref-ddl-table-recreate,RECREATE TABLE>>.
 
 [[fblangref-ddl-table-drop]]
-== DROP TABLE
+== `DROP TABLE`
 
 .Назначение
 Удаление существующей таблицы.
@@ -1675,7 +1675,7 @@ DSQL, ESQL.
 DROP TABLE _tablename_
 ----
 
-.Параметры оператора DROP TABLE
+.Параметры оператора `DROP TABLE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^|Параметр
@@ -1712,7 +1712,7 @@ DROP TABLE COUNTRY;
 <<fblangref-ddl-table-create,CREATE TABLE>>, <<fblangref-ddl-table-recreate,RECREATE TABLE>>.
 
 [[_fblangref_ddl_table_recreate]]
-== RECREATE TABLE
+== `RECREATE TABLE`
 
 .Назначение
 Создание новой таблицы или пересоздание существующей.

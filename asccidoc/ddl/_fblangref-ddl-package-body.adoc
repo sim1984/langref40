@@ -2,7 +2,7 @@
 = PACKAGE BODY
 
 [[fblangref-ddl-package-body-create]]
-== CREATE PACKAGE BODY
+== `CREATE PACKAGE BODY`
 
 .Назначение
 Создание тела пакета.
@@ -88,7 +88,7 @@ END
 ----
 
 [[fblangref-ddl-tbl-createpkgbdy]]
-.Параметры оператора CREATE PACKAGE BODY
+.Параметры оператора `CREATE PACKAGE BODY`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -248,10 +248,10 @@ END
 ====
 
 .См. также:
-<<fblangref-ddl-package-body-drop,DROP PACKAGE BODY>>, <<fblangref-ddl-package-create,CREATE PACKAGE>>.
+<<fblangref-ddl-package-body-drop,`DROP PACKAGE BODY`>>, <<fblangref-ddl-package-create,`CREATE PACKAGE`>>.
 
 [[fblangref-ddl-package-body-drop]]
-== DROP PACKAGE BODY
+== `DROP PACKAGE BODY`
 
 .Назначение
 Удаление тела пакета.
@@ -265,7 +265,7 @@ DSQL
 DROP PACKAGE BODY _package_name_
 ----
 
-.Параметры оператора DROP PACKAGE BODY
+.Параметры оператора `DROP PACKAGE BODY`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -300,10 +300,10 @@ DROP PACKAGE BODY APP_VAR;
 ====
 
 .См. также:
-<<fblangref-ddl-package-body-create,CREATE PACKAGE BODY>>, <<fblangref-ddl-package-drop,DROP PACKAGE>>.
+<<fblangref-ddl-package-body-create,`CREATE PACKAGE BODY`>>, <<fblangref-ddl-package-drop,`DROP PACKAGE`>>.
 
 [[fblangref-ddl-package-body-recreate]]
-== RECREATE PACKAGE BODY
+== `RECREATE PACKAGE BODY`
 
 .Назначение
 Создание нового и пересоздание существующего тела пакета.
@@ -392,5 +392,5 @@ END
 ====
 
 .См. также:
-<<fblangref-ddl-package-body-create,CREATE PACKAGE BODY>>,
-<<fblangref-ddl-package-body-drop,DROP PACKAGE BODY>>.
+<<fblangref-ddl-package-body-create,`CREATE PACKAGE BODY`>>,
+<<fblangref-ddl-package-body-drop,`DROP PACKAGE BODY`>>.

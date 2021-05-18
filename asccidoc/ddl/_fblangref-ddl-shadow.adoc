@@ -15,7 +15,7 @@
 ====
 
 [[fblangref-ddl-shadow-create]]
-== CREATE SHADOW
+== `CREATE SHADOW`
 
 .Назначение
 Создание теневой копии.
@@ -33,7 +33,7 @@ CREATE SHADOW _sh_num_ [AUTO | MANUAL] [CONDITIONAL]
 ----
 
 [[fblangref-ddl-tbl-createshadow]]
-.Параметры оператора CREATE SHADOW
+.Параметры оператора `CREATE SHADOW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -68,7 +68,7 @@ CREATE SHADOW _sh_num_ [AUTO | MANUAL] [CONDITIONAL]
 Что будет дальше зависит от выбранного режима.
 
 [[fblangref-ddl-shadow-create-mode]]
-=== Режимы AUTO и MANUAL
+=== Режимы `AUTO` и `MANUAL`
 
 Когда теневая копия преобразуется в базу данных она становится недоступной.
 Теневая копия может также стать недоступной если будет удалён её файл, или закончится место на диске, где она расположена, или если этот диск повреждён.
@@ -83,7 +83,7 @@ CREATE SHADOW _sh_num_ [AUTO | MANUAL] [CONDITIONAL]
 
 
 [[fblangref-ddl-shadow-create-options]]
-=== Необязательные параметры CREATE SHADOW
+=== Необязательные параметры `CREATE SHADOW`
 
 `LENGTH`::
 Необязательное предложение `LENGTH` задаёт максимальный размер первичного или вторичного файла теневой копии в страницах.
@@ -132,7 +132,7 @@ FILE 'g:\data\test.sh2';
 <<fblangref-ddl-database-create,CREATE DATABASE>>, <<fblangref-ddl-database-alter,ALTER DATABASE>>, <<fblangref-ddl-shadow-drop,DROP SHADOW>>.
 
 [[fblangref-ddl-shadow-drop]]
-== DROP SHADOW
+== `DROP SHADOW`
 
 .Назначение
 Удаление теневой копии.
@@ -148,7 +148,7 @@ DROP SHADOW _sh_num_
 ----
 
 [[fblangref-ddl-tbl-dropshadow]]
-.Параметры оператора DROP SHADOW
+.Параметры оператора `DROP SHADOW`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^|Параметр

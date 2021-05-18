@@ -11,7 +11,7 @@
 * DDL триггеры, которые срабатывают до или после выполнения одного или нескольких типов DDL операторов.
 
 [[fblangref-ddl-trigger-create]]
-== CREATE TRIGGER
+== `CREATE TRIGGER`
 
 .Назначение
 Создание нового триггера.
@@ -105,7 +105,7 @@ CREATE TRIGGER _trigname_ {
 ----
 
 [[fblangref-ddl-trgr-createtrigger]]
-.Параметры оператора CREATE TRIGGER
+.Параметры оператора `CREATE TRIGGER`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
@@ -505,7 +505,7 @@ END
 Если в качестве события указано предложение `ANY DDL STATEMENT`, то триггер будет вызван при наступлении любого из DDL событий.
 
 [[fblangref-ddl-trigger-create-ddl-contextvar]]
-==== Пространство имён DDL_TRIGGER
+==== Пространство имён `DDL_TRIGGER`
 
 Во время работы DDL триггера доступно пространство имён `DDL_TRIGGER` для использования в функции `RDB$GET_CONTEXT`.
 Его использование также допустимо в хранимых процедурах и функциях, вызванных триггерами DDL.
@@ -805,10 +805,10 @@ recreate table t1 (
 ====
 
 .См. также:
-<<fblangref-ddl-trigger-alter,ALTER TRIGGER>>, <<fblangref-ddl-trigger-drop,DROP TRIGGER>>.
+<<fblangref-ddl-trigger-alter,`ALTER TRIGGER`>>, <<fblangref-ddl-trigger-drop,`DROP TRIGGER`>>.
 
 [[fblangref-ddl-trigger-alter]]
-== ALTER TRIGGER
+== `ALTER TRIGGER`
 
 .Назначение
 Изменение существующего триггера.
@@ -966,7 +966,7 @@ END
 <<fblangref-ddl-trigger-recreate,RECREATE TRIGGER>>.
 
 [[fblangref-ddl-trigger-createoralter]]
-== CREATE OR ALTER TRIGGER
+== `CREATE OR ALTER TRIGGER`
 
 .Назначение
 Создание нового или изменение существующего триггера.
@@ -1008,10 +1008,10 @@ END
 ====
 
 .См. также:
-<<fblangref-ddl-trigger-create,CREATE TRIGGER>>, <<fblangref-ddl-trigger-alter,ALTER TRIGGER>>, <<fblangref-ddl-trigger-recreate,RECREATE TRIGGER>>.
+<<fblangref-ddl-trigger-create,`CREATE TRIGGER`>>, <<fblangref-ddl-trigger-alter,`ALTER TRIGGER`>>, <<fblangref-ddl-trigger-recreate,`RECREATE TRIGGER`>>.
 
 [[fblangref-ddl-trigger-drop]]
-== DROP TRIGGER
+== `DROP TRIGGER`
 
 .Назначение
 Удаление существующего триггера.
@@ -1025,13 +1025,13 @@ DSQL, ESQL
 DROP TRIGGER _trigname_
 ----
 
-.Параметры оператора DROP TRIGGER
+.Параметры оператора `DROP TRIGGER`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|trigname``
+|trigname
 |Имя триггера.
 |===
 
@@ -1066,10 +1066,10 @@ DROP TRIGGER set_cust_no;
 ====
 
 .См. также:
-<<fblangref-ddl-trigger-create,CREATE TRIGGER>>, <<fblangref-ddl-trigger-alter,ALTER TRIGGER>>.
+<<fblangref-ddl-trigger-create,`CREATE TRIGGER`>>, <<fblangref-ddl-trigger-alter,`ALTER TRIGGER`>>.
 
 [[fblangref-ddl-trigger-recreate]]
-== RECREATE TRIGGER
+== `RECREATE TRIGGER`
 
 .Назначение
 Создание нового или пересоздание существующего триггера.
@@ -1111,7 +1111,7 @@ END
 ====
 
 .См. также:
-<<fblangref-ddl-trigger-create,CREATE TRIGGER>>,
-<<fblangref-ddl-trigger-drop,DROP TRIGGER>>,
-<<fblangref-ddl-trigger-createoralter,CREATE OR ALTER TRIGGER>>.
+<<fblangref-ddl-trigger-create,`CREATE TRIGGER`>>,
+<<fblangref-ddl-trigger-drop,`DROP TRIGGER`>>,
+<<fblangref-ddl-trigger-createoralter,`CREATE OR ALTER TRIGGER`>>.
 

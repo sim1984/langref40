@@ -1,51 +1,35 @@
-[[_fblangref_functions]]
+[[fblangref-functions]]
 = Встроенные скалярные функции
-:doctype: book
-:sectnums:
-:toc: left
-:icons: font
-:experimental:
-:sourcedir: .
 
-[[_fblangref30_functions_workcontext]]
+[[fblangref-functions-workcontext]]
 == Функции для работы с контекстными переменными
 
+[[fblangref-scalarfuncs-get-context]]
+=== `RDB$GET_CONTEXT`
 
+.Доступно в
+DSQL, PSQL
 
-[[_fblangref_scalarfuncs_get_context]]
-=== RDB$GET_CONTEXT
-(((RDB$GET_CONTEXT)))
-
-.Доступно в:
-DSQL, PSQL.
-
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
 ----
-
-RDB$GET_CONTEXT('<namespace>', 'varname')   
+RDB$GET_CONTEXT('<namespace>', '_varname_')
                             
 <namespace> ::= SYSTEM | DDL_TRIGGER | USER_SESSION | USER_TRANSACTION
 ----
 
-
-
-.Параметры функции RDB$GET_CONTEXT
-[cols="1,1", frame="all", options="header"]
+[[fblangref-funcs-tbl-rdbgetcontext]]
+.Параметры функции `RDB$GET_CONTEXT`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``namespace``
-|
+|namespace
+|Пространство имён.
 
-Пространство имён.
-
-|[replaceable]``varname``
-|
-
-Имя переменной.
+|varname
+|Имя переменной.
 Зависит от регистра.
 Максимальная длина 80 байт.
 |===
@@ -53,293 +37,257 @@ RDB$GET_CONTEXT('<namespace>', 'varname')
 .Тип возвращаемого результата:
 VARCHAR(32765) CHARACTER SET NONE
 
-Функция RDB$GET_CONTEXT возвращает значение контекстной переменной из одного из пространства имён.
+Функция `RDB$GET_CONTEXT` возвращает значение контекстной переменной из одного из пространства имён.
 
 В настоящий момент существуют следующие пространства имён: 
 
-* SYSTEM -- предоставляет доступ к системным контекстным переменным. Эти переменные доступны только для чтения;
-* USER_SESSION -- предоставляет доступ к пользовательским контекстным переменным, заданным через функцию RDB$SET_CONTEXT. Переменные существуют в течение подключения;
-* USER_TRANSACTION -- предоставляет доступ к пользовательским контекстным переменным, заданным через функцию RDB$SET_CONTEXT. Переменные существуют в течение транзакции;
-* DDL_TRIGGER -- предоставляет доступ к системным контекстным переменным, доступным только во время выполнения DDL триггера. Эти переменные доступны только для чтения.
+* `SYSTEM` -- предоставляет доступ к системным контекстным переменным. Эти переменные доступны только для чтения;
+* `USER_SESSION` -- предоставляет доступ к пользовательским контекстным переменным, заданным через функцию `RDB$SET_CONTEXT`. Переменные существуют в течение подключения;
+* `USER_TRANSACTION` -- предоставляет доступ к пользовательским контекстным переменным, заданным через функцию `RDB$SET_CONTEXT`. Переменные существуют в течение транзакции;
+* `DDL_TRIGGER` -- предоставляет доступ к системным контекстным переменным, доступным только во время выполнения DDL триггера. Эти переменные доступны только для чтения.
 
-Пространства имён USER_SESSION и USER_TRANSACTION -- изначально пусты и пользователь сам создаёт переменные и наполняет их при помощи функции RDB$SET_CONTEXT.
+Пространства имён `USER_SESSION` и `USER_TRANSACTION` -- изначально пусты и пользователь сам создаёт переменные и наполняет их при помощи функции `RDB$SET_CONTEXT`.
 
 [NOTE]
 ====
-Для предотвращения DoS атак, существует ограничение на 1000 переменных в одном "пространстве имён".
+Для предотвращения DoS атак, существует ограничение на 1000 переменных в одном "`пространстве имён`".
 ====
 
-Если запрашиваемая функцией переменная существует в указанном пространстве имён, то будет возвращено её значение в виде строки VARCHAR(32765) CHARACTER SET NONE.
-При обращении к несуществующей переменной в пространстве SYSTEM возникает ошибка, если такое происходит с пространствами имён USER_SESSION или USER_TRANSACTION – функция возвращает NULL.
+Если запрашиваемая функцией переменная существует в указанном пространстве имён, то будет возвращено её значение в виде строки `VARCHAR(32765) CHARACTER SET NONE`.
+При обращении к несуществующей переменной в пространстве `SYSTEM` возникает ошибка, если такое происходит с пространствами имён `USER_SESSION` или `USER_TRANSACTION` -- функция возвращает NULL.
 
-Использование пространства имён DDL_TRIGGER допустимо, только во время работы DDL триггера.
+[[fblangref-funcs-tbl-rdbgetcontext-system]]
+==== Пространство имён `SYSTEM`
+
+[[fblangref-funcs-tbl-systemnamespace]]
+.Переменные пространства имён SYSTEM
+
+`CLIENT_ADDRESS`::
+Для TCPv4 – IP адрес, для XNET – локальный ID процесса. Для
+остальных случаев `NULL`.
+
+`CLIENT_HOST`::
+Имя хоста сетевого протокола удаленного клиента. Значение
+возвращается для всех поддерживаемых протоколов.
+
+`CLIENT_PID`::
+PID процесса на клиентском компьютере.
+
+`CLIENT_PROCESS`::
+Полный путь к клиентскому приложению, подключившемуся к базе
+данных. Позволяет не использовать системную таблицу
+`MON$ATTACHMENTS` (поле `MON$REMOTE_PROCESS`).
+
+`CURRENT_ROLE`::
+Глобальная переменная `CURRENT_ROLE`.
+
+`CURRENT_USER`::
+Глобальная переменная `CURRENT_USER`.
+
+`DB_NAME`::
+Каноническое имя текущей базы данных. Это либо имя псевдонима
+(если соединение с помощью имён файлов запрещено `DatabaseAccess = NONE`) или,
+в противном случае, полностью расширенное имя файла базы данных.
+
+`DB_FILE_ID`::
+Уникальный идентификатор текущей базы данных на уровне
+файловой системы.
+
+`DB_GUID`::
+GUID базы данных.
+
+`EFFECTIVE_USER`::
+Эффективный пользователь в текущий момент. Указывает
+пользователя с привилегиями которого в текущий момент времени
+выполняется процедура, функция или триггер.
+
+`ENGINE_VERSION`::
+Версия сервера Firebird.
+
+`EXT_CONN_POOL_SIZE`::
+Размер пула внешних соединений.
+
+`EXT_CONN_POOL_LIFETIME`::
+Время жизни неактивных соединений в пуле внешних
+соединений.
+
+`EXT_CONN_POOL_IDLE_COUNT`::
+Текущее количество неактивных соединений в пуле внешних
+соединений.
+
+`EXT_CONN_POOL_ACTIVE_COUNT`::
+Текущее количество активных соединений в пуле внешних
+соединений.
+
+`GLOBAL_CN`::
+Последнее значение текущего глобального счётчика Commit Number
+
+`ISOLATION_LEVEL`::
+Уровень изоляции текущей транзакции -- `CURRENT_TRANSACTION`.
+Значения: `'READ_COMMITED'`, `'SNAPSHOT'` или `'CONSISTENCY'`.
+
+`LOCK_TIMEOUT`::
+Время ожидания транзакцией высвобождения ресурса при
+блокировке, в секундах.
+
+`NETWORK_PROTOCOL`::
+Протокол, используемый для соединения с базой данных.
+Возможные значения: `'TCPv4'`, `'TCPv6'`, `'WNET'`, `'XNET'`, `NULL`.
+
+`READ_ONLY`::
+Отображает, является ли транзакция, транзакцией только для
+чтения. `'FALSE'` для Read-Write транзакций `'TRUE'` для Read Only.
+
+`REPLICA_MODE`::
+Режим репликации: пустая строка или `NULL` -- первичная база данных,
+`'READ-ONLY'` -- реплика в режиме только чтение, `'READ-WRITE'` -- реплика в режиме чтение и запись.
+
+`REPLICATION_SEQUENCE`::
+Текущее значение последовательности репликации (номер
+последнего сегмента, записанного в журнал репликации).
+
+`SESSION_ID`::
+Глобальная переменная `CURRENT_CONNECTION`.
+
+SESSION_IDLE_TIMEOUT`::
+Содержит текущее значение тайм-аут простоя соединения в
+секундах, который был установлен на уровне соединения, или ноль,
+если тайм-аут не был установлен.
+
+`SESSION_TIMEZONE`::
+Текущий часовой пояс, установленный в текущей сессии.
+
+`SNAPSHOT_NUMBER`::
+Номер моментального снимка базы данных: уровня транзакции
+(для транзакции `SNAPSHOT` или `CONSISTENCY`) или уровня запроса
+(для транзакции `READ COMMITTED READ CONSISTENCY`). NULL, если
+моментальный снимок не существует.
+
+`STATEMENT_TIMEOUT`::
+Содержит текущее значение тайм-аута выполнения оператора в
+миллисекундах, который был установлен на уровне подключения, или
+ноль, если тайм-аут не был установлен.
+
+`TRANSACTION_ID`::
+Глобальная переменная `CURRENT_TRANSACTION`.
+
+`WIRE_COMPRESSED`::
+Используется ли сжатие сетевого трафика. Если используется
+сжатие сетевого трафика возвращает `'TRUE'`, если не используется
+-- `'FALSE'`. Для встроенных соединений -- возвращает `NULL`.
+
+`WIRE_ENCRYPTED`::
+Используется ли шифрование сетевого трафика. Если
+используется шифрование сетевого трафика возвращает `'TRUE'`, если
+не используется -- `'FALSE'`. Для встроенных соединений --
+возвращает `NULL`.
+
+`WIRE_CRYPT_PLUGIN`::
+Если используется шифрование сетевого трафика, то возвращает
+имя текущего плагина шифрования, в противном случае `NULL`.
+
+[[fblangref-funcs-tbl-rdbgetcontext-ddl-trigger]]
+==== Пространство имён `DDL_TRIGGER`
+
+Использование пространства имён `DDL_TRIGGER` допустимо, только во время работы DDL триггера.
 Его использование также допустимо в хранимых процедурах и функциях, вызванных триггерами DDL.
 
-Контекст DDL_TRIGGER работает как стек.
+Контекст `DDL_TRIGGER` работает как стек.
 Перед возбуждением DDL триггера, значения, относящиеся к выполняемой команде, помещаются в этот стек.
 После завершения работы триггера значения выталкиваются.
-Таким образом.
-В случае каскадных DDL операторов, когда каждая пользовательская DDL команда возбуждает DDL триггер, и этот триггер запускает другие DDL команды, с помощью EXECUTE STATEMENT, значения переменных в пространстве имён DDL_TRIGGER будут соответствовать команде, которая вызвала последний DDL триггер в стеке вызовов.
+Таким образом в случае каскадных DDL операторов, когда каждая пользовательская DDL команда возбуждает DDL триггер, и этот триггер запускает другие DDL команды, с помощью `EXECUTE STATEMENT`, значения переменных в пространстве имён `DDL_TRIGGER` будут соответствовать команде, которая вызвала последний DDL триггер в стеке вызовов.
 
 
+.Переменные пространства имён `DDL_TRIGGER`
 
-.Переменные пространства имён SYSTEM
-[cols="1,1", frame="all", options="header"]
-|===
-|  Переменная 
-|  Описание 
+`EVENT_TYPE`:: тип события (`CREATE`, `ALTER`, `DROP`).
 
-|CLIENT_ADDRESS
-|Для TCPv4 – IP адрес, для XNET – локальный ID процесса. Для
-                                    остальных случаев NULL.
+`OBJECT_TYPE`:: тип объекта (`TABLE`, `VIEW` и др.).
 
-|CLIENT_HOST
-|Имя хоста сетевого протокола удаленного клиента. Значение
-                                    возвращается для всех поддерживаемых протоколов.
+`DDL_EVENT`:: (`<ddl event item>`), где `<ddl_event_item>` это `EVENT_TYPE || ' ' || OBJECT_TYPE`
 
-|CLIENT_PID
-|PID процесса на клиентском компьютере.
+OBJECT_NAME:: имя объекта метаданных.
 
-|CLIENT_PROCESS
-|Полный путь к клиентскому приложению, подключившемуся к базе
-                                    данных. Позволяет не использовать системную таблицу
-                                    MON$ATTACHMENTS (поле MON$REMOTE_PROCESS).
+OLD_OBJECT_NAME:: имя объекта метаданных до переименования.
 
-|CURRENT_ROLE
-|Глобальная переменная CURRENT_ROLE.
+NEW_OBJECT_NAME:: имя объекта метаданных после переименования.
 
-|CURRENT_USER
-|Глобальная переменная CURRENT_USER.
+SQL_TEXT:: текст SQL запроса.
 
-|DB_NAME
-|Каноническое имя текущей базы данных. Это либо имя псевдонима
-                                    (если соединение с помощью имён файлов запрещено DatabaseAccess
-                                    = NONE) или, в противном случае,полностью расширенное имя файла
-                                    базы данных.
-
-|DB_FILE_ID
-|Уникальный идентификатор текущей базы данных на уровне
-                                    файловой системы.
-
-|DB_GUID
-|GUID базы данных.
-
-|EFFECTIVE_USER
-|Эффективный пользователь в текущий момент. Указывает
-                                    пользователя с привилегиями которого в текущий момент времени
-                                    выполняется процедура, функция или триггер.
-
-|ENGINE_VERSION
-|Версия сервера Firebird. 
-
-|EXT_CONN_POOL_SIZE
-|Размер пула внешних соединений.
-
-|EXT_CONN_POOL_LIFETIME
-|Время жизни неактивных соединений в пуле внешних
-                                    соединений.
-
-|EXT_CONN_POOL_IDLE_COUNT
-|Текущее количество неактивных соединений в пуле внешних
-                                    соединений.
-
-|EXT_CONN_POOL_ACTIVE_COUNT
-|Текущее количество активных соединений в пуле внешних
-                                    соединений.
-
-|GLOBAL_CN
-|Последнее значение текущего глобального счётчика Commit
-                                    Number
-
-|ISOLATION_LEVEL
-|Уровень изоляции текущей транзакции -- CURRENT_TRANSACTION.
-                                    Значения: "READ_COMMITED", "SNAPSHOT" или
-                                    "CONSISTENCY". 
-
-|LOCK_TIMEOUT
-| Время ожидания транзакцией высвобождения ресурса при
-                                    блокировке, в секундах.
-
-|NETWORK_PROTOCOL 
-|Протокол, используемый для соединения с базой данных.
-                                    Возможные значения: "TCPv4", "TCPv6",
-                                    "WNET", "XNET",  NULL. 
-
-|READ_ONLY
-|Отображает, является ли транзакция, транзакцией только для
-                                    чтения. FALSE для R/W транзакций TRUE для ReadOnly. 
-
-|REPLICA_MODE
-|
-
-Режим репликации: пустая строка или NULL -- первичная база данных, "READ-ONLY" -- реплика в режиме только чтение, "READ-WRITE" -- реплика в режиме чтение и запись.
-
-|REPLICATION_SEQUENCE
-|Текущее значение последовательности репликации (номер
-                                    последнего сегмента, записанного в журнал репликации).
-
-|SESSION_ID
-|Глобальная переменная CURRENT_CONNECTION.
-
-|SESSION_IDLE_TIMEOUT
-|Содержит текущее значение тайм-аут простоя соединения в
-                                    секундах, который был установлен на уровне соединения, или ноль,
-                                    если тайм-аут не был установлен. 
-
-|SESSION_TIMEZONE
-|Текущий часовой пояс, установленный в текущей сессии.
-
-|SNAPSHOT_NUMBER
-|Номер моментального снимка базы данных: уровеня транзакции
-                                    (для транзакции SNAPSHOT или CONSISTENCY) или уровня запроса
-                                    (для транзакции READ COMMITTED READ CONSISTENCY). NULL, если
-                                    моментальный снимок не существует.
-
-|STATEMENT_TIMEOUT
-|Содержит текущее значение тайм-аута выполнения оператора в
-                                    миллисекундах, который был установлен на уровне подключения, или
-                                    ноль, если тайм-аут не был установлен.
-
-|TRANSACTION_ID
-|Глобальная переменная CURRENT_TRANSACTION.
-
-|WIRE_COMPRESSED
-|Используется ли сжатие сетевого трафика. Если используется
-                                    сжатие сетевого трафика возвращает "TRUE", если не используется
-                                    -- "FALSE". Для встроенных соединений -- возвращает NULL.
-
-|WIRE_ENCRYPTED
-|Используется ли шифрование сетевого трафика. Если
-                                    используется шифрование сетевого трафика возвращает "TRUE", если
-                                    не используется -- "FALSE". Для встроенных соединений --
-                                    возвращает NULL.
-
-|WIRE_CRYPT_PLUGIN
-|Если используется шифрование сетевого трафика, то возвращает
-                                    имя текущего плагина шифрования, в противном случае
-                                    NULL.
-|===
-
-
-
-.Переменные пространства имён DDL_TRIGGER
-[cols="1,1", frame="all", options="header"]
-|===
-|  Переменная 
-|  Описание 
-
-|EVENT_TYPE 
-|Тип события (CREATE, ALTER, DROP). 
-
-|OBJECT_TYPE 
-|Тип объекта (TABLE, VIEW и др.).
-
-|DDL_EVENT
-|Имя события. DDL_EVENT = EVENT_TYPE \|\| ' ' \|\|
-                                    OBJECT_TYPE
-
-|OBJECT_NAME
-|Имя объекта метаданных.
-
-|OLD_OBJECT_NAME
-|Имя объекта метаданных до переименования.
-
-|NEW_OBJECT_NAME
-|Имя объекта метаданных после переименования.
-
-|SQL_TEXT
-|Текст SQL запроса.
-|===
 
 [NOTE]
 ====
 Ещё раз обратите внимание на то, что пространства имён и имена переменных регистрочувствительны, должны быть не пустыми строками, и заключены в кавычки!
 ====
 
-.Примеры:
-
+[[fblangref-funcs-tbl-rdbgetcontext-exmpl]]
+==== Примеры
 
 .Использование функции RDB$GET_CONTEXT
 [example]
-
+====
 [source,sql]
 ----
-
 NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
 ----
+====
 
 .См. также:
-<<_fblangref_scalarfuncs_set_context,RDB$SET_CONTEXT>>. 
+<<fblangref-scalarfuncs-set-context,RDB$SET_CONTEXT>>. 
 
-[[_fblangref_scalarfuncs_set_context]]
+[[fblangref-scalarfuncs-set-context]]
 === RDB$SET_CONTEXT
-(((RDB$SET_CONTEXT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
 ----
-
 RDB$SET_CONTEXT('<namespace>', 'varname', {<value> | NULL})   
                             
 <namespace> ::= USER_SESSION | USER_TRANSACTION
 ----
 
-
-
-.Параметры функции RDB$SET_CONTEXT
-[cols="1,1", frame="all", options="header"]
+[[fblangref-funcs-tbl-rdbsetcontext]]
+.Параметры функции `RDB$SET_CONTEXT`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``namespace``
-|
+|namespace
+|Пространство имён.
 
-Пространство имён.
-
-|[replaceable]``varname``
-|
-
-Имя переменной.
+|varname
+|Имя переменной.
 Зависит от регистра.
 Максимальная длина 80 байт.
 
-|[replaceable]``value``
-|
-
-Данные любого типа при условии, что их можно привести к типу VARCHAR(32765) CHARACTER SET NONE.
+|value
+|Данные любого типа при условии, что их можно привести к типу VARCHAR(32765) CHARACTER SET NONE.
 |===
 
-.Тип возвращаемого результата:
-INTEGER
+.Тип возвращаемого результата
+`INTEGER`
 
-Функция RDB$SET_CONTEXT создаёт, устанавливает значение или обнуляет переменную в одном из используемых пользователем пространстве имён: USER_SESSION или USER_TRANSACTION. 
+Функция `RDB$SET_CONTEXT` создаёт, устанавливает значение или обнуляет переменную в одном из используемых пользователем пространстве имён: `USER_SESSION` или `USER_TRANSACTION`.
 
 Функция возвращает 1, если переменная уже существовала до вызова и 0, если не существовала.
-Для удаления переменной надо установить её значение в NULL.
+Для удаления переменной надо установить её значение в `NULL`.
 Если данное пространство имён не существует, то функция вернёт ошибку.
 Пространство имён и имя переменной зависят от регистра, должны быть не пустыми строками, и заключены в кавычки.
 
 [NOTE]
 ====
-
-
-* Пространство имён SYSTEM доступно только для чтения;
-* Максимальное число переменных в рамках одного соединения (для пространства USER_SESSION) или одной транзакции (для пространства USER_TRANSACTION) равно 1000;
-* Все переменные в пространстве имён USER_TRANSACTION сохраняются при ROLLBACK RETAIN или ROLLBACK TO SAVEPOINT, независимо от того, в какой точке во время выполнения транзакции они были установлены.
-
+* Пространство имён `SYSTEM` доступно только для чтения;
+* Максимальное число переменных в рамках одного соединения (для пространства `USER_SESSION`) или одной транзакции (для пространства `USER_TRANSACTION`) равно 1000;
+* Все переменные в пространстве имён `USER_TRANSACTION` сохраняются при `ROLLBACK RETAIN` или `ROLLBACK TO SAVEPOINT`, независимо от того, в какой точке во время выполнения транзакции они были установлены.
 ====
-
-.Примеры:
-
 
 .Использование функции RDB$SET_CONTEXT
 [example]
-
+====
 [source,sql]
 ----
 
@@ -352,13 +300,13 @@ RDB$SET_CONTEXT('USER_SESSION', 'RECORDSFOUND', RECCOUNTER);
 SELECT RDB$SET_CONTEXT ('USER_TRANSACTION', 'SAVEPOINTS', 'YES')
 FROM RDB$DATABASE;
 ----
+====
 
 .Использование функций для работы с контекстными переменными
 [example]
-
+====
 [source,sql]
 ----
-
 SET TERM ^;
 CREATE PROCEDURE set_context(User_ID VARCHAR(40), 
                              Trn_ID INT) AS
@@ -395,63 +343,52 @@ INSERT INTO journal(jrn_id) VALUES(0);
 
 COMMIT;
 ----
+====
 
 .См. также:
-<<_fblangref_scalarfuncs_get_context,RDB$GET_CONTEXT>>. 
+<<fblangref-scalarfuncs-get-context,`RDB$GET_CONTEXT`>>.
 
-[[_fblangref_functions_security]]
+[[fblangref-functions-security]]
 == Функции подсистемы безопасности
 
+[[fblangref-scalarfuncs-roleinuse]]
+=== `RDB$ROLE_IN_USE`
 
+.Доступно в
+DSQL, PSQL
 
-[[_fblangref_scalarfuncs_roleinuse]]
-=== RDB$ROLE_IN_USE
-(((RDB$ROLE_IN_USE)))
-
-.Доступно в:
-DSQL, PSQL.
-
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+RDB$ROLE_IN_USE (_role_name_)
 ----
 
-RDB$ROLE_IN_USE (role_name)
-----
-
-
-
-.Параметры функции RDB$ROLE_IN_USE
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `RDB$ROLE_IN_USE`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``role_name``
-|
-
-Имя роли использование которой проверяется
+|role_name
+|Имя роли использование которой проверяется
 |===
 
-.Тип возвращаемого результата:
+.Тип возвращаемого результата
 BOOLEAN.
 
-Функция RDB$ROLE_IN_USE возвращает используется ли роль текущим пользователем.
+Функция `RDB$ROLE_IN_USE` возвращает используется ли роль текущим пользователем.
 
 [NOTE]
 ====
 Данная функция позволяет проверить использование любой роли: указанной явно (при входе в систему или изменённой с помощью оператора SET ROLE) и назначенной неявно (роли назначенные пользователю с использованием предложения DEFAULT).
 ====
 
-.Примеры:
 
-
-.Использование функции RDB$ROLE_IN_USE
+.Использование функции `RDB$ROLE_IN_USE`
 [example]
-
+====
 [source,sql]
 ----
-
 -- Проверяем используется ли явно назначенная или 
 -- неявно полученная роль MANAGER                                
 IF (RDB$ROLE_IN_USE('MANAGER')) THEN
@@ -459,93 +396,79 @@ BEGIN
   ...
 END
 ----
+====
 
 .Список ролей используемых текущим подключением
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
 ----
+====
 
 .См. также:
-<<_fblangref_security_priv_grant_role,GRANT ROLE>>, <<_fblangref_session_role_setrole,SET ROLE>>, <<_fblangref_contextvars_current_role,CURRENT_ROLE>>. 
+<<fblangref-security-priv-grant-role,GRANT ROLE>>, <<fblangref-session-role-setrole,SET ROLE>>, <<fblangref-contextvars-current-role,CURRENT_ROLE>>.
 
-[[_fblangref_scalarfuncs_system_privelege]]
-=== RDB$SYSTEM_PRIVILEGE
-(((RDB$SYSTEM_PRIVILEGE)))
+[[fblangref-scalarfuncs-system-privelege]]
+=== `RDB$SYSTEM_PRIVILEGE`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+RDB$SYSTEM_PRIVILEGE (<privilege>)
 ----
 
-RDB$SYSTEM_PRIVILEGE (privilege)
-----
-
-
-
-.Параметры функции RDB$SYSTEM_PRIVILEGE
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `RDB$SYSTEM_PRIVILEGE`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``privilege``
-|
-
-Проверяемая системная привилегия
+|privilege
+|Проверяемая системная привилегия
 |===
 
-.Тип возвращаемого результата:
-BOOLEAN.
+.Тип возвращаемого результата
+BOOLEAN
 
-Функция RDB$SYSTEM_PRIVILEGE используется системная привилегия текущим соединением.
+Функция `RDB$SYSTEM_PRIVILEGE` используется системная привилегия текущим соединением.
 Список системных привилегий см.
-в <<_fblangref_security_roles_create,CREATE ROLE>>.
+в <<fblangref-security-roles-create,CREATE ROLE>>.
 
-.Примеры:
-
-
-.Использование функции RDB$SYSTEM_PRIVILEGE
+.Использование функции `RDB$SYSTEM_PRIVILEGE`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
 ----
+====
 
 .См. также:
-<<_fblangref_security_roles_create,CREATE ROLE>>. 
+<<fblangref-security-roles-create,CREATE ROLE>>. 
 
-[[_fblangref_functions_error]]
+[[fblangref-functions-error]]
 == Функции для обработки ошибок
 
-
-
-[[_fblangref_scalarfuncs_rdberror]]
+[[fblangref-scalarfuncs-rdberror]]
 === RDB$ERROR
-(((RDB$ERROR)))
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
 ----
-
 RDB$ERROR (<context>)   
                             
-<context> ::= { GDSCODE | SQLCODE | SQLSTATE | EXCEPTION | MESSAGE }
+<context> ::= GDSCODE | SQLCODE | SQLSTATE | EXCEPTION | MESSAGE
 ----
 
-.Тип возвращаемого результата:
+.Тип возвращаемого результата
 Зависит от контекста
 
 Возвращает значение контекста активного исключения.
@@ -553,26 +476,29 @@ RDB$ERROR (<context>)
 
 [NOTE]
 ====
-Функция RDB$ERROR всегда возвращает NULL вне блока обработки ошибок "WHEN ... DO".
+Функция `RDB$ERROR` всегда возвращает `NULL` вне блока обработки ошибок `WHEN ... DO`.
 ====
 
-Если задан контекст EXCEPTION то функция возвращает имя исключения, если активно исключение определённое пользователем, и NULL если активно одно из системных исключений.
-Для контекста EXCEPTION тип возвращаемого значения: VARCHAR(63) CHARACTER SET UTF8.
+Доступные контексты в качестве аргумента функции `RDB$ERROR`:
 
-Если задан контекст MESSAGE то функция возвращает интерпретированный текст активного исключения.
-Для контекста MESSAGE тип возвращаемого значения: VARCHAR(1024) CHARACTER SET UTF8.
+`EXCEPTION`:: функция возвращает имя исключения, если активно исключение определённое пользователем, или `NULL` если активно одно из системных исключений.
+Для контекста `EXCEPTION` тип возвращаемого значения: `VARCHAR(63) CHARACTER SET UTF8`.
 
-Если заданы контексты GDSCODE, SQLCODE или SQLSTATE то функция возвращает значение соответствующей контекстной переменной.
+`MESSAGE`:: функция возвращает интерпретированный текст активного исключения.
+Для контекста `MESSAGE` тип возвращаемого значения: `VARCHAR(1024) CHARACTER SET UTF8`.
 
-.Примеры:
+`GDSCODE`:: функция возвращает значение контекстной переменной `GDSCODE`.
+
+`SQLCODE`:: функция возвращает значение контекстной переменной `SQLCODE`.
+
+`SQLSTATE`:: функция возвращает значение контекстной переменной `SQLSTATE`.
 
 
-.Использование функции RDB$ERROR для сохранения текста ошибки вжурнал
+.Использование функции `RDB$ERROR` для сохранения текста ошибки в журнал
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 BEGIN
 ...
@@ -581,53 +507,49 @@ WHEN ANY DO
 END
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_psql_statements_when,WHEN ... DO>>, <<_fblangref_psql_statements_exception,EXCEPTION>>, <<_fblangref_contextvars_gdscode,GDSCODE>>, <<_fblangref_contextvars_sqlcode,SQLCODE>>, <<_fblangref_contextvars_sqlstate,SQLSTATE>>. 
+<<fblangref-psql-statements-when,`WHEN ... DO`>>,
+<<fblangref-psql-statements-exception,`EXCEPTION`>>,
+<<fblangref-contextvars-gdscode,`GDSCODE`>>,
+<<fblangref-contextvars-sqlcode,`SQLCODE`>>,
+<<fblangref-contextvars-sqlstate,`SQLSTATE`>>.
 
-[[_fblangref_functions_transaction]]
+[[fblangref-functions-transaction]]
 == Функции работы с транзакциями
 
-
-
-[[_fblangref_scalarfuncs_transaction_cn]]
+[[fblangref-scalarfuncs-transaction-cn]]
 === RDB$GET_TRANSACTION_CN
-(((RDB$GET_TRANSACTION_CN)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
 ----
-
-RDB$GET_TRANSACTION_CN (transaction number)
+RDB$GET_TRANSACTION_CN (_transaction-number_)
 ----
-
-
 
 .Параметры функции RDB$GET_TRANSACTION_CN
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``transaction number``
-|
-
-Номер (идентификатор) транзакции
+|transaction-number
+|Номер (идентификатор) транзакции
 |===
 
 .Тип возвращаемого результата:
-BIGINT.
+`BIGINT`
 
 Возвращает номер подтверждения (Commit Number) для заданной транзакции.
 
 [NOTE]
 ====
 Внутренние механизмы Firebird используют беззнаковое 8-байтное целое для Commit Number и беззнаковое 6-байтное целое для номера транзакции.
-Поэтому, не смотря на то, что язык SQL не имеет беззнаковых целых, а `RDB$GET_TRANSACTION_CN` возвращает знаковый BIGINT, не возможно увидеть отрицательный номер подтверждения, за исключением нескольких специальных значений, используемых для неподтверждённых транзакций.
+Поэтому, несмотря на то, что язык SQL не имеет без знаковых целых, а `RDB$GET_TRANSACTION_CN` возвращает знаковый BIGINT, невозможно увидеть отрицательный номер подтверждения, за исключением нескольких специальных значений, используемых для неподтверждённых транзакций.
 ====
 
 Таким образом, числа возвращаемые `RDB$GET_TRANSACTION_CN` могут иметь следующие значения: 
@@ -635,76 +557,61 @@ BIGINT.
 * -2 -- мёртвые транзакции (отмененные);
 * -1 -- зависшие транзакции (в состоянии limbo 2PC транзакций);
 * 0 -- активные транзакции;
-* 1 -- для транзакций подверждённых до старта базы данных или с номером меньше чем OIT (Oldest Interesting Transaction);
+* 1 -- для транзакций подтверждённых до старта базы данных или с номером меньше чем OIT (Oldest Interesting Transaction);
 * >1 -- транзакции подтверждённые после старта базы данных;
-* NULL -- если номер транзакции равен NULL или больше чем Next Transaction.
+* `NULL` -- если номер транзакции равен `NULL` или больше чем Next Transaction.
 
 
-.Использование RDB$GET_TRANSACTION_CN
+.Использование `RDB$GET_TRANSACTION_CN`
 [example]
-
+====
 [source,sql]
 ----
-
 select rdb$get_transaction_cn(current_transaction) from rdb$database;
 
 select rdb$get_transaction_cn(123) from rdb$database;
 ----
+====
 
 .См. также:
-README.read_consistency.md
+_README.read_consistency.md_
 
-[[_fblangref_scalarfuncs_make_dbkey]]
-== MAKE_DBKEY
-(((MAKE_DBKEY)))
+[[fblangref-scalarfuncs-make-dbkey]]
+== `MAKE_DBKEY`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+MAKE_DBKEY ({_rel_name_ | _rel_id_}, _recnum_ [, _dpnum_ [, _ppnum_]]})
 ----
 
-MAKE_DBKEY ({rel_name | rel_id}, recnum [, dpnum [, ppnum]]})
-----
-
-
-
-.Параметры функции MAKE_DBKEY
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `MAKE_DBKEY`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``rel_name``
-|
+|rel_name
+|Имя таблицы
 
-Имя таблицы
+|rel_id
+|Идентификатор таблицы.
+Можно найти в `RDB$RELATIONS.RDB$RELATION_ID`
 
-|[replaceable]``rel_id``
-|
+|recnum
+|Номер записи
 
-Идентификатор таблицы.
-Можно найти в RDB$RELATIONS.RDB$RELATION_ID
+|dpnum
+|Номер страницы данных DP
 
-|[replaceable]``recnum``
-|
-
-Номер записи
-
-|[replaceable]``dpnum``
-|
-
-Номер страницы данных DP
-
-|[replaceable]``ppnum``
-|
-
-Номер страницы указателей на данные PP
+|ppnum
+|Номер страницы указателей на данные PP
 |===
 
-Функция MAKE_DBKEY создает значение DBKEY, используя имя или идентификатор таблицы, номер записи и, необязательно, логический номер страницы данных и страницы указателя.
+Функция `MAKE_DBKEY` создает значение `DBKEY`, используя имя или идентификатор таблицы, номер записи и, необязательно, логический номер страницы данных и страницы указателя.
 
 .Замечания
 [NOTE]
@@ -714,54 +621,47 @@ MAKE_DBKEY ({rel_name | rel_id}, recnum [, dpnum [, ppnum]]})
 В случае строкового литерала идентификатор таблицы оценивается во время подготовки.
 В случае выражения, идентификатор таблицы оценивается во время выполнения.
 +
-Если таблица не может быть найдена, возникает ошибка ``isc_relnotdef``.
+Если таблица не может быть найдена, возникает ошибка `isc_relnotdef`.
 . Если первый аргумент (таблица) является числовым выражением или литералом, то он обрабатывается как идентификатор таблицы и используется «как есть», без проверки существования таблицы.
 +
-Если значение аргумента отрицательно или превышает максимально допустимый идентификатор таблицы (в настоящее время 65535), то возвращается NULL.
-. Второй аргумент ([replaceable]``recnum``) представляет собой абсолютный номер записи в отношении (если следующие аргументы -- [replaceable]``dpnum`` и [replaceable]``ppnum`` -- отсутствуют) или номер записи относительно первой записи, указанной в следующих аргументах.
-. Третий аргумент ([replaceable]``dpnum``) -- это логический номер страницы данных (DP) в таблице (если следующий аргумент -- [replaceable]``ppnum`` -- отсутствует) или номер страницы данных относительно первой страницы данных, адресованной заданным [replaceable]``ppnum``.
-. Четвёртый аргумент ([replaceable]``ppnum``) -- это логический номер страницы указателя (PP) в таблице.
-. Все числа начинаются с нуля. Максимально допустимое значение для [replaceable]``dpnum`` и [replaceable]``ppnum`` составляет 2
+Если значение аргумента отрицательно или превышает максимально допустимый идентификатор таблицы (в настоящее время 65535), то возвращается `NULL`.
+. Второй аргумент (_recnum_) представляет собой абсолютный номер записи в отношении (если следующие аргументы -- _dpnum_ и _ppnum_ -- отсутствуют) или номер записи относительно первой записи, указанной в следующих аргументах.
+. Третий аргумент (_dpnum_) -- это логический номер страницы данных (DP) в таблице (если следующий аргумент -- _ppnum_ -- отсутствует) или номер страницы данных относительно первой страницы данных, адресованной заданным _ppnum_.
+. Четвёртый аргумент (_ppnum_) -- это логический номер страницы указателя (PP) в таблице.
+. Все числа начинаются с нуля. Максимально допустимое значение для _dpnum_ и _ppnum_ составляет 2^32^ (4294967296).
 +
-// <superscript>32</superscript>
- (4294967296).
+Если указан параметр _dpnum_, значение _recnum_ может быть отрицательным.
 +
-Если указан параметр [replaceable]``dpnum``, значение [replaceable]``recnum`` может быть отрицательным.
+Если _dpnum_ отсутствует и _recnum_ отрицательно, возвращается `NULL`.
 +
-Если [replaceable]``dpnum`` отсутствует и [replaceable]``recnum`` отрицательно, возвращается NULL.
+Если указан _ppnum_, то _dpnum_ может быть отрицательным.
 +
-Если указан [replaceable]``ppnum``, то [replaceable]``dpnum`` может быть отрицательным.
+Если _ppnum_ отсутствует и _dpnum_ отрицателен, возвращается `NULL`.
+. Если какой-либо из указанных аргументов имеет значение `NULL`, результат также равен `NULL`.
+. Первый аргумент (таблица) описывается как `INTEGER`, но может быть переопределен приложением как `VARCHAR` или `CHAR`.
 +
-Если [replaceable]``ppnum`` отсутствует и [replaceable]``dpnum`` отрицателен, возвращается NULL.
-. Если какой-либо из указанных аргументов имеет значение NULL, результат также равен NULL.
-. Первый аргумент (таблица) описывается как INTEGER, но может быть переопределен приложением как VARCHAR или CHAR.
-+
-[replaceable]``recnum``, [replaceable]``dpnum`` и [replaceable]``ppnum`` описываются как BIGINT (64-разрядное целое число со знаком).
+_recnum_, _dpnum_ и _ppnum_ описываются как `BIGINT` (64-разрядное целое число со знаком).
 
 ====
 
-Примеры: 
+.Примеры:
 
 . Запрос выбирает запись, используя имя таблицы (имя таблицы в верхнем регистре) 
 +
 [source,sql]
 ----
-
 select * from rdb$relations where rdb$db_key = make_dbkey('RDB$RELATIONS', 0)
 ----
 . Запрос выбирает запись, используя идентификатор таблицы 
 +
 [source,sql]
 ----
-
 select * from rdb$relations where rdb$db_key = make_dbkey(6, 0)
 ----
 . Запрос выбирает все записи, которые физически находятся на первой странице данных в таблице 
 +
 [source,sql]
 ----
-
-
 select * from rdb$relations
 where rdb$db_key >= make_dbkey(6, 0, 0)
   and rdb$db_key <  make_dbkey(6, 0, 1)
@@ -770,614 +670,490 @@ where rdb$db_key >= make_dbkey(6, 0, 0)
 +
 [source,sql]
 ----
-
-
 select * from SOMETABLE
 where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
   and rdb$db_key <  make_dbkey('SOMETABLE', 0, 1, 5)
 ----
 
 
-[[_fblangref_functions_math]]
+[[fblangref-functions-math]]
 == Математические функции
 
+[[fblangref-scalarfuncs-abs]]
+=== `ABS()`
 
+.Доступно в
+DSQL, PSQL
 
-[[_fblangref_scalarfuncs_abs]]
-=== ABS
-(((ABS)))
-
-.Доступно в:
-DSQL, PSQL.
-
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+ABS (<value>)
 ----
 
-ABS (value)
-----
-
-
-
-.Параметры функции ABS
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `ABS`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
-|
-
-Выражение числового типа
+|value
+|Выражение числового типа
 |===
 
 .Тип возвращаемого результата:
 тот же что и входной аргумент.
 
-Функция ABS возвращает абсолютное значение (модуль) аргумента. 
+Функция `ABS` возвращает абсолютное значение (модуль) аргумента.
 
-[[_fblangref_scalarfuncs_acos]]
-=== ACOS
-(((ACOS)))
+[[fblangref-scalarfuncs-acos]]
+=== `ACOS()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
-ACOS (value)
+ACOS (<value>)
 ----
-
-
 
 .Параметры функции ACOS
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
-|
-
-Выражение числового типа в диапазоне [-1; 1].
-|===
-
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
-
-Функция ACOS возвращает арккосинус (в радианах) аргумента. 
-
-В случае если аргумент функции вне границы диапазона [-1, 1], то функция вернёт неопределённое значения NaN.
-
-.См. также:
-<<_fblangref_scalarfuncs_cos,COS>>. 
-
-[[_fblangref_scalarfuncs_acosh]]
-=== ACOSH
-(((ACOSH)))
-
-.Доступно в:
-DSQL, PSQL.
-
-.Синтаксис:
-
-[source]
-----
-
-ACOSH (value)
-----
-
-
-
-.Параметры функции ACOSH
-[cols="1,1", frame="all", options="header"]
-|===
-| Параметр
-| Описание
-
-|[replaceable]``value``
-|
-
-Выражение числового типа в диапазоне [1; +∞].
+|value
+|Выражение числового типа в диапазоне [-1; 1].
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция ACOSH возвращает гиперболический арккосинус (в радианах) аргумента. 
+Функция `ACOS` возвращает арккосинус (в радианах) аргумента.
+
+В случае если аргумент функции вне границы диапазона [-1, 1], то функция вернёт неопределённое значения `NaN`.
 
 .См. также:
-<<_fblangref_scalarfuncs_cosh,COSH>>. 
+<<fblangref-scalarfuncs-cos>>.
 
-[[_fblangref_scalarfuncs_asin]]
-=== ASIN
-(((ASIN)))
+[[fblangref-scalarfuncs-acosh]]
+=== `ACOSH()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+ACOSH (<value>)
 ----
 
-ASIN (value)
-----
-
-
-
-.Параметры функции ASIN
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `ACOSH`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
-|
-
-Выражение числового типа в диапазоне [-1; 1].
+|value
+|Выражение числового типа в диапазоне [1; +∞].
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция ASIN возвращает арксинус (в радианах) аргумента. 
-
-В случае если аргумент функции вне границы диапазона [-1, 1], то функция вернёт неопределённое значения NaN.
+Функция `ACOSH` возвращает гиперболический арккосинус (в радианах) аргумента.
 
 .См. также:
-<<_fblangref_scalarfuncs_sin,SIN>>. 
+<<fblangref-scalarfuncs-cosh>>.
 
-[[_fblangref_scalarfuncs_asinh]]
-=== ASINH
-(((ASINH)))
+[[fblangref-scalarfuncs-asin]]
+=== `ASIN()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+ASIN (<value>)
 ----
 
-ASINH (value)
-----
-
-
-
-.Параметры функции ASINH
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `ASIN`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа в диапазоне [-1; 1].
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция ASINH возвращает гиперболический арксинус (в радианах) аргумента. 
+Функция `ASIN` возвращает арксинус (в радианах) аргумента.
+
+В случае если аргумент функции вне границы диапазона [-1, 1], то функция вернёт неопределённое значения `NaN`.
 
 .См. также:
-<<_fblangref_scalarfuncs_sinh,ASINH>>. 
+<<fblangref-scalarfuncs-sin>>.
 
-[[_fblangref_scalarfuncs_atan]]
+[[fblangref-scalarfuncs-asinh]]
+=== `ASINH()`
+
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
+[listing]
+----
+ASINH (<value>)
+----
+
+.Параметры функции `ASINH`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|value
+|Выражение числового типа.
+|===
+
+.Тип возвращаемого результата:
+`DOUBLE PRECISION`
+
+Функция `ASINH` возвращает гиперболический арксинус (в радианах) аргумента.
+
+.См. также:
+<<fblangref-scalarfuncs-sinh>>.
+
+[[fblangref-scalarfuncs-atan]]
 === ATAN
-(((ATAN)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+ATAN (<value>)
 ----
 
-ATAN (value)
-----
-
-
-
-.Параметры функции ATAN
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `ATAN`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
+|value
 |
 
 Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция ATAN возвращает арктангенс аргумента. 
+Функция `ATAN` возвращает арктангенс аргумента. 
 
 Функция возвращает угол в радианах в диапазоне [-π/2; π/2].
 
 .См. также:
-<<_fblangref_scalarfuncs_atan2,ATAN2>>, <<_fblangref_scalarfuncs_tan,TAN>>. 
+<<fblangref-scalarfuncs-atan2>>, <<fblangref-scalarfuncs-tan>>. 
 
-[[_fblangref_scalarfuncs_atan2]]
-=== ATAN2
-(((ATAN2)))
+[[fblangref-scalarfuncs-atan2]]
+=== `ATAN2()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
 ----
-
-ATAN2 (y, x)
+ATAN2 (_y_, _x_)
 ----
-
-
 
 .Параметры функции ATAN2
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``x``
-|
+|x
+|Выражение числового типа.
 
-Выражение числового типа.
-
-|[replaceable]``y``
-|
-
-Выражение числового типа.
+|y
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция ATAN2 возвращает угол как отношение синуса к косинусу, аргументы, у которых задаются этими двумя параметрами, а знаки синуса и косинуса соответствуют знакам параметров.
+Функция `ATAN2` возвращает угол как отношение синуса к косинусу, аргументы, у которых задаются этими двумя параметрами, а знаки синуса и косинуса соответствуют знакам параметров.
 Это позволяет получать результаты по всей окружности, включая углы -π/2 и π/2. 
 
 Особенности использования: 
 
 * Результат -- угол в диапазоне [-π, π] радиан;
-* Если [replaceable]``х`` отрицательный, то при нулевом значении y результат равен π, а при значении 0 равен -π;
-* Если и y и x равны 0, то результат бессмыслен.
-
+* Если _х_ отрицательный, то при нулевом значении _y_ результат равен π, а при значении 0 равен -π;
+* Если и _y_ и _x_ равны 0, то результат бессмыслен.
 
 [NOTE]
 ====
-
-
-* Полностью эквивалентное описание этой функции следующее: ATAN2 (y, x) является углом между положительной осью X и линией от начала координат до точки (x, y). Это также делает очевидным, что значение ATAN2 (0, 0) не определено;
-* Если [replaceable]``x`` больше, чем 0, ATAN2 (y, x) совпадает с ATAN (y/x);
-* Если известны и синус, и косинус угла, то ATAN2 (SIN, COS) возвращает угол.
-
+* Полностью эквивалентное описание этой функции следующее: `ATAN2 (_y_, _x_)` является углом между положительной осью X и линией от начала координат до точки (_x_, _y_). Это также делает очевидным, что значение `ATAN2 (0, 0)` не определено;
+* Если _x_ больше, чем 0, `ATAN2 (_y_, _x_)` совпадает с `ATAN (_y_/_x_)`;
+* Если известны и синус, и косинус угла, то `ATAN2 (_SIN_, _COS_)` возвращает угол.
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_atan,ATAN>>, <<_fblangref_scalarfuncs_sin,SIN>>, <<_fblangref_scalarfuncs_cos,COS>>. 
+<<fblangref-scalarfuncs-atan>>, <<fblangref-scalarfuncs-sin>>, <<fblangref-scalarfuncs-cos>>.
 
-[[_fblangref_scalarfuncs_atanh]]
-=== ATANH
-(((ATANH)))
+[[fblangref-scalarfuncs-atanh]]
+=== `ATANH()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+ATANH (<value>)
 ----
 
-ATANH (value)
-----
-
-
-
-.Параметры функции ATANH
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `ATANH`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция ATANH возвращает гиперболический арктангенс (в радианах) аргумента. 
+Функция `ATANH` возвращает гиперболический арктангенс (в радианах) аргумента.
 
 .См. также:
-<<_fblangref_scalarfuncs_tanh,TANH>>. 
+<<fblangref-scalarfuncs-tanh>>.
 
-[[_fblangref_scalarfuncs_ceil]]
-=== CEIL, CEILING
-(((CEIL)))
-(((CEILING)))
+[[fblangref-scalarfuncs-ceil]]
+=== `CEIL()`, `CEILING()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
-CEIL[ING] (number)
+CEIL[ING] (<value>)
 ----
-
-
 
 .Параметры функции CEIL[ING]
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-BIGINT, INT128, DECFLOAT или DOUBLE PRECISION в зависимости от типа аргумента.
+`BIGINT`, `INT128`, `DECFLOAT` или `DOUBLE PRECISION` в зависимости от типа аргумента.
 
-Функция CEIL возвращает наименьшее целое число, большее или равное аргументу.
+Функция `CEIL` возвращает наименьшее целое число, большее или равное аргументу.
 
 .См. также:
-<<_fblangref_scalarfuncs_floor,FLOOR>>, <<_fblangref_scalarfuncs_trunc,TRUNC>>. 
+<<fblangref-scalarfuncs-floor>>, <<fblangref-scalarfuncs-trunc>>.
 
-[[_fblangref_scalarfuncs_cos]]
-=== COS
-(((COS)))
+[[fblangref-scalarfuncs-cos]]
+=== `COS()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+COS (_angle_)
 ----
 
-COS (angle)
-----
-
-
-
-.Параметры функции COS
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `COS`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``angle``
-|
-
-Угол, выраженный в радианах.
+|angle
+|Угол, выраженный в радианах.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция COS возвращает косинус угла.
+Функция `COS` возвращает косинус угла.
 Аргумент должен быть задан в радианах.
 
-Любой NOT NULL результат находится в диапазоне [-1, 1].
+Любой `NOT NULL` результат находится в диапазоне [-1, 1].
 
 .См. также:
-<<_fblangref_scalarfuncs_acos,ACOS>>. 
+<<fblangref-scalarfuncs-acos>>.
 
-[[_fblangref_scalarfuncs_cosh]]
-=== COSH
-(((COSH)))
+[[fblangref-scalarfuncs-cosh]]
+=== `COSH`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+COSH (<value>)
 ----
 
-COSH (number)
-----
-
-
-
-.Параметры функции COSH
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `COSH`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция COSH возвращает гиперболический косинус аргумента.
+Функция `COSH` возвращает гиперболический косинус аргумента.
 
-Любой NOT NULL результат находится в диапазоне [1, +∞].
+Любой `NOT NULL` результат находится в диапазоне [1, +∞].
 
 .См. также:
-<<_fblangref_scalarfuncs_acosh,ACOSH>>. 
+<<fblangref-scalarfuncs-acosh>>.
 
-[[_fblangref_scalarfuncs_cot]]
-=== COT
-(((COT)))
+[[fblangref-scalarfuncs-cot]]
+=== `COT`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+COT (_angle_)
 ----
 
-COT (angle)
-----
-
-
-
-.Параметры функции COT
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `COT`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``angle``
-|
-
-Угол, выраженный в радианах.
+|angle
+|Угол, выраженный в радианах.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция COT возвращает котангенс угла.
+Функция `COT` возвращает котангенс угла.
 Аргумент должен быть задан в радианах.
 
 .См. также:
-<<_fblangref_scalarfuncs_tan,TAN>>. 
+<<fblangref-scalarfuncs-tan>>.
 
-[[_fblangref_scalarfuncs_exp]]
-=== EXP
-(((EXP)))
+[[fblangref-scalarfuncs-exp]]
+=== `EXP`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+EXP (<value>)
 ----
 
-EXP (number)
-----
-
-
-
-.Параметры функции EXP
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `EXP`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция EXP возвращает значение натуральной экспоненты, 
-// <inlineequation>
-//                     <mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML">
-//                         <mml:mrow>
-//                             <mml:msup>
-//                                 <mml:mi>e</mml:mi>
-//                                 <mml:mn>number</mml:mn>
-//                             </mml:msup>
-//                         </mml:mrow>
-//                     </mml:math>
-//                 </inlineequation>
-$$.$$
+Функция `EXP` возвращает значение натуральной экспоненты, e^value^
 
 .См. также:
-<<_fblangref_scalarfuncs_ln,LN>>. 
+<<fblangref-scalarfuncs-ln>>.
 
-[[_fblangref_scalarfuncs_floor]]
-=== FLOOR
-(((FLOOR)))
+[[fblangref-scalarfuncs-floor]]
+=== `FLOOR`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+FLOOR (<value>)
 ----
 
-FLOOR (number)
-----
-
-
-
-.Параметры функции FLOOR
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `FLOOR`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-BIGINT, INT128, DECFLOAT или DOUBLE PRECISION в зависимости от типа аргумента.
+`BIGINT`, `INT128`, `DECFLOAT` или `DOUBLE PRECISION` в зависимости от типа аргумента.
 
-Функция FLOOR возвращает целое число, меньшее или равное аргументу.
+Функция `FLOOR` возвращает целое число, меньшее или равное аргументу.
 
 .См. также:
-<<_fblangref_scalarfuncs_ceil,"CEIL, CEILING">>, <<_fblangref_scalarfuncs_trunc,TRUNC>>. 
+<<fblangref-scalarfuncs-ceil>>, <<fblangref-scalarfuncs-trunc>>.
 
-[[_fblangref_scalarfuncs_ln]]
-=== LN
-(((LN)))
+[[fblangref-scalarfuncs-ln]]
+=== `LN`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+LN (<value>)
 ----
 
-LN (number)
-----
-
-
-
-.Параметры функции LN
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `LN`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция LN возвращает натуральный логарифм аргумента.
+Функция `LN` возвращает натуральный логарифм аргумента.
 
 [NOTE]
 ====
@@ -1385,589 +1161,473 @@ DOUBLE PRECISION.
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_exp,EXP>>. 
+<<fblangref-scalarfuncs-exp>>.
 
-[[_fblangref_scalarfuncs_log]]
-=== LOG
-(((LOG)))
+[[fblangref-scalarfuncs-log]]
+=== `LOG`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+LOG (_x_, _y_)
 ----
 
-LOG (x, y)
-----
-
-
-
-.Параметры функции LOG
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `LOG`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``x``
-|
-
-Основание.
+|x
+|Основание.
 Выражение числового типа.
 
-|[replaceable]``y``
-|
-
-Выражение числового типа.
+|y
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция LOG возвращает логарифм [replaceable]``y`` (второй аргумент) по основанию [replaceable]``x`` (первый аргумент).
+Функция `LOG` возвращает логарифм _y_ (второй аргумент) по основанию _x_ (первый аргумент).
 
 Особенности использования: 
 
 * Если один из аргументов меньше или равен 0, то возникает ошибка;
-* Если оба аргумента равны 1, то результатом функции будет NaN (Not-a-Number -- не число);
-* Если [replaceable]``x`` = 1 и [replaceable]``y`` < 1, то результатом функции будет -INF (-∞);
-* Если [replaceable]``x`` = 1 и [replaceable]``y`` > 1, то результатом функции будет +INF (+∞).
+* Если оба аргумента равны 1, то результатом функции будет `NaN` (Not-a-Number -- не число);
+* Если _x_ = 1 и _y_ < 1, то результатом функции будет `-INF` (-∞);
+* Если _x_ = 1 и _y_ > 1, то результатом функции будет `+INF` (+∞).
 
 
-[[_fblangref_scalarfuncs_log10]]
-=== LOG10
-(((LOG10)))
+[[fblangref-scalarfuncs-log10]]
+=== `LOG10`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+LOG10 (<value>)
 ----
 
-LOG10 (number)
-----
-
-
-
-.Параметры функции LOG10
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `LOG10`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|value
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция LOG10 возвращает десятичный логарифм аргумента.
+Функция `LOG10` возвращает десятичный логарифм аргумента.
 
 [NOTE]
 ====
 Если входной аргумент отрицательный или равен 0, возникает ошибка. 
 ====
 
-[[_fblangref_scalarfuncs_mod]]
-=== MOD
-(((MOD)))
+[[fblangref-scalarfuncs-mod]]
+=== `MOD`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+MOD (_a_, _b_)
 ----
 
-MOD (a, b)
-----
-
-
-
-.Параметры функции MOD
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `MOD`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``a``
-|
+|a
+|Выражение числового типа.
 
-Выражение числового типа.
-
-|[replaceable]``b``
-|
-
-Выражение числового типа.
+|b
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-INTEGER, BIGINT или INT128 в зависимости от типов аргументов.
+`INTEGER`, `BIGINT` или `INT128` в зависимости от типов аргументов.
 
-Функция MOD возвращает остаток от целочисленного деления. 
+Функция `MOD` возвращает остаток от целочисленного деления.
 
 [NOTE]
 ====
 Вещественные числа округляются до выполнения деления.
-Например, результатом 7.5 mod 2.5 будет 2 (8 mod 3), а не 0.
+Например, результатом `MOD(7.5, 2.5)` будет 2 (8 mod 3), а не 0.
 ====
 
-[[_fblangref_scalarfuncs_pi]]
-=== PI
-(((PI)))
+[[fblangref-scalarfuncs-pi]]
+=== `PI`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 PI ()
 ----
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция PI возвращает число π. 
+Функция `PI` возвращает число π.
 
-[[_fblangref_scalarfuncs_power]]
+[[fblangref-scalarfuncs-power]]
 === POWER
-(((POWER)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+POWER (_x_, _y_)
 ----
 
-POWER (x, y)
-----
-
-
-
-.Параметры функции POWER
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `POWER`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``x``
-|
+|x
+|Выражение числового типа.
 
-Выражение числового типа.
-
-|[replaceable]``y``
-|
-
-Выражение числового типа.
+|y
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция POWER возвращает результат возведения числа [replaceable]``x`` в степень [replaceable]``y``.
+Функция `POWER` возвращает результат возведения числа _x_ в степень _y_.
 
 [NOTE]
 ====
-Если [replaceable]``x`` меньше нуля, возникает ошибка.
+Если _x_ меньше нуля, возникает ошибка.
 ====
 
-[[_fblangref_scalarfuncs_rand]]
-=== RAND
-(((RAND)))
+[[fblangref-scalarfuncs-rand]]
+=== `RAND`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 RAND ()
 ----
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция RAND возвращает псевдослучайное число в интервале от 0 до 1. 
+Функция `RAND` возвращает псевдослучайное число в интервале от 0 до 1.
 
-[[_fblangref_scalarfuncs_round]]
-=== ROUND
-(((ROUND)))
+[[fblangref-scalarfuncs-round]]
+=== `ROUND`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes"]
+----
+ROUND (_number_ [, _scale_])
 ----
 
-ROUND (number [, scale])
-----
-
-
-
-.Параметры функции ROUND
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `ROUND`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
+|number
+|Выражение числового типа.
 
-Выражение числового типа.
+|scale
+a|Масштаб -- целое число, определяющее число десятичных разрядов, к которым должен быть проведено округление, т.е.
 
-|[replaceable]``scale``
-|
+* {nbsp}2 для округления к самому близкому кратному 0.01 числу
+* {nbsp}1 для округления к самому близкому кратному 0.1 числу
+* {nbsp}0 для округления к самому близкому целому числу
+* -1 для округления к самому близкому кратному 10 числу
+* -2 для округления к самому близкому кратному 100 числу
 
-Масштаб -- целое число, определяющее число десятичных разрядов, к которым должен быть проведено округление, т.е. 
-----
-
-2 для округления к самому близкому кратному 0.01 числу
-1 для округления к самому близкому кратному 0.1 числу
-0 для округления к самому близкому целому числу
--1 для округления к самому близкому кратному 10 числу
--2 для округления к самому близкому кратному 100 числу
-----
-По умолчанию 0. 
+По умолчанию 0.
 |===
 
-.Тип возвращаемого результата:
-масштабируемое целое (INTEGER, BIGINT или INT128) или DECFLOAT, или DOUBLE PRECISION в зависимости от типа [replaceable]``number``.
+.Тип возвращаемого результата
+масштабируемое целое (`INTEGER`, `BIGINT` или `INT128`) или `DECFLOAT`, или `DOUBLE PRECISION` в зависимости от типа _number_.
 
-Функция ROUND округляет число до ближайшего целого числа.
+Функция `ROUND` округляет число до ближайшего целого числа.
 Если дробная часть равна 0.5, то округление до ближайшего большего целого числа для положительных чисел и до ближайшего меньшего для отрицательных чисел.
-С дополнительным опциональным параметром [replaceable]``scale`` число может быть округлено до одной из степеней числа 10 (десятки, сотни, десятые части, сотые части и т.д.) вместо просто целого числа. 
+С дополнительным опциональным параметром _scale_ число может быть округлено до одной из степеней числа 10 (десятки, сотни, десятые части, сотые части и т.д.) вместо просто целого числа.
 
 [NOTE]
 ====
-Если используется параметр [replaceable]``scale``, то результат имеет такой же масштаб, как и первый параметр [replaceable]``number``. 
+Если используется параметр _scale_, то результат имеет такой же масштаб, как и первый параметр _number_.
 ====
 
-.Примеры:
+[[fblangref-scalarfuncs-round-exmpl]]
+==== Примеры `ROUND`
 
-
-.Использование функции ROUND
+.Использование функции `ROUND`
 [example]
-
+====
 [source,sql]
 ----
-
 ROUND(123.654, 1) -- Результат: 123.700 (а не 123.7)
 ROUND(8341.7, -3) -- Результат: 8000.0 (а не 8000)
 ROUND(45.1212, 0) -- Результат: 45.0000 (а не 45)
 ROUND(45.1212)    -- Результат: 45
 ----
+====
 
 .См. также:
-<<_fblangref_scalarfuncs_trunc,TRUNC>>. 
+<<fblangref-scalarfuncs-trunc>>.
 
-[[_fblangref_scalarfuncs_sign]]
-=== SIGN
-(((SIGN)))
+[[fblangref-scalarfuncs-sign]]
+=== `SIGN`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+SIGN (_number_)
 ----
 
-SIGN (number)
-----
-
-
-
-.Параметры функции SIGN
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `SIGN`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|number
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-SMALLINT.
+`SMALLINT`
 
-Функция SIGN возвращает знак входного параметра. 
+Функция `SIGN` возвращает знак входного параметра.
 
+* -1 -- число меньше нуля
+* {nbsp}0 -- число равно нулю
+* {nbsp}1 -- число больше нуля
 
+[[fblangref-scalarfuncs-sin]]
+=== `SIN`
 
-.Таблица результатов функции SIGN
-[cols="1,1", frame="all", options="header"]
-|===
-|  Результат 
-|  Значение 
+.Доступно в
+DSQL, PSQL
 
-| -1 
-| число меньше нуля 
-
-| 0 
-| число равно нулю 
-
-| 1 
-| число больше нуля 
-|===
-
-[[_fblangref_scalarfuncs_sin]]
-=== SIN
-(((SIN)))
-
-.Доступно в:
-DSQL, PSQL.
-
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+SIN (_angle_)
 ----
 
-SIN (angle)
-----
-
-
-
-.Параметры функции SIN
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `SIN`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``angle``
-|
-
-Угол, выраженный в радианах.
+|angle
+|Угол, выраженный в радианах.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция SIN возвращает синус угла.
+Функция `SIN` возвращает синус угла.
 Аргумент должен быть задан в радианах.
 
-Любой NOT NULL результат находится в диапазоне [-1, 1].
+Любой `NOT NULL` результат находится в диапазоне [-1, 1].
 
 .См. также:
-<<_fblangref_scalarfuncs_asin,ASIN>>. 
+<<fblangref-scalarfuncs-asin>>.
 
-[[_fblangref_scalarfuncs_sinh]]
-=== SINH
-(((SINH)))
+[[fblangref-scalarfuncs-sinh]]
+=== `SINH`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+SINH (_number_)
 ----
 
-SINH (number)
-----
-
-
-
-.Параметры функции SINH
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `SINH`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|number
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция SINH возвращает гиперболический синус аргумента.
+Функция `SINH` возвращает гиперболический синус аргумента.
 
 .См. также:
-<<_fblangref_scalarfuncs_asinh,ASINH>>. 
+<<fblangref-scalarfuncs-asinh>>.
 
-[[_fblangref_scalarfuncs_sqrt]]
-=== SQRT
-(((SQRT)))
+[[fblangref-scalarfuncs-sqrt]]
+=== `SQRT()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+SQRT (_number_)
 ----
 
-SQRT (number)
-----
-
-
-
-.Параметры функции SQRT
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `SQRT`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|number
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция SQRT возвращает квадратный корень аргумента.
+Функция `SQRT` возвращает квадратный корень аргумента.
 
-[[_fblangref_scalarfuncs_tan]]
-=== TAN
-(((TAN)))
+[[fblangref-scalarfuncs-tan]]
+=== `TAN()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+TAN (_angle_)
 ----
 
-TAN (angle)
-----
-
-
-
-.Параметры функции TAN
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `TAN`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``angle``
-|
-
-Угол, выраженный в радианах.
+|angle
+|Угол, выраженный в радианах.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция TAN возвращает тангенс угла.
+Функция `TAN` возвращает тангенс угла.
 Аргумент должен быть задан в радианах.
 
 .См. также:
-<<_fblangref_scalarfuncs_atan,ATAN>>, <<_fblangref_scalarfuncs_atan2,ATAN2>>. 
+<<fblangref-scalarfuncs-atan>>, <<fblangref-scalarfuncs-atan2>>.
 
-[[_fblangref_scalarfuncs_tanh]]
-=== TANH
-(((TANH)))
+[[fblangref-scalarfuncs-tanh]]
+=== `TANH()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+TANH (_number_)
 ----
 
-TANH (number)
-----
-
-
-
-.Параметры функции TANH
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `TANH`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
-
-Выражение числового типа.
+|number
+|Выражение числового типа.
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION.
+`DOUBLE PRECISION`
 
-Функция TANH возвращает гиперболический тангенс аргумента.
+Функция `TANH` возвращает гиперболический тангенс аргумента.
 
-Любой NOT NULL результат находится в диапазоне [-1, 1].
+Любой `NOT NULL` результат находится в диапазоне [-1, 1].
 
 .См. также:
-<<_fblangref_scalarfuncs_atanh,ATANH>>. 
+<<fblangref-scalarfuncs-atanh>>.
 
-[[_fblangref_scalarfuncs_trunc]]
-=== TRUNC
-(((TRUNC)))
+[[fblangref-scalarfuncs-trunc]]
+=== `TRUNC()`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+TRUNC (_number_ [, _scale_])
 ----
 
-TRUNC (number [, scale])
-----
-
-
-
-.Параметры функции TRUNC
-[cols="1,1", frame="all", options="header"]
+.Параметры функции `TRUNC`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``number``
-|
+|number
+|Выражение числового типа.
 
-Выражение числового типа.
+|scale
+a|Масштаб -- целое число, определяющее число десятичных разрядов, к которым должен быть проведено усечение, т.е.
 
-|[replaceable]``scale``
-|
+* {nbsp}2 для усечения к самому близкому кратному 0.01 числу
+* {nbsp}1 для усечения к самому близкому кратному 0.1 числу
+* {nbsp}0 для усечения к самому близкому целому числу
+* -1 для усечения к самому близкому кратному 10 числу
+* -2 для усечения к самому близкому кратному 100 числу
 
-Масштаб -- целое число, определяющее число десятичных разрядов, к которым должен быть проведено усечение, т.е. 
-----
-
-2 для усечения к самому близкому кратному 0.01 числу
-1 для усечения к самому близкому кратному 0.1 числу
-0 для усечения к самому близкому целому числу
--1 для усечения к самому близкому кратному 10 числу
--2 для усечения к самому близкому кратному 100 числу
-----
 По умолчанию 0.
 |===
 
-.Тип возвращаемого результата:
-масштабируемое целое (INTEGER, BIGINT или INT128) или DECFLOAT, или DOUBLE PRECISION в зависимости от типа [replaceable]``number``.
+.Тип возвращаемого результата
+масштабируемое целое (`INTEGER`, `BIGINT` или `INT128`) или `DECFLOAT`, или `DOUBLE PRECISION` в зависимости от типа _number_.
 
-Функция TRUNC усекает число до ближайшего целого числа.
-С дополнительным опциональным параметром [replaceable]``scale`` число может быть усечено до одной из степеней числа 10 (десятки, сотни, десятые части, сотые части и т.д.) вместо просто целого числа. 
+Функция `TRUNC` усекает число до ближайшего целого числа.
+С дополнительным опциональным параметром _scale_ число может быть усечено до одной из степеней числа 10 (десятки, сотни, десятые части, сотые части и т.д.) вместо просто целого числа.
 
 [NOTE]
 ====
-Если используется параметр [replaceable]``scale``, то результат имеет такой же масштаб, как и первый параметр [replaceable]``number``. 
+Если используется параметр _scale_, то результат имеет такой же масштаб, как и первый параметр _number_.
 ====
 
 [IMPORTANT]
@@ -1975,35 +1635,31 @@ TRUNC (number [, scale])
 Функция всегда увеличивает отрицательные числа, поскольку она обрезает дробную часть. 
 ====
 
-.Примеры:
-
-
 .Использование функции TRUNC
 [example]
-
+====
 [source,sql]
 ----
-
 TRUNC(789.2225, 2)  -- Результат: 789.2200 (а не 789.22)
 TRUNC(345.4, -2) 	-- Результат: 300.0 (а не 300)
 TRUNC(-163.41, 0)	-- Результат: -163.00 (а не -163)
 TRUNC(-163.41)      -- Результат: -163
 ----
+====
 
 .См. также:
-<<_fblangref_scalarfuncs_round,ROUND>>, <<_fblangref_scalarfuncs_ceil,"CEIL, CEILING">>, <<_fblangref_scalarfuncs_floor,FLOOR>>. 
+<<fblangref-scalarfuncs-round,ROUND>>, <<fblangref-scalarfuncs-ceil,"CEIL, CEILING">>, <<fblangref-scalarfuncs-floor,FLOOR>>. 
 
 [[_fblangref_functions_string]]
 == Функции для работы со строками
 
-[[_fblangref_scalarfuncs_ascii_char]]
+[[fblangref-scalarfuncs-ascii-char]]
 === ASCII_CHAR
-(((ASCII_CHAR)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2014,10 +1670,10 @@ ASCII_CHAR (code)
 
 
 .Параметры функции ASCII_CHAR
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``code``
 |
@@ -2031,16 +1687,15 @@ ASCII_CHAR (code)
 Функция ASCII_CHAR возвращает ASCII символ соответствующий номеру, переданному в качестве аргумента.
 
 .См. также:
-<<_fblangref_scalarfuncs_ascii_val,ASCII_VAL>>. 
+<<fblangref-scalarfuncs-ascii-val,ASCII_VAL>>.
 
-[[_fblangref_scalarfuncs_ascii_val]]
+[[fblangref-scalarfuncs-ascii-val]]
 === ASCII_VAL
-(((ASCII_VAL)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2051,10 +1706,10 @@ ASCII_VAL (ch)
 
 
 .Параметры функции ASCII_VAL
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``ch``
 |
@@ -2075,16 +1730,15 @@ SMALLINT.
 
 
 .См. также:
-<<_fblangref_scalarfuncs_ascii_char,ASCII_CHAR>>. 
+<<fblangref-scalarfuncs-ascii-char,ASCII_CHAR>>.
 
-[[_fblangref_scalarfuncs_bit_length]]
+[[fblangref-scalarfuncs-bit_length]]
 === BIT_LENGTH
-(((BIT_LENGTH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2095,10 +1749,10 @@ BIT_LENGTH (str)
 
 
 .Параметры функции BIT_LENGTH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2144,17 +1798,15 @@ FROM RDB$DATABASE
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_char_length,CHAR_LENGTH>>, <<_fblangref_scalarfuncs_octet_length,OCTET_LENGTH>>. 
+<<fblangref-scalarfuncs-char_length,CHAR_LENGTH>>, <<fblangref-scalarfuncs-octet_length,OCTET_LENGTH>>. 
 
-[[_fblangref_scalarfuncs_char_length]]
+[[fblangref-scalarfuncs-char_length]]
 === CHAR_LENGTH, CHARACTER_LENGTH
-(((CHAR_LENGTH)))
-(((CHARACTER_LENGTH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2167,10 +1819,10 @@ CHARACTER_LENGTH (str)
 
 
 .Параметры функции CHAR_LENGTH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2189,16 +1841,15 @@ BIGINT.
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_bit_length,BIT_LENGTH>>, <<_fblangref_scalarfuncs_octet_length,OCTET_LENGTH>>. 
+<<fblangref-scalarfuncs-bit_length,BIT_LENGTH>>, <<fblangref-scalarfuncs-octet_length,OCTET_LENGTH>>. 
 
-[[_fblangref_scalarfuncs_left]]
+[[fblangref-scalarfuncs-left]]
 === LEFT
-(((LEFT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2209,10 +1860,10 @@ LEFT (str, num)
 
 
 .Параметры функции LEFT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2258,16 +1909,15 @@ SELECT LEFT('ABC', 2) FROM rdb$database;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_right,RIGHT>>, <<_fblangref_scalarfuncs_substring,SUBSTRING>>. 
+<<fblangref-scalarfuncs-right,RIGHT>>, <<fblangref-scalarfuncs-substring,SUBSTRING>>. 
 
-[[_fblangref_scalarfuncs_lower]]
+[[fblangref-scalarfuncs-lower]]
 === LOWER
-(((LOWER)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2278,10 +1928,10 @@ LOWER (str)
 
 
 .Параметры функции LOWER
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2312,16 +1962,15 @@ FROM RDB$DATABASE
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_upper,UPPER>>. 
+<<fblangref-scalarfuncs-upper,UPPER>>. 
 
-[[_fblangref_scalarfuncs_lpad]]
+[[fblangref-scalarfuncs-lpad]]
 === LPAD
-(((LPAD)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2332,10 +1981,10 @@ LPAD (str, endlen [, padstr])
 
 
 .Параметры функции LPAD
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2392,16 +2041,15 @@ LPAD ('Hello', 2, '')             -- возвращает 'He'
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_rpad,RPAD>>. 
+<<fblangref-scalarfuncs-rpad,RPAD>>. 
 
-[[_fblangref_scalarfuncs_octet_length]]
+[[fblangref-scalarfuncs-octet_length]]
 === OCTET_LENGTH
-(((OCTET_LENGTH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2412,10 +2060,10 @@ OCTET_LENGTH (str)
 
 
 .Параметры функции OCTET_LENGTH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2465,16 +2113,15 @@ FROM rdb$database
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_bit_length,BIT_LENGTH>>, <<_fblangref_scalarfuncs_char_length,CHAR_LENGTH>>. 
+<<fblangref-scalarfuncs-bit_length,BIT_LENGTH>>, <<fblangref-scalarfuncs-char_length,CHAR_LENGTH>>. 
 
-[[_fblangref_scalarfuncs_overlay]]
+[[fblangref-scalarfuncs-overlay]]
 === OVERLAY
-(((OVERLAY)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2485,10 +2132,10 @@ OVERLAY (string PLACING replacement FROM pos [FOR length])
 
 
 .Параметры функции OVERLAY
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``string``
 |
@@ -2563,16 +2210,15 @@ OVERLAY ('' PLACING 'Hello' FROM 4 FOR 20) -- Результат: 'Hello'
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_substring,SUBSTRING>>, <<_fblangref_scalarfuncs_replace,REPLACE>>. 
+<<fblangref-scalarfuncs-substring,SUBSTRING>>, <<fblangref-scalarfuncs-replace,REPLACE>>. 
 
-[[_fblangref_scalarfuncs_position]]
+[[fblangref-scalarfuncs-position]]
 === POSITION
-(((POSITION)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2587,10 +2233,10 @@ POSITION (<args>)
 
 
 .Параметры функции POSITION
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``substr``
 |
@@ -2644,16 +2290,15 @@ POSITION ('be' in 'Alas, poor Yorick!') -- Результат: 0
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_substring,SUBSTRING>>. 
+<<fblangref-scalarfuncs-substring,SUBSTRING>>. 
 
-[[_fblangref_scalarfuncs_replace]]
+[[fblangref-scalarfuncs-replace]]
 === REPLACE
-(((REPLACE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2664,10 +2309,10 @@ REPLACE (str, find, repl)
 
 
 .Параметры функции REPLACE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2724,30 +2369,27 @@ REPLACE ('Billy Wilder', '', 'abc')    -- возвращает 'Billy Wilder'
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_overlay,OVERLAY>>. 
+<<fblangref-scalarfuncs-overlay,OVERLAY>>. 
 
-[[_fblangref_scalarfuncs_reverse]]
+[[fblangref-scalarfuncs-reverse]]
 === REVERSE
-(((REVERSE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
+.Синтаксис
 [source]
 ----
-
 REVERSE (str)
 ----
 
 
 
 .Параметры функции REVERSE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2776,6 +2418,7 @@ REVERSE ('Was it a cat I saw?')  -- возвращает '?was I tac a ti saW'
 ====
 Данная функция очень удобна, если вам предстоит работать (сортировать или группировать информацию) которая находится в окончаниях строк.
 Пример такой информации – доменные имена или имена адресов электронной почты. 
+
 [source,sql]
 ----
 
@@ -2787,14 +2430,13 @@ WHERE REVERSE(email) STARTING WITH reverse('.br');
 ----
 ====
 
-[[_fblangref_scalarfuncs_right]]
+[[fblangref-scalarfuncs-right]]
 === RIGHT
-(((RIGHT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2805,10 +2447,10 @@ RIGHT (str, num)
 
 
 .Параметры функции RIGHT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2855,16 +2497,15 @@ SELECT RIGHT('ABC', 1) FROM rdb$database;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_left,LEFT>>, <<_fblangref_scalarfuncs_substring,SUBSTRING>>. 
+<<fblangref-scalarfuncs-left,LEFT>>, <<fblangref-scalarfuncs-substring,SUBSTRING>>. 
 
-[[_fblangref_scalarfuncs_rpad]]
+[[fblangref-scalarfuncs-rpad]]
 === RPAD
-(((RPAD)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -2875,10 +2516,10 @@ RPAD (str, endlen [, padstr])
 
 
 .Параметры функции RPAD
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -2935,16 +2576,16 @@ RPAD ('Hello', 2, '')             -- возвращает 'He'
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_lpad,LPAD>>. 
+<<fblangref-scalarfuncs-lpad,LPAD>>. 
 
-[[_fblangref_scalarfuncs_substring]]
+[[fblangref-scalarfuncs-substring]]
 === SUBSTRING
-(((SUBSTRING)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -2964,10 +2605,10 @@ SUBSTRING (<args>)
 
 
 .Параметры функции SUBSTRING
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -3085,16 +2726,16 @@ SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- <null>
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_position,POSITION>>, <<_fblangref_scalarfuncs_left,LEFT>>, <<_fblangref_scalarfuncs_right,RIGHT>>, <<_fblangref_scalarfuncs_char_length,CHAR_LENGTH>>, <<_fblangref_commons_predsimilarto,SIMILAR TO>>. 
+<<fblangref-scalarfuncs-position,POSITION>>, <<fblangref-scalarfuncs-left,LEFT>>, <<fblangref-scalarfuncs-right,RIGHT>>, <<fblangref-scalarfuncs-char_length,CHAR_LENGTH>>, <<fblangref-commons-predsimilarto,SIMILAR TO>>. 
 
-[[_fblangref_scalarfuncs_trim]]
+[[fblangref-scalarfuncs-trim]]
 === TRIM
-(((TRIM)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -3109,10 +2750,10 @@ TRIM ([<adjust>] str)
 
 
 .Параметры функции TRIM
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -3140,7 +2781,7 @@ VARCHAR(N) или BLOB.
 
 
 .Спецификация опций функции TRIM
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
 |  Опция 
 |  Описание 
@@ -3193,16 +2834,15 @@ FROM RDB$DATABASE -- Результат: ' I love you El'
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_overlay,OVERLAY>>, <<_fblangref_scalarfuncs_replace,REPLACE>>. 
+<<fblangref-scalarfuncs-overlay,OVERLAY>>, <<fblangref-scalarfuncs-replace,REPLACE>>. 
 
-[[_fblangref_scalarfuncs_upper]]
+[[fblangref-scalarfuncs-upper]]
 === UPPER
-(((UPPER)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3213,10 +2853,10 @@ UPPER (str)
 
 
 .Параметры функции UPPER
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -3248,19 +2888,18 @@ FROM RDB$DATABASE
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_lower,LOWER>>. 
+<<fblangref-scalarfuncs-lower,LOWER>>. 
 
 [[_fblangref_functions_datetime]]
 == Функции для работы с датой и временем
 
-[[_fblangref_scalarfuncs_at]]
+[[fblangref-scalarfuncs-at]]
 === AT
-(((AT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3297,14 +2936,13 @@ select timestamp '2018-01-01 12:00 GMT' at local
   from rdb$database;
 ----
 
-[[_fblangref_scalarfuncs_dateadd]]
+[[fblangref-scalarfuncs-dateadd]]
 === DATEADD
-(((DATEADD)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3322,10 +2960,10 @@ DATEADD (<args>)
 
 
 .Параметры функции DATEADD
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``amount``
 |
@@ -3390,17 +3028,16 @@ T                             MS
 ....
 
 .См. также:
-<<_fblangref_scalarfuncs_datediff,DATEDIFF>>, <<_fblangref_datatypes_datetime_operation,"Операции, использующие
+<<fblangref-scalarfuncs-datediff,DATEDIFF>>, <<_fblangref_datatypes_datetime_operation,"Операции, использующие
                         значения даты и времени">>. 
 
-[[_fblangref_scalarfuncs_datediff]]
+[[fblangref-scalarfuncs-datediff]]
 === DATEDIFF
-(((DATEDIFF)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3418,10 +3055,10 @@ DATEDIFF (<args>)
 
 
 .Параметры функции DATEDIFF
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``unit``
 |
@@ -3491,17 +3128,16 @@ DATEDIFF (DAY FROM CURRENT_DATE TO CAST (? AS DATE))
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_dateadd,DATEADD>>, <<_fblangref_datatypes_datetime_operation,"Операции, использующие
+<<fblangref-scalarfuncs-dateadd,DATEADD>>, <<_fblangref_datatypes_datetime_operation,"Операции, использующие
                         значения даты и времени">>. 
 
-[[_fblangref_scalarfuncs_extract]]
+[[fblangref-scalarfuncs-extract]]
 === EXTRACT
-(((EXTRACT)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3517,10 +3153,10 @@ EXTRACT (<part> FROM datetime)
 
 
 .Параметры функции EXTRACT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``part``
 |
@@ -3637,14 +3273,13 @@ FROM RDB$DATABASE
 <<_fblangref_datatypes_datetime,Типы данных для работы с датой и
                         временем>>. 
 
-[[_fblangref_scalarfuncs_firstday]]
+[[fblangref-scalarfuncs-firstday]]
 === FIRST_DAY
-(((FIRST_DAY)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3657,10 +3292,10 @@ FIRST_DAY( OF <part> FROM <date_or_timestamp> )
 
 
 .Параметры функции FIRST_DAY
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``part``
 |
@@ -3702,16 +3337,15 @@ SELECT FIRST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_lastday,LAST_DAY>>. 
+<<fblangref-scalarfuncs-lastday,LAST_DAY>>. 
 
-[[_fblangref_scalarfuncs_lastday]]
+[[fblangref-scalarfuncs-lastday]]
 === LAST_DAY
-(((LAST_DAY)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3724,10 +3358,10 @@ LAST_DAY( OF <part> FROM <date_or_timestamp> )
 
 
 .Параметры функции LAST_DAY
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``part``
 |
@@ -3769,19 +3403,19 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_firstday,FIRST_DAY>>. 
+<<fblangref-scalarfuncs-firstday,FIRST_DAY>>. 
 
 [[_fblangref_functions_decfloat]]
 == Функции для работы с типом DECFLOAT
 
-[[_fblangref_scalarfuncs_compare_decfloat]]
+[[fblangref-scalarfuncs-compare_decfloat]]
 === COMPARE_DECFLOAT
-(((COMPARE_DECFLOAT)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -3792,10 +3426,10 @@ COMPARE_DECFLOAT (value1, value2)
 
 
 .Параметры функции COMPARE_DECFLOAT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``value1``, [replaceable]``value2``
 |
@@ -3823,14 +3457,13 @@ COMPARE_DECFLOAT(2.17, 2.170)
 ----
 вернёт 2, а не 0. 
 
-[[_fblangref_scalarfuncs_normalize_decfloat]]
+[[fblangref-scalarfuncs-normalize_decfloat]]
 === NORMALIZE_DECFLOAT
-(((NORMALIZE_DECFLOAT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3841,12 +3474,12 @@ NORMALIZE_DECFLOAT (value)
 
 
 .Параметры функции NORMALIZE_DECFLOAT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
+|value
 |
 
 Значение типа DECFLOAT.
@@ -3868,14 +3501,13 @@ NORMALIZE_DECFLOAT(12.00) -- возвращает 12
 NORMALIZE_DECFLOAT(120) -- возвращает 1.2E+2
 ----
 
-[[_fblangref_scalarfuncs_quantize]]
+[[fblangref-scalarfuncs-quantize]]
 === QUANTIZE
-(((QUANTIZE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3886,12 +3518,12 @@ QUANTIZE (value, pattern)
 
 
 .Параметры функции NORMALIZE_DECFLOAT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
+|value
 |
 
 Значение типа DECFLOAT.
@@ -3906,7 +3538,7 @@ QUANTIZE (value, pattern)
 DECFLOAT.
 
 Функция QUANTIZE возвращает значение первого аргумента масштабированным с использованием второго значения в качестве шаблона.
-Другими словами функция QUANTIZE возвращает значение DECFLOAT, равное по значению (за исключением любого округления) и знаку [replaceable]``value``, а также экспоненте, равной по значению экспоненте [replaceable]``pattern``.
+Другими словами функция QUANTIZE возвращает значение DECFLOAT, равное по значению (за исключением любого округления) и знаку value, а также экспоненте, равной по значению экспоненте [replaceable]``pattern``.
 Функцию QUANTIZE можно использовать для реализации округления с точностью до нужного знака, например, округление до ближайшего цента с использованием установленного режима округления DECFLOAT.
 
 [NOTE]
@@ -3945,14 +3577,13 @@ V                       PIC                   QUANTIZE
 ----
 ====
 
-[[_fblangref_scalarfuncs_totalorder]]
+[[fblangref-scalarfuncs-totalorder]]
 === TOTALORDER
-(((TOTALORDER)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -3963,10 +3594,10 @@ TOTALORDER (value1, value2)
 
 
 .Параметры функции TOTALORDER
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``value1``, [replaceable]``value2``
 |
@@ -3996,14 +3627,13 @@ SMALLINT.
 [[_fblangref_functions_binary]]
 == Кодирование и декодирование бинарных данных
 
-[[_fblangref_scalarfuncs_base64_encode]]
+[[fblangref-scalarfuncs-base64_encode]]
 === BASE64_ENCODE
-(((BASE64_ENCODE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4030,16 +3660,15 @@ select base64_encode(public_key) from clients;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_base64_decode,BASE64_DECODE>>. 
+<<fblangref-scalarfuncs-base64_decode,BASE64_DECODE>>. 
 
-[[_fblangref_scalarfuncs_base64_decode]]
+[[fblangref-scalarfuncs-base64_decode]]
 === BASE64_DECODE
-(((BASE64_DECODE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4054,16 +3683,15 @@ BLOB или VARCHAR.
 Функция может работать как с символьной строкой, так и с BLOB.
 
 .См. также:
-<<_fblangref_scalarfuncs_base64_encode,BASE64_ENCODE>>. 
+<<fblangref-scalarfuncs-base64_encode,BASE64_ENCODE>>. 
 
-[[_fblangref_scalarfuncs_hex_encode]]
+[[fblangref-scalarfuncs-hex_encode]]
 === HEX_ENCODE
-(((HEX_ENCODE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4090,16 +3718,15 @@ select hex_encode(public_key) from clients;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_hex_decode,HEX_DECODE>>. 
+<<fblangref-scalarfuncs-hex_decode,HEX_DECODE>>. 
 
-[[_fblangref_scalarfuncs_hex_decode]]
+[[fblangref-scalarfuncs-hex_decode]]
 === HEX_DECODE
-(((HEX_DECODE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4114,19 +3741,18 @@ BLOB или VARBINARY.
 Функция может работать как с символьной строкой, так и с BLOB.
 
 .См. также:
-<<_fblangref_scalarfuncs_hex_encode,HEX_ENCODE>>. 
+<<fblangref-scalarfuncs-hex_encode,HEX_ENCODE>>. 
 
 [[_fblangref_functions_hash]]
 == Хеш функции
 
-[[_fblangref_scalarfuncs_hash]]
+[[fblangref-scalarfuncs-hash]]
 === HASH
-(((HASH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4139,10 +3765,10 @@ HASH (str [USING <algorithm>])
 
 
 .Параметры функции HASH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -4181,14 +3807,13 @@ SELECT HASH(x USING CRC32) FROM MyTable;
 -- результат типа INTEGER
 ----
 
-[[_fblangref_scalarfuncs_crypt_hash]]
+[[fblangref-scalarfuncs-crypt_hash]]
 === CRYPT_HASH
-(((CRYPT_HASH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4201,10 +3826,10 @@ CRYPT_HASH (str USING <algorithm>)
 
 
 .Параметры функции CRYPT_HASH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``str``
 |
@@ -4242,14 +3867,13 @@ SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
 
 В Firebird 4.0 поддерживается только подмножество симметричных алгоритмов шифрования (как блочных так и потоковых), так и RSA.
 
-[[_fblangref_scalarfuncs_encrypt]]
+[[fblangref-scalarfuncs-encrypt]]
 === ENCRYPT
-(((ENCRYPT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4272,10 +3896,10 @@ ENCRYPT (<data> [USING <algorithm>] [MODE <mode>] KEY <key>
 
 
 .Параметры функции ENCRYPT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``data``
 |
@@ -4346,16 +3970,15 @@ from rdb$database;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_decrypt,DECRYPT>>. 
+<<fblangref-scalarfuncs-decrypt,DECRYPT>>. 
 
-[[_fblangref_scalarfuncs_decrypt]]
+[[fblangref-scalarfuncs-decrypt]]
 === DECRYPT
-(((DECRYPT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4378,10 +4001,10 @@ DECRYPT (<data> [USING <algorithm>] [MODE <mode>] KEY <key>
 
 
 .Параметры функции DECRYPT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``data``
 |
@@ -4457,16 +4080,15 @@ from secure_table;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_encrypt,ENCRYPT>>. 
+<<fblangref-scalarfuncs-encrypt,ENCRYPT>>. 
 
-[[_fblangref_scalarfuncs_rsa_private]]
+[[fblangref-scalarfuncs-rsa_private]]
 === RSA_PRIVATE
-(((RSA_PRIVATE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4477,10 +4099,10 @@ RSA_PRIVATE (<size>)
 
 
 .Параметры функции RSA_PRIVATE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``size``
 |
@@ -4507,16 +4129,15 @@ from rdb$database;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_rsa_public,RSA_PUBLIC>>. 
+<<fblangref-scalarfuncs-rsa_public,RSA_PUBLIC>>. 
 
-[[_fblangref_scalarfuncs_rsa_public]]
+[[fblangref-scalarfuncs-rsa_public]]
 === RSA_PUBLIC
-(((RSA_PUBLIC)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4527,10 +4148,10 @@ RSA_PUBLIC (<private key>)
 
 
 .Параметры функции RSA_PUBLIC
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``private key``
 |
@@ -4550,7 +4171,7 @@ VARBINARY.
 .Использование функции RSA_PUBLIC
 ====
 Закрытый ключ должен быть инициализирован ранее см.
-пример в <<_fblangref_scalarfuncs_rsa_private,RSA_PRIVATE>>
+пример в <<fblangref-scalarfuncs-rsa_private,RSA_PRIVATE>>
 
 
 [source,sql]
@@ -4563,16 +4184,15 @@ from rdb$database;
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_rsa_private,RSA_PRIVATE>>. 
+<<fblangref-scalarfuncs-rsa_private,RSA_PRIVATE>>. 
 
-[[_fblangref_scalarfuncs_rsa_encrypt]]
+[[fblangref-scalarfuncs-rsa_encrypt]]
 === RSA_ENCRYPT
-(((RSA_ENCRYPT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4585,10 +4205,10 @@ RSA_ENCRYPT (<data> KEY <public_key> [LPARAM <tag>] [HASH <hash>])
 
 
 .Параметры функции RSA_ENCRYPT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``data``
 |
@@ -4625,7 +4245,7 @@ VARBINARY.
 .Использование функции RSA_ENCRYPT
 ====
 Открытый ключ должен быть инициализирован ранее см.
-пример в <<_fblangref_scalarfuncs_rsa_public,RSA_PUBLIC>>
+пример в <<fblangref-scalarfuncs-rsa_public,RSA_PUBLIC>>
 
 
 [source,sql]
@@ -4638,16 +4258,15 @@ from rdb$database;
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_rsa_public,RSA_PUBLIC>>, <<_fblangref_scalarfuncs_rsa_decrypt,RSA_DECRYPT>>. 
+<<fblangref-scalarfuncs-rsa_public,RSA_PUBLIC>>, <<fblangref-scalarfuncs-rsa_decrypt,RSA_DECRYPT>>. 
 
-[[_fblangref_scalarfuncs_rsa_decrypt]]
+[[fblangref-scalarfuncs-rsa_decrypt]]
 === RSA_DECRYPT
-(((RSA_DECRYPT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4660,10 +4279,10 @@ RSA_DECRYPT (<data> KEY <private_key> [LPARAM <tag>] [HASH <hash>])
 
 
 .Параметры функции RSA_DECRYPT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``data``
 |
@@ -4701,8 +4320,8 @@ VARCHAR.
 .Использование функции RSA_DECRYPT
 ====
 Закрытый ключ должен быть инициализирован ранее см.
-пример в <<_fblangref_scalarfuncs_rsa_private,RSA_PRIVATE>>.
-Данные для расшифровки сипользуются из примера в <<_fblangref_scalarfuncs_rsa_encrypt,RSA_ENCRYPT>>
+пример в <<fblangref-scalarfuncs-rsa_private,RSA_PRIVATE>>.
+Данные для расшифровки сипользуются из примера в <<fblangref-scalarfuncs-rsa_encrypt,RSA_ENCRYPT>>
 
 
 [source,sql]
@@ -4715,16 +4334,15 @@ from RDB$DATABASE;
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_rsa_private,RSA_PRIVATE>>, <<_fblangref_scalarfuncs_rsa_encrypt,RSA_ENCRYPT>>. 
+<<fblangref-scalarfuncs-rsa_private,RSA_PRIVATE>>, <<fblangref-scalarfuncs-rsa_encrypt,RSA_ENCRYPT>>. 
 
-[[_fblangref_scalarfuncs_rsa_sign_hash]]
+[[fblangref-scalarfuncs-rsa_sign_hash]]
 === RSA_SIGN_HASH
-(((RSA_SIGN_HASH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4737,10 +4355,10 @@ RSA_SIGN_HASH (<data> KEY <private_key> [HASH <hash>] [SALT_LENGTH <length>])
 
 
 .Параметры функции RSA_SIGN_HASH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``data``
 |
@@ -4777,7 +4395,7 @@ VARBINARY.
 .Использование функции RSA_SIGN_HASH
 ====
 Закрытый ключ должен быть инициализирован ранее см.
-пример в <<_fblangref_scalarfuncs_rsa_private,RSA_PRIVATE>>. 
+пример в <<fblangref-scalarfuncs-rsa_private,RSA_PRIVATE>>. 
 
 
 [source,sql]
@@ -4791,16 +4409,15 @@ from rdb$database;
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_rsa_private,RSA_PRIVATE>>, <<_fblangref_scalarfuncs_rsa_verify_hash,RSA_VERIFY_HAS>>. 
+<<fblangref-scalarfuncs-rsa_private,RSA_PRIVATE>>, <<fblangref-scalarfuncs-rsa_verify_hash,RSA_VERIFY_HAS>>. 
 
-[[_fblangref_scalarfuncs_rsa_verify_hash]]
+[[fblangref-scalarfuncs-rsa_verify_hash]]
 === RSA_VERIFY_HASH
-(((RSA_VERIFY_HASH)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4814,10 +4431,10 @@ RSA_VERIFY_HASH (<data> SIGNATURE <signature> KEY <public_key> [HASH <hash>]
 
 
 .Параметры функции RSA_VERIFY_HASH
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``data``
 |
@@ -4860,7 +4477,7 @@ BOOLEAN.
 .Использование функции RSA_VERIFY_HASH
 ====
 Открытый ключ должен быть инициализирован ранее см.
-пример в <<_fblangref_scalarfuncs_rsa_public,RSA_PUBLIC>> Цифровая подпись получена ранее с помощью функции <<_fblangref_scalarfuncs_rsa_sign_hash,RSA_SIGN_HASH>>. 
+пример в <<fblangref-scalarfuncs-rsa_public,RSA_PUBLIC>> Цифровая подпись получена ранее с помощью функции <<fblangref-scalarfuncs-rsa_sign_hash,RSA_SIGN_HASH>>. 
 
 
 [source,sql]
@@ -4874,19 +4491,18 @@ from rdb$database;
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_rsa_sign_hash,RSA_SIGN_HASH>>, <<_fblangref_scalarfuncs_rsa_public,RSA_PUBLIC>>. 
+<<fblangref-scalarfuncs-rsa_sign_hash,RSA_SIGN_HASH>>, <<fblangref-scalarfuncs-rsa_public,RSA_PUBLIC>>. 
 
 [[_fblangref_functions_casting]]
 == Функции преобразования типов
 
-[[_fblangref_scalarfuncs_cast]]
+[[fblangref-scalarfuncs-cast]]
 === CAST
-(((CAST)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -4911,12 +4527,12 @@ CAST(value | NULL AS <type>)
 
 
 .Параметры функции CAST
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``value``
+|value
 |
 
 SQL выражение.
@@ -5037,12 +4653,15 @@ SQL выражение.
 ----
 
 CAST (? AS INTEGER)
-----Это дает вам контроль над типом полей ввода. 
+----
+
+Это дает вам контроль над типом полей ввода. 
 
 ==== Преобразование к домену или к его базовому типу
 
 При преобразовании к домену должны быть удовлетворены любые ограничения (NOT NULL и/или CHECK) объявленные для домена, иначе преобразование не будет выполнено.
 Помните, что проверка CHECK проходит, если его вычисление даёт TRUE или UNKNOWN (NULL). Для следующих операторов: 
+
 [source,sql]
 ----
 
@@ -5051,10 +4670,12 @@ SELECT CAST (2000 AS quint) FROM rdb$database -- (1)
 SELECT CAST (8000 AS quint) FROM rdb$database -- (2)
 SELECT CAST (null AS quint) FROM rdb$database -- (3)
 ----
+
 только (1) завершится с ошибкой. 
 
 При использовании модификатора TYPE OF выражение будет преобразовано к базовому типу домена, игнорируя любые ограничения.
 Для домена quint, объявленного выше, оба преобразования будут эквивалентны и оба будут успешно выполнены: 
+
 [source,sql]
 ----
 
@@ -5063,6 +4684,7 @@ SELECT CAST (2000 AS INT) FROM rdb$database
 ----
 
 При использовании TYPE OF с (VAR)CHAR типом, его набор символов и порядок сортировки (collate) сохраняются. 
+
 [source,sql]
 ----
 
@@ -5084,7 +4706,7 @@ SELECT CAST(zin AS TYPE OF dunl20) FROM zinnen ORDER BY 1;
 ====
 Если определение домена изменяется, то существующие преобразования к домену или его типу могут стать ошибочными.
 Если такие преобразования происходят в PSQL модулях, то их ошибки могут быть обнаружены.
-См. <<_fblangref_appx_supp_rdb_validblr,Поле RDB$VALID_BLR>>. 
+См. <<fblangref-appx-supp-rdb-validblr,Поле RDB$VALID_BLR>>. 
 ====
 
 ==== Преобразование к типу столбца
@@ -5092,6 +4714,7 @@ SELECT CAST(zin AS TYPE OF dunl20) FROM zinnen ORDER BY 1;
 Разрешено преобразовывать выражение к типу столбца существующей таблицы или представления.
 При этом будет использован только сам тип, для строковых типов будет использован так же набор символов, но не последовательность сортировки.
 Ограничения и значения по умолчанию исходного столбца не применяются. 
+
 [source,sql]
 ----
 
@@ -5107,13 +4730,11 @@ FROM rdb$database;
 ====
 Если определение столбца изменяется, то существующие преобразования к его типу могут стать ошибочными.
 Если такие преобразования происходят в PSQL модулях, то их ошибки могут быть обнаружены.
-См. <<_fblangref_appx_supp_rdb_validblr,Поле
-                        RDB$VALID_BLR>>.
+См. <<fblangref-appx-supp-rdb-validblr,Поле RDB$VALID_BLR>>.
 ====
 
 .См. также:
-<<_fblangref_datatypes_cast_explicit,Явное преобразование типов
-                            данных>>. 
+<<fblangref-datatypes-cast-explicit,Явное преобразование типов данных>>. 
 
 ==== Примеры приведения типов
 
@@ -5125,6 +4746,7 @@ SELECT CAST ('12' || '-June-' || '1959' AS DATE) FROM rdb$database
 ----
 
 Заметьте, что в некоторых случаях вы можете не использовать синтаксис преобразования как в примере выше, так как Firebird поймёт из контекста (сравнение с полем типа DATE) как интерпретировать строку: 
+
 [source,sql]
 ----
 
@@ -5134,23 +4756,23 @@ WHERE BirthDate < '1-Jan-1943'
 
 Но это не всегда возможно.
 Преобразование в примере ниже не может быть опущено, так как система будет пытаться преобразовать строку к числу чтобы вычесть из неё число: 
+
 [source,sql]
 ----
 
 SELECT CAST('TODAY' AS DATE) - 7 FROM rdb$database
 ----
 
-[[_fblangref_functions_bitwise]]
+[[fblangref-functions-bitwise]]
 == Функции побитовых операций
 
-[[_fblangref_scalarfuncs_bin_and]]
+[[fblangref-scalarfuncs-bin-and]]
 === BIN_AND
-(((BIN_AND)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5161,10 +4783,10 @@ BIN_AND (number [, number ...])
 
 
 .Параметры функции BIN_AND
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``number``
 |
@@ -5178,16 +4800,15 @@ INTEGER, BIGINT или INT128.
 Функция BIN_AND возвращает результат побитовой операции AND (И) аргументов.
 
 .См. также:
-<<_fblangref_scalarfuncs_bin_or,BIN_OR>>, <<_fblangref_scalarfuncs_bin_xor,BIN_XOR>>. 
+<<fblangref-scalarfuncs-bin-or,BIN_OR>>, <<fblangref-scalarfuncs-bin-xor,BIN_XOR>>. 
 
-[[_fblangref_scalarfuncs_bin_not]]
+[[fblangref-scalarfuncs-bin-not]]
 === BIN_NOT
-(((BIN_NOT)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5198,10 +4819,10 @@ BIN_NOT (number)
 
 
 .Параметры функции BIN_NOT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``number``
 |
@@ -5215,16 +4836,15 @@ INTEGER, BIGINT или INT128.
 Функция BIN_NOT возвращает результат побитовой операции NOT над аргументом.
 
 .См. также:
-<<_fblangref_scalarfuncs_bin_or,BIN_OR>>, <<_fblangref_scalarfuncs_bin_and,BIN_AND>>. 
+<<fblangref-scalarfuncs-bin-or,BIN_OR>>, <<fblangref-scalarfuncs-bin-and,BIN_AND>>. 
 
-[[_fblangref_scalarfuncs_bin_or]]
+[[fblangref-scalarfuncs-bin-or]]
 === BIN_OR
-(((BIN_OR)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5235,10 +4855,10 @@ BIN_OR (number [, number ...])
 
 
 .Параметры функции BIN_OR
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``number``
 |
@@ -5252,16 +4872,16 @@ INTEGER, BIGINT или INT128.
 Функция BIN_OR возвращает результат побитовой операции OR (ИЛИ) аргументов. 
 
 .См. также:
-<<_fblangref_scalarfuncs_bin_and,BIN_AND>>, <<_fblangref_scalarfuncs_bin_xor,BIN_XOR>>. 
+<<fblangref-scalarfuncs-bin-and,BIN_AND>>, <<fblangref-scalarfuncs-bin-xor,BIN_XOR>>. 
 
-[[_fblangref_scalarfuncs_bin_shl]]
+[[fblangref-scalarfuncs-bin-shl]]
 === BIN_SHL
-(((BIN_SHL)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -5272,10 +4892,10 @@ BIN_SHL (number, shift)
 
 
 .Параметры функции BIN_SHL
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``number``
 |
@@ -5294,16 +4914,15 @@ BIGINT или INT128.
 Функция BIN_SHL возвращает первый параметр, побитно смещённый влево на значение второго параметра. 
 
 .См. также:
-<<_fblangref_scalarfuncs_bin_shr,BIN_SHR>>. 
+<<fblangref-scalarfuncs-bin-shr,BIN_SHR>>. 
 
-[[_fblangref_scalarfuncs_bin_shr]]
+[[fblangref-scalarfuncs-bin-shr]]
 === BIN_SHR
-(((BIN_SHR)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5314,10 +4933,10 @@ BIN_SHR (number, shift)
 
 
 .Параметры функции BIN_SHR
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``number``
 |
@@ -5341,16 +4960,16 @@ BIGINT или INT128.
 ====
 
 .См. также:
-<<_fblangref_scalarfuncs_bin_shl,BIN_SHL>>. 
+<<fblangref-scalarfuncs-bin-shl,BIN_SHL>>. 
 
-[[_fblangref_scalarfuncs_bin_xor]]
+[[fblangref-scalarfuncs-bin-xor]]
 === BIN_XOR
-(((BIN_XOR)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -5361,10 +4980,10 @@ BIN_XOR (number [, number ...])
 
 
 .Параметры функции BIN_XOR
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``number``
 |
@@ -5378,21 +4997,20 @@ INTEGER, BIGINT или INT128.
 Функция BIN_XOR возвращает результат побитовой операции XOR аргументов. 
 
 .См. также:
-<<_fblangref_scalarfuncs_bin_and,BIN_AND>>, <<_fblangref_scalarfuncs_bin_or,BIN_OR>>. 
+<<fblangref-scalarfuncs-bin-and,BIN_AND>>, <<fblangref-scalarfuncs-bin-or,BIN_OR>>. 
 
-[[_fblangref_functions_uuid]]
+[[fblangref-functions-uuid]]
 == Функции для работы с UUID
 
 
 
-[[_fblangref_scalarfuncs_char_to_uuid]]
+[[fblangref-scalarfuncs-char-to-uuid]]
 === CHAR_TO_UUID
-(((CHAR_TO_UUID)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5403,10 +5021,10 @@ CHAR_TO_UUID (ascii_uuid)
 
 
 .Параметры функции CHAR_TO_UUID
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``ascii_uuid``
 |
@@ -5438,16 +5056,15 @@ SELECT CHAR_TO_UUID('A0bF4E45-3029-2A44-X493-4998c9b439A3') FROM rdb$database
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_gen_uuid,GEN_UUID>>, <<_fblangref_scalarfuncs_uuid_to_char,UUID_TO_CHAR>>. 
+<<fblangref-scalarfuncs-gen-uuid,GEN_UUID>>, <<fblangref-scalarfuncs-uuid-to-char,UUID_TO_CHAR>>.
 
-[[_fblangref_scalarfuncs_gen_uuid]]
+[[fblangref-scalarfuncs-gen-uuid]]
 === GEN_UUID
-(((GEN_UUID)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5483,16 +5100,16 @@ SELECT GEN_UUID() AS GUID FROM RDB$DATABASE
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_char_to_uuid,CHAR_TO_UUID>>, <<_fblangref_scalarfuncs_uuid_to_char,UUID_TO_CHAR>>. 
+<<fblangref-scalarfuncs-char-to-uuid,CHAR_TO_UUID>>, <<fblangref-scalarfuncs-uuid-to-char,UUID_TO_CHAR>>.
 
-[[_fblangref_scalarfuncs_uuid_to_char]]
+[[fblangref-scalarfuncs-uuid-to-char]]
 === UUID_TO_CHAR
-(((UUID_TO_CHAR)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -5503,10 +5120,10 @@ UUID_TO_CHAR (uuid)
 
 
 .Параметры функции UUID_TO_CHAR
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``uuid``
 |
@@ -5542,19 +5159,18 @@ SELECT UUID_TO_CHAR('Firebird swings!') FROM RDB$DATABASE;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_gen_uuid,GEN_UUID>>, <<_fblangref_scalarfuncs_char_to_uuid,CHAR_TO_UUID>>. 
+<<fblangref-scalarfuncs-gen-uuid,GEN_UUID>>, <<fblangref-scalarfuncs-char-to-uuid,CHAR_TO_UUID>>.
 
-[[_fblangref_functions_generators]]
+[[fblangref-functions-generators]]
 == Функции для работы с генераторами (последовательностями)
 
-[[_fblangref_scalarfuncs_gen_id]]
+[[fblangref-scalarfuncs-gen-id]]
 === GEN_ID
-(((GEN_ID)))
 
-.Доступно в:
+.Доступно в
 DSQL, PSQL, ESQL.
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5565,10 +5181,10 @@ GEN_ID(gen_name, step)
 
 
 .Параметры функции GEN_ID
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``gen_name``
 |
@@ -5608,21 +5224,19 @@ NEW.ID = GEN_ID (GEN_TABLE_ID, 1);
 ----
 
 .См. также:
-<<_fblangref_commons_nxtvlufor,NEXT VALUE FOR>>, <<_fblangref_ddl_sequence,SEQUENCE (GENERATOR)>>, <<_fblangref_ddl_sequence_alter,ALTER SEQUENCE>>, <<_fblangref_ddl_sequence_setgen,SET GENERATOR>>. 
+<<fblangref-commons-nxtvlufor,NEXT VALUE FOR>>, <<fblangref-ddl-sequence,SEQUENCE (GENERATOR)>>, <<fblangref-ddl-sequence-alter,ALTER SEQUENCE>>, <<fblangref-ddl-sequence-setgen,SET GENERATOR>>.
 
-[[_fblangref_functions_conditional]]
+[[fblangref-functions-conditional]]
 == Условные функции
 
 
-
-[[_fblangref_scalarfuncs_coalesce]]
+[[fblangref-scalarfuncs-coalesce]]
 === COALESCE
-(((COALESCE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5633,10 +5247,10 @@ COALESCE(expr1, expr2 [, exprN ...])
 
 
 .Параметры функции COALESCE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1``, [replaceable]``expr2`` ... [replaceable]``exprN``
 |
@@ -5682,16 +5296,15 @@ WHERE ...
 ----
 
 .См. также:
-<<_fblangref_commons_conditional_case,CASE>>. 
+<<fblangref-commons-conditional-case,CASE>>.
 
-[[_fblangref_scalarfuncs_decode]]
+[[fblangref-scalarfuncs-decode]]
 === DECODE
-(((DECODE)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5701,7 +5314,9 @@ DECODE(testexpr,
        [, expr2, result2 ...]
        [, defaultresult])
 ----
-эквивалентная конструкция CASE 
+
+эквивалентная конструкция CASE
+
 [source]
 ----
 
@@ -5715,10 +5330,10 @@ END
 
 
 .Параметры функции DECODE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``testexpr``
 |
@@ -5744,7 +5359,7 @@ END
 .Тип возвращаемого результата:
 тот же что и первый результат [replaceable]``result1``, если все выражения [replaceable]``result`` имеют одинаковый тип, в противном случае происходит преобразование в тип с наибольшей вместимостью.
 
-Данная функция эквивалентна конструкции <<_fblangref_commons_conditional_case_simple,Простой CASE>>, в которой заданное выражение сравнивается с другими выражениями до нахождения совпадения.
+Данная функция эквивалентна конструкции <<fblangref-commons-conditional-case-simple,Простой CASE>>, в которой заданное выражение сравнивается с другими выражениями до нахождения совпадения.
 Результатом является значение, указанное после выражения, с которым найдено совпадение.
 Если совпадений не найдено, то возвращается значение по умолчанию (если оно, конечно, задано – в противном случае возвращается NULL).
 
@@ -5775,16 +5390,15 @@ FROM people
 ----
 
 .См. также:
-<<_fblangref_commons_conditional_case,CASE>>. 
+<<fblangref-commons-conditional-case,CASE>>.
 
-[[_fblangref_scalarfuncs_iif]]
+[[fblangref-scalarfuncs-iif]]
 === IIF
-(((IIF)))
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
+.Синтаксис
 
 [source]
 ----
@@ -5795,10 +5409,10 @@ IIF(<condition>, resultT, resultF)
 
 
 .Параметры функции IIF
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``condition``
 |
@@ -5822,12 +5436,14 @@ IIF(<condition>, resultT, resultF)
 Функция IIF имеет три аргумента.
 Если первый аргумент является истиной, то результатом будет второй параметр, в противном случае результатом будет третий параметр.
 
-По сути, функция IIF это короткая запись оператора CASE 
+По сути, функция IIF это короткая запись оператора CASE
+
 [source]
 ----
 
 CASE WHEN <condition> THEN resultT ELSE resultF END
 ----
+
 Оператор IIF также можно сравнить в тройным оператором "?:" в C-подобных языках. 
 
 .Примеры:
@@ -5843,16 +5459,16 @@ SELECT IIF(SEX = 'M', 'Sir', 'Madam') FROM CUSTOMERS
 ----
 
 .См. также:
-<<_fblangref_commons_conditional_case,CASE>>. 
+<<fblangref-commons-conditional-case,CASE>>.
 
-[[_fblangref_scalarfuncs_maxvalue]]
+[[fblangref-scalarfuncs-maxvalue]]
 === MAXVALUE
-(((MAXVALUE)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -5863,10 +5479,10 @@ MAXVALUE(expr1 [, exprN ...])
 
 
 .Параметры функции MAXVALUE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1`` ... [replaceable]``exprN``
 |
@@ -5898,16 +5514,16 @@ FROM PRICELIST
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_minvalue,MINVALUE>>. 
+<<fblangref-scalarfuncs-minvalue,MINVALUE>>. 
 
-[[_fblangref_scalarfuncs_minvalue]]
+[[fblangref-scalarfuncs-minvalue]]
 === MINVALUE
-(((MINVALUE)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -5918,10 +5534,10 @@ MINVALUE(expr1 [, exprN ...])
 
 
 .Параметры функции MINVALUE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1`` ... [replaceable]``exprN``
 |
@@ -5953,16 +5569,16 @@ FROM PRICELIST
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_maxvalue,MAXVALUE>>. 
+<<fblangref-scalarfuncs-maxvalue,MAXVALUE>>. 
 
-[[_fblangref_scalarfuncs_nullif]]
+[[fblangref-scalarfuncs-nullif]]
 === NULLIF
-(((NULLIF)))
 
-.Доступно в:
-DSQL, PSQL.
 
-.Синтаксис:
+.Доступно в
+DSQL, PSQL
+
+.Синтаксис
 
 [source]
 ----
@@ -5973,10 +5589,10 @@ NULLIF(expr1, expr2)
 
 
 .Параметры функции NULLIF
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1``, [replaceable]``expr2``
 |
@@ -6007,10 +5623,5 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
 ----
 
 .См. также:
-<<_fblangref_scalarfuncs_coalesce,COALESCE>>, <<_fblangref_commons_conditional_case,CASE>>. 
+<<fblangref-scalarfuncs-coalesce,COALESCE>>, <<fblangref-commons-conditional-case,CASE>>.
 
-ifdef::backend-docbook[]
-[index]
-== Index
-// Generated automatically by the DocBook toolchain.
-endif::backend-docbook[]
