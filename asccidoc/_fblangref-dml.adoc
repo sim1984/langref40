@@ -192,18 +192,21 @@ ORDER BY name ASC
 ----
 SELECT
   [...]
-  [DISTINCT | ALL] <output-column> [, <output-column> ...]
+  [DISTINCT | ALL] <select_list>
   [...]
   FROM ...
 
-<output-column> ::= 
-    [<qualifier>.]*
-  | <value-expression> [COLLATE _collation_] [[AS] _alias_]
+<select_list> ::= * | <output_column> [, <output_column> ...]
+
+<output_column> ::=
+    <qualifier>.*
+  | <value_expression> [COLLATE _collation_] [[AS] _alias_]
+
+
 
 <value-expression> ::= 
-    [<qualifier>.{endsb}__table-column__
-  | [<qualifier>.{endsb}__view-column__
-  | [<qualifier>.{endsb}__selectable-SP-outparm__
+    [<qualifier>.{endsb}__col_name__
+  | [<qualifier>.{endsb}__selectable_SP_outparm__
   | <literal>
   | <context-variable>
   | <function-call>
@@ -228,11 +231,8 @@ SELECT
 |alias
 |Псевдоним поля.
 
-|table-column
-|Столбец таблицы.
-
-|view-column
-|Столбец представления.
+|col_name
+|Столбец таблицы или представления.
 
 |selectable-SP-outparm
 |Выходной параметр селективной хранимой процедуры.
@@ -3851,27 +3851,35 @@ DSQL, ESQL, PSQL
 .Синтаксис
 [listing,subs="+quotes,attributes"]
 ----
-INSERT INTO _target_
+INSERT INTO _target_ [(<column_list>)]
   [OVERRIDE {SYSTEM | USER} VALUE]
-  {DEFAULT VALUES | [(<column_list>)] <value_source>}
-  [RETURNING {<returning_list> | *} [INTO <variables>]]
+  {DEFAULT VALUES | <value_source>}
+  [RETURNING <returning_list> [INTO <variables>]]
 
-<column_list> ::= _colname_ [, _colname_ ...]
+<column_list> ::= _col-name_ [, _col-name_ ...]
 
 <value_source> ::= VALUES (<value_list>) | <select_stmt>
 
-<value_list> ::= {<value> | DEFAULT} [, {<value> | DEFAULT} ...]
+<value_list> ::= <ins_value> [, <ins_value> ...]
 
-<returning_list> ::= 
-  <ret_value> [[AS] _ret_alias_] [, <ret_value> [[AS] _ret_alias_] ...]
+<ins_value> :: = <value_expression> | DEFAULT
 
-<ret_value> ::=
-    _colname_ | *
-  | _target_.{_colname_ | {asterisk} }
-  | <value>
+<returning_list> ::= * | <output_column> [, <output_column]
 
+<output_column> ::=
+    _target_.*
+  | <return_expression> [COLLATE _collation_] [[AS] _alias_]
 
-[:{endsb}__varname__ [, [:{endsb}__varname__ ...]
+<return_expression> ::=
+    <value_expression>
+  | [_target_.{endsb}__col_name__
+
+<value_expression> ::=
+    <literal>
+  | <context-variable>
+  | <other-single-value-expr>
+
+<variables> ::= [:{endsb}__varname__ [, [:{endsb}__varname__ ...]
 ----
 
 [[fblangref-dml-tbl-insert]]
@@ -3884,17 +3892,29 @@ INSERT INTO _target_
 |target
 |Имя таблицы или представления, в которую происходит вставка новой записи или записей.
 
-|colname
-|Столбец таблицы или представления.
+|col-name
+|Имя столбца таблицы или представления.
 
-|value
-|Выражение, значение которого используется для вставки в таблицу или возврата в returning
+|value_expression
+|Выражение, значение которого используется для вставки в таблицу или возврата в `RETURNING`
 
-|ret_value
+|literal
+|Литерал.
+
+|context-variable
+|Контекстная переменная.
+
+|other-single-value-expr
+|Любое другое выражение, возвращающее единственное значение типа данных Firebird или `NULL`.
+
+|return_expression
 |Выражение, возвращаемое в предложении `RETURNING`.
 
-|ret_alias
-|Псевдоним для выражения, возвращаемого в предложении RETURNING.
+|collation
+|Существующее имя сортировки (только для символьных типов).
+
+|alias
+|Псевдоним для выражения, возвращаемого в предложении `RETURNING`.
 
 |varname
 |Имя PSQL переменной.
@@ -4102,19 +4122,19 @@ VALUES (12, 'Laptop');
 ====
 [source,sql]
 ----
-INSERT INTO Scholars (
-  firstname, 
-  lastname, 
-  address, 
-  phone, 
-  email)
+INSERT INTO Scholars (firstname, lastname, address,
+  phone, email)
 VALUES (
-  'Henry', 
-  'Higgins', 
-  '27A Wimpole Street', 
-  '3231212', 
-  NULL)
+  'Henry', 'Higgins', '27A Wimpole Street',
+  '3231212', NULL)
 RETURNING lastname, fullname, id;
+
+INSERT INTO Scholars (firstname, lastname, address,
+  phone, email)
+VALUES (
+  'Henry', 'Higgins', '27A Wimpole Street',
+  '3231212', NULL)
+RETURNING *;
 
 INSERT INTO Dumbbells (first_name, last_name, iq)
 SELECT fname, lname, iq 
@@ -4125,11 +4145,11 @@ INTO :id, :fname, :iq;
 ----
 ====
 
-.Замечания:
-
+[NOTE]
+====
 * Предложение `RETURNING` поддерживается только для `INSERT ... VALUES` и одиночных `INSERT ... SELECT`.
 * В DSQL оператор с использованием `RETURNING` всегда возвращает ровно одну строку. Если запись не была вставлена на самом деле, то все поля в возвращаемой строке будут иметь значения `NULL`. Это поведение может быть изменено позже. В PSQL, если ни одна строка не вставлена, то ничего не возвращается и все целевые переменные сохраняют свои прежние значения.
-
+====
 
 === Вставка столбцов BLOB
 
@@ -4160,22 +4180,31 @@ DSQL, ESQL, PSQL
 [listing,subs="+quotes,attributes"]
 ----
 UPDATE _target_ [[AS] _alias_]
-  SET _col_ = {<value> | DEFAULT} [, _col_ = {<value> | DEFAULT} ...]
+  SET _col_name_ = <upd_value> [, _col_name_ = <upd_value> ...]
   [WHERE {<search-conditions> | CURRENT OF _cursorname_}]
   [PLAN <plan_items>]
   [ORDER BY <sort_items>]
   [ROWS _m_ [TO _n_]]
   [RETURNING <returning_list> [INTO <variables>]]
 
-<returning_list> ::= 
-  <ret_value> [[AS] _ret_alias_] [, <ret_value> [[AS] _ret_alias_] ...]
+<upd_value> ::= <value_expression> | DEFAULT
 
-<ret_value> ::=
-    _colname_ | *
-  | _table_or_alias_.{_colname_ | {asterisk} }
-  | NEW.{_colname_ | {asterisk} }
-  | OLD.{_colname_ | {asterisk} }
-  | <value>
+<returning_list> ::= * | <output_column> [, <output_column]
+
+<output_column> ::=
+    _target_.* | NEW.* | OLD.*
+  | <return_expression> [COLLATE _collation_] [[AS] _ret_alias_]
+
+<return_expression> ::=
+    <value_expression>
+  | [_target_.{endsb}__col_name__
+  | NEW._col_name_
+  | OLD._col_name_
+
+<value_expression> ::=
+    <literal>
+  | <context-variable>
+  | <other-single-value-expr>
 
 <variables> ::= [:{endsb}__varname__ [, [:{endsb}__varname__ ...]
 ----
@@ -4193,11 +4222,20 @@ UPDATE _target_ [[AS] _alias_]
 |alias
 |Псевдоним таблицы или представления.
 
-|col
+|col_name
 |Столбец таблицы или представления.
 
-|value
-|Выражение для нового значения для столбца, который должен быть обновлен в таблице или представлении оператором, или значение, которое должно быть возвращено.
+|upd_value
+|Выражение для нового значения для столбца, который должен быть обновлен в таблице или представлении оператором.
+
+|literal
+|Литерал.
+
+|context-variable
+|Контекстная переменная.
+
+|other-single-value-expr
+|Любое другое выражение, возвращающее единственное значение типа данных Firebird или `NULL`.
 
 |search-conditions
 |Условие поиска, ограничивающее набор обновляемых строк.
@@ -4214,8 +4252,11 @@ UPDATE _target_ [[AS] _alias_]
 |m, n
 |Целочисленные выражения для ограничения количества обновляемых строк.
 
-|ret_value
+|return_expression
 |Выражение, возвращаемое в предложении `RETURNING`.
+
+|collation
+|Существующее имя сортировки (только для символьных типов).
 
 |ret_alias
 |Псевдоним для выражения, возвращаемого в предложении `RETURNING`.
@@ -4516,20 +4557,28 @@ UPDATE OR INSERT INTO _target_ [(<column_list>)]
   [MATCHING (<column_list>)]
   [RETURNING <returning_list> [INTO <variables>]]
 
-<column_list> ::= _colname_ [, _colname_ ...]
+<column_list> ::= _col_name_ [, _col_name_ ...]
 
-<value_list> ::= {<value> | DEFAULT} [, {<value> | DEFAULT} ...]
+<value_list> ::= <ins_value> [, <ins_value> ...]
 
-<returning_list> ::= <ret_value> [, <ret_value> ...]
+<ins_value> ::= <value_expression> | DEFAULT
 
-<returning_list> ::= 
-  <ret_value> [[AS] ret_alias] [, <ret_value> [[AS] ret_alias] ...]
+<returning_list> ::= * | <output_column> [, <output_column]
 
-<ret_value> ::=
-    _colname_ | *
-  | NEW.{_colname_ | {asterisk} }
-  | OLD.{_colname_ | {asterisk} }
-  | <value>
+<output_column> ::=
+    _target_.* | NEW.* | OLD.*
+  | <return_expression> [COLLATE _collation_] [[AS] _alias_]
+
+<return_expression> ::=
+    <value_expression>
+  | [_target_.{endsb}__col_name__
+  | NEW._col_name_
+  | OLD._col_name_
+
+<value_expression> ::=
+    <literal>
+  | <context-variable>
+  | <other-single-value-expr>
 
 <variables> ::= [:{endsb}__varname__ [, [:{endsb}__varname__ ...]
 ----
@@ -4545,23 +4594,32 @@ UPDATE OR INSERT INTO _target_ [(<column_list>)]
 |target
 |Имя таблицы или представления, запись в которой будет обновлена или произойдет вставка новой записи.
 
-|colname
+|col_name
 |Столбец таблицы или представления.
 
-|value
+|ins_value
 |Выражение, значение которого используется для вставки или обновления таблицы.
 
-|ret_value
+|literal
+|Литерал.
+
+|context-variable
+|Контекстная переменная.
+
+|other-single-value-expr
+|Любое другое выражение, возвращающее единственное значение типа данных Firebird или `NULL`.
+
+|return_expression
 |Выражение, возвращаемое в предложении `RETURNING`.
 
-|ret_alias
+|alias
 |Псевдоним для выражения, возвращаемого в предложении `RETURNING`.
 
 |varname
 |Имя PSQL переменной.
 |===
 
-Оператор `UPDATE OR INSER`T вставляет или обновляет одну, или более существующих записей.
+Оператор `UPDATE OR INSERT` вставляет или обновляет одну, или более существующих записей.
 Производимое действие зависит от значений столбцов в предложении `MATCHING` (или, если оно не указано, то от значений столбцов первичного ключа -- PK). Если найдены записи, совпадающие с указанными значениями, то они обновляются.
 Если нет, то вставляется новая запись. 
 
@@ -4658,13 +4716,21 @@ DELETE
   [ORDER BY <sort_items>]
   [ROWS _m_ [TO _n_]]
   [RETURNING <returning_list> [INTO <variables>]]
- 
-<returning_list> ::= <ret_value> [[AS] _alias_val_] [, <ret_value> [[AS] _alias_val_] ...]
 
-<ret_value> ::=
-    _colname_ | *
-  | _target_or_alias_.{_colname_ | {asterisk} }
-  | <value>
+<returning_list> ::= * | <output_column> [, <output_column]
+
+<output_column> ::=
+    _target_.*
+  | <return_expression> [COLLATE _collation_] [[AS] _ret_alias_]
+
+<return_expression> ::=
+    <value_expression>
+  | [_target_.{endsb}__col_name__
+
+<value_expression> ::=
+    <literal>
+  | <context-variable>
+  | <other-single-value-expr>
 
 <variables> ::=
   [:{endsb}__varname__ [, [:{endsb}__varname__ ...]
@@ -4683,6 +4749,9 @@ DELETE
 |alias
 |Псевдоним таблицы или представления.
 
+|col-name
+|Имя столбца таблицы или представления.
+
 |search-conditions
 |Условие поиска, ограничивающее набор удаляемых записей.
 
@@ -4698,10 +4767,22 @@ DELETE
 |m, n
 |Целочисленные выражения для ограничения количества удаляемых записей.
 
-|ret_value
+|return_expression
 |Выражение, возвращаемое в предложении `RETURNING`.
 
-|alias_val
+|literal
+|Литерал.
+
+|context-variable
+|Контекстная переменная.
+
+|other-single-value-expr
+|Любое другое выражение, возвращающее единственное значение типа данных Firebird или `NULL`.
+
+|collation
+|Существующее имя сортировки (только для символьных типов).
+
+|ret_alias
 |Псевдоним для выражения, возвращаемого в предложении `RETURNING`.
 
 |varname
@@ -4916,21 +4997,30 @@ ON <join condition>
   VALUES (<value_list>)
 
 <assignment_list> ::= 
-  _colname_ = {<value> | DEFAULT} [, _colname_ = {<value> | DEFAULT} ...]
+  _col_name_ = <m_value> [, _colname_ = <m_value> ...]
 
-<column_list> ::= _colname_ [, _colname_ ...]
+<column_list> ::= _col_name_ [, _col_name_ ...]
 
-<value_list> ::= {<value> | DEFAULT} [, {<value> | DEFAULT} ...]
+<value_list> ::= <m_value> [, <m_value> ...]
 
-<returning_list> ::= 
-  <ret_value> [[AS] _ret_alias_] [, <ret_value> [[AS] _ret_alias_] ...]
+<m_value> ::= <value_expression> | DEFAULT
 
-<ret_value> ::=
-    _colname_ | *
-  | _table_or_alias_.{_colname_ | {asterisk} }
-  | NEW.{_colname_ | {asterisk} }
-  | OLD.{_colname_ | {asterisk} }
-  | <value>
+<returning_list> ::= * | <output_column> [, <output_column]
+
+<output_column> ::=
+    _target_.* | NEW.* | OLD.*
+  | <return_expression> [COLLATE _collation_] [[AS] _ret_alias_]
+
+<return_expression> ::=
+    <value_expression>
+  | [_target_.{endsb}__col_name__
+  | NEW._col_name_
+  | OLD._col_name_
+
+<value_expression> ::=
+    <literal>
+  | <context-variable>
+  | <other-single-value-expr>
 
 <variables> ::=
   [:{endsb}__varname__ [, [:{endsb}__varname__ ...]
@@ -4962,14 +5052,14 @@ ON <join condition>
 |condition
 |Дополнительные условия проверки в предложениях `WHEN MATCHED` или `WHEN NOT MATCHED`.
 
-|colname
+|col_name
 |Столбец целевой таблицы или представления.
 
-|value
+|m_value
 |Значение, присваиваемое столбцу целевой таблицы.
 Выражение, которое может содержать литералы, PSQL переменные, столбцы из источника.
 
-|ret_value
+|return_expression
 |Выражение, возвращаемое в предложении `RETURNING`.
 
 |ret_alias
