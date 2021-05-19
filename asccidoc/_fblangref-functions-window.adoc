@@ -1,12 +1,6 @@
-[[_fblangref_windowfuncs]]
+[[fblangref-windowfuncs]]
 = Оконные (аналитические) функции
-:doctype: book
-:sectnums:
-:toc: left
-:icons: font
-:experimental:
-:sourcedir: .
-(((OVER)))
+
 
 Согласно SQL спецификации оконные функции (также известные как аналитические функции) являются своего рода агрегатными функциями, не уменьшающими степень детализации.
 При этом агрегированные данные выводятся вместе с неагрегированными.
@@ -20,18 +14,16 @@
 .Доступно в:
 DSQL. 
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs="+quotes, macros"]
 ----
+<window_function> ::=
+    <aggregate_function> OVER {<window specification> | <window name>}
+  | <window_function_name> ([<expr> [, <expr> ...]]) OVER {<window specification> | <window name>}
 
-<window function> ::=    
-  <function name>([<expr> [, <expr> ...]]) OVER {<window specification> | <window name>}                      
-     
-<function name> ::=
-     <aggregate function> 
-   | <ranking function>
-   | <navigation function> 
+<window_function_name> ::=
+     <ranking_function>
+   | <navigation_function>
                
 <window specification> ::= 
    ([<window name>] [<window partition>] [<window order>] [<window frame>])  
@@ -59,8 +51,10 @@ DSQL.
 <window frame between> ::= 
   BETWEEN { UNBOUNDED PRECEDING | <expr> PRECEDING | <expr> FOLLOWING | CURRENT ROW } 
       AND { UNBOUNDED FOLLOWING | <expr> PRECEDING | <expr> FOLLOWING | CURRENT ROW }
+
+<aggregate_function> ::= <<fblangref-aggfuncs,Агрегатные функции>>
        
-<ranking function> ::= 
+<ranking_function> ::=
     DENSE_RANK 
   | RANK
   | PERCENT_RANK 
@@ -68,13 +62,13 @@ DSQL.
   | NTILE
   | ROW_NUMBER 
 
-<navigation function> ::= 
+<navigation_function> ::=
     LEAD 
   | LAG 
   | FIRST_VALUE 
   | LAST_VALUE 
   | NTH_VALUE
-   
+
 <query spec> ::=
   SELECT
     [<first clause>] [<skip clause>]
@@ -158,7 +152,7 @@ DSQL.
 Навигационная функция.
 |===
 
-[[_fblangref_windowfuncs_aggfuncs]]
+[[fblangref-windowfuncs-aggfuncs]]
 == Агрегатные функции
 
 Все агрегатные функции могут быть использованы в качестве оконных функций, при добавлении предложения OVER. 
@@ -209,7 +203,7 @@ order by id;
 
 Здесь *sum(salary) OVER ()* вычисляет сумму всех зарплат из запроса (таблицы сотрудников). 
 
-[[_fblangref_windowfuncs_partition]]
+[[fblangref-windowfuncs-partition]]
 == Секционирование
 (((OVER,PARTITION BY)))
 
@@ -253,7 +247,7 @@ id department salary percentage
 5  R & D       10.00     0.3448
 ----
 
-[[_fblangref_windowfuncs_order_by]]
+[[fblangref-windowfuncs-order_by]]
 == Сортировка
 
 Предложение ORDER BY может быть использовано с секционированием или без него.
@@ -293,7 +287,7 @@ id salary cumul_salary
 
 Это происходит потому, что не задана рамка окна, которая по умолчанию, с указанием ORDER BY состоит из всех строк от начала раздела до текущей строки и строк, равных текущей по значению выражения ORDER BY (т.е.
 RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW). Без ORDER BY рамка по умолчанию состоит из всех строк раздела.
-Подробней о <<_fblangref_windowfuncs_framing,рамке окна>> (кадрах окна) будет рассказано далее.
+Подробней о <<fblangref-windowfuncs-framing,рамке окна>> (кадрах окна) будет рассказано далее.
 
 Вы можете использовать несколько окон с различными сортировками, и дополнять предложение ORDER BY опциями ASC/DESC и NULLS FIRST/LAST.
 
@@ -340,7 +334,7 @@ ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
 8  15.06.2015 1000000       100000 1000000 1000000         0
 ----
 
-[[_fblangref_windowfuncs_framing]]
+[[fblangref-windowfuncs-framing]]
 == Рамка окна
 (((OVER,ROWS)))
 
@@ -400,7 +394,7 @@ CURRENT ROW может быть задана и как начальная, и к
 * Если верхняя и нижняя границы фиксированы относительно текущей строки, например 1 строка до текущей и 2 после текущей, то получаем скользящий агрегат. В этом случае размер окна фиксирован, а само окно скользит.
 
 
-[[_fblangref_windowfuncs_framing_range]]
+[[fblangref-windowfuncs-framing_range]]
 === Окна диапазона
 
 Окна диапазона объединяют строки в соответствии с заданным порядком.
@@ -446,10 +440,10 @@ ID  SALARY     S1      S2      S3      S4      S5      S6      S7      S8
 2    12.00  49.00   49.00   49.00   12.00   49.00   12.00   12.00   12.00
 ....
 
-Для того чтобы понять, какие значения будут входить в диапазон, можно использовать функции <<_fblangref_windowfuncs_first_value,FIRST_VALUE>> и <<_fblangref_windowfuncs_last_value,LAST_VALUE>>.
+Для того чтобы понять, какие значения будут входить в диапазон, можно использовать функции <<fblangref-windowfuncs-first_value,FIRST_VALUE>> и <<fblangref-windowfuncs-last_value,LAST_VALUE>>.
 Это помогает увидеть диапазоны окна и проверить, корректно ли установлены параметры.
 
-[[_fblangref_windowfuncs_framing_rows]]
+[[fblangref-windowfuncs-framing_rows]]
 === Окна строк
 
 Окна срок задаются в физических единицах, строках.
@@ -495,7 +489,7 @@ ID SALARY      S1      S2      S3      S4      S5      S6      S7      S8
 2   12.00   49.00   49.00   49.00   12.00   49.00   12.00   22.00   22.00
 ....
 
-[[_fblangref_windowfuncs_naming]]
+[[fblangref-windowfuncs-naming]]
 == Именованные окна
 
 Для того чтобы не писать каждый раз сложные выражения для задания окна, имя окна можно задать в предложении WINDOW.
@@ -526,7 +520,7 @@ WINDOW w1 AS (PARTITION BY department),
 ORDER BY department, salary;
 ----
 
-[[_fblangref_windowfuncs_rankfuncs]]
+[[fblangref-windowfuncs-rankfuncs]]
 == Ранжирующие функции
 
 Ранжирующие функции вычисляют порядковый номер ранга внутри секции окна. 
@@ -569,7 +563,7 @@ id salary dense_rank rank      percent_rank         cume_dist ntile row_number s
 2   12.00          4    5 1.000000000000000 1.000000000000000     3          5   5
 ----
 
-[[_fblangref_windowfuncs_dense_rank]]
+[[fblangref-windowfuncs-dense_rank]]
 === DENSE_RANK
 (((DENSE_RANK)))
 
@@ -617,9 +611,9 @@ id salary dense_rank
 ----
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_rank,RANK>>, <<_fblangref_windowfuncs_row_number,ROW_NUMBER>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-rank,RANK>>, <<fblangref-windowfuncs-row_number,ROW_NUMBER>>. 
 
-[[_fblangref_windowfuncs_rank]]
+[[fblangref-windowfuncs-rank]]
 === RANK
 (((RANK)))
 
@@ -667,9 +661,9 @@ id salary rank
 ----
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_dense_rank,DENSE_RANK>>, <<_fblangref_windowfuncs_row_number,ROW_NUMBER>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-dense_rank,DENSE_RANK>>, <<fblangref-windowfuncs-row_number,ROW_NUMBER>>. 
 
-[[_fblangref_windowfuncs_percent_rank]]
+[[fblangref-windowfuncs-percent_rank]]
 === PERCENT_RANK
 (((PERCENT_RANK)))
 
@@ -729,9 +723,9 @@ id salary percent_rank
 ----
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_rank,RANK>>, <<_fblangref_windowfuncs_cume_dist,CUME_DIST>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-rank,RANK>>, <<fblangref-windowfuncs-cume_dist,CUME_DIST>>. 
 
-[[_fblangref_windowfuncs_cume_dist]]
+[[fblangref-windowfuncs-cume_dist]]
 === CUME_DIST
 (((CUME_DIST)))
 
@@ -780,9 +774,9 @@ id salary    cume_dist
 ----
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_rank,RANK>>, <<_fblangref_windowfuncs_percent_rank,PERCENT_RANK>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-rank,RANK>>, <<fblangref-windowfuncs-percent_rank,PERCENT_RANK>>. 
 
-[[_fblangref_windowfuncs_ntile]]
+[[fblangref-windowfuncs-ntile]]
 === NTILE
 (((NTILE)))
 
@@ -848,9 +842,9 @@ id salary        ntile
 ----
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>. 
 
-[[_fblangref_windowfuncs_row_number]]
+[[fblangref-windowfuncs-row_number]]
 === ROW_NUMBER
 (((ROW_NUMBER)))
 
@@ -896,9 +890,9 @@ id salary row_number
 ----
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_rank,RANK>>, <<_fblangref_windowfuncs_dense_rank,DENSE_RANK>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-rank,RANK>>, <<fblangref-windowfuncs-dense_rank,DENSE_RANK>>. 
 
-[[_fblangref_windowfuncs_navfuncs]]
+[[fblangref-windowfuncs-navfuncs]]
 == Навигационные функции
 
 Навигационные функции получают простые (не агрегированные) значения выражения из другой строки запроса в той же секции.
@@ -983,7 +977,7 @@ id salary first_value last_value nth_value    lag   lead
 2   12.00        8.00      12.00      9.00  10.00 <null>
 ----
 
-[[_fblangref_windowfuncs_first_value]]
+[[fblangref-windowfuncs-first_value]]
 === FIRST_VALUE
 (((FIRST_VALUE)))
 
@@ -1020,9 +1014,9 @@ FIRST_VALUE(<expr>) OVER {<window specification> | <window name>}
 Возвращает первое значение из упорядоченного набора значений рамки окна.
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_last_value,LAST_VALUE>>, <<_fblangref_windowfuncs_nth_value,NTH_VALUE>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-last_value,LAST_VALUE>>, <<fblangref-windowfuncs-nth_value,NTH_VALUE>>. 
 
-[[_fblangref_windowfuncs_lag]]
+[[fblangref-windowfuncs-lag]]
 === LAG
 (((LAG)))
 
@@ -1110,9 +1104,9 @@ bydate        cost    change   percent_change
 ....
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_lead,LEAD>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-lead,LEAD>>. 
 
-[[_fblangref_windowfuncs_last_value]]
+[[fblangref-windowfuncs-last_value]]
 === LAST_VALUE
 (((LAST_VALUE)))
 
@@ -1149,9 +1143,9 @@ LAST_VALUE(<expr>) OVER {<window specification> | <window name>}
 Возвращает последнее значение из упорядоченного набора значений рамки окна.
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_first_value,FIRST_VALUE>>, <<_fblangref_windowfuncs_nth_value,NTH_VALUE>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-first_value,FIRST_VALUE>>, <<fblangref-windowfuncs-nth_value,NTH_VALUE>>. 
 
-[[_fblangref_windowfuncs_lead]]
+[[fblangref-windowfuncs-lead]]
 === LEAD
 (((LEAD)))
 
@@ -1203,9 +1197,9 @@ LEAD(<expr> [, <offset> [, <default>]])
 Если смещение ([replaceable]``offset``) указывает за пределы секции, то будет возвращено значение [replaceable]``default``, которое по умолчанию равно NULL.
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_lag,LAG>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-lag,LAG>>. 
 
-[[_fblangref_windowfuncs_nth_value]]
+[[fblangref-windowfuncs-nth_value]]
 === NTH_VALUE
 (((NTH_VALUE)))
 
@@ -1250,9 +1244,9 @@ NTH_VALUE(<expr> [, <offset>]) [FROM FIRST | FROM LAST]
 Смещение 1 от первой записи будет эквивалентно функции FIRST_VALUE, смещение 1 от последней записи будет эквивалентно функции LAST_VALUE. 
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_windowfuncs_partition,PARTITION BY>>, <<_fblangref_windowfuncs_order_by,ORDER BY>>, <<_fblangref_windowfuncs_first_value,FIRST_VALUE>>, <<_fblangref_windowfuncs_last_value,LAST_VALUE>>. 
+<<_fblangref_dml_select,SELECT>>, <<fblangref-windowfuncs-partition,PARTITION BY>>, <<fblangref-windowfuncs-order_by,ORDER BY>>, <<fblangref-windowfuncs-first_value,FIRST_VALUE>>, <<fblangref-windowfuncs-last_value,LAST_VALUE>>. 
 
-[[_fblangref_windowfuncs_aggfuncs_windowspec]]
+[[fblangref-windowfuncs-aggfuncs_windowspec]]
 == Агрегатные функции внутри оконных
 
 В качестве аргументов оконных функций, а также в предложении OVER разрешено использование агрегатных функций (но не оконных). В этом случае сначала вычисляются агрегатные функции, а только затем на них накладываются окна оконных функций.

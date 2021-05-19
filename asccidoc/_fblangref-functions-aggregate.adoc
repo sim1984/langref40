@@ -1,11 +1,5 @@
-[[_fblangref_aggfuncs]]
+[[fblangref-aggfuncs]]
 = Агрегатные функции
-:doctype: book
-:sectnums:
-:toc: left
-:icons: font
-:experimental:
-:sourcedir: .
 
 Агрегатные функции выполняют вычисление на наборе значений и возвращают одиночное значение.
 Агрегатные функции, за исключением COUNT, не учитывают значения NULL.
@@ -17,62 +11,62 @@
 * Предложение HAVING.
 
 
-[[_fblangref_aggfuncs_syntax]]
-== Синтаксис агрегатных функций
-
-Обобщённый синтаксис агрегатных функций выглядит следующим образом: 
-[source]
+.Синтаксис агрегатных функций
+[listing,subs=+quotes]
+----
+<aggregate_function> ::=
+  _aggragate_function_ ([ALL | DISTINCT] <expr>)
+  [FILTER (WHERE <condition>)]
 ----
 
-<agg_function>([ALL | DISTINCT] <expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+Агрегатные функции также могут использоваться как оконные с предложением `OVER ()`.
+Подробнее смотри в <<fblangref-windowfuncs,Оконные (Аналитические) функции>>.
+
+[[fblangref-aggfuncs-filter]]
+== Предложение FILTER
+
+Предложение `FILTER` расширяет агрегатные функции дополнительным предложением `WHERE`.
+Если используется предложение `FILTER`, то результат агрегата строится только из строк, которые также удовлетворяют условию в дополнительном предложении `WHERE`.
+
+Как правило, предложение фильтра может быть реализовано с использованием выражения `CASE` внутри агрегатной функции: условие фильтра должно быть помещено в предложение `WHEN`, значение, которое должно быть агрегировано в предложение `THEN`.
+Поскольку агрегатные функции обычно пропускают значения `NULL`, неявное предложение `ELSE NULL` достаточно, чтобы игнорировать не подходящие под условия фильтрации строки.
+Следующие два выражения эквивалентны:
+
+[listing]
 ----
-
-[[_fblangref_aggfuncs_filter]]
-=== Предложение FILTER
-(((FILTER)))
-
-Предложение FILTER расширяет агрегатные функции дополнительным предложением WHERE.
-Если используется предложение FILTER, то результат агрегата строится только из строк, которые также удовлетворяют условию в дополнительном предложении WHERE.
-
-Как правило, предложение фильтра может быть реализовано с использованием выражения CASE внутри агрегатной функции: условие фильтра должно быть помещено в предложение WHEN, значение, которое должно быть агрегировано в предложение THEN.
-Поскольку агрегатные функции обычно пропускают значения NULL, неявное предложение ELSE NULL достаточно, чтобы игнорировать не подходящие под условия фильтрации строки.
-Следующие два выражения эквивалентны: 
-[source]
-----
-
 SUM(<expression>) FILTER(WHERE <condition>)
 ----
-и 
-[source]
-----
 
+и
+
+[listing]
+----
 SUM(CASE WHEN <condition> THEN <expression> END)
 ----
 
-Для COUNT(*) этот пример выглядит иначе, потому что выражение "`*`" не может быть использовано в предложении THEN.
-Вместо этого обычно используется любое константное значение не равное NULL. 
-[source]
-----
+Для `COUNT(*)` этот пример выглядит иначе, потому что выражение "`*`" не может быть использовано в предложении `THEN`.
+Вместо этого обычно используется любое константное значение не равное `NULL`.
 
+[listing]
+----
 COUNT(*) FILTER(WHERE <condition>)
 ----
-и 
-[source]
-----
 
+и
+
+[listing]
+----
 SUM(CASE WHEN <condition> THEN 1 END)
 ----
 
-.Примеры:
-
+[float]
+===== Примеры `FILTER`
 
 .Использование предложения FILTER
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   invoice_year,
   SUM(revenue) FILTER (WHERE invoice_month = 1) AS jan_revenue,
@@ -88,136 +82,112 @@ FROM (
 )
 GROUP BY invoice_year
 ----
+====
 
-[[_fblangref_aggfuncs_over]]
-=== Предложение OVER
 
-Любая агрегатная функция может быть использована в качестве оконной.
-Подробнее см. <<_fblangref_windowfuncs_aggfuncs,Оконные (аналитические) функции>>. 
-
-[[_fblangref_aggfuncs_general]]
+[[fblangref-aggfuncs-general]]
 == Основные агрегатные функции
 
-[[_fblangref_aggfuncs_avg]]
-=== AVG
-(((AVG)))
+[[fblangref-aggfuncs-avg]]
+=== `AVG()`
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+AVG([ALL | DISTINCT] <expr>)
 ----
 
-AVG([ALL | DISTINCT] <expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
-----
-
-
-
+[[fblangref-aggfuncs-tbl-avg]]
 .Параметры функции AVG
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
-|
-
-Выражение.
+|expr
+|Выражение.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION, DECFLOAT или масштабируемое целое (INTEGER, BIGINT или INT128) в зависимости от типа аргумента функции [replaceable]``expr``.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`, `DECFLOAT` или масштабируемое целое (`INTEGER`, `BIGINT` или `INT128`) в зависимости от типа аргумента функции _expr_.
 
-Функция AVG возвращает среднее значение для группы.
-Значения NULL пропускаются.
+Функция `AVG` возвращает среднее значение для группы.
+Значения `NULL` пропускаются.
 
-Параметр ALL применяет агрегатную функцию ко всем значениям.
-ALL является параметром по умолчанию.
-Параметр DISTINCT указывает на то, что функция AVG будет выполнена только для одного экземпляра каждого уникального значения, независимо от того, сколько раз встречается это значение.
+* Параметр `ALL` (по умолчанию) применяет агрегатную функцию ко всем значениям.
+* Параметр `DISTINCT` указывает на то, что функция `AVG` будет выполнена только для одного экземпляра каждого уникального значения, независимо от того, сколько раз встречается это значение.
+* В случае если выборка записей пустая или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-В случае если выборка записей пустая или содержит только значения NULL, результат будет содержать NULL.
-
-.Примеры:
-
+[[fblangref-aggfuncs-avg-exmpl]]
+==== Примеры `AVG`
 
 .Использование функции AVG
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   AVG(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>. 
+<<fblangref-dml-select,`SELECT`>>.
 
-[[_fblangref_aggfuncs_count]]
-=== COUNT
-(((COUNT)))
+[[fblangref-aggfuncs-count]]
+=== `COUNT()`
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+COUNT([ALL | DISTINCT] <expr> | *)
 ----
 
-COUNT({[ALL | DISTINCT] <expr> | *}) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
-----
-
-
-
+[[fblangref-aggfuncs-tbl-count]]
 .Параметры функции COUNT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
-|
-
-Выражение.
+|expr
+|Выражение.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-BIGINT.
+.Тип возвращаемого результата
+`BIGINT`
 
-Функция COUNT возвращает количество значений в группе, которые не являются NULL.
+Функция `COUNT` возвращает количество значений в группе, которые не являются `NULL`.
 
-При указании DISTINCT из выборки устраняются дубликаты, ALL является значением по умолчанию для всех выборки значений не NULL.
+* По умолчанию используется `ALL`: функция просто считает все значения в наборе, которые не равны `NULL`.
+* Если указан `DISTINCT` дубликаты исключаются из подсчитываемого набора.
+* Если вместо выражения _expr_ указано `COUNT ({asterisk})`, будут подсчитаны все записи.
+** не может использоваться с ключевым словом `DISTINCT`
+** дубликаты записей не исключаются
+** при этом учитываются записи содержащие `NULL`
+* Для пустой выборки данных или если при выборке окажутся одни значения, содержащие `NULL`, функция возвратит значение равное `0`.
 
-Если вместо выражения [replaceable]``expr`` указана звёздочка (*), то будут подсчитаны все строки.
-Функция COUNT(*) не принимает параметры и не может использоваться с ключевым словом DISTINCT.
-Для функции COUNT(*) не нужен параметр [replaceable]``expr``, так как по определению она не использует сведения о каких-либо конкретных столбцах.
-Функция COUNT(*) возвращает количество строк в указанной таблице, не отбрасывая дублированные строки.
-Она подсчитывает каждую строку отдельно.
-При этом учитываются и строки, содержащие значения NULL.
-
-Для пустой выборки данных или если при выборке окажутся одни значения, содержащие NULL, функция возвратит значение равное 0.
-
-.Примеры:
-
+[[fblangref-aggfuncs-count-exmpl]]
+==== Примеры `COUNT`
 
 .Использование функции COUNT
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   COUNT(*) AS cnt,
@@ -225,268 +195,249 @@ SELECT
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>. 
+<<fblangref-dml-select,`SELECT`>>.
 
-[[_fblangref_aggfuncs_list]]
-=== LIST
-(((LIST)))
+[[fblangref-aggfuncs-list]]
+=== `LIST()`
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing,subs=+quotes]
+----
+LIST([ALL | DISTINCT] <expr> [, _separator_])
 ----
 
-LIST([ALL | DISTINCT] <expr> [, separator]) [FILTER (WHERE <condition>)] 
-  [OVER ([<partition_exp>])]
-----
-
-
-
+[[fblangref-aggfuncs-tbl-list]]
 .Параметры функции LIST
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает строковый тип данных или BLOB.
+|expr
+|Выражение.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает строковый тип данных или `BLOB`.
 Поля типа дата / время и числовые преобразуются к строке.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``separator``
-|
-
-Разделитель.
+|separator
+|Разделитель.
 Выражение строкового типа.
 По умолчанию разделителем является запятая.
 |===
 
-.Тип возвращаемого результата:
-BLOB.
+.Тип возвращаемого результата
+`BLOB`
 
-Функция LIST возвращает строку, содержащую значения элементов выборки, которые не равны NULL.
-При пустой выборке функция возвратит NULL.
-Тип возвращаемого значения текстовый BLOB за исключением тех случаев, когда выражением являются BLOB других подтипов.
+Функция `LIST` возвращает строку, состоящую из значений аргумента, отличных от `NULL` в группе,
+разделенных запятой или заданным пользователем разделителем.
+Если нет значений, отличных от `NULL` (включая случай, когда группа пуста), возвращается `NULL`.
 
-ALL является опцией по умолчанию.
-При ней обрабатываются все значения в выборке, не содержащие NULL.
-При указании DISTINCT из выборки устраняются дубликаты.
+* `ALL` (по умолчанию) приводит к обработке всех значений, отличных от `NULL`.
+Если указано ключевое слово `DISTINCT`, то дубликаты удаляются, за исключением случаев, когда _expr_ является `BLOB`.
+* Необязательный аргумент _separator_ может быть любым строковым выражением.
+Это позволяет указать, например, ascii_char (13) в качестве разделителя.
+* Аргументы _expr_ и _separator_ поддерживают `BLOB` любого размера и набора символов.
+* Дата / время и числовые аргументы неявно преобразуются в строки перед объединением.
+* Результатом функции является текстовый `BLOB`, кроме случаев, когда _expr_ является `BLOB` другого подтипа.
+* Порядок значений в списке не определен -- порядок, в котором строки объединяются, определяется порядком чтения из исходного набора данных.
+Для таблиц такой порядок обычно не определяется.
+Если порядок важен, исходные данные можно предварительно отсортировать используя производную таблицы или аналогичное средство.
 
-Значения выражения [replaceable]``expr`` и разделитель [replaceable]``separator`` поддерживают тип данных BLOB любого размера и набора символов.
-Поля типа дата / время и числовые перед проведением операции конкатенации преобразуются в строки.
-
-[NOTE]
-====
-Порядок конкатенации строк определяется порядком чтения записей из источников, который в общем случае не определён.
-Для придания списку необходимого порядка вы можете предварительно упорядочить источник данных, например с помощью производной таблицы.
-====
-
-.Примеры:
-
+[[fblangref-aggfuncs-list-exmpl]]
+==== Примеры `LIST`
 
 .Использование функции LIST
 [example]
+====
+Получение списка, порядок не определён.
 
 [source,sql]
 ----
-
--- Получение списка, порядок не определён                    
 SELECT LIST (display_name, '; ') 
-FROM GR_WORK;          
+FROM GR_WORK;
+----
+====
 
--- Получение списка в алфавитном порядке
+.Использование функции LIST с заданным порядком
+[example]
+====
+Получение списка в алфавитном порядке.
+
+[source,sql]
+----
 SELECT LIST (display_name, '; ') 
 FROM (SELECT display_name 
       FROM GR_WORK 
       ORDER BY display_name);
 ----
+====
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>. 
+<<fblangref-dml-select,`SELECT`>>.
 
-[[_fblangref_aggfuncs_max]]
-=== MAX
-(((MAX)))
+[[fblangref-aggfuncs-max]]
+=== `MAX()`
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+MAX([ALL | DISTINCT] <expr>)
 ----
 
-MAX([ALL | DISTINCT] <expr>) [FILTER (WHERE <condition>)] 
-  [OVER ([<partition_exp>] [<order_exp>])]
-----
-
-
-
+[[fblangref-aggfuncs-tbl-max]]
 .Параметры функции MAX
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
-|
-
-Выражение.
+|expr
+|Выражение.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-тот же что и аргумент функции [replaceable]``expr``.
+.Тип возвращаемого результата
+тот же что и аргумент функции _expr_.
 
-Функция MAX возвращает максимальный элемент выборки, которые не равны NULL.
-При пустой выборке, или при выборке из одних NULL функция возвратит NULL.
-Если аргумент функции строка, то функция вернёт значение, которое окажется последним в сортировке при применении COLLATE.
+Функция `MAX` возвращает максимальный элемент выборки, которые не равны NULL.
+
+* Если группа пуста или содержит только `NULL`, результатом будет `NULL`.
+* Если входным аргументом является строка, то функция вернет значение, которое будет последним в сортировке с использованием соответствующего `COLLATE`.
+* Эта функция полностью поддерживает текстовые `BLOB` любого размера и набора символов.
 
 [NOTE]
 ====
-Параметр DISTINCT не имеет смысла при использовании функцией MAX и доступен только для совместимости со стандартом. 
+Параметр `DISTINCT` не имеет смысла при использовании функцией `MAX` и доступен только для совместимости со стандартом.
 ====
 
-.Примеры:
+[[fblangref-aggfuncs-max-exmpl]]
+==== Примеры `MAX`
 
-
-.Использование функции MAX
+.Использование функции `MAX`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   MAX(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_aggfuncs_min,MIN>>. 
+<<fblangref-dml-select,`SELECT`>>, <<fblangref-aggfuncs-min>>.
 
-[[_fblangref_aggfuncs_min]]
-=== MIN
-(((MIN)))
+[[fblangref-aggfuncs-min]]
+=== `MIN()`
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+MIN([ALL | DISTINCT] <expr>)
 ----
 
-MIN([ALL | DISTINCT] <expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
-----
-
-
-
+[[fblangref-aggfuncs-tbl-min]]
 .Параметры функции MIN
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
-|
-
-Выражение.
+|expr
+|Выражение.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-тот же что и аргумент функции [replaceable]``expr``.
+.Тип возвращаемого результата
+тот же что и аргумент функции _expr_
 
-Функция MIN возвращает минимальный элемент выборки, которые не равны NULL.
-При пустой выборке, или при выборке из одних NULL функция возвратит NULL.
-Если аргумент функции строка, то функция вернёт значение, которое окажется первым в сортировке при применении COLLATE.
+Функция `MIN` возвращает минимальный элемент выборки, которые не равны `NULL`.
+
+* Если группа пуста или содержит только `NULL`, результатом будет `NULL`.
+* Если входным аргументом является строка, то функция вернет значение, которое будет первым в сортировке с использованием соответствующего `COLLATE`.
+* Эта функция полностью поддерживает текстовые `BLOB` любого размера и набора символов.
 
 [NOTE]
 ====
-Параметр DISTINCT не имеет смысла при использовании функцией MIN и доступен только для совместимости со стандартом. 
+Параметр `DISTINCT` не имеет смысла при использовании функцией `MIN` и доступен только для совместимости со стандартом.
 ====
 
-.Примеры:
+[[fblangref-aggfuncs-min-exmpl]]
+==== Примеры `MIN`
 
-
-.Использование функции MIN
+.Использование функции `MIN`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   MIN(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>, <<_fblangref_aggfuncs_max,MAX>>. 
+<<fblangref-dml-select,`SELECT`>>, <<fblangref-aggfuncs-max>>.
 
-[[_fblangref_functions_agg_sum]]
-=== SUM
-(((SUM)))
+[[fblangref-aggfuncs-sum]]
+=== `SUM()`
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
+----
+SUM([ALL | DISTINCT] <expr>)
 ----
 
-SUM([ALL | DISTINCT] <expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
-----
-
-
-
-.Параметры функции SUM
-[cols="1,1", frame="all", options="header"]
+[[fblangref-aggfuncs-tbl-sum]]
+.Параметры функции `SUM`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
-|
-
-Выражение.
+|expr
+|Выражение.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION, DECFLOAT или масштабируемое целое (INTEGER, BIGINT или INT128) в зависимости от типа аргумента функции [replaceable]``expr``.
-Обычно, если это возможно, выбирается тип с большей вместимостью, чем тип выражения [replaceable]``expr``.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`, `DECFLOAT` или масштабируемое целое (`INTEGER`, `BIGINT` или `INT128`) в зависимости от типа аргумента функции _expr_.
+Обычно, если это возможно, выбирается тип с большей вместимостью, чем тип выражения expr.
 
-Функция SUM возвращает сумму элементов выборки, которые не равны NULL.
-При пустой выборке, или при выборке из одних NULL функция возвратит NULL.
+Функция `SUM` возвращает сумму элементов выборки, которые не равны `NULL`.
 
-ALL является опцией по умолчанию.
-При ней обрабатываются все значения из выборки, не содержащие NULL.
-При указании DISTINCT из выборки устраняются дубликаты, после осуществляется подсчёт.
+* `ALL` является опцией по умолчанию -- обрабатываются все значения из выборки, не содержащие `NULL`.
+При указании DISTINCT из выборки устраняются дубликаты, после чего осуществляется суммирование.
+* При пустой выборке, или при выборке из одних NULL функция возвратит NULL.
 
-.Примеры:
-
+[[fblangref-aggfuncs-sum-exmpl]]
+==== Примеры `SUM`
 
 .Использование функции SUM
 [example]
-
+====
 [source,sql]
 ----
 
@@ -496,11 +447,12 @@ SELECT
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<_fblangref_dml_select,SELECT>>. 
+<<fblangref-dml-select,`SELECT`>>.
 
-[[_fblangref_aggfuncs_stats]]
+[[fblangref-aggfuncs-stats]]
 == Статистические функции
 
 Статистические функции являются агрегатными функциями.
@@ -508,19 +460,15 @@ GROUP BY dept_no
 К аргументу статистической функции не применимы параметры ALL и DISTINCT.
 
 Статистические функции часто используются совместно с предложением GROUP BY.
-Любую из статистических функций можно использовать в качестве оконной.
-Подробнее см. <<_fblangref_windowfuncs_aggfuncs,OVER>>.
 
-[[_fblangref_aggfuncs_corr]]
+[[fblangref-aggfuncs-corr]]
 === CORR
-(((CORR)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 CORR(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
@@ -530,10 +478,10 @@ CORR(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции CORR
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1``
 |
@@ -587,18 +535,16 @@ FROM measure
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_covar_pop,COVAR_POP>>, <<_fblangref_aggfuncs_stddev_pop,STDDEV_POP>>. 
+<<fblangref-aggfuncs-covar_pop,COVAR_POP>>, <<fblangref-aggfuncs-stddev_pop,STDDEV_POP>>. 
 
-[[_fblangref_aggfuncs_covar_pop]]
+[[fblangref-aggfuncs-covar_pop]]
 === COVAR_POP
-(((COVAR_POP)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 COVAR_POP(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
@@ -608,10 +554,10 @@ COVAR_POP(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции COVAR_POP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1``
 |
@@ -663,18 +609,16 @@ FROM measure
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_covar_samp,COVAR_SAMP>>, <<_fblangref_functions_agg_sum,SUM>>, <<_fblangref_aggfuncs_count,COUNT>>. 
+<<fblangref-aggfuncs-covar_samp,COVAR_SAMP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
 
-[[_fblangref_aggfuncs_covar_samp]]
+[[fblangref-aggfuncs-covar_samp]]
 === COVAR_SAMP
-(((COVAR_SAMP)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 COVAR_SAMP(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
@@ -684,10 +628,10 @@ COVAR_SAMP(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции COVAR_SAMP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``expr1``
 |
@@ -739,18 +683,16 @@ FROM measure
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_covar_pop,COVAR_POP>>, <<_fblangref_functions_agg_sum,SUM>>, <<_fblangref_aggfuncs_count,COUNT>>. 
+<<fblangref-aggfuncs-covar_pop,COVAR_POP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
 
-[[_fblangref_aggfuncs_stddev_pop]]
+[[fblangref-aggfuncs-stddev_pop]]
 === STDDEV_POP
-(((STDDEV_POP)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 STDDEV_POP(<expr>) [FILTER (WHERE <condition>)]
@@ -760,12 +702,12 @@ STDDEV_POP(<expr>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции STDDEV_POP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
+|expr
 |
 
 Выражение.
@@ -774,7 +716,7 @@ STDDEV_POP(<expr>) [FILTER (WHERE <condition>)]
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа [replaceable]``expr``.
+DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
 
 Функция STDDEV_POP возвращает среднеквадратичное отклонение для группы.
 Значения NULL пропускаются.
@@ -809,18 +751,16 @@ GROUP BY dept_no
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_stddev_pop,STDDEV_SAMP>>, <<_fblangref_aggfuncs_var_pop,VAR_POP>>. 
+<<fblangref-aggfuncs-stddev_pop,STDDEV_SAMP>>, <<fblangref-aggfuncs-var_pop,VAR_POP>>. 
 
-[[_fblangref_aggfuncs_stddev_samp]]
+[[fblangref-aggfuncs-stddev_samp]]
 === STDDEV_SAMP
-(((STDDEV_SAMP)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 STDDEV_SAMP(<expr>) [FILTER (WHERE <condition>)]
@@ -830,12 +770,12 @@ STDDEV_SAMP(<expr>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции STDDEV_SAMP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
+|expr
 |
 
 Выражение.
@@ -844,7 +784,7 @@ STDDEV_SAMP(<expr>) [FILTER (WHERE <condition>)]
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа [replaceable]``expr``.
+DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
 
 Функция STDDEV_SAMP возвращает стандартное отклонение для группы.
 Значения NULL пропускаются.
@@ -879,18 +819,16 @@ GROUP BY dept_no
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_stddev_pop,STDDEV_POP>>, <<_fblangref_aggfuncs_var_samp,VAR_SAMP>>. 
+<<fblangref-aggfuncs-stddev_pop,STDDEV_POP>>, <<fblangref-aggfuncs-var_samp,VAR_SAMP>>. 
 
-[[_fblangref_aggfuncs_var_pop]]
+[[fblangref-aggfuncs-var_pop]]
 === VAR_POP
-(((VAR_POP)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 VAR_POP(<expr>) [FILTER (WHERE <condition>)]
@@ -900,12 +838,12 @@ VAR_POP(<expr>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции VAR_POP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
+|expr
 |
 
 Выражение.
@@ -914,7 +852,7 @@ VAR_POP(<expr>) [FILTER (WHERE <condition>)]
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа [replaceable]``expr``.
+DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
 
 Функция VAR_POP возвращает выборочную дисперсию для группы.
 Значения NULL пропускаются.
@@ -951,18 +889,16 @@ GROUP BY dept_no
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_var_samp,VAR_SAMP>>, <<_fblangref_functions_agg_sum,SUM>>, <<_fblangref_aggfuncs_count,COUNT>>. 
+<<fblangref-aggfuncs-var_samp,VAR_SAMP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
 
-[[_fblangref_aggfuncs_var_samp]]
+[[fblangref-aggfuncs-var_samp]]
 === VAR_SAMP
-(((VAR_SAMP)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 VAR_SAMP(<expr>) [FILTER (WHERE <condition>)]
@@ -972,12 +908,12 @@ VAR_SAMP(<expr>) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции VAR_SAMP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``expr``
+|expr
 |
 
 Выражение.
@@ -986,7 +922,7 @@ VAR_SAMP(<expr>) [FILTER (WHERE <condition>)]
 |===
 
 .Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа [replaceable]``expr``.
+DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
 
 Функция VAR_SAMP возвращает несмещённую выборочную дисперсию для группы.
 Значения NULL пропускаются.
@@ -1023,9 +959,9 @@ GROUP BY dept_no
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_var_pop,VAR_POP>>, <<_fblangref_functions_agg_sum,SUM>>, <<_fblangref_aggfuncs_count,COUNT>>. 
+<<fblangref-aggfuncs-var_pop,VAR_POP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
 
-[[_fblangref_aggfuncs_regr]]
+[[fblangref-aggfuncs-regr]]
 == Функции линейной регрессии
 
 Функции линейной регрессии полезны для продолжения линии тренда.
@@ -1037,19 +973,15 @@ GROUP BY dept_no
 
 В синтаксисе функций, [replaceable]``у`` интерпретируется в качестве переменной, зависящей от [replaceable]``х``.
 
-Любую функции линейной регрессии из статистических функций можно использовать в качестве оконной.
-Подробнее см. <<_fblangref_windowfuncs_aggfuncs,Оконные (аналитические) функции>>.
 
-[[_fblangref_aggfuncs_regr_avgx]]
+[[fblangref-aggfuncs-regr_avgx]]
 === REGR_AVGX
-(((REGR_AVGX)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_AVGX(y, x) [FILTER (WHERE <condition>)]
@@ -1059,10 +991,10 @@ REGR_AVGX(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_AVGX
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1099,18 +1031,16 @@ SUM(<X>) / REGR_COUNT(y, x)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_regr_count,REGR_COUNT>>, <<_fblangref_aggfuncs_regr_avgy,REGR_AVGY>>. 
+<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-regr_avgy,REGR_AVGY>>. 
 
-[[_fblangref_aggfuncs_regr_avgy]]
+[[fblangref-aggfuncs-regr_avgy]]
 === REGR_AVGY
-(((REGR_AVGY)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_AVGY(y, x) [FILTER (WHERE <condition>)]
@@ -1120,10 +1050,10 @@ REGR_AVGY(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_AVGY
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1160,18 +1090,16 @@ SUM(<Y>) / REGR_COUNT(y, x)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_regr_count,REGR_COUNT>>, <<_fblangref_aggfuncs_regr_avgx,REGR_AVGX>>. 
+<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-regr_avgx,REGR_AVGX>>. 
 
-[[_fblangref_aggfuncs_regr_count]]
+[[fblangref-aggfuncs-regr_count]]
 === REGR_COUNT
-(((REGR_COUNT)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_COUNT(y, x) [FILTER (WHERE <condition>)]
@@ -1181,10 +1109,10 @@ REGR_COUNT(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_COUNT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1218,16 +1146,14 @@ REGR_COUNT(y, x)
 SUM(CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN 1 END)
 ----
 
-[[_fblangref_aggfuncs_regr_intercept]]
+[[fblangref-aggfuncs-regr_intercept]]
 === REGR_INTERCEPT
-(((REGR_INTERCEPT)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_INTERCEPT(y, x) [FILTER (WHERE <condition>)]
@@ -1237,10 +1163,10 @@ REGR_INTERCEPT(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_INTERCEPT
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1322,18 +1248,16 @@ BYYEAR     TOTAL_VALUE
 ====
 
 .См. также:
-<<_fblangref_aggfuncs_regr_avgy,REGR_AVGY>>, <<_fblangref_aggfuncs_regr_avgx,REGR_AVGX>>, <<_fblangref_aggfuncs_regr_slope,REGR_SLOPE>>. 
+<<fblangref-aggfuncs-regr_avgy,REGR_AVGY>>, <<fblangref-aggfuncs-regr_avgx,REGR_AVGX>>, <<fblangref-aggfuncs-regr_slope,REGR_SLOPE>>. 
 
-[[_fblangref_aggfuncs_regr_r2]]
+[[fblangref-aggfuncs-regr_r2]]
 === REGR_R2
-(((REGR_R2)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_R2(y, x) [FILTER (WHERE <condition>)]
@@ -1343,10 +1267,10 @@ REGR_R2(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_R2
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1381,18 +1305,16 @@ POWER(CORR(y, x), 2)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_corr,CORR>>. 
+<<fblangref-aggfuncs-corr,CORR>>. 
 
-[[_fblangref_aggfuncs_regr_slope]]
+[[fblangref-aggfuncs-regr_slope]]
 === REGR_SLOPE
-(((REGR_SLOPE)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_SLOPE(y, x) [FILTER (WHERE <condition>)]
@@ -1402,10 +1324,10 @@ REGR_SLOPE(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_SLOPE
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1442,18 +1364,16 @@ COVAR_POP(y, x) / VAR_POP(<X>)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_covar_pop,COVAR_POP>>. 
+<<fblangref-aggfuncs-covar_pop,COVAR_POP>>. 
 
-[[_fblangref_aggfuncs_regr_sxx]]
+[[fblangref-aggfuncs-regr_sxx]]
 === REGR_SXX
-(((REGR_SXX)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_SXX(y, x) [FILTER (WHERE <condition>)]
@@ -1463,10 +1383,10 @@ REGR_SXX(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_SXX
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1497,18 +1417,16 @@ REGR_COUNT(y, x) * VAR_POP(<X>)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_regr_count,REGR_COUNT>>, <<_fblangref_aggfuncs_var_pop,VAR_POP>>. 
+<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-var_pop,VAR_POP>>. 
 
-[[_fblangref_aggfuncs_regr_sxy]]
+[[fblangref-aggfuncs-regr_sxy]]
 === REGR_SXY
-(((REGR_SXY)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_SXY(y, x) [FILTER (WHERE <condition>)]
@@ -1518,10 +1436,10 @@ REGR_SXY(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_SXY
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1550,18 +1468,16 @@ REGR_COUNT(y, x) * COVAR_POP(y, x)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_regr_count,REGR_COUNT>>, <<_fblangref_aggfuncs_covar_pop,COVAR_POP>>. 
+<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-covar_pop,COVAR_POP>>. 
 
-[[_fblangref_aggfuncs_regr_syy]]
+[[fblangref-aggfuncs-regr_syy]]
 === REGR_SYY
-(((REGR_SYY)))
 
-.Доступно в:
-DSQL.
+.Доступно в
+DSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 REGR_SYY(y, x) [FILTER (WHERE <condition>)]
@@ -1571,10 +1487,10 @@ REGR_SYY(y, x) [FILTER (WHERE <condition>)]
 
 
 .Параметры функции REGR_SYY
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
 |[replaceable]``y``
 |
@@ -1605,10 +1521,5 @@ REGR_COUNT(y, x) * VAR_POP(<Y>)
 ----
 
 .См. также:
-<<_fblangref_aggfuncs_regr_count,REGR_COUNT>>, <<_fblangref_aggfuncs_var_pop,VAR_POP>>. 
+<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-var_pop,VAR_POP>>. 
 
-ifdef::backend-docbook[]
-[index]
-== Index
-// Generated automatically by the DocBook toolchain.
-endif::backend-docbook[]
