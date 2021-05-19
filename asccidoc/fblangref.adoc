@@ -28,5 +28,7 @@ include::_fblangref-functions-aggregate.adoc[leveloffset=1]
 
 include::_fblangref-functions-window.adoc[leveloffset=1]
 
+include::_fblangref-context-var.adoc[leveloffset=1]
+
 
 include::_fblangref-appx08-license.adoc[leveloffset=1]

@@ -1,211 +1,179 @@
-[[_fblangref_contextvars]]
+[[fblangref-contextvars]]
 = Контекстные переменные
-:doctype: book
-:sectnums:
-:toc: left
-:icons: font
-:experimental:
-:sourcedir: .
 
-[[_fblangref_contextvars_current_connection]]
-== CURRENT_CONNECTION
-(((CURRENT_CONNECTION)))
+[[fblangref-contextvars-current-connection]]
+== `CURRENT_CONNECTION`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 CURRENT_CONNECTION
 ----
 
-.Тип возвращаемого результата:
-BIGINT
+.Тип возвращаемого результата
+`BIGINT`
 
-Переменная CURRENT_CONNECTION хранит уникальный идентификатор текущего соединения.
+Переменная `CURRENT_CONNECTION` хранит уникальный идентификатор текущего соединения.
 Значение переменной хранится в странице заголовка базы и сбрасывается после restore.
 Переменная увеличивается на единицу при каждом последующем соединении с базой данных (соединения также могут быть внутренними вызванными самим ядром). Следовательно, переменная показывает количество подключений произошедших к базе после её восстановления (или после её создания). 
 
-.Примеры:
-
-
-.Использование переменной CURRENT_CONNECTION
+.Использование переменной `CURRENT_CONNECTION`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT CURRENT_CONNECTION FROM RDB$DATABASE
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_transaction,CURRENT_TRANSACTION>>. 
+<<fblangref-contextvars-current-transaction>>. 
 
-[[_fblangref_contextvars_current_date]]
-== CURRENT_DATE
-(((CURRENT_DATE)))
+[[fblangref-contextvars-current-date]]
+== `CURRENT_DATE`
 
-.Доступно в:
-DSQL, PSQL, ESQL.
+.Доступно в
+DSQL, PSQL, ESQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 CURRENT_DATE
 ----
 
-.Тип возвращаемого результата:
-DATE
+.Тип возвращаемого результата
+`DATE`
 
-Переменная CURRENT_DATE возвращает текущую дату сервера. 
+Переменная `CURRENT_DATE` возвращает текущую дату сервера. 
 
-.Примеры:
-
-
-.Использование переменной CURRENT_DATE
+.Использование переменной `CURRENT_DATE`
 [example]
-
+====
 [source,sql]
 ----
-
 CREATE DOMAIN DDATE_DNN AS
 DATE DEFAULT CURRENT_DATE NOT NULL
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_timestamp,CURRENT_TIMESTAMP>>, <<_fblangref_contextvars_current_time,CURRENT_TIME>>. 
+<<fblangref-contextvars-current-timestamp>>, <<fblangref-contextvars-current-time>>. 
 
-[[_fblangref_contextvars_current_role]]
-== CURRENT_ROLE
-(((CURRENT_ROLE)))
+[[fblangref-contextvars-current-role]]
+== `CURRENT_ROLE`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 CURRENT_ROLE
 ----
 
-.Тип возвращаемого результата:
-VARCHAR(63)
+.Тип возвращаемого результата
+`VARCHAR(63)`
 
-Контекстная переменная CURRENT_ROLE служит для определения роли, с которой произошло подключение к базе данных, или которая была установлена позже с помощью оператора SET ROLE.
-В случае если произошло подключение без указания роли и роль не была указана позже с помощью оператора SET ROLE, переменная принимает значение NONE.
+Контекстная переменная `CURRENT_ROLE` служит для определения роли, с которой произошло подключение к базе данных, или которая была установлена позже с помощью оператора `SET ROLE`.
+В случае если произошло подключение без указания роли и роль не была указана позже с помощью оператора `SET ROLE`, переменная принимает значение `NONE`.
 
 [NOTE]
 ====
-Контекстная переменная CURRENT_ROLE содержит только имя явно указанной роли (при входе в систему или с помощью SET ROLE), неявно определяемые роли (выданные оператором GRANT с использованием ключевого слова DEFAULT) не будут попадать в неё.
-Для того чтобы узнать используется ли текущим пользователем неявно указанная роль используйте системную функцию <<_fblangref_scalarfuncs_roleinuse,RDB$ROLE_IN_USE>>.
+Контекстная переменная `CURRENT_ROLE` содержит только имя явно указанной роли (при входе в систему или с помощью `SET ROLE`), неявно определяемые роли (выданные оператором `GRANT` с использованием ключевого слова `DEFAULT`) не будут попадать в неё.
+Для того чтобы узнать, используется ли текущим пользователем неявно указанная роль, используйте системную
+функцию <<fblangref-scalarfuncs-roleinuse,`RDB$ROLE_IN_USE()`>>.
 ====
 
-.Примеры:
-
-
-.Использование переменной CURRENT_ROLE
+.Использование переменной `CURRENT_ROLE`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT CURRENT_ROLE FROM RDB$DATABASE
 ----
+====
 
 [NOTE]
 ====
-Такое же значение можно будет получить и в результате выполнения запроса: 
+Такое же значение можно будет получить и в результате выполнения запроса:
+
 [source,sql]
 ----
-
 SELECT RDB$GET_CONTEXT ('SYSTEM', 'CURRENT_ROLE')
 FROM RDB$DATABASE;
 ----
 ====
 
 .См. также:
-<<_fblangref_session_role_setrole,SET ROLE>>, <<_fblangref_scalarfuncs_get_context,RDB$GET_CONTEXT>>, <<_fblangref_scalarfuncs_roleinuse,RDB$ROLE_IN_USE>>. 
+<<fblangref-session-role-setrole,`SET ROLE`>>,
+<<fblangref-scalarfuncs-get-context,`RDB$GET_CONTEXT()`>>,
+<<fblangref-scalarfuncs-roleinuse,`RDB$ROLE_IN_USE()`>>.
 
-[[_fblangref_contextvars_current_time]]
-== CURRENT_TIME
-(((CURRENT_TIME)))
+[[fblangref-contextvars-current-time]]
+== `CURRENT_TIME`
 
-.Доступно в:
-DSQL, PSQL, ESQL.
+.Доступно в
+DSQL, PSQL, ESQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 CURRENT_TIME [(<precision>)]
 
 <precision> ::= 0 | 1 | 2 | 3
 ----
 
-
-
-.Параметры контекстной переменной CURRENT_TIME
-[cols="1,1", frame="all", options="header"]
+[[fblangref-funcs-tbl-current_time]]
+.Параметры контекстной переменной `CURRENT_TIME`
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``precision``
-|
-
-Точность.
+|precision
+|Точность.
 Значение по умолчанию 0.
 Не поддерживается в ESQL.
 |===
 
-.Тип возвращаемого результата:
-TIME WITH TIME ZONE
+.Тип возвращаемого результата
+`TIME WITH TIME ZONE`
 
-Переменная CURRENT_TIME возвращает текущее время в часовом поясе сессии, включая информацию о часовом поясе.
+Переменная `CURRENT_TIME` возвращает текущее время в часовом поясе сессии, включая информацию о часовом поясе.
 Точность определяет, сколько учитывать знаков после запятой в долях секунды.
 По умолчанию точность равна 0.
 
 [NOTE]
 ====
-В блоке кода PSQL (процедура, триггер, исполняемый блок) значение CURRENT_TIME не меняется по мере выполнения.
+В блоке кода PSQL (процедура, триггер, исполняемый блок) значение `CURRENT_TIME` не меняется по мере выполнения.
 При вызове вложенного кода, значение также не изменится и будет равно значению в коде самого верхнего уровня.
-Для определения реального времени используйте другие переменные, например 'NOW' (с приведением типа данных). 
+Для определения реального времени используйте `CAST('NOW' AS TIME)`. 
 ====
 
-.Примеры:
-
-
-.Использование переменной CURRENT_TIME
+.Использование переменной `CURRENT_TIME`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT CURRENT_TIME(2) FROM RDB$DATABASE;
 -- результат будет (например) 23:35:33.1200 Europe/Moscow
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_timestamp,CURRENT_TIMESTAMP>>, <<_fblangref_contextvars_current_date,CURRENT_DATE>>. 
+<<fblangref-contextvars-current-timestamp>>, <<fblangref-contextvars-current-date>>. 
 
-[[_fblangref_contextvars_current_timestamp]]
-== CURRENT_TIMESTAMP
-(((CURRENT_TIMESTAMP)))
+[[fblangref-contextvars-current-timestamp]]
+== `CURRENT_TIMESTAMP`
 
-.Доступно в:
-DSQL, PSQL, ESQL.
+.Доступно в
+DSQL, PSQL, ESQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
 
 CURRENT_TIMESTAMP [(<precision>)]
@@ -216,12 +184,12 @@ CURRENT_TIMESTAMP [(<precision>)]
 
 
 .Параметры контекстной переменной CURRENT_TIMESTAMP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``precision``
+|precision
 |
 
 Точность.
@@ -229,140 +197,118 @@ CURRENT_TIMESTAMP [(<precision>)]
 Не поддерживается в ESQL.
 |===
 
-.Тип возвращаемого результата:
-TIMESTAMP WITH TIME ZONE
+.Тип возвращаемого результата
+`TIMESTAMP WITH TIME ZONE`
 
-Переменная CURRENT_TIMESTAMP возвращает текущую дату и время в часовом поясе сессии, включая информацию о часовом поясе.
+Переменная `CURRENT_TIMESTAMP` возвращает текущую дату и время в часовом поясе сессии, включая информацию о часовом поясе.
 Точность определяет, сколько учитывать знаков после запятой в долях секунды.
 Точность по умолчанию равна 3.
 
 [NOTE]
 ====
-В блоке кода PSQL (процедура, триггер, исполняемый блок) значение CURRENT_TIMESTAMP не меняется по мере выполнения.
+В блоке кода PSQL (процедура, триггер, исполняемый блок) значение `CURRENT_TIMESTAMP` не меняется по мере выполнения.
 При вызове вложенного кода, значение также не изменится и будет равно значению в коде самого верхнего уровня.
-Для определения реального времени используйте другие переменные, например 'NOW' (с приведением типа данных). 
+Для определения реального времени используйте `CAST('NOW' AS TIMESTAMP)`. 
 ====
 
-.Примеры:
-
-
-.Использование переменной CURRENT_TIMESTAMP
+.Использование переменной `CURRENT_TIMESTAMP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT CURRENT_TIMESTAMP(2) FROM RDB$DATABASE;
 -- результат будет (например) 02.03.2014 23:35:33.1200 Europe/Moscow
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_time,CURRENT_TIME>>, <<_fblangref_contextvars_current_date,CURRENT_DATE>>. 
+<<fblangref-contextvars-current-time>>, <<fblangref-contextvars-current-date>>. 
 
-[[_fblangref_contextvars_current_transaction]]
-== CURRENT_TRANSACTION
-(((CURRENT_TRANSACTION)))
+[[fblangref-contextvars-current-transaction]]
+== `CURRENT_TRANSACTION`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 CURRENT_TRANSACTION
 ----
 
-.Тип возвращаемого результата:
-BIGINT
+.Тип возвращаемого результата
+`BIGINT`
 
-Переменная CURRENT_TRANSACTION содержит уникальный номер текущей транзакции. 
+Переменная `CURRENT_TRANSACTION` содержит уникальный номер текущей транзакции. 
 
-Значение CURRENT_TRANSACTION хранится в странице заголовка базы данных и сбрасывается в 0 после восстановления (или создания базы). Оно увеличивается при старте новой транзакции.
+Значение `CURRENT_TRANSACTION`` ``хранится в странице заголовка базы данных и сбрасывается в 0 после восстановления (или создания базы). Оно увеличивается при старте новой транзакции.
 
-.Примеры:
-
-
-.Использование переменной CURRENT_TRANSACTION
+.Использование переменной `CURRENT_TRANSACTION`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT CURRENT_TRANSACTION FROM RDB$DATABASE;
 
 NEW.TRANS_ID = CURRENT_TRANSACTION;
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_connection,CURRENT_CONNECTION>>, <<_fblangref_scalarfuncs_get_context,RDB$GET_CONTEXT>>. 
+<<fblangref-contextvars-current-connection>>, <<fblangref-scalarfuncs-get-context,`RDB$GET_CONTEXT()`>>. 
 
-[[_fblangref_contextvars_current_user]]
-== CURRENT_USER
-(((CURRENT_USER)))
+[[fblangref-contextvars-current-user]]
+== `CURRENT_USER`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 CURRENT_USER
 ----
 
-.Тип возвращаемого результата:
-VARCHAR(63)
+.Тип возвращаемого результата
+`VARCHAR(63)`
 
-Переменная CURRENT_USER содержит имя текущего подключенного пользователя базы данных. 
+Переменная `CURRENT_USER` содержит имя текущего подключенного пользователя базы данных. 
 
-.Примеры:
-
-
-.Использование переменной CURRENT_USER
+.Использование переменной `CURRENT_USER`
 [example]
-
+====
 [source,sql]
 ----
-
 NEW.ADDED_BY = CURRENT_USER;
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_user,USER>>, <<_fblangref_contextvars_current_role,CURRENT_ROLE>>. 
+<<fblangref-contextvars-user>>, <<fblangref-contextvars-current-role>>. 
 
-[[_fblangref_contextvars_deleting]]
-== DELETING
-(((DELETING)))
+[[fblangref-contextvars-deleting]]
+== `DELETING`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 DELETING
 ----
 
-.Тип возвращаемого результата:
-BOOLEAN
+.Тип возвращаемого результата
+`BOOLEAN`
 
-Контекстная переменная DELETING доступна только в коде табличных триггеров.
-Используется в триггерах на несколько типов событий и показывает, что триггер сработал при выполнении операции DELETE.
+Контекстная переменная `DELETING` доступна только в коде табличных триггеров.
+Используется в триггерах на несколько типов событий и показывает, что триггер сработал при выполнении операции `DELETE`.
 
-.Примеры:
-
-
-.Использование переменной DELETING
+.Использование переменной `DELETING`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 IF (DELETING) THEN
 BEGIN
@@ -373,43 +319,37 @@ BEGIN
 END
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_inserting,INSERTING>>, <<_fblangref_contextvars_updating,UPDATING>>. 
+<<fblangref-contextvars-inserting>>, <<fblangref-contextvars-updating>>.
 
-[[_fblangref_contextvars_gdscode]]
-== GDSCODE
-(((GDSCODE)))
+[[fblangref-contextvars-gdscode]]
+== `GDSCODE`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 GDSCODE
 ----
 
-.Тип возвращаемого результата:
-INTEGER
+.Тип возвращаемого результата
+`INTEGER`
 
-В блоке обработки ошибок "WHEN ... DO" контекстная переменная GDSCODE содержит числовое представление текущего кода ошибки Firebird.
-До версии Firebird 2.0 GDSCODE можно было получить только с использованием конструкции WHEN GDSCODE.
-Теперь эту контекстную переменную можно также использовать в блоках WHEN ANY, WHEN SQLCODE и WHEN EXCEPTION при условии, что код ошибки соответствует коду ошибки Firebird.
-Вне обработчика ошибок GDSCODE всегда равен 0.
-Вне PSQL GDSCODE не существует вообще. 
+В блоке обработки ошибок `WHEN ... DO` контекстная переменная `GDSCODE` содержит числовое представление текущего кода ошибки Firebird.
+До версии Firebird 2.0 `GDSCODE` можно было получить только с использованием конструкции `WHEN GDSCODE`.
+Теперь эту контекстную переменную можно также использовать в блоках `WHEN ANY`, `WHEN SQLCODE` и `WHEN EXCEPTION` при условии, что код ошибки соответствует коду ошибки Firebird.
+Вне обработчика ошибок `GDSCODE` всегда равен 0.
+Вне PSQL `GDSCODE` не существует вообще.
 
-.Примеры:
-
-
-.Использование переменной GDSCODE
+.Использование переменной `GDSCODE`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 WHEN GDSCODE GRANT_OBJ_NOTFOUND,
      GDSCODE GRANT_FLD_NOTFOUND,
@@ -422,47 +362,41 @@ BEGIN
 END
 ...
 ----
+====
 
 [NOTE]
 ====
-Обратите внимание, пожалуйста: после, WHEN GDSCODE вы должны использовать символьные имена -- такие, как [replaceable]``grant_obj_notfound`` и т.д.
-Но контекстная переменная GDSCODE - целое число.
-Для сравнения его с определённой ошибкой вы должны использовать числовое значение, например, 335544551 для [replaceable]``grant_obj_notfound``.
+Обратите внимание, пожалуйста: после, `WHEN GDSCODE` вы должны использовать символьные имена -- такие, как `grant_obj_notfound` и т.д.
+Но контекстная переменная `GDSCODE` -- целое число.
+Для сравнения его с определённой ошибкой вы должны использовать числовое значение, например, `335544551` для `grant_obj_notfound`.
 ====
 
 .См. также:
-<<_fblangref_contextvars_sqlcode,SQLCODE>>, <<_fblangref_contextvars_sqlstate,SQLSTATE>>. 
+<<fblangref-contextvars-sqlcode>>, <<fblangref-contextvars-sqlstate>>.
 
-[[_fblangref_contextvars_inserting]]
-== INSERTING
-(((INSERTING)))
+[[fblangref-contextvars-inserting]]
+== `INSERTING`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 INSERTING
 ----
 
-.Тип возвращаемого результата:
-BOOLEAN
+.Тип возвращаемого результата
+`BOOLEAN`
 
-Контекстная переменная INSERTING доступна только коде табличных триггеров.
-Используется в триггерах на несколько типов событий и показывает, что триггер сработал при выполнении операции INSERT. 
+Контекстная переменная `INSERTING` доступна только коде табличных триггеров.
+Используется в триггерах на несколько типов событий и показывает, что триггер сработал при выполнении операции `INSERT`.
 
-.Примеры:
-
-
-.Использование переменной INSERTING
+.Использование переменной `INSERTING`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 IF (INSERTING OR UPDATING) THEN
 BEGIN
@@ -471,262 +405,227 @@ BEGIN
 END
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_updating,UPDATING>>, <<_fblangref_contextvars_deleting,DELETING>>. 
+<<fblangref-contextvars-updating>>, <<fblangref-contextvars-deleting>>.
 
-[[_fblangref_contextvars_localtime]]
-== LOCALTIME
-(((LOCALTIME)))
+[[fblangref-contextvars-localtime]]
+== `LOCALTIME`
 
-.Доступно в:
-DSQL, PSQL, ESQL.
+.Доступно в
+DSQL, PSQL, ESQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 LOCALTIME [(<precision>)]
 
 <precision> ::= 0 | 1 | 2 | 3
 ----
 
-
-
 .Параметры контекстной переменной LOCALTIME
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``precision``
-|
-
-Точность.
+|precision
+|Точность.
 Значение по умолчанию 0.
 Не поддерживается в ESQL.
 |===
 
-.Тип возвращаемого результата:
-TIME WITHOUT TIME ZONE
+.Тип возвращаемого результата
+`TIME WITHOUT TIME ZONE`
 
-Переменная LOCALTIME возвращает текущее время в часовом поясе сессии, без информации о часовом поясе.
+Переменная `LOCALTIME` возвращает текущее время в часовом поясе сессии, без информации о часовом поясе.
 Точность определяет, сколько учитывать знаков после запятой в долях секунды.
 Точность по умолчанию равна 0.
 
 [NOTE]
 ====
-В блоке кода PSQL (процедура, триггер, исполняемый блок) значение LOCALTIME не меняется по мере выполнения.
+В блоке кода PSQL (процедура, триггер, исполняемый блок) значение `LOCALTIME` не меняется по мере выполнения.
 При вызове вложенного кода, значение также не изменится и будет равно значению в коде самого верхнего уровня.
-Для определения реального времени используйте другие переменные, например 'NOW' (с приведением типа данных). 
+Для определения реального времени используйте `CAST('NOW' AS TIME WITHOUT TIME ZONE)`.
 ====
 
-.Примеры:
-
-
-.Использование переменной LOCALTIME
+.Использование переменной `LOCALTIME`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT LOCALTIME(2) FROM RDB$DATABASE;
 -- результат будет (например) 23:35:33.1200
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_time,CURRENT_TIME>>, <<_fblangref_contextvars_current_timestamp,CURRENT_TIMESTAMP>>, <<_fblangref_contextvars_current_date,CURRENT_DATE>>. 
+<<fblangref-contextvars-current-time>>,
+<<fblangref-contextvars-current-timestamp>>,
+<<fblangref-contextvars-current-date>>.
 
-[[_fblangref_contextvars_localtimestamp]]
-== LOCALTIMESTAMP
-(((LOCALTIMESTAMP)))
+[[fblangref-contextvars-localtimestamp]]
+== `LOCALTIMESTAMP`
 
-.Доступно в:
-DSQL, PSQL, ESQL.
+.Доступно в
+DSQL, PSQL, ESQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 LOCALTIMESTAMP [(<precision>)]
 
 <precision> ::= 0 | 1 | 2 | 3
 ----
 
-
-
 .Параметры контекстной переменной LOCALTIMESTAMP
-[cols="1,1", frame="all", options="header"]
+[cols="<1,<3", options="header",stripes="none"]
 |===
-| Параметр
-| Описание
+^| Параметр
+^| Описание
 
-|[replaceable]``precision``
-|
-
-Точность.
+|precision
+|Точность.
 Значение по умолчанию 3.
 Не поддерживается в ESQL.
 |===
 
-.Тип возвращаемого результата:
-TIMESTAMP WITHOUT TIME ZONE
+.Тип возвращаемого результата
+`TIMESTAMP WITHOUT TIME ZONE`
 
-Переменная LOCALTIMESTAMP возвращает текущую дату и время в часовом поясе сессии, без информации о часовом поясе.
+Переменная `LOCALTIMESTAMP` возвращает текущую дату и время в часовом поясе сессии, без информации о часовом поясе.
 Точность определяет, сколько учитывать знаков после запятой в долях секунды.
 Точность по умолчанию равна 3.
 
 [NOTE]
 ====
-В блоке кода PSQL (процедура, триггер, исполняемый блок) значение LOCALTIMESTAMP не меняется по мере выполнения.
+В блоке кода PSQL (процедура, триггер, исполняемый блок) значение `LOCALTIMESTAMP` не меняется по мере выполнения.
 При вызове вложенного кода, значение также не изменится и будет равно значению в коде самого верхнего уровня.
-Для определения реального времени используйте другие переменные, например 'NOW' (с приведением типа данных). 
+Для определения реального времени используйте `CAST('NOW' AS TIMESTAMP WITHOUT TIME ZONE)`.
 ====
 
-.Примеры:
-
-
-.Использование переменной LOCALTIMESTAMP
+.Использование переменной `LOCALTIMESTAMP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT LOCALTIMESTAMP(2) FROM RDB$DATABASE;
 -- результат будет (например) 02.03.2014 23:35:33.1200
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_timestamp,CURRENT_TIMESTAMP>>, <<_fblangref_contextvars_current_time,CURRENT_TIME>>, <<_fblangref_contextvars_current_date,CURRENT_DATE>>. 
+<<fblangref-contextvars-current-timestamp>>,
+<<fblangref-contextvars-current-time>>,
+<<fblangref-contextvars-current-date>>.
 
-[[_fblangref_contextvars_new]]
-== NEW
-(((NEW)))
+[[fblangref-contextvars-new]]
+== `NEW`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 NEW
 ----
 
-Контекстная переменная NEW доступна только в коде табличных триггеров.
-Значение NEW содержит новые значения полей данных, которое возникли в базе во время операции обновления или вставки.
+Контекстная переменная `NEW` доступна только в коде табличных триггеров.
+Значение `NEW` содержит новые значения полей данных, которое возникли в базе во время операции обновления или вставки.
 
-В AFTER триггерах переменная доступна только для чтения.
+В `AFTER` триггерах переменная доступна только для чтения.
 
 [NOTE]
 ====
-Для табличных триггеров, срабатывающих на несколько типов событий, переменная NEW доступна всегда.
+Для табличных триггеров, срабатывающих на несколько типов событий, переменная `NEW` доступна всегда.
 Однако в случае если триггер сработал на операцию удаления, то для него новая версия данных не имеет смысла.
-В этой ситуации чтение переменной NEW всегда вернёт NULL.
+В этой ситуации чтение переменной `NEW` всегда вернёт `NULL`.
 ====
 
 [IMPORTANT]
 ====
-Попытка записи в переменную NEW в AFTER триггере вызовет исключение в коде. 
+Попытка записи в переменную `NEW` в `AFTER` триггере вызовет исключение в коде.
 ====
 
-.Примеры:
-
-
-.Использование переменной NEW
+.Использование переменной `NEW`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
   IF (NEW.SERIAL_NUM IS NULL) THEN
     NEW.SERIAL_NUM = GEN_ID (GEN_SERIALS, 1);
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_old,OLD>>. 
+<<fblangref-contextvars-old>>.
 
-[[_fblangref_contextvars_old]]
-== OLD
-(((OLD)))
+[[fblangref-contextvars-old]]
+== `OLD`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 OLD
 ----
 
-Контекстная переменная OLD доступна только коде триггеров.
-Значения, содержащееся в OLD, хранит прошлые значения полей, которые были в базе до операции изменения или удаления.
+Контекстная переменная `OLD` доступна только коде триггеров.
+Значения, содержащееся в `OLD`, хранит прошлые значения полей, которые были в базе до операции изменения или удаления.
 
-Переменная OLD доступна только для чтения.
+Переменная `OLD` доступна только для чтения.
 
 [NOTE]
 ====
-Для табличных триггеров, срабатывающих на несколько типов событий, значения для переменной OLD всегда возможны.
-Однако для триггеров, сработавших на вставку записи, значение данной переменной не имеет смысла, поэтому в этой ситуации чтение OLD возвратит NULL, а попытка записи в неё вызовет исключение в коде.
+Для табличных триггеров, срабатывающих на несколько типов событий, значения для переменной `OLD` всегда возможны.
+Однако для триггеров, сработавших на вставку записи, значение данной переменной не имеет смысла, поэтому в этой ситуации чтение `OLD` возвратит `NULL`, а попытка записи в неё вызовет исключение в коде.
 ====
 
-.Примеры:
-
-
-.Использование переменной OLD
+.Использование переменной `OLD`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
   IF (NEW.QUANTITY IS DISTINCT FROM OLD.QUANTITY) THEN
     DELTA = NEW.QUANTITY - OLD.QUANTITY;
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_new,NEW>>. 
+<<fblangref-contextvars-new>>.
 
-[[_fblangref_contextvars_resetting]]
-== RESETTING
-(((RESETTING)))
+[[fblangref-contextvars-resetting]]
+== `RESETTING`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 RESETTING
 ----
 
-.Тип возвращаемого результата:
-BOOLEAN
+.Тип возвращаемого результата
+`BOOLEAN`
 
-Контекстная переменная RESETTING доступна только коде триггеров на события ON CONNECT и ON DISCONNECT, и может использоваться в любом месте, где можно использовать логический предикат.
-Системная переменная RESETTING, позволяет обнаружить случай, когда триггер базы данных срабатывает из-за сброса сеанса, например с помощью оператора ``ALTER
-                SESSION RESET``.
-Её значение TRUE, если выполняется сброс сеанса, и FALSE в противном случае.
+Контекстная переменная `RESETTING` доступна только коде триггеров на события `ON CONNECT` и `ON DISCONNECT`, и может использоваться в любом месте, где можно использовать логический предикат.
+Системная переменная `RESETTING`, позволяет обнаружить случай, когда триггер базы данных срабатывает из-за сброса сеанса, например с помощью оператора `ALTER SESSION RESET`.
+Её значение `TRUE`, если выполняется сброс сеанса, и `FALSE` в противном случае.
 
-.Примеры:
-
-
-.Использование переменной RESETTING
+.Использование переменной `RESETTING`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 IF (RESETTING) THEN
 BEGIN
@@ -734,50 +633,51 @@ BEGIN
 END
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_session_resetsession,ALTER SESSION RESET>>.
+<<fblangref-session-resetsession,`ALTER SESSION RESET`>>.
 
-[[_fblangref_contextvars_row_count]]
-== ROW_COUNT
-(((ROW_COUNT)))
+[[fblangref-contextvars-row_count]]
+== `ROW_COUNT`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 ROW_COUNT
 ----
 
-.Тип возвращаемого результата:
-INTEGER
+.Тип возвращаемого результата
+`BIGINT`
 
-Контекстная переменная ROW_COUNT содержит число строк, затронутых последним оператором DML (INSERT, UPDATE, DELETE, SELECT или FETCH) в текущем триггере, хранимой процедуре или исполняемом блоке.
+Контекстная переменная `ROW_COUNT` содержит число строк, затронутых последним оператором DML
+(`INSERT`, `UPDATE`, `DELETE`, `SELECT` или `FETCH`) в текущем триггере, хранимой процедуре или исполняемом блоке.
 
-Поведение с SELECT и FETCH: 
+Поведение с `SELECT` и `FETCH`:
 
-* После выполнения singleton SELECT запроса (запроса, который может вернуть не более одной строки данных), ROW_COUNT равна 1, если была получена строка данных и 0 в противном случае;
-* В цикле <<_fblangref_psql_statements_forselect,FOR SELECT>> переменная ROW_COUNT увеличивается на каждой итерации (начиная с 0 в качестве первого значения);
-* После выборки (FETCH) из курсора, ROW_COUNT равна 1, если была получена строка данных и 0 в противном случае. Выборка нескольких записей из одного курсора не увеличивает ROW_COUNT после 1.
+* После выполнения singleton `SELECT` запроса (запроса, который может вернуть не более одной строки данных),
+`ROW_COUNT` равна 1, если была получена строка данных и 0 в противном случае;
+* В цикле <<fblangref-psql-statements-forselect,`FOR SELECT`>> переменная `ROW_COUNT` увеличивается на каждой итерации (начиная с 0 в качестве первого значения);
+* После выборки (`FETCH`) из курсора, `ROW_COUNT` равна 1, если была получена строка данных и 0 в противном случае. Выборка нескольких записей из одного курсора не увеличивает `ROW_COUNT` после 1.
 
 
 [IMPORTANT]
 ====
-Переменная ROW_COUNT не может быть использована для определения количества строк, затронутых при выполнении операторов EXECUTE STATEMENT или EXECUTE PROCEDURE.
-Для оператора MERGE переменная ROW_COUNT будет содержать 0 или 1, даже если было затронуто более записей 
+Переменная `ROW_COUNT` не может быть использована для определения количества строк, затронутых при выполнении
+операторов `EXECUTE STATEMENT` или `EXECUTE PROCEDURE`.
+Для оператора `MERGE` переменная `ROW_COUNT` будет содержать 0 или 1, даже если было затронуто более записей
 ====
 
 [WARNING]
 ====
-Не используйте переменную ROW_COUNT внутри DML операторов.
-Дело в том, что эта переменная сбрасывает своё значение в 0 перед началом выполнения любого DML оператора, а потому вы можете получить не то что ожидаете. 
+Не используйте переменную `ROW_COUNT` внутри DML операторов.
+Дело в том, что эта переменная сбрасывает своё значение в 0 перед началом выполнения любого DML оператора, а потому вы можете получить не то что ожидаете.
+
 [source,sql]
 ----
-
 ...                        
 UPDATE t2 SET 
     evt='upd', 
@@ -788,11 +688,12 @@ WHERE new_id = old.id;
 INSERT INTO t2log(evt, affected_rows) VALUES('upd', ROW_COUNT); 
 ...
 ----
-В вышеприведённом примере в столбец affected_rows будут записаны нулевые значения, даже если оператором UPDATE были затронуты строки.
-Для того, чтобы исправить эту ошибку, необходимо сохранить значение контекстной переменной ROW_COUNT в локальную переменную PSQL модуля и использовать эту локальную переменную в DML операторе. 
+
+В вышеприведённом примере в столбец `affected_rows` будут записаны нулевые значения, даже если оператором `UPDATE` были затронуты строки.
+Для того чтобы исправить эту ошибку, необходимо сохранить значение контекстной переменной `ROW_COUNT` в локальную переменную PSQL модуля и использовать эту локальную переменную в DML операторе.
+
 [source,sql]
 ----
-
 ...                        
 DECLARE rc INT;                        
 ...                        
@@ -808,15 +709,11 @@ INSERT INTO t2log(evt, affected_rows) VALUES('upd', rc);
 ----
 ====
 
-.Примеры:
-
-
-.Использование переменной ROW_COUNT
+.Использование переменной `ROW_COUNT`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 UPDATE Figures SET Number = 0 WHERE id = :id;
 IF (row_count = 0) THEN
@@ -824,39 +721,33 @@ IF (row_count = 0) THEN
   VALUES (:id, 0);
 ...
 ----
+====
 
-[[_fblangref_contextvars_sqlcode]]
-== SQLCODE
-(((SQLCODE)))
+[[fblangref-contextvars-sqlcode]]
+== `SQLCODE`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 SQLCODE
 ----
 
-.Тип возвращаемого результата:
-INTEGER
+.Тип возвращаемого результата
+`INTEGER`
 
-В блоках обработки ошибок "WHEN ... DO" контекстная переменная SQLCODE содержит текущий код ошибки SQL.
-До Firebird 2.0 значение SQLCODE можно было получить только в блоках обработки ошибок WHEN SQLCODE и WHEN ANY.
-Теперь она может быть отлична от нуля в блоках WHEN GDSCODE и WHEN EXCEPTION при условии, что ошибка, вызвавшее срабатывание блока, соответствует коду ошибки SQL.
-Вне обработчиков ошибок SQLCODE всегда равен 0, а вне PSQL не существует вообще.
+В блоках обработки ошибок `WHEN ... DO` контекстная переменная `SQLCODE` содержит текущий код ошибки SQL.
+До Firebird 2.0 значение `SQLCODE` можно было получить только в блоках обработки ошибок WHEN SQLCODE и WHEN ANY.
+Теперь она может быть отлична от нуля в блоках `WHEN GDSCODE` и `WHEN EXCEPTION` при условии, что ошибка, вызвавшее срабатывание блока, соответствует коду ошибки SQL.
+Вне обработчиков ошибок `SQLCODE` всегда равен 0, а вне PSQL не существует вообще.
 
-.Примеры:
-
-
-.Использование переменной SQLCODE
+.Использование переменной `SQLCODE`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 WHEN ANY DO
 BEGIN
@@ -868,49 +759,40 @@ BEGIN
 END
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_gdscode,GDSCODE>>, <<_fblangref_contextvars_sqlstate,SQLSTATE>>. 
+<<fblangref-contextvars-gdscode>>, <<fblangref-contextvars-sqlstate>>.
 
-[[_fblangref_contextvars_sqlstate]]
-== SQLSTATE
-(((SQLSTATE)))
+[[fblangref-contextvars-sqlstate]]
+== `SQLSTATE`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 SQLSTATE
 ----
 
-.Тип возвращаемого результата:
-CHAR(5)
+.Тип возвращаемого результата
+`CHAR(5)`
 
-В блоках обработки ошибок "WHEN ... DO" контекстная переменная SQLSTATE переменная содержит 5 символов SQL-2003 -- совместимого кода состояния, переданного оператором, вызвавшим ошибку.
-Вне обработчиков ошибок SQLSTATE всегда равен '00000', а вне PSQL не существует вообще.
+В блоках обработки ошибок `WHEN ... DO` контекстная переменная `SQLSTATE` переменная содержит 5 символов SQL-2003 -- совместимого кода состояния, переданного оператором, вызвавшим ошибку.
+Вне обработчиков ошибок `SQLSTATE` всегда равен '00000', а вне PSQL не существует вообще.
 
 [NOTE]
 ====
-
-
-* SQLSTATE предназначен для замены SQLCODE. Последняя, в настоящее время устарела и буден удалена будущих версиях Firebird;
-* Любой код SQLSTATE состоит из двух символов класса и трёх символов подкласса. Класс 00 (успешное выполнение), 01 (предупреждение) и 02 (нет данных) представляют собой условия завершения. Каждый код статуса вне этих классов является исключением. Поскольку классы 00, 01 и 02 не вызывают ошибку, они никогда не будут обнаруживаться в переменной SQLSTATE.
-
+* `SQLSTATE` предназначен для замены `SQLCODE`. Последняя, в настоящее время устарела и буден удалена будущих версиях Firebird;
+* Любой код `SQLSTATE` состоит из двух символов класса и трёх символов подкласса. Класс 00 (успешное выполнение), 01 (предупреждение) и 02 (нет данных) представляют собой условия завершения. Каждый код статуса вне этих классов является исключением. Поскольку классы 00, 01 и 02 не вызывают ошибку, они никогда не будут обнаруживаться в переменной `SQLSTATE`.
 ====
 
-.Примеры:
-
-
-.Использование переменной SQLSTATE
+.Использование переменной `SQLSTATE`
 [example]
-
+====
 [source,sql]
 ----
-
 WHEN ANY DO
 BEGIN
   MSG = CASE SQLSTATE
@@ -925,40 +807,34 @@ BEGIN
   EXCEPTION EX_CUSTOM MSG;
 END
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_gdscode,GDSCODE>>, <<_fblangref_contextvars_sqlcode,SQLCODE>>, <<_fblangref_appx_errorcodes,Коды ошибок SQLSTATE>>. 
+<<fblangref-contextvars-gdscode>>, <<fblangref-contextvars-sqlcode>>, <<fblangref-appx-errorcodes,Коды ошибок SQLSTATE>>.
 
-[[_fblangref_contextvars_updating]]
-== UPDATING
-(((UPDATING)))
+[[fblangref-contextvars-updating]]
+== `UPDATING`
 
-.Доступно в:
-PSQL.
+.Доступно в
+PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 UPDATING
 ----
 
-.Тип возвращаемого результата:
-BOOLEAN
+.Тип возвращаемого результата
+`BOOLEAN`
 
-Контекстная переменная UPDATING доступна только коде табличных триггеров.
-Используется в триггерах на несколько типов событий и показывает, что триггер сработал при выполнении операции UPDATE. 
+Контекстная переменная `UPDATING` доступна только коде табличных триггеров.
+Используется в триггерах на несколько типов событий и показывает, что триггер сработал при выполнении операции `UPDATE`.
 
-.Примеры:
-
-
-.Использование переменной UPDATING
+.Использование переменной `UPDATING`
 [example]
-
+====
 [source,sql]
 ----
-
 ...
 IF (INSERTING OR UPDATING) THEN
 BEGIN
@@ -967,47 +843,36 @@ BEGIN
 END
 ...
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_inserting,INSERTING>>, <<_fblangref_contextvars_deleting,DELETING>>. 
+<<fblangref-contextvars-inserting>>, <<fblangref-contextvars-deleting>>.
 
-[[_fblangref_contextvars_user]]
-== USER
-(((USER)))
+[[fblangref-contextvars-user]]
+== `USER`
 
-.Доступно в:
-DSQL, PSQL.
+.Доступно в
+DSQL, PSQL
 
-.Синтаксис:
-
-[source]
+.Синтаксис
+[listing]
 ----
-
 USER
 ----
 
-.Тип возвращаемого результата:
-VARCHAR(63)
+.Тип возвращаемого результата
+`VARCHAR(63)`
 
-Переменная USER содержит имя текущего подключенного пользователя базы данных. 
+Переменная `USER` содержит имя текущего подключенного пользователя базы данных.
 
-.Примеры:
-
-
-.Использование переменной USER
+.Использование переменной `USER`
 [example]
-
+====
 [source,sql]
 ----
-
 NEW.ADDED_BY = USER;
 ----
+====
 
 .См. также:
-<<_fblangref_contextvars_current_user,CURRENT_USER>>, <<_fblangref_contextvars_current_role,CURRENT_ROLE>>. 
-
-ifdef::backend-docbook[]
-[index]
-== Index
-// Generated automatically by the DocBook toolchain.
-endif::backend-docbook[]
+<<fblangref-contextvars-current-user>>, <<fblangref-contextvars-current-role>>.
