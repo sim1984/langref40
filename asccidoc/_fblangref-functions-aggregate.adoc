@@ -23,7 +23,7 @@
 Подробнее смотри в <<fblangref-windowfuncs,Оконные (Аналитические) функции>>.
 
 [[fblangref-aggfuncs-filter]]
-== Предложение FILTER
+== Предложение `FILTER`
 
 Предложение `FILTER` расширяет агрегатные функции дополнительным предложением `WHERE`.
 Если используется предложение `FILTER`, то результат агрегата строится только из строк, которые также удовлетворяют условию в дополнительном предложении `WHERE`.
@@ -44,7 +44,7 @@ SUM(<expression>) FILTER(WHERE <condition>)
 SUM(CASE WHEN <condition> THEN <expression> END)
 ----
 
-Для `COUNT(*)` этот пример выглядит иначе, потому что выражение "`*`" не может быть использовано в предложении `THEN`.
+Для `COUNT({asterisk})` этот пример выглядит иначе, потому что выражение "`{asterisk}`" не может быть использовано в предложении `THEN`.
 Вместо этого обычно используется любое константное значение не равное `NULL`.
 
 [listing]
@@ -456,13 +456,13 @@ GROUP BY dept_no
 == Статистические функции
 
 Статистические функции являются агрегатными функциями.
-Эти функции не учитывают значения NULL.
-К аргументу статистической функции не применимы параметры ALL и DISTINCT.
+Эти функции не учитывают значения `NULL`.
+К аргументу статистической функции не применимы параметры `ALL` и `DISTINCT`.
 
-Статистические функции часто используются совместно с предложением GROUP BY.
+Статистические функции часто используются совместно с предложением `GROUP BY`.
 
 [[fblangref-aggfuncs-corr]]
-=== CORR
+=== `CORR()`
 
 .Доступно в
 DSQL
@@ -470,46 +470,30 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-CORR(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+CORR(<expr1>, <expr2>)
 ----
 
-
-
-.Параметры функции CORR
+[[fblangref-aggfuncs-tbl-corr]]
+.Параметры функции `CORR`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``expr1``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
-Агрегатные функции в качестве выражения не допускаются.
-
-|[replaceable]``expr2``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|expr1, expr2
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция CORR возвращает коэффициент корреляции для пары выражений, возвращающих числовые значения.
+Функция `CORR` возвращает коэффициент корреляции для пары выражений, возвращающих числовые значения.
 
-Функция 
-[source]
-----
-CORR(<expr1>, <expr2>)
-----
-эквивалентна 
-[source]
+Функция `CORR(<expr1>, <expr2>)` эквивалентна
+
+[listing]
 ----
 COVAR_POP(<expr1>, <expr2>) / (STDDEV_POP(<expr2>) * STDDEV_POP(<expr1>))
 ----
@@ -518,27 +502,27 @@ COVAR_POP(<expr1>, <expr2>) / (STDDEV_POP(<expr2>) * STDDEV_POP(<expr1>))
 Связь между переменными означает, что значение одной переменной можно в определённой степени предсказать по значению другой.
 Коэффициент корреляции представляет степень корреляции в виде числа в диапазоне от -1 (высокая обратная корреляция) до 1 (высокая корреляция). Значение 0 соответствует отсутствию корреляции.
 
-В случае если выборка записей пустая или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
-
+[[fblangref-aggfuncs-corr-exmpl]]
+==== Примеры `CORR`
 
 .Использование функции CORR
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT
     CORR(alength, aheight) AS c_corr
 FROM measure
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-covar_pop,COVAR_POP>>, <<fblangref-aggfuncs-stddev_pop,STDDEV_POP>>. 
+<<fblangref-aggfuncs-covar-pop>>, <<fblangref-aggfuncs-stddev-pop>>.
 
-[[fblangref-aggfuncs-covar_pop]]
-=== COVAR_POP
+[[fblangref-aggfuncs-covar-pop]]
+=== `COVAR_POP()`
 
 .Доступно в
 DSQL
@@ -546,73 +530,56 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-COVAR_POP(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+COVAR_POP(<expr1>, <expr2>)
 ----
 
-
-
-.Параметры функции COVAR_POP
+[[fblangref-aggfuncs-tbl-covar-pop]]
+.Параметры функции `COVAR_POP`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``expr1``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
-Агрегатные функции в качестве выражения не допускаются.
-
-|[replaceable]``expr2``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|expr1, expr2
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция COVAR_POP возвращает ковариацию совокупности (population covariance) пар выражений с числовыми значениями.
+Функция `COVAR_POP` возвращает ковариацию совокупности (population covariance) пар выражений с числовыми значениями.
 
-Функция 
-[source]
-----
-COVAR_POP(<expr1>, <expr2>)
-----
-эквивалентна 
-[source]
-----
+Функция `COVAR_POP(<expr1>, <expr2>)` эквивалентна
 
+[listing]
+----
 (SUM(<expr1> * <expr2>) - SUM(<expr1>) * SUM(<expr2>) / COUNT(*)) 
   / COUNT(*)
 ----
 
-В случае если выборка записей пустая или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
+[[fblangref-aggfuncs-covar-pop-exmpl]]
+==== Примеры `COVAR_POP`
 
-
-.Использование функции COVAR_POP
+.Использование функции `COVAR_POP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT
     COVAR_POP(alength, aheight) AS c_corr
 FROM measure
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-covar_samp,COVAR_SAMP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
+<<fblangref-aggfuncs-covar-samp>>, <<fblangref-aggfuncs-sum>>, <<fblangref-aggfuncs-count>>. 
 
-[[fblangref-aggfuncs-covar_samp]]
-=== COVAR_SAMP
+[[fblangref-aggfuncs-covar-samp]]
+=== `COVAR_SAMP()`
 
 .Доступно в
 DSQL
@@ -620,73 +587,56 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-COVAR_SAMP(<expr1>, <expr2>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+COVAR_SAMP(<expr1>, <expr2>)
 ----
 
-
-
-.Параметры функции COVAR_SAMP
+[[fblangref-aggfuncs-tbl-covar-samp]]
+.Параметры функции `COVAR_SAMP`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``expr1``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
-Агрегатные функции в качестве выражения не допускаются.
-
-|[replaceable]``expr2``
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|expr1, expr2
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция COVAR_SAMP возвращает выборочную ковариацию (sample covariance) пары выражений с числовыми значениями.
+Функция `COVAR_SAMP` возвращает выборочную ковариацию (sample covariance) пары выражений с числовыми значениями.
 
-Функция 
-[source]
-----
-COVAR_SAMP(<expr1>, <expr2>)
-----
-эквивалентна 
-[source]
-----
+Функция `COVAR_SAMP(<expr1>, <expr2>)` эквивалентна
 
+[listing]
+----
 (SUM(<expr1> * <expr2>) - SUM(<expr1>) * SUM(<expr2>) / COUNT(*)) 
   / (COUNT(*) - 1)
 ----
 
-В случае если выборка записей пустая, содержит только 1 запись или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая, содержит только 1 запись или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
+[[fblangref-aggfuncs-covar-samp-exmpl]]
+==== Примеры `COVAR_SAMP`
 
-
-.Использование функции COVAR_SAMP
+.Использование функции `COVAR_SAMP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT
     COVAR_SAMP(alength, aheight) AS c_corr
 FROM measure
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-covar_pop,COVAR_POP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
+<<fblangref-aggfuncs-covar-pop>>, <<fblangref-aggfuncs-sum>>, <<fblangref-aggfuncs-count>>.
 
-[[fblangref-aggfuncs-stddev_pop]]
-=== STDDEV_POP
+[[fblangref-aggfuncs-stddev-pop]]
+=== `STDDEV_POP()`
 
 .Доступно в
 DSQL
@@ -694,13 +644,10 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-STDDEV_POP(<expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+STDDEV_POP(<expr>)
 ----
 
-
-
+[[fblangref-aggfuncs-tbl-stddev-pop]]
 .Параметры функции STDDEV_POP
 [cols="<1,<3", options="header",stripes="none"]
 |===
@@ -708,53 +655,47 @@ STDDEV_POP(<expr>) [FILTER (WHERE <condition>)]
 ^| Описание
 
 |expr
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
+.Тип возвращаемого результата
+`DOUBLE PRECISION` или `NUMERIC` в зависимости от типа _expr_.
 
-Функция STDDEV_POP возвращает среднеквадратичное отклонение для группы.
-Значения NULL пропускаются.
+Функция `STDDEV_POP` возвращает среднеквадратичное отклонение для группы.
+Значения `NULL` пропускаются.
 
-Функция 
-[source]
-----
-STDDEV_POP(<expr>)
-----
-эквивалентна 
-[source]
+Функция `STDDEV_POP(<expr>)` эквивалентна
+
+[listing]
 ----
 SQRT(VAR_POP(<expr>))
 ----
 
-В случае если выборка записей пустая или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
+[[fblangref-aggfuncs-stddev-pop-exmpl]]
+==== Примеры `STDDEV_POP`
 
-
-.Использование функции STDDEV_POP
+.Использование функции `STDDEV_POP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   STDDEV_POP(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-stddev_pop,STDDEV_SAMP>>, <<fblangref-aggfuncs-var_pop,VAR_POP>>. 
+<<fblangref-aggfuncs-stddev-pop>>, <<fblangref-aggfuncs-var-pop>>.
 
-[[fblangref-aggfuncs-stddev_samp]]
-=== STDDEV_SAMP
+[[fblangref-aggfuncs-stddev-samp]]
+=== `STDDEV_SAMP()`
 
 .Доступно в
 DSQL
@@ -762,13 +703,10 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-STDDEV_SAMP(<expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+STDDEV_SAMP(<expr>)
 ----
 
-
-
+[[fblangref-aggfuncs-tbl-stddev-samp]]
 .Параметры функции STDDEV_SAMP
 [cols="<1,<3", options="header",stripes="none"]
 |===
@@ -776,53 +714,47 @@ STDDEV_SAMP(<expr>) [FILTER (WHERE <condition>)]
 ^| Описание
 
 |expr
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
+.Тип возвращаемого результата
+`DOUBLE PRECISION` или `NUMERIC` в зависимости от типа _expr_
 
-Функция STDDEV_SAMP возвращает стандартное отклонение для группы.
-Значения NULL пропускаются.
+Функция `STDDEV_SAMP` возвращает стандартное отклонение для группы.
+Значения `NULL` пропускаются.
 
-Функция 
-[source]
-----
-STDDEV_SAMP(<expr>)
-----
-эквивалентна 
-[source]
+Функция `STDDEV_SAMP(<expr>)` эквивалентна
+
+[listing]
 ----
 SQRT(VAR_SAMP(<expr>))
 ----
 
-В случае если выборка записей пустая, содержит только 1 запись или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая, содержит только 1 запись или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
+[[fblangref-aggfuncs-stddev-samp-exmpl]]
+==== Примеры `STDDEV_SAMP` 
 
-
-.Использование функции STDDEV_SAMP
+.Использование функции `STDDEV_SAMP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   STDDEV_SAMP(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-stddev_pop,STDDEV_POP>>, <<fblangref-aggfuncs-var_samp,VAR_SAMP>>. 
+<<fblangref-aggfuncs-stddev-pop>>, <<fblangref-aggfuncs-var-samp>>.
 
-[[fblangref-aggfuncs-var_pop]]
-=== VAR_POP
+[[fblangref-aggfuncs-var-pop]]
+=== `VAR_POP()`
 
 .Доступно в
 DSQL
@@ -830,69 +762,59 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-VAR_POP(<expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+VAR_POP(<expr>)
 ----
 
-
-
-.Параметры функции VAR_POP
+[[fblangref-aggfuncs-tbl-var-pop]]
+.Параметры функции `VAR_POP`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
 |expr
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
+.Тип возвращаемого результата
+`DOUBLE PRECISION` или `NUMERIC` в зависимости от типа _expr_
 
-Функция VAR_POP возвращает выборочную дисперсию для группы.
-Значения NULL пропускаются.
+Функция `VAR_POP` возвращает выборочную дисперсию для группы.
+Значения `NULL` пропускаются.
 
-Функция 
-[source]
-----
-VAR_POP(<expr>)
-----
-эквивалентна 
-[source]
-----
+Функция `VAR_POP(<expr>)` эквивалентна
 
+[listing]
+----
 (SUM(<expr> * <expr>) - SUM(<expr>) * SUM(<expr>) / COUNT(<expr>)) 
   / COUNT(<expr>)
 ----
 
-В случае если выборка записей пустая или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
+[[fblangref-aggfuncs-var-pop-exmpl]]
+==== Примеры `VAR_POP`
 
-
-.Использование функции VAR_POP
+.Использование функции `VAR_POP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   VAR_POP(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-var_samp,VAR_SAMP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
+<<fblangref-aggfuncs-var-samp>>, <<fblangref-aggfuncs-sum>>, <<fblangref-aggfuncs-count>>.
 
-[[fblangref-aggfuncs-var_samp]]
-=== VAR_SAMP
+[[fblangref-aggfuncs-var-samp]]
+=== `VAR_SAMP()`
 
 .Доступно в
 DSQL
@@ -900,82 +822,72 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-VAR_SAMP(<expr>) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+VAR_SAMP(<expr>)
 ----
 
-
-
-.Параметры функции VAR_SAMP
+[[fblangref-aggfuncs-tbl-var-samp]]
+.Параметры функции `VAR_SAMP`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
 |expr
-|
-
-Выражение.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+|Выражение возвращает числовой тип данных.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION или NUMERIC в зависимости от типа expr.
+.Тип возвращаемого результата
+`DOUBLE PRECISION` или `NUMERIC` в зависимости от типа _expr_
 
-Функция VAR_SAMP возвращает несмещённую выборочную дисперсию для группы.
-Значения NULL пропускаются.
+Функция `VAR_SAMP` возвращает несмещённую выборочную дисперсию для группы.
+Значения `NULL` пропускаются.
 
-Функция 
-[source]
-----
-VAR_SAMP(<expr>)
-----
-эквивалентна 
-[source]
-----
+Функция `VAR_SAMP(<expr>)` эквивалентна
 
+[listing]
+----
 (SUM(<expr> * <expr>) - SUM(<expr>) * SUM(<expr>) / COUNT(<expr>)) 
   / (COUNT(<expr>) - 1)
 ----
 
-В случае если выборка записей пустая, содержит только 1 запись или содержит только значения NULL, результат будет содержать NULL.
+В случае если выборка записей пустая, содержит только 1 запись или содержит только значения `NULL`, результат будет содержать `NULL`.
 
-.Примеры:
+[[fblangref-aggfuncs-var-samp-exmpl]]
+==== Примеры `VAR_SAMP`
 
-
-.Использование функции VAR_SAMP
+.Использование функции `VAR_SAMP`
 [example]
-
+====
 [source,sql]
 ----
-
 SELECT 
   dept_no,
   VAR_SAMP(salary)
 FROM employee
 GROUP BY dept_no
 ----
+====
 
 .См. также:
-<<fblangref-aggfuncs-var_pop,VAR_POP>>, <<_fblangref_functions_agg_sum,SUM>>, <<fblangref-aggfuncs-count,COUNT>>. 
+<<fblangref-aggfuncs-var-pop>>, <<fblangref-aggfuncs-sum>>, <<fblangref-aggfuncs-count>>.
 
 [[fblangref-aggfuncs-regr]]
 == Функции линейной регрессии
 
 Функции линейной регрессии полезны для продолжения линии тренда.
-Линия тренда – это, как правило, закономерность, которой придерживается набор значений.
+Линия тренда -- это, как правило, закономерность, которой придерживается набор значений.
 Линия тренда полезна для прогнозирования будущих значений.
 Этот означает, что тренд будет продолжаться и в будущем.
 Для продолжения линии тренда необходимо знать угол наклона и точку пересечения с осью Y.
 Набор линейных функций включает функции для вычисления этих значений.
 
-В синтаксисе функций, [replaceable]``у`` интерпретируется в качестве переменной, зависящей от [replaceable]``х``.
+В синтаксисе функций, _у_ интерпретируется в качестве переменной, зависящей от _х_.
 
 
-[[fblangref-aggfuncs-regr_avgx]]
-=== REGR_AVGX
+[[fblangref-aggfuncs-regr-avgx]]
+=== `REGR_AVGX()`
 
 .Доступно в
 DSQL
@@ -983,58 +895,47 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_AVGX(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_AVGX ( <y>, <x> )
 ----
 
-
-
+[[fblangref-aggfuncs-tbl-regr-avgx]]
 .Параметры функции REGR_AVGX
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция REGR_AVGX вычисляет среднее независимой переменной линии регрессии. 
+Функция `REGR_AVGX` вычисляет среднее независимой переменной линии регрессии.
 
-Функция 
-[source]
+Функция `REGR_AVGX(<y>, <x>)` эквивалентна
+
+[listing]
 ----
-REGR_AVGX(y, x)
-----
-эквивалентна 
-[source]
-----
+SUM(<exprX>) / REGR_COUNT(<y>, <x>)
 
-SUM(<X>) / REGR_COUNT(y, x)                       
-
-<X> ::= CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN x END
+<exprX> ::=
+  CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN <x> END
 ----
 
 .См. также:
-<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-regr_avgy,REGR_AVGY>>. 
+<<fblangref-aggfuncs-regr-count>>, <<fblangref-aggfuncs-regr-avgy>>.
 
-[[fblangref-aggfuncs-regr_avgy]]
-=== REGR_AVGY
+[[fblangref-aggfuncs-regr-avgy]]
+=== `REGR_AVGY()`
 
 .Доступно в
 DSQL
@@ -1042,112 +943,47 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_AVGY(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_AVGY(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_AVGY
+[[fblangref-aggfuncs-tbl-regr-avgy]]
+.Параметры функции `REGR_AVGY`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция REGR_AVGY вычисляет среднее зависимой переменной линии регрессии. 
+Функция `REGR_AVGY` вычисляет среднее зависимой переменной линии регрессии.
 
-Функция 
-[source]
+Функция `REGR_AVGY(<y>, <x>)` эквивалентна
+
+[listing]
 ----
-REGR_AVGY(y, x)
-----
-эквивалентна 
-[source]
-----
+SUM(<exprY>) / REGR_COUNT(<y>, <x>)
 
-SUM(<Y>) / REGR_COUNT(y, x)                       
-
-<Y> ::= CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN y END
+<exprY> ::=
+  CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN <y> END
 ----
 
 .См. также:
-<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-regr_avgx,REGR_AVGX>>. 
+<<fblangref-aggfuncs-regr-count>>, <<fblangref-aggfuncs-regr-avgx>>.
 
-[[fblangref-aggfuncs-regr_count]]
-=== REGR_COUNT
-
-.Доступно в
-DSQL
-
-.Синтаксис
-[listing]
-----
-
-REGR_COUNT(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
-----
-
-
-
-.Параметры функции REGR_COUNT
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
-Агрегатные функции в качестве выражения не допускаются.
-
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
-Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
-Агрегатные функции в качестве выражения не допускаются.
-|===
-
-.Тип возвращаемого результата:
-BIGINT.
-
-Функция REGR_COUNT возвращает количество не пустых пар, используемых для создания линии регрессии. 
-
-Функция 
-[source]
-----
-REGR_COUNT(y, x)
-----
-эквивалентна 
-[source]
-----
-
-SUM(CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN 1 END)
-----
-
-[[fblangref-aggfuncs-regr_intercept]]
-=== REGR_INTERCEPT
+[[fblangref-aggfuncs-regr-count]]
+=== `REGR_COUNT()`
 
 .Доступно в
 DSQL
@@ -1155,60 +991,92 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_INTERCEPT(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_COUNT(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_INTERCEPT
+[[fblangref-aggfuncs-tbl-regr-count]]
+.Параметры функции `REGR_COUNT`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`BIGINT`
 
-Функция REGR_INTERCEPT вычисляет точку пересечения линии регрессии с осью  Y. 
+Функция `REGR_COUNT` возвращает количество не пустых пар, используемых для создания линии регрессии.
 
-Функция 
-[source]
+Функция `REGR_COUNT(<y>, <x>)` эквивалентна
+
+[listing]
 ----
-REGR_INTERCEPT(y, x)
-----
-эквивалентна 
-[source]
+SUM(CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN 1 END)
 ----
 
-REGR_AVGY(y, x) - REGR_SLOPE(y, x) * REGR_AVGX(y, x)
+См. также:
+<<fblangref-aggfuncs-sum>>
+
+[[fblangref-aggfuncs-regr-intercept]]
+=== `REGR_INTERCEPT()`
+
+.Доступно в
+DSQL
+
+.Синтаксис
+[listing]
+----
+REGR_INTERCEPT(<y>, <x>)
 ----
 
-.Примеры:
+[[fblangref-aggfuncs-tbl-regr-intercept]]
+.Параметры функции `REGR_INTERCEPT`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
 
+|y
+|Зависимая переменная линии регрессии.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+Агрегатные функции в качестве выражения не допускаются.
+
+|x
+|Независимая переменная линии регрессии.
+Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
+Агрегатные функции в качестве выражения не допускаются.
+|===
+
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
+
+Функция `REGR_INTERCEPT` вычисляет точку пересечения линии регрессии с осью Y.
+
+Функция `REGR_INTERCEPT(<y>, <x>)` эквивалентна 
+
+[listing]
+----
+REGR_AVGY(<y>, <x>) - REGR_SLOPE(<y>, <x>) * REGR_AVGX(<y>, <x>)
+----
+
+[[fblangref-aggfuncs-regr-intercept-exmpl]]
+==== Примеры `REGR_INTERCEPT`
 
 .Прогнозирование объёмов продаж
+[example]
 ====
-
 [source,sql]
 ----
-
 WITH RECURSIVE years(byyear) AS (
   SELECT 1991 FROM rdb$database UNION ALL
   SELECT byyear+1 FROM years WHERE byyear < 2020
@@ -1229,8 +1097,7 @@ FROM years CROSS JOIN regr
 
 
 [listing]
-....
-
+----
 BYYEAR     TOTAL_VALUE
 ----------------------------
  1991        118377,35
@@ -1244,14 +1111,14 @@ BYYEAR     TOTAL_VALUE
  1999       2487819,50
  2000       2783999,77
 ...
-....
+----
 ====
 
 .См. также:
-<<fblangref-aggfuncs-regr_avgy,REGR_AVGY>>, <<fblangref-aggfuncs-regr_avgx,REGR_AVGX>>, <<fblangref-aggfuncs-regr_slope,REGR_SLOPE>>. 
+<<fblangref-aggfuncs-regr-avgy>>, <<fblangref-aggfuncs-regr-avgx>>, <<fblangref-aggfuncs-regr-slope>>. 
 
-[[fblangref-aggfuncs-regr_r2]]
-=== REGR_R2
+[[fblangref-aggfuncs-regr-r2]]
+=== `REGR_R2()`
 
 .Доступно в
 DSQL
@@ -1259,56 +1126,44 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_R2(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_R2(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_R2
+[[fblangref-aggfuncs-tbl-regr-r2]]
+.Параметры функции `REGR_R2`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция REGR_R2 вычисляет коэффициент детерминации, или R-квадрат, линии регрессии.
+Функция `REGR_R2` вычисляет коэффициент детерминации, или R-квадрат, линии регрессии.
 
-Функция 
-[source]
-----
-REGR_R2(y, x)
-----
-эквивалентна 
-[source]
-----
+Функция `REGR_R2(<y>, <x>)` эквивалентна
 
-POWER(CORR(y, x), 2)
+[listing]
+----
+POWER(CORR(<y>, <x>), 2)
 ----
 
 .См. также:
-<<fblangref-aggfuncs-corr,CORR>>. 
+<<fblangref-aggfuncs-corr>>, <<fblangref-scalarfuncs-power>>
 
-[[fblangref-aggfuncs-regr_slope]]
-=== REGR_SLOPE
+[[fblangref-aggfuncs-regr-slope]]
+=== `REGR_SLOPE()`
 
 .Доступно в
 DSQL
@@ -1316,58 +1171,47 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_SLOPE(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_SLOPE(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_SLOPE
+[[fblangref-aggfuncs-tbl-regr-slope]]
+.Параметры функции `REGR_SLOPE`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
-Функция REGR_SLOPE вычисляет угол наклона линии регрессии. 
+Функция `REGR_SLOPE` вычисляет угол наклона линии регрессии.
 
-Функция 
-[source]
-----
-REGR_SLOPE(y, x)
-----
-эквивалентна 
-[source]
-----
+Функция `REGR_SLOPE(<y>, <x>)` эквивалентна
 
-COVAR_POP(y, x) / VAR_POP(<X>) 
+[listing]
+----
+COVAR_POP(<y>, <x>) / VAR_POP(<exprX>)
                         
-<X> ::= CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN x END
+<exprX> :==
+  CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN <x> END
 ----
 
 .См. также:
-<<fblangref-aggfuncs-covar_pop,COVAR_POP>>. 
+<<fblangref-aggfuncs-covar-pop>>, <<fblangref-aggfuncs-var-pop>>.
 
-[[fblangref-aggfuncs-regr_sxx]]
-=== REGR_SXX
+[[fblangref-aggfuncs-regr-sxx]]
+=== `REGR_SXX()`
 
 .Доступно в
 DSQL
@@ -1375,52 +1219,47 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_SXX(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_SXX(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_SXX
+[[fblangref-aggfuncs-tbl-regr-sxx]]
+.Параметры функции `REGR_SXX`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
 Диагностическая статистика, используемая для анализа регрессии.
-Вычисляется следующим образом: 
-[source]
+
+Функция `REGR_SXX(<y>, <x>)` вычисляется следующим образом:
+
+[listing]
 ----
+REGR_COUNT(<y>, <x>) * VAR_POP(<exprX>)
 
-REGR_COUNT(y, x) * VAR_POP(<X>)                  
-
-<X> ::= CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN x END
+<exprX> :==
+  CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN <x> END
 ----
 
 .См. также:
-<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-var_pop,VAR_POP>>. 
+<<fblangref-aggfuncs-regr-count>>, <<fblangref-aggfuncs-var-pop>>.
 
-[[fblangref-aggfuncs-regr_sxy]]
-=== REGR_SXY
+[[fblangref-aggfuncs-regr-sxy]]
+=== `REGR_SXY()`
 
 .Доступно в
 DSQL
@@ -1428,50 +1267,44 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_SXY(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_SXY(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_SXY
+[[fblangref-aggfuncs-tbl-regr-sxy]]
+.Параметры функции `REGR_SXY`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
 Диагностическая статистика, используемая для анализа регрессии.
-Вычисляется следующим образом: 
-[source]
-----
 
-REGR_COUNT(y, x) * COVAR_POP(y, x)
+Функция `REGR_SXY(<y>, <x>)` вычисляется следующим образом:
+
+[listing]
+----
+REGR_COUNT(<y>, <x>) * COVAR_POP(<y>, <x>)
 ----
 
 .См. также:
-<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-covar_pop,COVAR_POP>>. 
+<<fblangref-aggfuncs-regr-count>>, <<fblangref-aggfuncs-covar-pop>>.
 
 [[fblangref-aggfuncs-regr_syy]]
-=== REGR_SYY
+=== `REGR_SYY()`
 
 .Доступно в
 DSQL
@@ -1479,47 +1312,42 @@ DSQL
 .Синтаксис
 [listing]
 ----
-
-REGR_SYY(y, x) [FILTER (WHERE <condition>)]
-  [OVER ([<partition_exp>] [<order_exp>])]
+REGR_SYY(<y>, <x>)
 ----
 
-
-
-.Параметры функции REGR_SYY
+[[fblangref-aggfuncs-tbl-regr-syy]]
+.Параметры функции `REGR_SYY`
 [cols="<1,<3", options="header",stripes="none"]
 |===
 ^| Параметр
 ^| Описание
 
-|[replaceable]``y``
-|
-
-Зависимая переменная линии регрессии.
+|y
+|Зависимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 
-|[replaceable]``x``
-|
-
-Независимая переменная линии регрессии.
+|x
+|Независимая переменная линии регрессии.
 Может содержать столбец таблицы, константу, переменную, выражение, неагрегатную функцию или UDF, которая возвращает числовой тип данных.
 Агрегатные функции в качестве выражения не допускаются.
 |===
 
-.Тип возвращаемого результата:
-DOUBLE PRECISION.
+.Тип возвращаемого результата
+`DOUBLE PRECISION`
 
 Диагностическая статистика, используемая для анализа регрессии.
-Вычисляется следующим образом: 
-[source]
+
+Функция `REGR_SYY(<y>, <x>)` вычисляется следующим образом:
+
+[listing]
 ----
+REGR_COUNT(<y>, <x>) * VAR_POP(<exprY>)
 
-REGR_COUNT(y, x) * VAR_POP(<Y>)                  
-
-<Y> ::= CASE WHEN x IS NOT NULL AND y IS NOT NULL THEN y END
+<exprY> :==
+  CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN <y> END
 ----
 
 .См. также:
-<<fblangref-aggfuncs-regr_count,REGR_COUNT>>, <<fblangref-aggfuncs-var_pop,VAR_POP>>. 
+<<fblangref-aggfuncs-regr-count>>, <<fblangref-aggfuncs-var-pop>>.
 

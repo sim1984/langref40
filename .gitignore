@@ -9,9 +9,9 @@ Desktop.ini
 ._*
 
 # PDF and HTML
-*.pdf
-*.html
+asciidoc/*.pdf
+asciidoc/*.html
 
 # output documents
-/docbook/out/*
+docbook/out/*
 
