@@ -1,0 +1,302 @@
+[[_fblangref_security_roles]]
+= Роли
+
+*Роль* (role) -- объект базы данных, представляющий набор привилегий.
+Роли реализуют концепцию управления безопасностью на групповом уровне.
+Множество привилегий предоставляется роли, а затем роль может быть предоставлена или отозвана у одного или нескольких пользователей.
+
+Пользователь, которому предоставлена роль, должен указать её при входе, для того чтобы получить её привилегии, или же эта роль должна быть грантована с использованием ключевого слова `DEFAULT`.
+Любые другие привилегии, предоставленные пользователю, не будут затронуты при его входе в систему с указанной ролью.
+Вход в систему с несколькими ролями не поддерживается, однако вы можете права нескольких ролей назначенных по умолчанию.
+Вы можете изменить текущую роль с помощью оператора <<fblangref-management-role,SET ROLE>>.
+
+Роли могут быть грантованы другие роли.
+При входе с этой ролью пользователь автоматически получит права всех ролей выданных с использованием ключевого слова DEFAULT.
+
+В данном разделе рассматриваются вопросы создания и удаления ролей.
+
+[[fblangref-security-roles-create]]
+== `CREATE ROLE`
+
+.Назначение
+Создание новой роли.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+CREATE ROLE _rolename_
+[SET SYSTEM PRIVILEGES TO <privileges_list>]
+
+<privileges_list> ::= <privilege> [, <privilege> [, <privilege> ...]]
+----
+
+
+[[fblangref-security-tbl-createrole]]
+.Параметры оператора `CREATE ROLE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|rolename
+|Имя роли.
+Максимальная длина 63 символа.
+
+|privilege
+|Системная привилегия.
+|===
+
+Оператор `CREATE ROLE` создаёт новую роль.
+Имя роли должно быть уникальным среди имён ролей.
+
+[WARNING]
+====
+Желательно также чтобы имя роли было уникальным не только среди имён ролей, но и среди имён пользователей.
+Если вы создадите роль с тем же именем существующего пользователя, то такой пользователь не сможет подключиться к базе данных.
+====
+
+[[fblangref-security-roles-system]]
+=== Роли с системными привилегиями
+
+Предложение `SET SYSTEM PRIVILEGES TO` позволяет создать роль с системными привилегиями.
+Системные привилегии это части привилегий администратора.
+Таким образом, через делегирование роли с системными привилегиями пользователю можно передавать ему часть прав администратора БД.
+
+[NOTE]
+====
+Системные привилегии позволяют производить очень тонкую настройку, поэтому иногда вам нужно будет выдать более 1 системной привилегии для выполнения какой-либо задачи.
+Например, необходимо выдать `IGNORE_DB_TRIGGERS` совместно с `USE_GSTAT_UTILITY`, потому что [app]``gstat`` должен игнорировать триггера на события БД.
+====
+
+.Доступны следующие системные привилегии:
+
+`USER_MANAGEMENT`::
+Управление пользователями.
+
+`READ_RAW_PAGES`::
+Чтение страниц в сыром формате используя `Attachment::getInfo()`
+
+`CREATE_USER_TYPES`::
+Создание, изменение и удаление не системных записей в таблице `RDB$USER_TYPES`.
+
+`USE_NBACKUP_UTILITY`::
+Использование [app]``nbackup`` для создания резервных копий.
+
+`CHANGE_SHUTDOWN_MODE`::
+Закрытие базы данных (shutdown) и возвращение её в online.
+
+`TRACE_ANY_ATTACHMENT`::
+Трассировка чужих пользовательских сессий.
+
+`MONITOR_ANY_ATTACHMENT`::
+Мониторинг (MON$ таблицы) чужих пользовательских сессий.
+
+`ACCESS_SHUTDOWN_DATABASE`::
+Доступ к базе данных в режиме shutdown.
+
+`CREATE_DATABASE`::
+Создание новой базы данных (хранится в базе данных пользователей _security.db_).
+
+`DROP_DATABASE`::
+Удаление текущей БД.
+
+`USE_GBAK_UTILITY`::
+Использование утилиты или сервиса [app]``gbak``.
+
+`USE_GSTAT_UTILITY`::
+Использование утилиты или сервиса [app]``gstat``.
+
+`USE_GFIX_UTILITY`::
+Использование утилиты или сервиса [app]``gfix``.
+
+`IGNORE_DB_TRIGGERS`::
+Разрешает игнорировать триггеры на события БД.
+
+`CHANGE_HEADER_SETTINGS`::
+Изменение параметров на заголовочной странице БД.
+
+`SELECT_ANY_OBJECT_IN_DATABASE`::
+Выполнение оператора `SELECT` из всех селективных объектов (таблиц, представлений, хранимых процедур выбора).
+
+`ACCESS_ANY_OBJECT_IN_DATABASE`::
+Доступ (любым способом) к любому объекту БД.
+
+`MODIFY_ANY_OBJECT_IN_DATABASE`::
+Изменение любого объекта БД.
+
+`CHANGE_MAPPING_RULES`::
+Изменение правил отображения при аутентификации.
+
+`USE_GRANTED_BY_CLAUSE`::
+Использование `GRANTED BY` в операторах `GRANT` и `REVOKE`.
+
+`GRANT_REVOKE_ON_ANY_OBJECT`::
+Выполнение операторов GRANT и REVOKE для любого объекта БД.
+
+`GRANT_REVOKE_ANY_DDL_RIGHT`::
+Выполнение операторов GRANT и REVOKE для выдачи DDL привилегий.
+
+`CREATE_PRIVILEGED_ROLES`::
+Создание привилегированных ролей (с использованием `SET SYSTEM PRIVILEGES`).
+
+`GET_DBCRYPT_KEY_NAME`::
+Получение имени ключа шифрования.
+
+`MODIFY_EXT_CONN_POOL`::
+Управление пулом внешних соединений.
+
+`REPLICATE_INTO_DATABASE`::
+Использование API репликации для загрузки наборов изменений в базу данных.
+
+
+Для проверки имеет ли текущее подключение заданную системную привилегию можно воспользоваться встроенной функцией
+<<fblangref-scalarfuncs-system-privelege,`RDB$SYSTEM_PRIVILEGE()`>>.
+
+[[fblangref-security-role-createpriv]]
+=== Кто может создать роль
+
+Выполнить оператор `CREATE ROLE` могут:
+
+* <<fblangref-security-administrators,Администраторы>>
+* Пользователи с привилегией `CREATE ROLE`.
+
+
+[[fblangref-security-role-create-exmpl]]
+=== Примеры `CREATE ROLE`
+
+.Создание роли.
+[example]
+====
+[source,sql]
+----
+CREATE ROLE SELLERS;
+----
+====
+
+.Создание роли с системными привилегиями.
+[example]
+====
+[source,sql]
+----
+CREATE ROLE SYS_UTILS
+SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS;
+----
+====
+
+.См. также:
+<<fblangref-security-roles-drop,DROP ROLE>>,
+<<fblangref-security-priv-grant,GRANT>>,
+<<fblangref-security-priv-revoke,REVOKE>>,
+<<fblangref-management-role-setrole,SET ROLE>>,
+<<fblangref-scalarfuncs-system-privelege,RDB$SYSTEM_PRIVILEGE>>.
+
+[[fblangref-security-roles-alter]]
+== ALTER ROLE
+
+.Назначение
+Изменение системных привилегий роли.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+ALTER ROLE _rolename_
+{
+    SET SYSTEM PRIVILEGES TO <privileges_list>
+  | DROP SYSTEM PRIVILEGES
+}
+
+
+<privileges_list> ::= <privilege> [, <privilege> [, <privilege> ...]]
+----
+
+.Синтаксис для роли `RDB$ADMIN`
+[listing]
+----
+ALTER ROLE RDB$ADMIN {SET | DROP} AUTO ADMIN MAPPING
+----
+
+
+.Параметры оператора ALTER ROLE
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|rolename
+|Имя роли.
+
+|privilege
+|Системная привилегия.
+|===
+
+Оператор `ALTER ROLE` изменяет список системных привилегий роли или удаляет их.
+При использовании предложения `SET SYSTEM PRIVILEGES TO` к роли добавляются системные привилегии из списка.
+Для очистки списка системных привилегий установленных предыдущим оператором используйте оператор `ALTER ROLE` с предложением `DROP SYSTEM PRIVILEGES`.
+
+Оператор `ALTER ROLE RDB$ADMIN` предназначен для включения и отключения возможности администраторам Windows автоматически получать привилегии
+<<fblangref-security-administrators,администраторов>> при входе.
+
+Эта возможность существует только для одной роли, а именно системной роли `RDB$ADMIN`, которая существует в любой базе данных с ODS 11.2 и выше.
+Подробности см. в <<fblangref-security-autoadminmapping,AUTO ADMIN MAPPING>>.
+
+В настоящее время является устаревшим и поддерживается для обратной совместимости, вместо него рекомендуется использовать операторы
+<<fblangref-security-mapping,`{CREATE | ALTER | DROP} MAPPING`>>.
+
+[[fblangref-security-roles-drop]]
+== `DROP ROLE`
+
+.Назначение
+Удаление существующей роли.
+
+.Доступно в
+DSQL, ESQL
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+DROP ROLE _rolename_
+----
+
+.Параметры оператора `DROP ROLE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|rolename
+|Имя роли.
+|===
+
+Оператор `DROP ROLE` удаляет существующую роль.
+При удалении роли все привилегии, предоставленные этой роли, отменяются.
+
+[[fblangref-security-role-droppriv]]
+=== Кто может удалить роль
+
+Выполнить оператор `DROP ROLE` могут:
+
+* <<fblangref-security-administrators,Администраторы>>
+* Владелец роли;
+* Пользователи с привилегией `ALTER ANY ROLE`.
+
+
+[[fblangref-security-role-drop-exmpl]]
+=== Примеры `DROP ROLE`
+
+.Удаление роли.
+[example]
+====
+[source,sql]
+----
+DROP ROLE SELLERS;
+----
+====
+
+.См. также:
+<<fblangref-security-roles-create,CREATE ROLE>>, <<fblangref-security-priv-revoke,REVOKE>>.

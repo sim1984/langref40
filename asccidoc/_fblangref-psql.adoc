@@ -2189,7 +2189,7 @@ END
 * размер пула: максимально допустимое количество незанятых соединений в пуле. Параметр ExtConnPoolSize в [path]_firebird.conf_. По умолчанию равен 0, т.е. пул внешних соединений отключен.
 
 Пулом внешних соединений, а также его параметрами можно управлять с помощью специальных операторов.
-Подробнее см. <<fblangref-session-extconnpool,ALTER EXTERNAL CONNECTIONS POOL>>.
+Подробнее см. <<fblangref-management-extconnpool,ALTER EXTERNAL CONNECTIONS POOL>>.
 
 Состояние пула внешних подключений можно запросить с использованием контекстных переменных в пространстве имен `SYSTEM`:
 
@@ -3216,7 +3216,7 @@ RETURN _value_;
 [[fblangref-psql-return-exmpl]]
 ==== Примеры `RETURN`
 
-См. <<fblangref-ddl-func-create-example,Примеры `CREATE FUNCTION`>>
+См. <<fblangref-ddl-function-create-examples,Примеры `CREATE FUNCTION`>>
 
 [[fblangref-psql-statements-handleexceptions]]
 === Обработка ошибок

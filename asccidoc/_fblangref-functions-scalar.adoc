@@ -407,7 +407,7 @@ SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
 ====
 
 .См. также:
-<<fblangref-security-priv-grant-role,GRANT ROLE>>, <<fblangref-session-role-setrole,SET ROLE>>, <<fblangref-contextvars-current-role,CURRENT_ROLE>>.
+<<fblangref-security-grant-role,GRANT ROLE>>, <<fblangref-management-setrole,SET ROLE>>, <<fblangref-contextvars-current-role,CURRENT_ROLE>>.
 
 [[fblangref-scalarfuncs-system-privelege]]
 === `RDB$SYSTEM_PRIVILEGE()`
@@ -2738,7 +2738,7 @@ T                             MS
 
 .См. также:
 <<fblangref-scalarfuncs-datediff>>,
-<<fblangref-datatypes-datetime-operation,"Операции, использующие значения даты и времени">>.
+<<fblangref-datatypes-datetimeops>>.
 
 [[fblangref-scalarfuncs-datediff]]
 === `DATEDIFF()`
@@ -2816,7 +2816,7 @@ DATEDIFF (DAY FROM CURRENT_DATE TO CAST (? AS DATE))
 
 .См. также:
 <<fblangref-scalarfuncs-dateadd>>,
-<<fblangref-datatypes-datetime-operation,"Операции, использующие значения даты и времени">>.
+<<fblangref-datatypes-datetimeops>>.
 
 [[fblangref-scalarfuncs-extract]]
 === `EXTRACT()`
@@ -4232,7 +4232,7 @@ FROM rdb$database;
 ====
 
 .См. также:
-<<fblangref-datatypes-cast-explicit,Явное преобразование типов данных>>. 
+<<fblangref-datatypes-convert-explicit>>.
 
 ==== Примеры приведения типов
 

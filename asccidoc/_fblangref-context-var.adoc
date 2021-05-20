@@ -108,7 +108,7 @@ FROM RDB$DATABASE;
 ====
 
 .См. также:
-<<fblangref-session-role-setrole,`SET ROLE`>>,
+<<fblangref-management-setrole,`SET ROLE`>>,
 <<fblangref-scalarfuncs-get-context,`RDB$GET_CONTEXT()`>>,
 <<fblangref-scalarfuncs-roleinuse,`RDB$ROLE_IN_USE()`>>.
 
@@ -636,7 +636,7 @@ END
 ====
 
 .См. также:
-<<fblangref-session-resetsession,`ALTER SESSION RESET`>>.
+<<fblangref-management-resetsession,`ALTER SESSION RESET`>>.
 
 [[fblangref-contextvars-row_count]]
 == `ROW_COUNT`

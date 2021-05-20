@@ -30,5 +30,10 @@ include::_fblangref-functions-window.adoc[leveloffset=1]
 
 include::_fblangref-context-var.adoc[leveloffset=1]
 
+include::_fblangref-transaction.adoc[leveloffset=1]
+
+include::_fblangref-security.adoc[leveloffset=1]
+
+include::_fblangref-management.adoc[leveloffset=1]
 
 include::_fblangref-appx08-license.adoc[leveloffset=1]

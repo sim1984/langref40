@@ -1,0 +1,298 @@
+[[fblangref-security-revoking]]
+= Операторы для отзыва привилегий и ролей
+
+Оператор `REVOKE` используется для отзыва привилегий и ролей, у пользователей и других объектов базы данных.
+
+[[fblangref-security-revoke]]
+== REVOKE
+
+.Назначение
+Отмена привилегий или отбор ролей.
+
+.Доступно в
+DSQL
+
+.Синтаксис (отзыв привилегий)
+[listing,subs="+quotes,macros"]
+----
+REVOKE [GRANT OPTION FOR] <privileges>
+  FROM <grantee_list>
+  [{GRANTED BY | AS} [USER] _grantor_]
+
+<privileges> ::=
+   См. <<fblangref-security-grant-privsyntax,`GRANT` синтаксис>>
+
+<grantee_list> ::=
+   См. <<fblangref-security-grant-privsyntax,`GRANT` синтаксис>>
+----
+
+.Синтаксис (отзыв ролей)
+[listing,subs="+quotes,macros"]
+----
+REVOKE [ADMIN OPTION FOR] <role_granted>
+  FROM <role_grantee_list>
+  [{GRANTED BY | AS} [USER] _grantor_]
+
+<role_granted> ::=
+  См. <<fblangref-security-grant-rolesyntax,`GRANT` синтаксис>>
+
+<role_grantee_list> ::=
+  См. <<fblangref-security-grant-rolesyntax,`GRANT` синтаксис>>
+----
+
+.Синтаксис (отзыв всех привилегий)
+[listing,subs="+quotes,macros"]
+----
+REVOKE ALL ON ALL FROM <grantee_list>
+
+<grantee_list> ::=
+  <<fblangref-security-grant-privsyntax,`GRANT` синтаксис>>
+----
+
+[[fblangref-security-tbl-revoke]]
+.Параметры оператора `REVOKE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+| Параметр
+| Описание
+
+|grantor
+|Пользователь от имени, которого отзываются привилегии.
+|===
+
+Оператор `REVOKE` отменяет привилегии для пользователей, ролей, хранимых процедур, хранимых функций, пакетов, триггеров и представлений выданные оператором `GRANT`.
+Подробное описание различных типов привилегий см.
+в <<fblangref-security-grant,GRANT>>.
+
+[[fblangref-security-revoke-from-clause]]
+=== Предложение `FROM`
+
+В предложении `FROM` указывается список пользователей, ролей и объектов базы данных (процедур, функций, пакетов, триггеров и представлений) у которых будут отняты перечисленные привилегии.
+Необязательные предложения `USER` и `ROLE` позволяют уточнить, у кого именно выдаётся привилегия.
+Если ключевое слово `USER` или `ROLE` не указано, то сервер проверяет, существует ли роль с данным именем, если таковой не существует, то привилегии отбираются у пользователя.
+
+.Рекомендация
+[TIP]
+====
+Несмотря на то, что ключевые слова `USER` и `ROLE` не обязательные, желательно использовать их, чтобы избежать путаницы.
+====
+
+Существование пользователя, у которого отбираются права, не проверяются при выполнении оператора `REVOKE`.
+Если привилегия отбирается у объекта базы данных, то необходимо обязательно указывать тип объекта.
+
+[IMPORTANT]
+====
+Если привилегии были назначены специальному пользователю `PUBLIC`, то отменять привилегии необходимо для пользователя `PUBLIC`.
+Специальный пользователь `PUBLIC` используется, когда необходимо предоставить привилегии сразу всем пользователям.
+Однако не следует рассматривать `PUBLIC` как группу пользователей.
+====
+
+
+[[fblangref-security-revoke-examples]]
+=== Примеры отзыва привилегий
+
+.Отзыв привилегий на таблицу
+[example]
+====
+[source,sql]
+----
+-- отзыв привилегий SELECT, INSERT у таблицы
+REVOKE SELECT, INSERT ON TABLE SALES FROM USER ALEX
+
+-- отзыв привилегии SELECT у ролей MANAGER и ENGINEER и пользователя IVAN
+REVOKE SELECT ON TABLE CUSTOMER
+FROM ROLE MANAGER, ROLE ENGINEER, USER IVAN;
+
+-- отзыв привилегий SELECT и REFERENCES у пользователя PUBLIC
+REVOKE SELECT, REFERENCES (NAME) ON TABLE COUNTRY
+FROM PUBLIC;
+
+-- отзыв привилегии UPDATE для столбцов FIRST_NAME, LAST_NAME
+REVOKE UPDATE (FIRST_NAME, LAST_NAME) ON TABLE EMPLOYEE
+FROM USER IVAN;
+
+-- отзыв привилегии INSERT у хранимой процедуры ADD_EMP_PROJ
+REVOKE INSERT ON EMPLOYEE_PROJECT
+FROM PROCEDURE ADD_EMP_PROJ;
+----
+====
+
+.Отзыв привилегии `EXECUTE`
+[example]
+====
+[source,sql]
+----
+-- отзыв привилегии EXECUTE на процедуру
+REVOKE EXECUTE ON PROCEDURE ADD_EMP_PROJ
+FROM USER IVAN;
+
+-- отзыв привилегии EXECUTE на пакет
+REVOKE EXECUTE ON PACKAGE DATE_UTILS
+FROM USER ALEX;
+----
+====
+
+.Отзыв привилегии `USAGE`
+[example]
+====
+[source,sql]
+----
+-- Отзыв привилегии USAGE на последовательность выданной роли
+REVOKE USAGE ON SEQUENCE GEN_AGE FROM ROLE MANAGER;
+
+-- Отзыв привилегии USAGE на последовательность выданной триггеру
+REVOKE USAGE ON SEQUENCE GEN_AGE FROM TRIGGER TR_AGE_BI;
+
+-- Отзыв привилегии USAGE на исключение выданной пакету
+REVOKE USAGE ON EXCEPTION E_ACCESS_DENIED
+FROM PACKAGE PKG_BILL;
+----
+====
+
+.Отзыв привилегий на изменение метаданных
+[example]
+====
+[source,sql]
+----
+-- Отзыв у пользователя Joe привилегии на создание таблиц
+REVOKE CREATE TABLE FROM Joe;
+
+-- Отзыв у пользователя Joe привилегии на изменение любой процедуры
+REVOKE ALTER ANY PROCEDURE FROM Joe;
+
+-- Отзыв привилегии пользователю на создание базы данных
+-- у пользователя Superuser
+REVOKE CREATE DATABASE FROM USER Superuser;
+----
+====
+
+.Отзыв привилегий у системной привилегии
+[example]
+====
+[source,sql]
+----
+
+-- Отзыв у системной привилегии USER_MANAGEMENT всех прав
+-- на представление PLG$SRP_VIEW
+REVOKE ALL ON PLG$SRP_VIEW FROM SYSTEM PRIVILEGE USER_MANAGEMENT;
+----
+====
+
+[[fblangref-security-revoke-grant-option]]
+=== Предложение `GRANT OPTION FOR`
+
+Необязательное предложение `GRANT OPTION FOR` отменяет для соответствующего пользователя или роли право предоставления другим пользователям или ролям привилегии к таблицам, представлениям, триггерам, хранимым процедурам.
+
+[[fblangref-security-revoke-grantopt-examples]]
+=== Отзыв привилегий с использованием `GRANT OPTION FOR`
+
+.Отзыв привилегий с использованием `GRANT OPTION FOR`
+[example]
+====
+[source,sql]
+----
+-- отмена возможности передавать любую из привилегии на таблицу
+-- другим пользователям или ролям у роли ADMINISTRATOR
+REVOKE GRANT OPTION FOR ALL ON TABLE CUSTOMER
+FROM ROLE ADMINISTRATOR;
+
+-- отзыв привилегии EXECUTE на функцию
+-- и лишение права передавать эту привилегию
+-- другим пользователям и ролям
+REVOKE GRANT OPTION FOR
+EXECUTE ON FUNCTION GET_BEGIN_DATE
+FROM ROLE MANAGER;
+----
+====
+
+[[fblangref-security-revoke-roles]]
+=== Отмена назначенных ролей
+
+Другое назначение оператора `REVOKE` в отзыве назначенных пользователям или ролям ролей оператором `GRANT`.
+В этом случае после предложения `REVOKE` следует список ролей, которые будут отозваны у списка пользователей или ролей, указанных после предложения FROM.
+
+В одном операторе могут быть обработаны несколько ролей и/или грантополучателей.
+
+[[fblangref-security-revoke-roles-admopt]]
+==== Предложение `ADMIN OPTION FOR`
+
+Необязательное предложение `ADMIN OPTION FOR` отменяет ранее предоставленную административную опцию (право на передачу предоставленной пользователю роли другим) из грантополучателей, не отменяя прав на роль.
+
+[[fblangref-security-revoke-roles-examples]]
+==== Примеры отзыва ролей
+
+.Отзыв ролей
+[example]
+====
+[source,sql]
+----
+-- Отзыв ролей DIRECTOR, MANAGER у пользователя IVAN
+REVOKE DIRECTOR, MANAGER FROM USER IVAN;
+
+-- Отзыв умолчательной роли MANAGER у пользователя FEDOR
+REVOKE DEFAULT MANAGER FROM USER FEDOR;
+
+-- Отзыв роли MANAGER и права назначать её другим пользователям
+REVOKE ADMIN OPTION FOR MANAGER FROM USER ALEX;
+----
+====
+
+[[fblangref-security-revoke-grantedby]]
+=== Предложение `GRANTED BY`
+
+При предоставлении прав в базе данных в качестве лица, предоставившего эти права, обычно записывается текущий пользователь.
+Используя предложение `GRANTED BY` можно предоставлять права от имени другого пользователя.
+При использовании оператора `REVOKE` после `GRANTED BY` права будут удалены только в том случае, если они были зарегистрированы от удаляющего пользователя.
+Для облегчения миграции из некоторых других реляционных СУБД нестандартное предложение `AS` поддерживается как синоним оператора `GRANTED BY`.
+
+Предложение `GRANTED BY` может использовать:
+
+* Владелец базы данных;
+* `SYSDBA`;
+* Любой пользователь, имеющий права на роль `RDB$ADMIN` и указавший её при соединении с базой данных;
+* При использовании флага `AUTO ADMIN MAPPING` -- любой администратор операционной системы Windows (при условии использования сервером доверенной авторизации -- trusted authentication), даже без указания роли.
+
+Даже владелец роли не может использовать `GRANTED BY`, если он не находится в вышеупомянутом списке.
+
+[[fblangref-security-revoke-grantedby-exmaple]]
+==== Отзыв привилегий с использованием `GRANTED BY`
+
+.Отзыв привилегий на таблицу с использованием `GRANTED BY`
+[example]
+====
+[source,sql]
+----
+-- отзыв привилегии SELECT у пользователя IVAN,
+-- которая была выдана пользователем ALEX
+REVOKE SELECT ON TABLE EMPLOYEE
+FROM USER IVAN GRANTED BY ALEX;
+----
+====
+
+[[fblangref-security-revoke_all_on_all]]
+=== `REVOKE ALL ON ALL`
+
+Если после ключевого слова `REVOKE` указано предложение `ALL ON ALL`, то это позволяет отменить все привилегии (включая роли) на всех объектах от одного или более пользователей и/или ролей.
+Это быстрый способ "`очистить`" (отобрать) права, когда пользователю должен быть заблокирован доступ к базе данных.
+
+[NOTE]
+====
+* Когда оператор `REVOKE ALL ON ALL` вызывается привилегированным пользователем (владельцем базы данных, `SYSDBA` или любым пользователем, у которого CURRENT_ROLE -- `RDB$ADMIN`), удаляются все права независимо от того, кто их предоставил. В противном случае удаляются только права, предоставленные текущим пользователем;
+* Не поддерживается предложение `GRANTED BY`;
+* Этот оператор не удаляет флаг пользователя, давшего права на хранимые процедуры, триггеры или представлений (права на такие объекты конечно удаляются).
+
+====
+
+.Отзыв всех привилегий и ролей у пользователя
+[example]
+====
+[source,sql]
+----
+REVOKE ALL ON ALL FROM IVAN;
+----
+====
+
+После выполнения этой команды у пользователя `IVAN` нет вообще никаких прав.
+
+.См. также:
+<<fblangref-security-grant,GRANT>>.

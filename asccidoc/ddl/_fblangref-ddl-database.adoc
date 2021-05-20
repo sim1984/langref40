@@ -251,7 +251,7 @@ XNET:: локальный протокол.
 `DIFFERENCE FILE`::
 Необязательное предложение `DIFFERENCE FILE` задаёт путь и имя дельта файла, в который будут записываться изменения, внесённые в БД после перевода её в режим "`безопасного копирования`" ("`copy-safe`") путём выполнения команды `ALTER DATABASE BEGIN BACKUP`.
 Полное описание данного параметра см.
-в <<_fblangref_ddl_database_alter,ALTER DATABASE>>.
+в <<fblangref-ddl-database-alter,`ALTER DATABASE`>>.
 
 [[fblangref-ddl-db-create-dialect]]
 === Диалект базы данных
@@ -423,9 +423,9 @@ STARTING AT PAGE 20001;
 ====
 
 .См. также:
-<<_fblangref_ddl_database_alter,ALTER DATABASE>>, <<_fblangref_ddl_database_drop,DROP DATABASE>>. 
+<<fblangref-ddl-database-alter>>, <<fblangref-ddl-database-drop>>.
 
-[[_fblangref_ddl_database_alter]]
+[[fblangref-ddl-database-alter]]
 == `ALTER DATABASE`
 
 .Назначение
