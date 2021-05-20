@@ -240,7 +240,7 @@ ALTER [GLOBAL] MAPPING _name_
   TO { USER | ROLE } [_to_name_]
 ----
 
-Описание параметров оператора смотри в <<fblangref30-security-mapping-create>>.
+Описание параметров оператора смотри в <<fblangref-security-mappingcreate>>.
 
 Оператор `ALTER MAPPING` позволяет изменять любые опции существующего отображения.
 
@@ -302,10 +302,10 @@ CREATE OR ALTER [GLOBAL] MAPPING _name_
   TO { USER | ROLE } [_to_name_]
 ----
 
-Описание параметров оператора смотри в <<fblangref30-security-mapping-create>>.
+Описание параметров оператора смотри в <<fblangref-security-mappingcreate>>.
 
 Оператор `CREATE OR ALTER MAPPING` создаёт новое или изменяет существующее отображение.
-Если отображение не существует, то оно будет создано с использованием предложения CREATE MAPPING.
+Если отображение не существует, то оно будет создано с использованием оператора `CREATE MAPPING`.
 
 [IMPORTANT]
 ====

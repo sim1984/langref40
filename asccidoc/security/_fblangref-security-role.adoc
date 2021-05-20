@@ -188,9 +188,9 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
 
 .См. также:
 <<fblangref-security-roles-drop,DROP ROLE>>,
-<<fblangref-security-priv-grant,GRANT>>,
-<<fblangref-security-priv-revoke,REVOKE>>,
-<<fblangref-management-role-setrole,SET ROLE>>,
+<<fblangref-security-grant,GRANT>>,
+<<fblangref-security-revoke,REVOKE>>,
+<<fblangref-management-setrole,SET ROLE>>,
 <<fblangref-scalarfuncs-system-privelege,RDB$SYSTEM_PRIVILEGE>>.
 
 [[fblangref-security-roles-alter]]
@@ -299,4 +299,4 @@ DROP ROLE SELLERS;
 ====
 
 .См. также:
-<<fblangref-security-roles-create,CREATE ROLE>>, <<fblangref-security-priv-revoke,REVOKE>>.
+<<fblangref-security-roles-create,CREATE ROLE>>, <<fblangref-security-revoke,REVOKE>>.
