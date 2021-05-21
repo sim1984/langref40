@@ -2,7 +2,7 @@
 :sectnums!:
 
 [appendix]
-[[_fblangref_appx_keywords]]
+[[fblangref-appx-keywords]]
 = Зарезервированные и ключевые слова
 
 Зарезервированные слова являются частью языка SQL Firebird.
@@ -12,749 +12,752 @@
 Они имеют особое значение при использовании в определённом контексте, но не являются зарезервированными для монопольного использования самим сервером Firebird.
 Вы можете использовать их в качестве идентификаторов без заключения в двойные кавычки.
 
-[[_fblangref_reskeywords_reswords]]
+[[fblangref-reskeywords-reswords]]
 == Зарезервированные слова
 
+[%autowidth,cols="3*",frame=none,grid=none,stripes=none]
+|===
+|`ADD`
+|`ADMIN`
+|`ALL`
+|`ALTER`
+|`AND`
+|`ANY`
+|`AS`
+|`AT`
+|`AVG`
+|`BASE64_DECODE`
+|`BASE64_ENCODE`
+|`BEGIN`
+|`BETWEEN`
+|`BIGINT`
+|`BINARY`
+|`BIND`
+|`BIT_LENGTH`
+|`BLOB`
+|`BOOLEAN`
+|`BOTH`
+|`BY`
+|`CASE`
+|`CAST`
+|`CHAR`
+|`CHAR_LENGTH`
+|`CHARACTER`
+|`CHARACTER_LENGTH`
+|`CHECK`
+|`CLOSE`
+|`COLLATE`
+|`COLUMN`
+|`COMMIT`
+|`COMPARE_DECFLOAT`
+|`CONNECT`
+|`CONSISTENCY`               
+|`CONSTRAINT`
+|`CORR`
+|`COUNT`
+|`COUNTER`
+|`COVAR_POP`
+|`COVAR_SAMP`
+|`CREATE`
+|`CROSS`
+|`CURRENT`
+|`CURRENT_CONNECTION`
+|`CURRENT_DATE`
+|`CURRENT_ROLE`
+|`CURRENT_TIME`
+|`CURRENT_TIMESTAMP`
+|`CURRENT_TRANSACTION`
+|`CURRENT_USER`
+|`CURSOR`
+|`DATE`
+|`DAY`
+|`DEC`
+|`DECFLOAT`
+|`DECIMAL`
+|`DECLARE`
+|`DEFAULT`
+|`DELETE`
+|`DELETING`
+|`DETERMINISTIC`
+|`DISCONNECT`
+|`DISTINCT`
+|`DOUBLE`
+|`DROP`
+|`ELSE`
+|`END`
+|`ESCAPE`
+|`EXECUTE`
+|`EXISTS`
+|`EXTERNAL`
+|`EXTRACT`
+|`FALSE`
+|`FETCH`
+|`FILTER`
+|`FLOAT`
+|`FOR`
+|`FOREIGN`
+|`FROM`
+|`FULL`
+|`FUNCTION`
+|`GDSCODE`
+|`GLOBAL`
+|`GRANT`
+|`GROUP`
+|`HAVING`
+|`HOUR`
+|`IN`
+|`INDEX`
+|`INNER`
+|`INSENSITIVE`
+|`INSERT`
+|`INSERTING`
+|`INT`
+|`INTEGER`
+|`INTO`
+|`IS`
+|`JOIN`                
+|`LEADING`
+|`LEFT`
+|`LIKE`
+|`LOCAL`
+|`LOCALTIME`
+|`LOCALTIMESTAMP`
+|`LONG`
+|`LOWER`
+|`MAX`
+|`MAXIMUM_SEGMENT`
+|`MERGE`
+|`MIN`
+|`MINUTE`
+|`MONTH`
+|`NATIONAL`
+|`NATURAL`
+|`NCHAR`
+|`NO`
+|`NOT`
+|`NULL`
+|`NUMERIC`
+|`OCTET_LENGTH`
+|`OF`
+|`OFFSET`
+|`ON`
+|`ONLY`
+|`OPEN`
+|`OR`
+|`ORDER`
+|`OUTER`
+|`OVER`
+|`PARAMETER`
+|`PLAN`
+|`POSITION`
+|`POST_EVENT`
+|`PRECISION`
+|`PRIMARY`
+|`PROCEDURE`
+|`PUBLICATION`
+|`RDB$DB_KEY`
+|`RDB$GET_TRANSACTION_CN`
+|`RDB$ERROR`
+|`RDB$RECORD_VERSION`
+|`RDB$ROLE_IN_USE`
+|`RDB$SYSTEM_PRIVILEGE`
+|`REAL`
+|`RECORD_VERSION`
+|`RECREATE`
+|`RECURSIVE`
+|`REFERENCES`
+|`REGR_AVGX`
+|`REGR_AVGY`
+|`REGR_COUNT`
+|`REGR_INTERCEPT`
+|`REGR_R2`
+|`REGR_SLOPE`
+|`REGR_SXX`
+|`REGR_SXY`
+|`REGR_SYY`
+|`RELEASE`
+|`RESET`
+|`RESETTING`
+|`RETURN`
+|`RETURNING_VALUES`
+|`RETURNS`
+|`REVOKE`
+|`RIGHT`
+|`ROLLBACK`
+|`ROW`
+|`ROW_COUNT`
+|`ROWS`
+|`SAVEPOINT`
+|`SCROLL`
+|`SECOND`
+|`SELECT`
+|`SENSITIVE`
+|`SET`
+|`SIMILAR`
+|`SMALLINT`
+|`SOME`
+|`SQLCODE`
+|`SQLSTATE`
+|`START`
+|`STDDEV_POP`
+|`STDDEV_SAMP`
+|`SUM`
+|`TABLE`
+|`THEN`
+|`TIME`
+|`TIMESTAMP`
+|`TIMEZONE_HOUR`
+|`TIMEZONE_MINUTE`
+|`TO`
+|`TRAILING`
+|`TRIGGER`
+|`TRIM`
+|`TRUE`
+|`UNBOUNDED`
+|`UNION`
+|`UNIQUE`
+|`UNKNOWN`
+|`UPDATE`
+|`UPDATING`
+|`UPPER`
+|`USER`
+|`USING`
+|`VALUE`
+|`VALUES`
+|`VAR_POP`
+|`VAR_SAMP`
+|`VARBINARY`
+|`VARCHAR`
+|`VARIABLE`
+|`VARYING`
+|`VIEW`
+|`WHEN`
+|`WHERE`
+|`WHILE`
+|`WINDOW`
+|`WITH`
+|`WITHOUT`
+|`YEAR`
+|{nbsp}
+|===
 
-// <simplelist type="vert" columns="3">
-//                 <member>ADD</member>
-//                 <member>ADMIN</member>
-//                 <member>ALL</member>
-//                 <member>ALTER</member>
-//                 <member>AND</member>
-//                 <member>ANY</member>
-//                 <member>AS</member>
-//                 <member>AT</member>
-//                 <member>AVG</member>
-//                 <member>BASE64_DECODE</member>
-//                 <member>BASE64_ENCODE</member>
-//                 <member>BEGIN</member>
-//                 <member>BETWEEN</member>
-//                 <member>BIGINT</member>
-//                 <member>BINARY</member>
-//                 <member>BIND</member>
-//                 <member>BIT_LENGTH</member>
-//                 <member>BLOB</member>
-//                 <member>BOOLEAN</member>
-//                 <member>BOTH</member>
-//                 <member>BY</member>
-//                 <member>CASE</member>
-//                 <member>CAST</member>
-//                 <member>CHAR</member>
-//                 <member>CHAR_LENGTH</member>
-//                 <member>CHARACTER</member>
-//                 <member>CHARACTER_LENGTH</member>
-//                 <member>CHECK</member>
-//                 <member>CLOSE</member>
-//                 <member>COLLATE</member>
-//                 <member>COLUMN</member>
-//                 <member>COMMIT</member>
-//                 <member>COMPARE_DECFLOAT</member>
-//                 <member>CONNECT</member>
-//                 <member>CONSISTENCY</member>               
-//                 <member>CONSTRAINT</member>
-//                 <member>CORR</member>
-//                 <member>COUNT</member>
-//                 <member>COUNTER</member>
-//                 <member>COVAR_POP</member>
-//                 <member>COVAR_SAMP</member>
-//                 <member>CREATE</member>
-//                 <member>CROSS</member>
-//                 <member>CURRENT</member>
-//                 <member>CURRENT_CONNECTION</member>
-//                 <member>CURRENT_DATE</member>
-//                 <member>CURRENT_ROLE</member>
-//                 <member>CURRENT_TIME</member>
-//                 <member>CURRENT_TIMESTAMP</member>
-//                 <member>CURRENT_TRANSACTION</member>
-//                 <member>CURRENT_USER</member>
-//                 <member>CURSOR</member>
-//                 <member>DATE</member>
-//                 <member>DAY</member>
-//                 <member>DEC</member>
-//                 <member>DECFLOAT</member>
-//                 <member>DECIMAL</member>
-//                 <member>DECLARE</member>
-//                 <member>DEFAULT</member>
-//                 <member>DELETE</member>
-//                 <member>DELETING</member>
-//                 <member>DETERMINISTIC</member>
-//                 <member>DISCONNECT</member>
-//                 <member>DISTINCT</member>
-//                 <member>DOUBLE</member>
-//                 <member>DROP</member>
-//                 <member>ELSE</member>
-//                 <member>END</member>
-//                 <member>ESCAPE</member>
-//                 <member>EXECUTE</member>
-//                 <member>EXISTS</member>
-//                 <member>EXTERNAL</member>
-//                 <member>EXTRACT</member>
-//                 <member>FALSE</member>
-//                 <member>FETCH</member>
-//                 <member>FILTER</member>
-//                 <member>FLOAT</member>
-//                 <member>FOR</member>
-//                 <member>FOREIGN</member>
-//                 <member>FROM</member>
-//                 <member>FULL</member>
-//                 <member>FUNCTION</member>
-//                 <member>GDSCODE</member>
-//                 <member>GLOBAL</member>
-//                 <member>GRANT</member>
-//                 <member>GROUP</member>
-//                 <member>HAVING</member>
-//                 <member>HOUR</member>
-//                 <member>IN</member>
-//                 <member>INDEX</member>
-//                 <member>INNER</member>
-//                 <member>INSENSITIVE</member>
-//                 <member>INSERT</member>
-//                 <member>INSERTING</member>
-//                 <member>INT</member>
-//                 <member>INTEGER</member>
-//                 <member>INTO</member>
-//                 <member>IS</member>
-//                 <member>JOIN</member>                
-//                 <member>LEADING</member>
-//                 <member>LEFT</member>
-//                 <member>LIKE</member>
-//                 <member>LOCAL</member>
-//                 <member>LOCALTIME</member>
-//                 <member>LOCALTIMESTAMP</member>
-//                 <member>LONG</member>
-//                 <member>LOWER</member>
-//                 <member>MAX</member>
-//                 <member>MAXIMUM_SEGMENT</member>
-//                 <member>MERGE</member>
-//                 <member>MIN</member>
-//                 <member>MINUTE</member>
-//                 <member>MONTH</member>
-//                 <member>NATIONAL</member>
-//                 <member>NATURAL</member>
-//                 <member>NCHAR</member>
-//                 <member>NO</member>
-//                 <member>NOT</member>
-//                 <member>NULL</member>
-//                 <member>NUMERIC</member>
-//                 <member>OCTET_LENGTH</member>
-//                 <member>OF</member>
-//                 <member>OFFSET</member>
-//                 <member>ON</member>
-//                 <member>ONLY</member>
-//                 <member>OPEN</member>
-//                 <member>OR</member>
-//                 <member>ORDER</member>
-//                 <member>OUTER</member>
-//                 <member>OVER</member>
-//                 <member>PARAMETER</member>
-//                 <member>PLAN</member>
-//                 <member>POSITION</member>
-//                 <member>POST_EVENT</member>
-//                 <member>PRECISION</member>
-//                 <member>PRIMARY</member>
-//                 <member>PROCEDURE</member>
-//                 <member>PUBLICATION</member>
-//                 <member>RDB$DB_KEY</member>
-//                 <member>RDB$GET_TRANSACTION_CN</member>
-//                 <member>RDB$ERROR</member>
-//                 <member>RDB$RECORD_VERSION</member>
-//                 <member>RDB$ROLE_IN_USE</member>
-//                 <member>RDB$SYSTEM_PRIVILEGE</member>
-//                 <member>REAL</member>
-//                 <member>RECORD_VERSION</member>
-//                 <member>RECREATE</member>
-//                 <member>RECURSIVE</member>
-//                 <member>REFERENCES</member>
-//                 <member>REGR_AVGX</member>
-//                 <member>REGR_AVGY</member>
-//                 <member>REGR_COUNT</member>
-//                 <member>REGR_INTERCEPT</member>
-//                 <member>REGR_R2</member>
-//                 <member>REGR_SLOPE</member>
-//                 <member>REGR_SXX</member>
-//                 <member>REGR_SXY</member>
-//                 <member>REGR_SYY</member>
-//                 <member>RELEASE</member>
-//                 <member>RESET</member>
-//                 <member>RESETTING</member>
-//                 <member>RETURN</member>
-//                 <member>RETURNING_VALUES</member>
-//                 <member>RETURNS</member>
-//                 <member>REVOKE</member>
-//                 <member>RIGHT</member>
-//                 <member>ROLLBACK</member>
-//                 <member>ROW</member>
-//                 <member>ROW_COUNT</member>
-//                 <member>ROWS</member>
-//                 <member>SAVEPOINT</member>
-//                 <member>SCROLL</member>
-//                 <member>SECOND</member>
-//                 <member>SELECT</member>
-//                 <member>SENSITIVE</member>
-//                 <member>SET</member>
-//                 <member>SIMILAR</member>
-//                 <member>SMALLINT</member>
-//                 <member>SOME</member>
-//                 <member>SQLCODE</member>
-//                 <member>SQLSTATE</member>
-//                 <member>START</member>
-//                 <member>STDDEV_POP</member>
-//                 <member>STDDEV_SAMP</member>
-//                 <member>SUM</member>
-//                 <member>TABLE</member>
-//                 <member>THEN</member>
-//                 <member>TIME</member>
-//                 <member>TIMESTAMP</member>
-//                 <member>TIMEZONE_HOUR</member>
-//                 <member>TIMEZONE_MINUTE</member>
-//                 <member>TO</member>
-//                 <member>TRAILING</member>
-//                 <member>TRIGGER</member>
-//                 <member>TRIM</member>
-//                 <member>TRUE</member>
-//                 <member>UNBOUNDED</member>
-//                 <member>UNION</member>
-//                 <member>UNIQUE</member>
-//                 <member>UNKNOWN</member>
-//                 <member>UPDATE</member>
-//                 <member>UPDATING</member>
-//                 <member>UPPER</member>
-//                 <member>USER</member>
-//                 <member>USING</member>
-//                 <member>VALUE</member>
-//                 <member>VALUES</member>
-//                 <member>VAR_POP</member>
-//                 <member>VAR_SAMP</member>
-//                 <member>VARBINARY</member>
-//                 <member>VARCHAR</member>
-//                 <member>VARIABLE</member>
-//                 <member>VARYING</member>
-//                 <member>VIEW</member>
-//                 <member>WHEN</member>
-//                 <member>WHERE</member>
-//                 <member>WHILE</member>
-//                 <member>WINDOW</member>
-//                 <member>WITH</member>
-//                 <member>WITHOUT</member>
-//                 <member>YEAR</member>
-//             </simplelist>
 
-
-[[_fblangref_reskeywords_allkeywords]]
+[[fblangref-reskeywords-allkeywords]]
 == Ключевые слова
 
 Следующие термины имеют особое значение в DSQL Firebird.
-Некоторые из них также являются и зарезервированными словами. 
-// <simplelist type="vert" columns="3">
-//                 <member>!&lt;</member>
-//                 <member>^&lt;</member>
-//                 <member>^=</member>
-//                 <member>^&gt;</member>
-//                 <member>,</member>
-//                 <member>:=</member>
-//                 <member>!=</member>
-//                 <member>!&gt;</member>
-//                 <member>(</member>
-//                 <member>)</member>
-//                 <member>&lt;</member>
-//                 <member>&lt;=</member>
-//                 <member>&lt;&gt;</member>
-//                 <member>=</member>
-//                 <member>&gt;</member>
-//                 <member>&gt;=</member>
-//                 <member>||</member>
-//                 <member>~&lt;</member>
-//                 <member>~=</member>
-//                 <member>~&gt;</member>
-//                 <member>ABS</member>
-//                 <member>ABSOLUTE</member>
-//                 <member>ACCENT</member>
-//                 <member>ACOS</member>
-//                 <member>ACOSH</member>
-//                 <member>ACTION</member>
-//                 <member>ACTIVE</member>
-//                 <member>ADD</member>
-//                 <member>ADMIN</member>
-//                 <member>AFTER</member>
-//                 <member>ALL</member>
-//                 <member>ALTER</member>
-//                 <member>ALWAYS</member>
-//                 <member>AND</member>
-//                 <member>ANY</member>
-//                 <member>AS</member>
-//                 <member>ASC</member>
-//                 <member>ASCENDING</member>
-//                 <member>ASCII_CHAR</member>
-//                 <member>ASCII_VAL</member>
-//                 <member>ASIN</member>
-//                 <member>ASINH</member>
-//                 <member>AT</member>
-//                 <member>ATAN</member>
-//                 <member>ATAN2</member>
-//                 <member>ATANH</member>
-//                 <member>AUTO</member>
-//                 <member>AUTONOMOUS</member>
-//                 <member>AVG</member>
-//                 <member>BACKUP</member>
-//                 <member>BASE64_ENCODE</member>
-//                 <member>BASE64_DECODE</member>
-//                 <member>BEFORE</member>
-//                 <member>BEGIN</member>
-//                 <member>BETWEEN</member>
-//                 <member>BIGINT</member>
-//                 <member>BIN_AND</member>
-//                 <member>BIN_NOT</member>
-//                 <member>BIN_OR</member>
-//                 <member>BIN_SHL</member>
-//                 <member>BIN_SHR</member>
-//                 <member>BIN_XOR</member>
-//                 <member>BINARY</member>
-//                 <member>BIND</member>
-//                 <member>BIT_LENGTH</member>
-//                 <member>BLOB</member>
-//                 <member>BLOCK</member>
-//                 <member>BODY</member>
-//                 <member>BOOLEAN</member>
-//                 <member>BOTH</member>
-//                 <member>BREAK</member>
-//                 <member>BY</member>
-//                 <member>CALLER</member>
-//                 <member>CASCADE</member>
-//                 <member>CASE</member>
-//                 <member>CAST</member>
-//                 <member>CEIL</member>
-//                 <member>CEILING</member>
-//                 <member>CHAR</member>
-//                 <member>CHAR_LENGTH</member>
-//                 <member>CHAR_TO_UUID</member>
-//                 <member>CHARACTER</member>
-//                 <member>CHARACTER_LENGTH</member>
-//                 <member>CHECK</member>
-//                 <member>CLEAR</member>
-//                 <member>CLOSE</member>
-//                 <member>COALESCE</member>
-//                 <member>COLLATE</member>
-//                 <member>COLLATION</member>
-//                 <member>COLUMN</member>
-//                 <member>COMMENT</member>
-//                 <member>COMMIT</member>
-//                 <member>COMMITTED</member>
-//                 <member>COMMON</member>
-//                 <member>COMPARE_DECFLOAT</member>
-//                 <member>COMPUTED</member>
-//                 <member>CONDITIONAL</member>
-//                 <member>CONNECT</member>
-//                 <member>CONNECTIONS</member>
-//                 <member>CONSISTENCY</member>
-//                 <member>CONSTRAINT</member>
-//                 <member>CONTAINING</member>
-//                 <member>CONTINUE</member>
-//                 <member>CORR</member>
-//                 <member>COS</member>
-//                 <member>COSH</member>
-//                 <member>COT</member>
-//                 <member>COUNT</member>
-//                 <member>COUNTER</member>
-//                 <member>COVAR_POP</member>
-//                 <member>COVAR_SAMP</member>
-//                 <member>CREATE</member>
-//                 <member>CROSS</member>
-//                 <member>CRYPT_HASH</member>
-//                 <member>CSTRING</member>
-//                 <member>CTR_BIG_ENDIAN</member>
-//                 <member>CTR_LITTLE_ENDIAN</member>
-//                 <member>CTR_LENGTH</member>
-//                 <member>CUME_DIST</member>
-//                 <member>CURRENT</member>
-//                 <member>CURRENT_CONNECTION</member>
-//                 <member>CURRENT_DATE</member>
-//                 <member>CURRENT_ROLE</member>
-//                 <member>CURRENT_TIME</member>
-//                 <member>CURRENT_TIMESTAMP</member>
-//                 <member>CURRENT_TRANSACTION</member>
-//                 <member>CURRENT_USER</member>
-//                 <member>CURSOR</member>
-//                 <member>DATA</member>
-//                 <member>DATABASE</member>
-//                 <member>DATE</member>
-//                 <member>DATEADD</member>
-//                 <member>DATEDIFF</member>
-//                 <member>DAY</member>
-//                 <member>DDL</member>
-//                 <member>DEC</member>
-//                 <member>DECFLOAT</member>
-//                 <member>DECIMAL</member>
-//                 <member>DECLARE</member>
-//                 <member>DECODE</member>
-//                 <member>DECRYPT</member>
-//                 <member>DEFAULT</member>
-//                 <member>DEFINER</member>
-//                 <member>DELETE</member>
-//                 <member>DELETING</member>
-//                 <member>DENSE_RANK</member>
-//                 <member>DESC</member>
-//                 <member>DESCENDING</member>
-//                 <member>DESCRIPTOR</member>
-//                 <member>DETERMINISTIC</member>
-//                 <member>DIFFERENCE</member>
-//                 <member>DISABLE</member>
-//                 <member>DISCONNECT</member>
-//                 <member>DISTINCT</member>
-//                 <member>DO</member>
-//                 <member>DOMAIN</member>
-//                 <member>DOUBLE</member>
-//                 <member>DROP</member>
-//                 <member>ELSE</member>
-//                 <member>ENABLE</member>
-//                 <member>ENCLUDE</member>
-//                 <member>ENCRYPT</member>
-//                 <member>ENGINE</member>
-//                 <member>END</member>
-//                 <member>ENTRY_POINT</member>
-//                 <member>ESCAPE</member>
-//                 <member>EXCEPTION</member>
-//                 <member>EXCESS</member>
-//                 <member>EXCLUDE</member>
-//                 <member>EXECUTE</member>               
-//                 <member>EXISTS</member>
-//                 <member>EXIT</member>
-//                 <member>EXP</member>
-//                 <member>EXTENDED</member>
-//                 <member>EXTERNAL</member>
-//                 <member>EXTRACT</member>
-//                 <member>FALSE</member>
-//                 <member>FETCH</member>
-//                 <member>FILE</member>
-//                 <member>FILTER</member>
-//                 <member>FIRST</member>
-//                 <member>FIRST_DAY</member>
-//                 <member>FIRST_VALUE</member>
-//                 <member>FIRSTNAME</member>
-//                 <member>FLOAT</member>
-//                 <member>FLOOR</member>
-//                 <member>FOLLOWING</member>
-//                 <member>FOR</member>
-//                 <member>FOREIGN</member>
-//                 <member>FREE_IT</member>
-//                 <member>FROM</member>
-//                 <member>FULL</member>
-//                 <member>FUNCTION</member>
-//                 <member>GDSCODE</member>
-//                 <member>GEN_ID</member>
-//                 <member>GEN_UUID</member>
-//                 <member>GENERATED</member>
-//                 <member>GENERATOR</member>
-//                 <member>GLOBAL</member>
-//                 <member>GRANT</member>
-//                 <member>GRANTED</member>
-//                 <member>GROUP</member>
-//                 <member>HASH</member>
-//                 <member>HAVING</member>
-//                 <member>HEX_DECODE</member>
-//                 <member>HEX_ENCODE</member>
-//                 <member>HOUR</member>
-//                 <member>IDENTITY</member>
-//                 <member>IDLE</member>
-//                 <member>IF</member>
-//                 <member>IGNORE</member>
-//                 <member>IIF</member>
-//                 <member>IN</member>
-//                 <member>INACTIVE</member>
-//                 <member>INCREMENT</member>
-//                 <member>INDEX</member>
-//                 <member>INNER</member>
-//                 <member>INPUT_TYPE</member>
-//                 <member>INSENSITIVE</member>
-//                 <member>INSERT</member>
-//                 <member>INSERTING</member>
-//                 <member>INT</member>
-//                 <member>INT128</member>
-//                 <member>INTEGER</member>
-//                 <member>INTO</member>
-//                 <member>INVOKER</member>
-//                 <member>IS</member>
-//                 <member>ISOLATION</member>
-//                 <member>IV</member>
-//                 <member>JOIN</member>
-//                 <member>KEY</member>
-//                 <member>LAG</member>
-//                 <member>LAST</member>
-//                 <member>LAST_DAY</member>
-//                 <member>LAST_VALUE</member>
-//                 <member>LASTNAME</member>
-//                 <member>LATERAL</member>
-//                 <member>LEAD</member>
-//                 <member>LEADING</member>
-//                 <member>LEAVE</member>               
-//                 <member>LEFT</member>
-//                 <member>LEGACY</member>
-//                 <member>LENGTH</member>
-//                 <member>LEVEL</member>
-//                 <member>LIFETIME</member>
-//                 <member>LIKE</member>
-//                 <member>LIMBO</member>
-//                 <member>LINGER</member>
-//                 <member>LIST</member>
-//                 <member>LN</member>
-//                 <member>LOCAL</member>
-//                 <member>LOCALTIME</member>
-//                 <member>LOCALTIMESTAMP</member>
-//                 <member>LOCK</member>
-//                 <member>LOG</member>
-//                 <member>LOG10</member>
-//                 <member>LONG</member>
-//                 <member>LOWER</member>
-//                 <member>LPAD</member>
-//                 <member>LPARAM</member>
-//                 <member>MAKE_DBKEY</member>
-//                 <member>MANUAL</member>
-//                 <member>MAPPING</member>
-//                 <member>MATCHED</member>
-//                 <member>MATCHING</member>
-//                 <member>MAX</member>
-//                 <member>MAXIMUM_SEGMENT</member>
-//                 <member>MAXVALUE</member>
-//                 <member>MERGE</member>
-//                 <member>MESSAGE</member>
-//                 <member>MIDDLENAME</member>
-//                 <member>MILLISECOND</member>
-//                 <member>MIN</member>
-//                 <member>MINUTE</member>
-//                 <member>MINVALUE</member>
-//                 <member>MOD</member>
-//                 <member>MODE</member>
-//                 <member>MODULE_NAME</member>
-//                 <member>MONTH</member>
-//                 <member>NAME</member>
-//                 <member>NAMES</member>
-//                 <member>NATIONAL</member>
-//                 <member>NATIVE</member>
-//                 <member>NATURAL</member>
-//                 <member>NCHAR</member>
-//                 <member>NEXT</member>
-//                 <member>NO</member>
-//                 <member>NORMALIZE_DECFLOAT</member>
-//                 <member>NOT</member>
-//                 <member>NTH_VALUE</member>
-//                 <member>NTILE</member>
-//                 <member>NULL</member>
-//                 <member>NULLIF</member>
-//                 <member>NULLS</member>
-//                 <member>NUMBER</member>
-//                 <member>NUMERIC</member>
-//                 <member>OCTET_LENGTH</member>
-//                 <member>OF</member>
-//                 <member>OFFSET</member>
-//                 <member>OLDEST</member>
-//                 <member>ON</member>
-//                 <member>ONLY</member>
-//                 <member>OPEN</member>
-//                 <member>OPTION</member>
-//                 <member>OR</member>
-//                 <member>ORDER</member>
-//                 <member>OS_NAME</member>
-//                 <member>OTHERS</member>
-//                 <member>OUTER</member>
-//                 <member>OUTPUT_TYPE</member>
-//                 <member>OVER</member>
-//                 <member>OVERFLOW</member>
-//                 <member>OVERLAY</member>
-//                 <member>OVERRIDING</member>
-//                 <member>PACKAGE</member>
-//                 <member>PAD</member>
-//                 <member>PAGE</member>
-//                 <member>PAGE_SIZE</member>
-//                 <member>PAGES</member>
-//                 <member>PARAMETER</member>
-//                 <member>PARTITION</member>
-//                 <member>PASSWORD</member>
-//                 <member>PERCENT_RANK</member>
-//                 <member>PRECEDING</member>
-//                 <member>PRIVILEGE</member>
-//                 <member>PI</member>
-//                 <member>PLACING</member>
-//                 <member>PLAN</member>
-//                 <member>PLUGIN</member>
-//                 <member>POOL</member>
-//                 <member>POSITION</member>
-//                 <member>POST_EVENT</member>
-//                 <member>POWER</member>
-//                 <member>PRECISION</member>
-//                 <member>PRESERVE</member>
-//                 <member>PRIMARY</member>
-//                 <member>PRIOR</member>
-//                 <member>PRIVILEGE</member>
-//                 <member>PRIVILEGES</member>
-//                 <member>PROCEDURE</member>
-//                 <member>PROTECTED</member>
-//                 <member>PUBLICATION</member>
-//                 <member>QUANTIZE</member>
-//                 <member>RAND</member>
-//                 <member>RANGE</member>
-//                 <member>RANK</member>
-//                 <member>RDB$DB_KEY</member>
-//                 <member>RDB$GET_CONTEXT</member>               
-//                 <member>RDB$ERROR</member>
-//                 <member>RDB$RECORD_VERSION</member>
-//                 <member>RDB$ROLE_IN_USE</member>
-//                 <member>RDB$SET_CONTEXT</member>
-//                 <member>RDB$SYSTEM_PRIVILEGE</member>
-//                 <member>READ</member>
-//                 <member>REAL</member>
-//                 <member>RECORD_VERSION</member>
-//                 <member>RECREATE</member>
-//                 <member>RECURSIVE</member>
-//                 <member>REFERENCES</member>
-//                 <member>REGR_AVGX</member>
-//                 <member>REGR_AVGY</member>
-//                 <member>REGR_COUNT</member>
-//                 <member>REGR_INTERCEPT</member>
-//                 <member>REGR_R2</member>
-//                 <member>REGR_SLOPE</member>
-//                 <member>REGR_SXX</member>
-//                 <member>REGR_SXY</member>
-//                 <member>REGR_SYY</member>
-//                 <member>RELATIVE</member>
-//                 <member>RELEASE</member>
-//                 <member>REPLACE</member>
-//                 <member>REQUESTS</member>
-//                 <member>RESET</member>
-//                 <member>RESETTING</member>
-//                 <member>RESERV</member>
-//                 <member>RESERVING</member>
-//                 <member>RESTART</member>
-//                 <member>RESTRICT</member>
-//                 <member>RETAIN</member>
-//                 <member>RETURN</member>
-//                 <member>RETURNING</member>
-//                 <member>RETURNING_VALUES</member>
-//                 <member>RETURNS</member>
-//                 <member>REVERSE</member>
-//                 <member>REVOKE</member>
-//                 <member>RIGHT</member>
-//                 <member>ROLE</member>
-//                 <member>ROLLBACK</member>
-//                 <member>ROUND</member>
-//                 <member>ROW</member>
-//                 <member>ROW_COUNT</member>
-//                 <member>ROW_NUMBER</member>
-//                 <member>ROWS</member>
-//                 <member>RPAD</member>
-//                 <member>RSA_DECRYPT</member>
-//                 <member>RSA_ENCRYPT</member>
-//                 <member>RSA_PRIVATE</member>
-//                 <member>RSA_PUBLIC</member>
-//                 <member>RSA_SIGN</member>
-//                 <member>RSA_VERIFY</member>
-//                 <member>SALT_LENGTH</member>
-//                 <member>SAVEPOINT</member>
-//                 <member>SCALAR_ARRAY</member>
-//                 <member>SCHEMA</member>
-//                 <member>SCROLL</member>
-//                 <member>SECOND</member>
-//                 <member>SECURITY</member>
-//                 <member>SEGMENT</member>
-//                 <member>SELECT</member>
-//                 <member>SENSITIVE</member>
-//                 <member>SEQUENCE</member>
-//                 <member>SERVERWIDE</member>
-//                 <member>SESSION</member>
-//                 <member>SET</member>
-//                 <member>SHADOW</member>
-//                 <member>SHARED</member>
-//                 <member>SIGN</member>
-//                 <member>SIGNATURE</member>
-//                 <member>SIMILAR</member>
-//                 <member>SIN</member>
-//                 <member>SINGULAR</member>
-//                 <member>SINH</member>
-//                 <member>SIZE</member>
-//                 <member>SKIP</member>
-//                 <member>SMALLINT</member>
-//                 <member>SNAPSHOT</member>
-//                 <member>SOME</member>
-//                 <member>SORT</member>
-//                 <member>SOURCE</member>
-//                 <member>SPACE</member>
-//                 <member>SQL</member>
-//                 <member>SQLCODE</member>
-//                 <member>SQLSTATE</member>
-//                 <member>SQRT</member>
-//                 <member>STABILITY </member>
-//                 <member>START</member>
-//                 <member>STARTING</member>
-//                 <member>STARTS</member>
-//                 <member>STATEMENT</member>
-//                 <member>STATISTICS</member>
-//                 <member>STDDEV_POP</member>
-//                 <member>STDDEV_SAMP</member>
-//                 <member>SUB_TYPE</member>
-//                 <member>SUBSTRING</member>
-//                 <member>SUM</member>
-//                 <member>SUSPEND</member>
-//                 <member>SYSTEM</member>
-//                 <member>TABLE</member>
-//                 <member>TAGS</member>
-//                 <member>TAN</member>
-//                 <member>TANH</member>
-//                 <member>TEMPORARY</member>
-//                 <member>THEN</member>
-//                 <member>TIES</member>
-//                 <member>TIME</member>
-//                 <member>TIMEOUT</member>
-//                 <member>TIMESTAMP</member>
-//                 <member>TIMEZONE_HOUR</member>
-//                 <member>TIMEZONE_MINUTE</member>
-//                 <member>TO</member>
-//                 <member>TOTALORDER</member>
-//                 <member>TRAILING</member>
-//                 <member>TRANSACTION</member>
-//                 <member>TRAPS</member>
-//                 <member>TRIGGER</member>
-//                 <member>TRIM</member>
-//                 <member>TRUE</member>
-//                 <member>TRUNC</member>
-//                 <member>TRUSTED</member>
-//                 <member>TWO_PHASE</member>
-//                 <member>TYPE</member>
-//                 <member>UNCOMMITTED</member>
-//                 <member>UNBOUNDED</member>
-//                 <member>UNDO</member>
-//                 <member>UNION</member>
-//                 <member>UNIQUE</member>
-//                 <member>UNKNOWN</member>
-//                 <member>UPDATE</member>
-//                 <member>UPDATING</member>
-//                 <member>UPPER</member>
-//                 <member>USAGE</member>
-//                 <member>USER</member>
-//                 <member>USING</member>
-//                 <member>UUID_TO_CHAR</member>
-//                 <member>VALUE</member>
-//                 <member>VALUES</member>
-//                 <member>VAR_POP</member>
-//                 <member>VAR_SAMP</member>
-//                 <member>VARBINARY</member>
-//                 <member>VARCHAR</member>
-//                 <member>VARIABLE</member>
-//                 <member>VARYING</member>
-//                 <member>VIEW</member>
-//                 <member>WAIT</member>
-//                 <member>WEEK</member>
-//                 <member>WEEKDAY</member>
-//                 <member>WHEN</member>
-//                 <member>WHERE</member>
-//                 <member>WHILE</member>
-//                 <member>WINDOW</member>
-//                 <member>WITH</member>
-//                 <member>WITHOUT</member>
-//                 <member>WORK</member>
-//                 <member>WRITE</member>
-//                 <member>YEAR</member>
-//                 <member>YEARDAY</member>
-//                 <member>ZONE</member>
-//             </simplelist>
+Некоторые из них также являются и зарезервированными словами.
+
+[%autowidth,cols="3*",frame=none,grid=none,stripes=none]
+|===
+|`!<`
+|`^<`
+|`^=`
+|`^>`
+|`,`
+|`:=`
+|`!=`
+|`!>`
+|`(`
+|`)`
+|`<`
+|`<=`
+|`<>`
+|`=`
+|`>`
+|`>=`
+|`{vbar}{vbar}`
+|`~<`
+|`~=`
+|`~>`
+|`ABS`
+|`ABSOLUTE`
+|`ACCENT`
+|`ACOS`
+|`ACOSH`
+|`ACTION`
+|`ACTIVE`
+|`ADD`
+|`ADMIN`
+|`AFTER`
+|`ALL`
+|`ALTER`
+|`ALWAYS`
+|`AND`
+|`ANY`
+|`AS`
+|`ASC`
+|`ASCENDING`
+|`ASCII_CHAR`
+|`ASCII_VAL`
+|`ASIN`
+|`ASINH`
+|`AT`
+|`ATAN`
+|`ATAN2`
+|`ATANH`
+|`AUTO`
+|`AUTONOMOUS`
+|`AVG`
+|`BACKUP`
+|`BASE64_ENCODE`
+|`BASE64_DECODE`
+|`BEFORE`
+|`BEGIN`
+|`BETWEEN`
+|`BIGINT`
+|`BIN_AND`
+|`BIN_NOT`
+|`BIN_OR`
+|`BIN_SHL`
+|`BIN_SHR`
+|`BIN_XOR`
+|`BINARY`
+|`BIND`
+|`BIT_LENGTH`
+|`BLOB`
+|`BLOCK`
+|`BODY`
+|`BOOLEAN`
+|`BOTH`
+|`BREAK`
+|`BY`
+|`CALLER`
+|`CASCADE`
+|`CASE`
+|`CAST`
+|`CEIL`
+|`CEILING`
+|`CHAR`
+|`CHAR_LENGTH`
+|`CHAR_TO_UUID`
+|`CHARACTER`
+|`CHARACTER_LENGTH`
+|`CHECK`
+|`CLEAR`
+|`CLOSE`
+|`COALESCE`
+|`COLLATE`
+|`COLLATION`
+|`COLUMN`
+|`COMMENT`
+|`COMMIT`
+|`COMMITTED`
+|`COMMON`
+|`COMPARE_DECFLOAT`
+|`COMPUTED`
+|`CONDITIONAL`
+|`CONNECT`
+|`CONNECTIONS`
+|`CONSISTENCY`
+|`CONSTRAINT`
+|`CONTAINING`
+|`CONTINUE`
+|`CORR`
+|`COS`
+|`COSH`
+|`COT`
+|`COUNT`
+|`COUNTER`
+|`COVAR_POP`
+|`COVAR_SAMP`
+|`CREATE`
+|`CROSS`
+|`CRYPT_HASH`
+|`CSTRING`
+|`CTR_BIG_ENDIAN`
+|`CTR_LITTLE_ENDIAN`
+|`CTR_LENGTH`
+|`CUME_DIST`
+|`CURRENT`
+|`CURRENT_CONNECTION`
+|`CURRENT_DATE`
+|`CURRENT_ROLE`
+|`CURRENT_TIME`
+|`CURRENT_TIMESTAMP`
+|`CURRENT_TRANSACTION`
+|`CURRENT_USER`
+|`CURSOR`
+|`DATA`
+|`DATABASE`
+|`DATE`
+|`DATEADD`
+|`DATEDIFF`
+|`DAY`
+|`DDL`
+|`DEC`
+|`DECFLOAT`
+|`DECIMAL`
+|`DECLARE`
+|`DECODE`
+|`DECRYPT`
+|`DEFAULT`
+|`DEFINER`
+|`DELETE`
+|`DELETING`
+|`DENSE_RANK`
+|`DESC`
+|`DESCENDING`
+|`DESCRIPTOR`
+|`DETERMINISTIC`
+|`DIFFERENCE`
+|`DISABLE`
+|`DISCONNECT`
+|`DISTINCT`
+|`DO`
+|`DOMAIN`
+|`DOUBLE`
+|`DROP`
+|`ELSE`
+|`ENABLE`
+|`ENCLUDE`
+|`ENCRYPT`
+|`ENGINE`
+|`END`
+|`ENTRY_POINT`
+|`ESCAPE`
+|`EXCEPTION`
+|`EXCESS`
+|`EXCLUDE`
+|`EXECUTE`               
+|`EXISTS`
+|`EXIT`
+|`EXP`
+|`EXTENDED`
+|`EXTERNAL`
+|`EXTRACT`
+|`FALSE`
+|`FETCH`
+|`FILE`
+|`FILTER`
+|`FIRST`
+|`FIRST_DAY`
+|`FIRST_VALUE`
+|`FIRSTNAME`
+|`FLOAT`
+|`FLOOR`
+|`FOLLOWING`
+|`FOR`
+|`FOREIGN`
+|`FREE_IT`
+|`FROM`
+|`FULL`
+|`FUNCTION`
+|`GDSCODE`
+|`GEN_ID`
+|`GEN_UUID`
+|`GENERATED`
+|`GENERATOR`
+|`GLOBAL`
+|`GRANT`
+|`GRANTED`
+|`GROUP`
+|`HASH`
+|`HAVING`
+|`HEX_DECODE`
+|`HEX_ENCODE`
+|`HOUR`
+|`IDENTITY`
+|`IDLE`
+|`IF`
+|`IGNORE`
+|`IIF`
+|`IN`
+|`INACTIVE`
+|`INCREMENT`
+|`INDEX`
+|`INNER`
+|`INPUT_TYPE`
+|`INSENSITIVE`
+|`INSERT`
+|`INSERTING`
+|`INT`
+|`INT128`
+|`INTEGER`
+|`INTO`
+|`INVOKER`
+|`IS`
+|`ISOLATION`
+|`IV`
+|`JOIN`
+|`KEY`
+|`LAG`
+|`LAST`
+|`LAST_DAY`
+|`LAST_VALUE`
+|`LASTNAME`
+|`LATERAL`
+|`LEAD`
+|`LEADING`
+|`LEAVE`               
+|`LEFT`
+|`LEGACY`
+|`LENGTH`
+|`LEVEL`
+|`LIFETIME`
+|`LIKE`
+|`LIMBO`
+|`LINGER`
+|`LIST`
+|`LN`
+|`LOCAL`
+|`LOCALTIME`
+|`LOCALTIMESTAMP`
+|`LOCK`
+|`LOG`
+|`LOG10`
+|`LONG`
+|`LOWER`
+|`LPAD`
+|`LPARAM`
+|`MAKE_DBKEY`
+|`MANUAL`
+|`MAPPING`
+|`MATCHED`
+|`MATCHING`
+|`MAX`
+|`MAXIMUM_SEGMENT`
+|`MAXVALUE`
+|`MERGE`
+|`MESSAGE`
+|`MIDDLENAME`
+|`MILLISECOND`
+|`MIN`
+|`MINUTE`
+|`MINVALUE`
+|`MOD`
+|`MODE`
+|`MODULE_NAME`
+|`MONTH`
+|`NAME`
+|`NAMES`
+|`NATIONAL`
+|`NATIVE`
+|`NATURAL`
+|`NCHAR`
+|`NEXT`
+|`NO`
+|`NORMALIZE_DECFLOAT`
+|`NOT`
+|`NTH_VALUE`
+|`NTILE`
+|`NULL`
+|`NULLIF`
+|`NULLS`
+|`NUMBER`
+|`NUMERIC`
+|`OCTET_LENGTH`
+|`OF`
+|`OFFSET`
+|`OLDEST`
+|`ON`
+|`ONLY`
+|`OPEN`
+|`OPTION`
+|`OR`
+|`ORDER`
+|`OS_NAME`
+|`OTHERS`
+|`OUTER`
+|`OUTPUT_TYPE`
+|`OVER`
+|`OVERFLOW`
+|`OVERLAY`
+|`OVERRIDING`
+|`PACKAGE`
+|`PAD`
+|`PAGE`
+|`PAGE_SIZE`
+|`PAGES`
+|`PARAMETER`
+|`PARTITION`
+|`PASSWORD`
+|`PERCENT_RANK`
+|`PRECEDING`
+|`PRIVILEGE`
+|`PI`
+|`PLACING`
+|`PLAN`
+|`PLUGIN`
+|`POOL`
+|`POSITION`
+|`POST_EVENT`
+|`POWER`
+|`PRECISION`
+|`PRESERVE`
+|`PRIMARY`
+|`PRIOR`
+|`PRIVILEGE`
+|`PRIVILEGES`
+|`PROCEDURE`
+|`PROTECTED`
+|`PUBLICATION`
+|`QUANTIZE`
+|`RAND`
+|`RANGE`
+|`RANK`
+|`RDB$DB_KEY`
+|`RDB$GET_CONTEXT`               
+|`RDB$ERROR`
+|`RDB$RECORD_VERSION`
+|`RDB$ROLE_IN_USE`
+|`RDB$SET_CONTEXT`
+|`RDB$SYSTEM_PRIVILEGE`
+|`READ`
+|`REAL`
+|`RECORD_VERSION`
+|`RECREATE`
+|`RECURSIVE`
+|`REFERENCES`
+|`REGR_AVGX`
+|`REGR_AVGY`
+|`REGR_COUNT`
+|`REGR_INTERCEPT`
+|`REGR_R2`
+|`REGR_SLOPE`
+|`REGR_SXX`
+|`REGR_SXY`
+|`REGR_SYY`
+|`RELATIVE`
+|`RELEASE`
+|`REPLACE`
+|`REQUESTS`
+|`RESET`
+|`RESETTING`
+|`RESERV`
+|`RESERVING`
+|`RESTART`
+|`RESTRICT`
+|`RETAIN`
+|`RETURN`
+|`RETURNING`
+|`RETURNING_VALUES`
+|`RETURNS`
+|`REVERSE`
+|`REVOKE`
+|`RIGHT`
+|`ROLE`
+|`ROLLBACK`
+|`ROUND`
+|`ROW`
+|`ROW_COUNT`
+|`ROW_NUMBER`
+|`ROWS`
+|`RPAD`
+|`RSA_DECRYPT`
+|`RSA_ENCRYPT`
+|`RSA_PRIVATE`
+|`RSA_PUBLIC`
+|`RSA_SIGN_HASH`
+|`RSA_VERIFY_HASH`
+|`SALT_LENGTH`
+|`SAVEPOINT`
+|`SCALAR_ARRAY`
+|`SCHEMA`
+|`SCROLL`
+|`SECOND`
+|`SECURITY`
+|`SEGMENT`
+|`SELECT`
+|`SENSITIVE`
+|`SEQUENCE`
+|`SERVERWIDE`
+|`SESSION`
+|`SET`
+|`SHADOW`
+|`SHARED`
+|`SIGN`
+|`SIGNATURE`
+|`SIMILAR`
+|`SIN`
+|`SINGULAR`
+|`SINH`
+|`SIZE`
+|`SKIP`
+|`SMALLINT`
+|`SNAPSHOT`
+|`SOME`
+|`SORT`
+|`SOURCE`
+|`SPACE`
+|`SQL`
+|`SQLCODE`
+|`SQLSTATE`
+|`SQRT`
+|`STABILITY`
+|`START`
+|`STARTING`
+|`STARTS`
+|`STATEMENT`
+|`STATISTICS`
+|`STDDEV_POP`
+|`STDDEV_SAMP`
+|`SUB_TYPE`
+|`SUBSTRING`
+|`SUM`
+|`SUSPEND`
+|`SYSTEM`
+|`TABLE`
+|`TAGS`
+|`TAN`
+|`TANH`
+|`TEMPORARY`
+|`THEN`
+|`TIES`
+|`TIME`
+|`TIMEOUT`
+|`TIMESTAMP`
+|`TIMEZONE_HOUR`
+|`TIMEZONE_MINUTE`
+|`TO`
+|`TOTALORDER`
+|`TRAILING`
+|`TRANSACTION`
+|`TRAPS`
+|`TRIGGER`
+|`TRIM`
+|`TRUE`
+|`TRUNC`
+|`TRUSTED`
+|`TWO_PHASE`
+|`TYPE`
+|`UNCOMMITTED`
+|`UNBOUNDED`
+|`UNDO`
+|`UNION`
+|`UNIQUE`
+|`UNKNOWN`
+|`UPDATE`
+|`UPDATING`
+|`UPPER`
+|`USAGE`
+|`USER`
+|`USING`
+|`UUID_TO_CHAR`
+|`VALUE`
+|`VALUES`
+|`VAR_POP`
+|`VAR_SAMP`
+|`VARBINARY`
+|`VARCHAR`
+|`VARIABLE`
+|`VARYING`
+|`VIEW`
+|`WAIT`
+|`WEEK`
+|`WEEKDAY`
+|`WHEN`
+|`WHERE`
+|`WHILE`
+|`WINDOW`
+|`WITH`
+|`WITHOUT`
+|`WORK`
+|`WRITE`
+|`YEAR`
+|`YEARDAY`
+|`ZONE`
+|===
 
 
 :sectnums:
