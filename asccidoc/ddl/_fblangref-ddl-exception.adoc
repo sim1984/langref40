@@ -8,6 +8,7 @@
 
 [[fblangref-ddl-exception-create]]
 == `CREATE EXCEPTION`
+((CREATE EXCEPTION))
 
 .Назначение
 Создание пользовательского исключения для использования в PSQL модулях.
@@ -120,6 +121,7 @@ CREATE EXCEPTION E_INVALID_VALUE
 
 [[fblangref-ddl-exception-alter]]
 == `ALTER EXCEPTION`
+((ALTER EXCEPTION))
 
 .Назначение
 Изменение текста сообщения пользовательского исключения.
@@ -204,6 +206,7 @@ CREATE OR ALTER EXCEPTION E_LARGE_VALUE
 
 [[fblangref-ddl-exception-drop]]
 == `DROP EXCEPTION`
+((DROP EXCEPTION))
 
 .Назначение
 Удаление пользовательского исключения.

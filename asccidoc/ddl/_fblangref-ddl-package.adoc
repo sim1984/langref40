@@ -10,6 +10,7 @@
 
 [[fblangref-ddl-package-create]]
 == `CREATE PACKAGE`
+((CREATE PACKAGE))
 
 .Назначение
 Создание заголовка пакета.
@@ -142,6 +143,7 @@ END
 
 [[fblangref-ddl-package-create-sql-security]]
 === Привилегии выполнения
+(((CREATE PACKAGE, SQL SECURITY)))
 
 Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется процедуры и функции пакета.
 Если выбрана опция `INVOKER`, то процедуры и функции пакета выполняются с привилегиями вызывающего пользователя.
@@ -278,6 +280,7 @@ END
 
 [[fblangref-ddl-package-alter]]
 == `ALTER PACKAGE`
+((ALTER PACKAGE))
 
 .Назначение
 Изменение заголовка пакета.
@@ -351,6 +354,7 @@ END
 
 [[fblangref-ddl-package-createoralter]]
 == `CREATE OR ALTER PACKAGE`
+((CREATE OR ALTER PACKAGE))
 
 .Назначение
 Создание нового или изменение существующего заголовка пакета.
@@ -413,6 +417,7 @@ END
 
 [[fblangref-ddl-package-drop]]
 == `DROP PACKAGE`
+((DROP PACKAGE))
 
 .Назначение
 Удаление заголовка пакета.

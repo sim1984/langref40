@@ -1,11 +1,13 @@
 [[fblangref-functions]]
 = Встроенные скалярные функции
+((Функция))
 
 [[fblangref-functions-workcontext]]
 == Функции для работы с контекстными переменными
 
 [[fblangref-scalarfuncs-get-context]]
 === `RDB$GET_CONTEXT()`
+(((Функция, `RDB$GET_CONTEXT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -237,6 +239,7 @@ NEW.USER_ADR = RDB$GET_CONTEXT ('SYSTEM', 'CLIENT_ADDRESS');
 
 [[fblangref-scalarfuncs-set-context]]
 === `RDB$SET_CONTEXT()`
+(((Функция, `RDB$SET_CONTEXT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -352,6 +355,7 @@ COMMIT;
 
 [[fblangref-scalarfuncs-roleinuse]]
 === `RDB$ROLE_IN_USE()`
+(((Функция, `RDB$ROLE_IN_USE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -411,6 +415,7 @@ SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
 
 [[fblangref-scalarfuncs-system-privelege]]
 === `RDB$SYSTEM_PRIVILEGE()`
+(((Функция, `RDB$SYSTEM_PRIVILEGE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -455,6 +460,7 @@ SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
 
 [[fblangref-scalarfuncs-rdberror]]
 === `RDB$ERROR()`
+(((Функция, `RDB$ERROR()`)))
 
 .Доступно в
 PSQL
@@ -521,6 +527,7 @@ END
 
 [[fblangref-scalarfuncs-abs]]
 === `ABS()`
+(((Функция, `ABS()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -548,6 +555,7 @@ ABS (_number_)
 
 [[fblangref-scalarfuncs-acos]]
 === `ACOS()`
+(((Функция, `ACOS()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -581,6 +589,7 @@ ACOS (_number_)
 
 [[fblangref-scalarfuncs-acosh]]
 === `ACOSH()`
+(((Функция, `ACOSH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -611,6 +620,7 @@ ACOSH (_number_)
 
 [[fblangref-scalarfuncs-asin]]
 === `ASIN()`
+(((Функция, `ASIN()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -643,6 +653,7 @@ ASIN (_number_)
 
 [[fblangref-scalarfuncs-asinh]]
 === `ASINH()`
+(((Функция, `ASINH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -673,6 +684,7 @@ ASIN (_number_)
 
 [[fblangref-scalarfuncs-atan]]
 === `ATAN()`
+(((Функция, `ATAN()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -705,6 +717,7 @@ ATAN (_number_)
 
 [[fblangref-scalarfuncs-atan2]]
 === `ATAN2()`
+(((Функция, `ATAN2()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -752,6 +765,7 @@ ATAN2 (_y_, _x_)
 
 [[fblangref-scalarfuncs-atanh]]
 === `ATANH()`
+(((Функция, `ATANH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -782,6 +796,7 @@ ATANH (_number_)
 
 [[fblangref-scalarfuncs-ceil]]
 === `CEIL()`, `CEILING()`
+(((Функция, `CEIL()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -812,6 +827,7 @@ CEIL[ING] (_number_)
 
 [[fblangref-scalarfuncs-cos]]
 === `COS()`
+(((Функция, `COS()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -845,6 +861,7 @@ COS (_angle_)
 
 [[fblangref-scalarfuncs-cosh]]
 === `COSH()`
+(((Функция, `COSH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -877,6 +894,7 @@ COSH (_number_)
 
 [[fblangref-scalarfuncs-cot]]
 === `COT()`
+(((Функция, `COT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -908,6 +926,7 @@ COT (_angle_)
 
 [[fblangref-scalarfuncs-exp]]
 === `EXP()`
+(((Функция, `EXP()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -938,6 +957,7 @@ EXP (_number_)
 
 [[fblangref-scalarfuncs-floor]]
 === `FLOOR()`
+(((Функция, `FLOOR()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -968,6 +988,7 @@ FLOOR (_number_)
 
 [[fblangref-scalarfuncs-ln]]
 === `LN()`
+(((Функция, `LN()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1003,6 +1024,7 @@ LN (_number_)
 
 [[fblangref-scalarfuncs-log]]
 === `LOG()`
+(((Функция, `LOG()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1042,6 +1064,7 @@ LOG (_x_, _y_)
 
 [[fblangref-scalarfuncs-log10]]
 === `LOG10()`
+(((Функция, `LOG10()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1074,6 +1097,7 @@ LOG10 (_number_)
 
 [[fblangref-scalarfuncs-mod]]
 === `MOD()`
+(((Функция, `MOD()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1110,6 +1134,7 @@ MOD (_a_, _b_)
 
 [[fblangref-scalarfuncs-pi]]
 === `PI()`
+(((Функция, `PI()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1127,6 +1152,7 @@ PI ()
 
 [[fblangref-scalarfuncs-power]]
 === `POWER()`
+(((Функция, `POWER()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1162,6 +1188,7 @@ POWER (_x_, _y_)
 
 [[fblangref-scalarfuncs-rand]]
 === `RAND()`
+(((Функция, `RAND()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1179,6 +1206,7 @@ RAND ()
 
 [[fblangref-scalarfuncs-round]]
 === `ROUND()`
+(((Функция, `ROUND()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1242,6 +1270,7 @@ ROUND(45.1212)    -- Результат: 45
 
 [[fblangref-scalarfuncs-sign]]
 === `SIGN()`
+(((Функция, `SIGN()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1273,6 +1302,7 @@ SIGN (_number_)
 
 [[fblangref-scalarfuncs-sin]]
 === `SIN()`
+(((Функция, `SIN()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1306,6 +1336,7 @@ SIN (_angle_)
 
 [[fblangref-scalarfuncs-sinh]]
 === `SINH()`
+(((Функция, `SINH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1336,6 +1367,7 @@ SINH (_number_)
 
 [[fblangref-scalarfuncs-sqrt]]
 === `SQRT()`
+(((Функция, `SQRT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1363,6 +1395,7 @@ SQRT (_number_)
 
 [[fblangref-scalarfuncs-tan]]
 === `TAN()`
+(((Функция, `TAN()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1394,6 +1427,7 @@ TAN (_angle_)
 
 [[fblangref-scalarfuncs-tanh]]
 === `TANH()`
+(((Функция, `TANH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1426,6 +1460,7 @@ TANH (_number_)
 
 [[fblangref-scalarfuncs-trunc]]
 === `TRUNC()`
+(((Функция, `TRUNC()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1493,6 +1528,7 @@ TRUNC(-163.41)      -- Результат: -163
 
 [[fblangref-scalarfuncs-ascii-char]]
 === `ASCII_CHAR()`
+(((Функция, `ASCII_CHAR()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1524,6 +1560,7 @@ ASCII_CHAR (_code_)
 
 [[fblangref-scalarfuncs-ascii-val]]
 === `ASCII_VAL()`
+(((Функция, `ASCII_VAL()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1561,6 +1598,7 @@ ASCII_VAL (_ch_)
 
 [[fblangref-scalarfuncs-bit-length]]
 === `BIT_LENGTH()`
+(((Функция, `BIT_LENGTH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1623,6 +1661,7 @@ FROM RDB$DATABASE
 
 [[fblangref-scalarfuncs-char-length]]
 === `CHAR_LENGTH()`, `CHARACTER_LENGTH()`
+(((Функция, `CHAR_LENGTH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1659,6 +1698,7 @@ DSQL, PSQL
 
 [[fblangref-scalarfuncs-hash]]
 === `HASH()`
+(((Функция, `HASH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1734,6 +1774,7 @@ SELECT HASH(x USING CRC32) FROM MyTable;
 
 [[fblangref-scalarfuncs-left]]
 === `LEFT()`
+(((Функция, `LEFT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1791,6 +1832,7 @@ SELECT LEFT('ABC', 2) FROM rdb$database;
 
 [[fblangref-scalarfuncs-lower]]
 === `LOWER()`
+(((Функция, `LOWER()`)))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1839,6 +1881,7 @@ where lower(Name) = 'cooper''s valley'
 
 [[fblangref-scalarfuncs-lpad]]
 === `LPAD()`
+(((Функция, `LPAD()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1907,6 +1950,7 @@ LPAD ('Hello', 2, '')             -- возвращает 'He'
 
 [[fblangref-scalarfuncs-octet-length]]
 === `OCTET_LENGTH()`
+(((Функция, `OCTET_LENGTH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -1974,6 +2018,7 @@ FROM rdb$database
 
 [[fblangref-scalarfuncs-overlay]]
 === `OVERLAY()`
+(((Функция, `OVERLAY()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2059,6 +2104,7 @@ OVERLAY ('' PLACING 'Hello' FROM 4 FOR 20) -- Результат: 'Hello'
 
 [[fblangref-scalarfuncs-position]]
 === `POSITION()`
+(((Функция, `POSITION()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2194,6 +2240,7 @@ REPLACE ('Billy Wilder', '', 'abc')    -- возвращает 'Billy Wilder'
 
 [[fblangref-scalarfuncs-reverse]]
 === `REVERSE()`
+(((Функция, `REVERSE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2249,6 +2296,7 @@ WHERE REVERSE(email) STARTING WITH reverse('.br');
 
 [[fblangref-scalarfuncs-right]]
 === `RIGHT()`
+(((Функция, `RIGHT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2306,6 +2354,7 @@ SELECT RIGHT('ABC', 1) FROM rdb$database;
 
 [[fblangref-scalarfuncs-rpad]]
 === `RPAD()`
+(((Функция, `RPAD()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2376,6 +2425,7 @@ RPAD ('Hello', 2, '')             -- возвращает 'He'
 
 [[fblangref-scalarfuncs-substring]]
 === `SUBSTRING()`
+(((Функция, `SUBSTRING()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2522,6 +2572,7 @@ SUBSTRING('abcabc' SIMILAR '#"abc#"' ESCAPE '#')     -- <null>
 
 [[fblangref-scalarfuncs-trim]]
 === `TRIM()`
+(((Функция, `TRIM()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2603,6 +2654,7 @@ FROM RDB$DATABASE -- Результат: ' I love you El'
 
 [[fblangref-scalarfuncs-upper]]
 === `UPPER()`
+(((Функция, `UPPER()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2656,6 +2708,7 @@ from rdb$database
 
 [[fblangref-scalarfuncs-dateadd]]
 === `DATEADD()`
+(((Функция, `DATEADD()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2742,6 +2795,7 @@ T                             MS
 
 [[fblangref-scalarfuncs-datediff]]
 === `DATEDIFF()`
+(((Функция, `DATEDIFF()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2820,6 +2874,7 @@ DATEDIFF (DAY FROM CURRENT_DATE TO CAST (? AS DATE))
 
 [[fblangref-scalarfuncs-extract]]
 === `EXTRACT()`
+(((Функция, `EXTRACT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -2950,6 +3005,7 @@ FROM RDB$DATABASE
 
 [[fblangref-scalarfuncs-firstday]]
 === `FIRST_DAY()`
+(((Функция, `FIRST_DAY()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3002,6 +3058,7 @@ SELECT FIRST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
 
 [[fblangref-scalarfuncs-lastday]]
 === `LAST_DAY()`
+(((Функция, `LAST_DAY()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3057,6 +3114,7 @@ SELECT LAST_DAY(OF WEEK FROM date '2017-11-01') FROM rdb$database;
 
 [[fblangref-scalarfuncs-comparedecfloat]]
 === `COMPARE_DECFLOAT()`
+(((Функция, `COMPARE_DECFLOAT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3099,6 +3157,7 @@ COMPARE_DECFLOAT (_decfloat1_, _decfloat2_)
 
 [[fblangref-scalarfuncs-normalize_decfloat]]
 === `NORMALIZE_DECFLOAT()`
+(((Функция, `NORMALIZE_DECFLOAT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3141,6 +3200,7 @@ NORMALIZE_DECFLOAT(120) -- возвращает 1.2E+2
 
 [[fblangref-scalarfuncs-quantize]]
 === `QUANTIZE()`
+(((Функция, `QUANTIZE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3222,6 +3282,7 @@ V                       PIC                   QUANTIZE
 
 [[fblangref-scalarfuncs-totalorder]]
 === `TOTALORDER()`
+(((Функция, `TOTALORDER()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3270,6 +3331,7 @@ TOTALORDER (_decfloat1_, _decfloat2_)
 
 [[fblangref-scalarfuncs-base64decode]]
 === `BASE64_DECODE()`
+(((Функция, `BASE64_DECODE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3330,6 +3392,7 @@ Test base64
 
 [[fblangref-scalarfuncs-base64encode]]
 === `BASE64_ENCODE()`
+(((Функция, `BASE64_ENCODE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3386,6 +3449,7 @@ VGVzdCBiYXNlNjQ=
 
 [[fblangref-scalarfuncs-hexdecode]]
 === `HEX_DECODE()`
+(((Функция, `HEX_DECODE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3444,6 +3508,7 @@ Hexadecimal
 
 [[fblangref-scalarfuncs-hexencode]]
 === `HEX_ENCODE()`
+(((Функция, `HEX_ENCODE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3505,6 +3570,7 @@ HEX_ENCODE
 
 [[fblangref-scalarfuncs-crypthash]]
 === `CRYPT_HASH()`
+(((Функция, `CRYPT_HASH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3559,6 +3625,7 @@ SELECT CRYPT_HASH(x USING SHA256) FROM MyTable;
 
 [[fblangref-scalarfuncs-decrypt]]
 === `DECRYPT()`
+(((Функция, `DECRYPT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3653,6 +3720,7 @@ from secure_table;
 
 [[fblangref-scalarfuncs-encrypt]]
 === `ENCRYPT()`
+(((Функция, `ENCRYPT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3741,6 +3809,7 @@ from rdb$database;
 
 [[fblangref-scalarfuncs-rsa_private]]
 === `RSA_PRIVATE()`
+(((Функция, `RSA_PRIVATE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3782,6 +3851,7 @@ from rdb$database;
 
 [[fblangref-scalarfuncs-rsa_public]]
 === `RSA_PUBLIC()`
+(((Функция, `RSA_PUBLIC()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3827,6 +3897,7 @@ from rdb$database;
 
 [[fblangref-scalarfuncs-rsa_encrypt]]
 === `RSA_ENCRYPT()`
+(((Функция, `RSA_ENCRYPT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3886,6 +3957,7 @@ from rdb$database;
 
 [[fblangref-scalarfuncs-rsa_decrypt]]
 === `RSA_DECRYPT()`
+(((Функция, `RSA_DECRYPT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -3946,6 +4018,7 @@ from RDB$DATABASE;
 
 [[fblangref-scalarfuncs-rsa_sign_hash]]
 === `RSA_SIGN_HASH()`
+(((Функция, `RSA_SIGN_HASH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4004,6 +4077,7 @@ from rdb$database;
 
 [[fblangref-scalarfuncs-rsa_verify_hash]]
 === `RSA_VERIFY_HASH()`
+(((Функция, `RSA_VERIFY_HASH()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4072,6 +4146,7 @@ from rdb$database;
 
 [[fblangref-scalarfuncs-cast]]
 === `CAST()`
+(((Функция, `CAST()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4262,6 +4337,7 @@ SELECT CAST('TODAY' AS DATE) - 7 FROM rdb$database
 
 [[fblangref-scalarfuncs-bin-and]]
 === `BIN_AND()`
+(((Функция, `BIN_AND()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4293,6 +4369,7 @@ BIN_AND (_number_, _number_ [, _number_ ...])
 
 [[fblangref-scalarfuncs-bin-not]]
 === `BIN_NOT()`
+(((Функция, `BIN_NOT()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4324,6 +4401,7 @@ BIN_NOT (_number_)
 
 [[fblangref-scalarfuncs-bin-or]]
 === `BIN_OR()`
+(((Функция, `BIN_OR()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4355,6 +4433,7 @@ BIN_OR (_number_, _number_ [, _number_ ...])
 
 [[fblangref-scalarfuncs-bin-shl]]
 === `BIN_SHL()`
+(((Функция, `BIN_SHL()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4389,6 +4468,7 @@ BIN_SHL (_number_, _shift_)
 
 [[fblangref-scalarfuncs-bin-shr]]
 === `BIN_SHR()`
+(((Функция, `BIN_SHR()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4425,6 +4505,7 @@ BIN_SHR (_number_, _shift_)
 
 [[fblangref-scalarfuncs-bin-xor]]
 === `BIN_XOR()`
+(((Функция, `BIN_XOR()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4459,6 +4540,7 @@ BIN_XOR (_number_, _number_ [, _number_ ...])
 
 [[fblangref-scalarfuncs-char-to-uuid]]
 === `CHAR_TO_UUID()`
+(((Функция, `CHAR_TO_UUID()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4509,6 +4591,7 @@ SELECT CHAR_TO_UUID('A0bF4E45-3029-2A44-X493-4998c9b439A3') FROM rdb$database
 
 [[fblangref-scalarfuncs-gen-uuid]]
 === `GEN_UUID()`
+(((Функция, `GEN_UUID()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4550,6 +4633,7 @@ GUID
 
 [[fblangref-scalarfuncs-uuid-to-char]]
 === `UUID_TO_CHAR()`
+(((Функция, `UUID_TO_CHAR()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4606,6 +4690,7 @@ SELECT UUID_TO_CHAR('Firebird swings!') FROM RDB$DATABASE;
 
 [[fblangref-scalarfuncs-gen-id]]
 === `GEN_ID()`
+(((Функция, `GEN_ID()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4670,6 +4755,7 @@ NEW.ID = GEN_ID (GEN_TABLE_ID, 1);
 
 [[fblangref-scalarfuncs-coalesce]]
 === `COALESCE()`
+(((Функция, `COALESCE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4736,6 +4822,7 @@ WHERE ...
 
 [[fblangref-scalarfuncs-decode]]
 === `DECODE()`
+(((Функция, `DECODE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4817,6 +4904,7 @@ from people
 
 [[fblangref-scalarfuncs-iif]]
 === `IIF()`
+(((Функция, `IIF()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4878,6 +4966,7 @@ SELECT IIF(SEX = 'M', 'Sir', 'Madam') FROM CUSTOMERS
 
 [[fblangref-scalarfuncs-maxvalue]]
 === `MAXVALUE()`
+(((Функция, `MAXVALUE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4927,6 +5016,7 @@ FROM PRICELIST
 
 [[fblangref-scalarfuncs-minvalue]]
 === `MINVALUE()`
+(((Функция, `MINVALUE()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -4976,6 +5066,7 @@ FROM PRICELIST
 
 [[fblangref-scalarfuncs-nullif]]
 === `NULLIF()`
+(((Функция, `NULLIF()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -5030,6 +5121,7 @@ SELECT AVG(NULLIF(weight, -1)) FROM cargo;
 
 [[fblangref-scalarfuncs-makedbkey]]
 === `MAKE_DBKEY()`
+(((Функция, `MAKE_DBKEY()`)))
 
 .Доступно в
 DSQL, PSQL
@@ -5135,6 +5227,7 @@ where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
 
 [[fblangref-scalarfuncs-transaction-cn]]
 === `RDB$GET_TRANSACTION_CN()`
+(((Функция, `RDB$GET_TRANSACTION_CN()`)))
 
 .Доступно в
 DSQL, PSQL

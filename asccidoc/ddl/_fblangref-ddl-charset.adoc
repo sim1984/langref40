@@ -3,6 +3,7 @@
 
 [[fblangref-ddl-charset-alter]]
 == `ALTER CHARACTER SET`
+((ALTER CHARACTER SET))
 
 .Назначение
 Установка сортировки по умолчанию для набора символов.

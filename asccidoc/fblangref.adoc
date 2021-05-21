@@ -53,3 +53,6 @@ include::_fblangref-appx07-syspackage.adoc[leveloffset=1]
 include::_fblangref-appx08-charsets.adoc[leveloffset=1]
 
 include::_fblangref-appx09-license.adoc[leveloffset=1]
+
+[index]
+== Алфавитный указатель

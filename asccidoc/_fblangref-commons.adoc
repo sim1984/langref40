@@ -5,6 +5,7 @@
 
 [[fblangref-commons-expressions]]
 == Выражения
+((Выражение))
 
 Выражения SQL представляют формальные методы для вычисления, преобразования и сравнения значений.
 Выражения SQL могут включать в себя столбцы таблиц, переменные, константы, литералы, различные операторы и предикаты, а так же другие выражения.
@@ -118,6 +119,7 @@ ANY, SOME могут быть использованы только с подз�
 
 [[fblangref-commons-constants]]
 === Литералы (константы)
+((Литерал))
 
 Литерал или константа -- это значение, подставляемое непосредственно в SQL оператор, которое не получено из выражения, параметра, ссылки на столбец или переменной. 
 
@@ -579,6 +581,7 @@ IF (A > B OR (A > C AND A > D) AND NOT (C = D)) THEN
 
 [[fblangref-commons-at]]
 === `AT`
+((AT))
 
 .Доступно в
 DSQL, PSQL.
@@ -619,6 +622,7 @@ select timestamp '2018-01-01 12:00 GMT' at local
 
 [[fblangref-commons-nxtvlufor]]
 === `NEXT VALUE FOR`
+((NEXT VALUE FOR))
 
 Доступно в
 DSQL, PSQL.
@@ -659,6 +663,7 @@ NEW.CUST_ID = NEXT VALUE FOR CUSTSEQ;
 
 [[fblangref-commons-conditional-case]]
 ==== CASE
+((CASE))
 
 .Доступно в
 DSQL, ESQL.
@@ -912,6 +917,7 @@ WHERE
 
 [[fblangref-commons-predicates]]
 == Предикаты
+((Предикат))
 
 Предикат -- это простое выражение, утверждающее некоторый факт, назовем его `P`.
 Если `P` разрешается как TRUE, он успешен.
@@ -997,6 +1003,7 @@ WHERE type = NULL AND price < 300;
 
 [[fblangref-commons-predbetween]]
 ==== `BETWEEN`
+((BETWEEN))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1036,6 +1043,7 @@ WHERE HIRE_DATE BETWEEN date '01.01.1992' AND CURRENT_DATE
 
 [[fblangref-commons-predlike]]
 ==== `LIKE`
+((LIKE))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1071,6 +1079,7 @@ DSQL, PSQL, ESQL.
 
 [[fblangref-commons-escapechar]]
 ===== Использование управляющего символа в предложении `ESCAPE`
+(((LIKE, ESCAPE)))
 
 Если искомая строка содержит трафаретный символ, то следует задать управляющий символ в предложении `ESCAPE`.
 Этот управляющий символ должен использоваться в образце перед трафаретным символом, сообщая о том, что последний следует трактовать как обычный символ.
@@ -1160,6 +1169,7 @@ WHERE RDB$RELATION_NAME LIKE '%#_%' ESCAPE '#'
 
 [[fblangref-commons-predstartwith]]
 ==== `STARTING WITH`
+((STARTING WITH))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1195,6 +1205,7 @@ WHERE LAST_NAME STARTING WITH 'Jo'
 
 [[fblangref-commons-predcontaining]]
 ==== `CONTAINING`
+((CONTAINING))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1252,6 +1263,7 @@ WHERE CHANGE_DATE CONTAINING 84;
 
 [[fblangref-commons-predsimilarto]]
 ==== `SIMILAR TO`
+((SIMILAR TO))
 
 .Доступно в
 DSQL, PSQL.
@@ -1588,6 +1600,7 @@ $$...$$ и управляющих символов (escaped character), если
 
 [[fblangref-commons-isnotdistinct]]
 ==== `IS DISTINCT FROM`
+((IS DISTINCT FROM))
 
 .Доступно в
 DSQL, PSQL.
@@ -1660,6 +1673,7 @@ IF (NEW.JOB IS DISTINCT FROM OLD.JOB) THEN
 
 [[fblangref-commons-isnotboolean]]
 ==== Логический `IS [NOT]`
+((IS)) (((IS, IS TRUE))) (((IS, IS FALSE))) (((IS, IS UNKNOWN)))
 
 .Доступно в
 DSQL, PSQL.
@@ -1712,6 +1726,7 @@ ID           BVAL
 
 [[fblangref-commons-isnotnull]]
 ==== `IS [NOT] NULL`
+((IS)) (((IS, IS NULL)))
 
 .Доступно в
 DSQL, PSQL.
@@ -1746,6 +1761,7 @@ WHERE SHIP_DATE IS NULL;
 
 [[fblangref-commons-exists]]
 ==== `EXISTS`
+((EXISTS))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1802,6 +1818,7 @@ WHERE NOT EXISTS (SELECT *
 
 [[fblangref-commons-in]]
 ==== `IN`
+((IN))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1946,6 +1963,7 @@ WHERE
 
 [[fblangref-commons-singular]]
 ==== `SINGULAR`
+((SINGULAR))
 
 .Доступно в
 DSQL, PSQL, ESQL.
@@ -1994,6 +2012,7 @@ WHERE SINGULAR (SELECT *
 
 [[fblangref-commons-quant_all]]
 ==== `ALL`
+((ALL))
 
 .Доступно в
 DSQL, PSQL.
@@ -2035,6 +2054,7 @@ WHERE rating > ALL
 
 [[fblangref-commons-quant-anysome]]
 ==== `ANY` и `SOME`
+((ANY)) ((SOME))
 
 .Доступно в
 DSQL, PSQL.

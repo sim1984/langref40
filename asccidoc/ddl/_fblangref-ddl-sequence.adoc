@@ -18,6 +18,7 @@
 
 [[fblangref-ddl-sequence-create]]
 == `CREATE SEQUENCE`
+((CREATE SEQUENCE)) ((CREATE GENERATOR))
 
 .Назначение
 Создание новой последовательности (генератора).
@@ -54,6 +55,7 @@ CREATE {SEQUENCE | GENERATOR} _seq_name_
 Слова `SEQUENCE` и `GENERATOR` являются синонимами.
 Вы можете использовать любое из них, но рекомендуется использовать `SEQUENCE`.
 
+(((CREATE SEQUENCE, STARTING WITH))) (((CREATE GENERATOR, STARTING WITH)))
 В момент создания последовательности ей устанавливается значение, указанное в необязательном предложении `START WITH` минус значение приращения указанное в предложении `INCREMENT [BY]`. Если предложение `STARTING WITH` отсутствует, то последовательности устанавливается значение равное 1.
 Таким образом, если начальное значение последовательности равно 100, а приращение 10, то первое значение выданное оператором `NEXT VALUE FOR` будет равно 100.
 
@@ -62,6 +64,7 @@ CREATE {SEQUENCE | GENERATOR} _seq_name_
 До Firebird 4.0, первое значение выданное оператором `NEXT VALUE FOR` было равно 110.
 ====
 
+(((CREATE SEQUENCE, INCREMENT BY))) (((CREATE GENERATOR, INCREMENT BY)))
 Необязательное предложение `INCREMENT [BY]` позволяет задать шаг приращения для оператора `NEXT VALUES FOR`.
 По умолчанию шаг приращения равен единице.
 Приращение не может быть установлено в ноль для пользовательских последовательностей.
@@ -129,6 +132,7 @@ CREATE SEQUENCE EMP_NO_GEN START WITH 5 INCREMENT BY 10;
 
 [[fblangref-ddl-sequence-alter]]
 == `ALTER SEQUENCE`
+((ALTER SEQUENCE)) ((ALTER GENERATOR))
 
 .Назначение
 Изменение последовательности (генератора).
@@ -163,7 +167,9 @@ ALTER {SEQUENCE | GENERATOR} _seq_name_
 
 Оператор `ALTER SEQUENCE` устанавливает значение последовательности или генератора в заданное значение и/или изменяет значение приращения.
 
+(((ALTER SEQUENCE, RESTART WITH))) (((ALTER GENERATOR, RESTART WITH)))
 Предложение `RESTART WITH` позволяет установить значение последовательности.
+(((ALTER SEQUENCE, RESTART))) (((ALTER GENERATOR, RESTART)))
 Предложение `RESTART` может быть использовано самостоятельно (без `WITH`) для перезапуска значения последовательности с того значения с которого был начат старт генерации значений или предыдущий рестарт.
 
 [WARNING]
@@ -171,6 +177,7 @@ ALTER {SEQUENCE | GENERATOR} _seq_name_
 Неосторожное использование оператора `ALTER SEQUENCE` (изменение значения последовательности или генератора) может привести к нарушению логической целостности данных.
 ====
 
+(((ALTER SEQUENCE, INCREMENT BY))) (((ALTER GENERATOR, INCREMENT BY)))
 Предложение `INCREMENT [BY]` позволяет изменить шаг приращения последовательности для оператора `NEXT VALUES FOR`.
 
 [NOTE]
@@ -233,6 +240,7 @@ ALTER SEQUENCE EMP_NO_GEN INCREMENT BY 10;
 
 [[fblangref-ddl-sequence-createoralter]]
 == `CREATE OR ALTER SEQUENCE`
+((CREATE OR ALTER SEQUENCE)) ((CREATE OR ALTER GENERATOR))
 
 .Назначение
 Создание новой или изменение существующей последовательности (генератора).
@@ -294,6 +302,7 @@ INCREMENT BY 1;
 
 [[fblangref-ddl-sequence-drop]]
 == `DROP SEQUENCE`
+((DROP SEQUENCE)) ((DROP GENERATOR))
 
 .Назначение
 Удаление последовательности (генератора).
@@ -349,6 +358,7 @@ DROP SEQUENCE EMP_NO_GEN;
 
 [[fblangref-ddl-sequence-recreate]]
 == `RECREATE SEQUENCE`
+((RECREATE SEQUENCE)) ((RECREATE GENERATOR))
 
 .Назначение
 Создание или пересоздание последовательности (генератора).
@@ -402,6 +412,7 @@ INCREMENT BY 1;
 
 [[fblangref-ddl-sequence-setgen]]
 == `SET GENERATOR`
+((SET GENERATOR))
 
 .Назначение
 Устанавливает значение последовательности или генератора в заданное значение. 

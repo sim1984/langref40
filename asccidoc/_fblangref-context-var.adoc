@@ -1,8 +1,10 @@
 [[fblangref-contextvars]]
 = Контекстные переменные
+((Контекстные переменные))
 
 [[fblangref-contextvars-current-connection]]
 == `CURRENT_CONNECTION`
+(((Контекстные переменные, CURRENT_CONNECTION)))
 
 .Доступно в
 DSQL, PSQL
@@ -34,6 +36,7 @@ SELECT CURRENT_CONNECTION FROM RDB$DATABASE
 
 [[fblangref-contextvars-current-date]]
 == `CURRENT_DATE`
+(((Контекстные переменные, CURRENT_DATE)))
 
 .Доступно в
 DSQL, PSQL, ESQL
@@ -64,6 +67,7 @@ DATE DEFAULT CURRENT_DATE NOT NULL
 
 [[fblangref-contextvars-current-role]]
 == `CURRENT_ROLE`
+(((Контекстные переменные, CURRENT_ROLE)))
 
 .Доступно в
 DSQL, PSQL
@@ -114,6 +118,7 @@ FROM RDB$DATABASE;
 
 [[fblangref-contextvars-current-time]]
 == `CURRENT_TIME`
+(((Контекстные переменные, CURRENT_TIME)))
 
 .Доступно в
 DSQL, PSQL, ESQL
@@ -168,6 +173,7 @@ SELECT CURRENT_TIME(2) FROM RDB$DATABASE;
 
 [[fblangref-contextvars-current-timestamp]]
 == `CURRENT_TIMESTAMP`
+(((Контекстные переменные, CURRENT_TIMESTAMP)))
 
 .Доступно в
 DSQL, PSQL, ESQL
@@ -175,13 +181,10 @@ DSQL, PSQL, ESQL
 .Синтаксис
 [listing]
 ----
-
 CURRENT_TIMESTAMP [(<precision>)]
 
 <precision> ::= 0 | 1 | 2 | 3
 ----
-
-
 
 .Параметры контекстной переменной CURRENT_TIMESTAMP
 [cols="<1,<3", options="header",stripes="none"]
@@ -226,6 +229,7 @@ SELECT CURRENT_TIMESTAMP(2) FROM RDB$DATABASE;
 
 [[fblangref-contextvars-current-transaction]]
 == `CURRENT_TRANSACTION`
+(((Контекстные переменные, CURRENT_TRANSACTION)))
 
 .Доступно в
 DSQL, PSQL
@@ -259,6 +263,7 @@ NEW.TRANS_ID = CURRENT_TRANSACTION;
 
 [[fblangref-contextvars-current-user]]
 == `CURRENT_USER`
+(((Контекстные переменные, CURRENT_USER)))
 
 .Доступно в
 DSQL, PSQL
@@ -288,6 +293,7 @@ NEW.ADDED_BY = CURRENT_USER;
 
 [[fblangref-contextvars-deleting]]
 == `DELETING`
+(((Контекстные переменные, DELETING)))
 
 .Доступно в
 PSQL
@@ -326,6 +332,7 @@ END
 
 [[fblangref-contextvars-gdscode]]
 == `GDSCODE`
+(((Контекстные переменные, GDSCODE)))
 
 .Доступно в
 PSQL
@@ -376,6 +383,7 @@ END
 
 [[fblangref-contextvars-inserting]]
 == `INSERTING`
+(((Контекстные переменные, INSERTING)))
 
 .Доступно в
 PSQL
@@ -412,6 +420,7 @@ END
 
 [[fblangref-contextvars-localtime]]
 == `LOCALTIME`
+(((Контекстные переменные, LOCALTIME)))
 
 .Доступно в
 DSQL, PSQL, ESQL
@@ -467,6 +476,7 @@ SELECT LOCALTIME(2) FROM RDB$DATABASE;
 
 [[fblangref-contextvars-localtimestamp]]
 == `LOCALTIMESTAMP`
+(((Контекстные переменные, LOCALTIMESTAMP)))
 
 .Доступно в
 DSQL, PSQL, ESQL
@@ -522,6 +532,7 @@ SELECT LOCALTIMESTAMP(2) FROM RDB$DATABASE;
 
 [[fblangref-contextvars-new]]
 == `NEW`
+(((Контекстные переменные, NEW)))
 
 .Доступно в
 PSQL
@@ -566,6 +577,7 @@ NEW
 
 [[fblangref-contextvars-old]]
 == `OLD`
+(((Контекстные переменные, OLD)))
 
 .Доступно в
 PSQL
@@ -604,6 +616,7 @@ OLD
 
 [[fblangref-contextvars-resetting]]
 == `RESETTING`
+(((Контекстные переменные, RESETTING)))
 
 .Доступно в
 PSQL
@@ -640,6 +653,7 @@ END
 
 [[fblangref-contextvars-row_count]]
 == `ROW_COUNT`
+(((Контекстные переменные, ROW_COUNT)))
 
 .Доступно в
 PSQL
@@ -725,6 +739,7 @@ IF (row_count = 0) THEN
 
 [[fblangref-contextvars-sqlcode]]
 == `SQLCODE`
+(((Контекстные переменные, SQLCODE)))
 
 .Доступно в
 PSQL
@@ -766,6 +781,7 @@ END
 
 [[fblangref-contextvars-sqlstate]]
 == `SQLSTATE`
+(((Контекстные переменные, SQLSTATE)))
 
 .Доступно в
 PSQL
@@ -814,6 +830,7 @@ END
 
 [[fblangref-contextvars-updating]]
 == `UPDATING`
+(((Контекстные переменные, UPDATING)))
 
 .Доступно в
 PSQL
@@ -850,6 +867,7 @@ END
 
 [[fblangref-contextvars-user]]
 == `USER`
+(((Контекстные переменные, USER)))
 
 .Доступно в
 DSQL, PSQL

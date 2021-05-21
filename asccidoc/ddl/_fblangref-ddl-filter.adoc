@@ -11,6 +11,7 @@ BLOB фильтр -- объект базы данных, являющийся, �
 
 [[fblangref-ddl-filter-declare]]
 == `DECLARE FILTER`
+((DECLARE FILTER))
 
 .Назначение
 Объявление в базе данных BLOB фильтра.
@@ -145,6 +146,7 @@ ENTRY_POINT 'blr2asc' MODULE_NAME 'myfilterlib';
 
 [[fblangref-ddl-filter-drop]]
 == `DROP FILTER`
+((DROP FILTER))
 
 .Назначение
 Удаление объявления BLOB фильтра.

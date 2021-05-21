@@ -12,6 +12,7 @@
 
 [[fblangref-ddl-collation-create]]
 == `CREATE COLLATION`
+((CREATE COLLATION))
 
 .Назначение
 Добавление новой сортировки (сравнения) для набора символов поддерживаемого в базе данных.
@@ -235,6 +236,7 @@ CREATE TABLE wares(id int primary key, articul dm_nums ...);
 
 [[fblangref-ddl-collation-drop]]
 == `DROP COLLATION`
+((DROP COLLATION))
 
 .Назначение
 Удаление существующей сортировки.

@@ -17,6 +17,7 @@
 
 [[fblangref-security-roles-create]]
 == `CREATE ROLE`
+((CREATE ROLE))
 
 .Назначение
 Создание новой роли.
@@ -60,6 +61,7 @@ CREATE ROLE _rolename_
 
 [[fblangref-security-roles-system]]
 === Роли с системными привилегиями
+(((CREATE ROLE, SET SYSTEM PRIVILEGES TO)))
 
 Предложение `SET SYSTEM PRIVILEGES TO` позволяет создать роль с системными привилегиями.
 Системные привилегии это части привилегий администратора.
@@ -195,6 +197,7 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
 
 [[fblangref-security-roles-alter]]
 == ALTER ROLE
+((ALTER ROLE))
 
 .Назначение
 Изменение системных привилегий роли.
@@ -235,10 +238,12 @@ ALTER ROLE RDB$ADMIN {SET | DROP} AUTO ADMIN MAPPING
 |Системная привилегия.
 |===
 
+(((ALTER ROLE, SET SYSTEM PRIVILEGES TO)))
 Оператор `ALTER ROLE` изменяет список системных привилегий роли или удаляет их.
 При использовании предложения `SET SYSTEM PRIVILEGES TO` к роли добавляются системные привилегии из списка.
 Для очистки списка системных привилегий установленных предыдущим оператором используйте оператор `ALTER ROLE` с предложением `DROP SYSTEM PRIVILEGES`.
 
+(((ALTER ROLE, RDB$ADMIN)))
 Оператор `ALTER ROLE RDB$ADMIN` предназначен для включения и отключения возможности администраторам Windows автоматически получать привилегии
 <<fblangref-security-administrators,администраторов>> при входе.
 
@@ -250,6 +255,7 @@ ALTER ROLE RDB$ADMIN {SET | DROP} AUTO ADMIN MAPPING
 
 [[fblangref-security-roles-drop]]
 == `DROP ROLE`
+((DROP ROLE))
 
 .Назначение
 Удаление существующей роли.

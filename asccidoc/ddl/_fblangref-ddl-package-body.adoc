@@ -3,6 +3,7 @@
 
 [[fblangref-ddl-package-body-create]]
 == `CREATE PACKAGE BODY`
+((CREATE PACKAGE BODY))
 
 .Назначение
 Создание тела пакета.
@@ -252,6 +253,7 @@ END
 
 [[fblangref-ddl-package-body-drop]]
 == `DROP PACKAGE BODY`
+((DROP PACKAGE BODY))
 
 .Назначение
 Удаление тела пакета.
@@ -304,6 +306,7 @@ DROP PACKAGE BODY APP_VAR;
 
 [[fblangref-ddl-package-body-recreate]]
 == `RECREATE PACKAGE BODY`
+((RECREATE PACKAGE BODY))
 
 .Назначение
 Создание нового и пересоздание существующего тела пакета.

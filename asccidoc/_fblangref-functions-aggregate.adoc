@@ -1,5 +1,6 @@
 [[fblangref-aggfuncs]]
 = Агрегатные функции
+((Агрегатные функции))
 
 Агрегатные функции выполняют вычисление на наборе значений и возвращают одиночное значение.
 Агрегатные функции, за исключением COUNT, не учитывают значения NULL.
@@ -24,6 +25,7 @@
 
 [[fblangref-aggfuncs-filter]]
 == Предложение `FILTER`
+(((Агрегатные функции, FILTER)))
 
 Предложение `FILTER` расширяет агрегатные функции дополнительным предложением `WHERE`.
 Если используется предложение `FILTER`, то результат агрегата строится только из строк, которые также удовлетворяют условию в дополнительном предложении `WHERE`.
@@ -90,6 +92,7 @@ GROUP BY invoice_year
 
 [[fblangref-aggfuncs-avg]]
 === `AVG()`
+(((Функция, `AVG()`)))
 
 .Доступно в
 DSQL
@@ -144,6 +147,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-count]]
 === `COUNT()`
+(((Функция, `COUNT()`)))
 
 .Доступно в
 DSQL
@@ -202,6 +206,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-list]]
 === `LIST()`
+(((Функция, `LIST()`)))
 
 .Доступно в
 DSQL
@@ -283,6 +288,7 @@ FROM (SELECT display_name
 
 [[fblangref-aggfuncs-max]]
 === `MAX()`
+(((Функция, `MAX()`)))
 
 .Доступно в
 DSQL
@@ -341,6 +347,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-min]]
 === `MIN()`
+(((Функция, `MIN()`)))
 
 .Доступно в
 DSQL
@@ -399,6 +406,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-sum]]
 === `SUM()`
+(((Функция, `SUM()`)))
 
 .Доступно в
 DSQL
@@ -462,6 +470,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-corr]]
 === `CORR()`
+(((Функция, `CORR()`)))
 
 .Доступно в
 DSQL
@@ -522,6 +531,7 @@ FROM measure
 
 [[fblangref-aggfuncs-covar-pop]]
 === `COVAR_POP()`
+(((Функция, `COVAR_POP()`)))
 
 .Доступно в
 DSQL
@@ -579,6 +589,7 @@ FROM measure
 
 [[fblangref-aggfuncs-covar-samp]]
 === `COVAR_SAMP()`
+(((Функция, `COVAR_SAMP()`)))
 
 .Доступно в
 DSQL
@@ -636,6 +647,7 @@ FROM measure
 
 [[fblangref-aggfuncs-stddev-pop]]
 === `STDDEV_POP()`
+(((Функция, `STDDEV_POP()`)))
 
 .Доступно в
 DSQL
@@ -695,6 +707,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-stddev-samp]]
 === `STDDEV_SAMP()`
+(((Функция, `STDDEV_SAMP()`)))
 
 .Доступно в
 DSQL
@@ -754,6 +767,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-var-pop]]
 === `VAR_POP()`
+(((Функция, `VAR_POP()`)))
 
 .Доступно в
 DSQL
@@ -814,6 +828,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-var-samp]]
 === `VAR_SAMP()`
+(((Функция, `VAR_SAMP()`)))
 
 .Доступно в
 DSQL
@@ -887,6 +902,7 @@ GROUP BY dept_no
 
 [[fblangref-aggfuncs-regr-avgx]]
 === `REGR_AVGX()`
+(((Функция, `REGR_AVGX()`)))
 
 .Доступно в
 DSQL
@@ -935,6 +951,7 @@ SUM(<exprX>) / REGR_COUNT(<y>, <x>)
 
 [[fblangref-aggfuncs-regr-avgy]]
 === `REGR_AVGY()`
+(((Функция, `REGR_AVGY()`)))
 
 .Доступно в
 DSQL
@@ -983,6 +1000,7 @@ SUM(<exprY>) / REGR_COUNT(<y>, <x>)
 
 [[fblangref-aggfuncs-regr-count]]
 === `REGR_COUNT()`
+(((Функция, `REGR_COUNT()`)))
 
 .Доступно в
 DSQL
@@ -1028,6 +1046,7 @@ SUM(CASE WHEN <x> IS NOT NULL AND <y> IS NOT NULL THEN 1 END)
 
 [[fblangref-aggfuncs-regr-intercept]]
 === `REGR_INTERCEPT()`
+(((Функция, `REGR_INTERCEPT()`)))
 
 .Доступно в
 DSQL
@@ -1118,6 +1137,7 @@ BYYEAR     TOTAL_VALUE
 
 [[fblangref-aggfuncs-regr-r2]]
 === `REGR_R2()`
+(((Функция, `REGR_R2()`)))
 
 .Доступно в
 DSQL
@@ -1163,6 +1183,7 @@ POWER(CORR(<y>, <x>), 2)
 
 [[fblangref-aggfuncs-regr-slope]]
 === `REGR_SLOPE()`
+(((Функция, `REGR_SLOPE()`)))
 
 .Доступно в
 DSQL
@@ -1211,6 +1232,7 @@ COVAR_POP(<y>, <x>) / VAR_POP(<exprX>)
 
 [[fblangref-aggfuncs-regr-sxx]]
 === `REGR_SXX()`
+(((Функция, `REGR_SXX()`)))
 
 .Доступно в
 DSQL
@@ -1259,6 +1281,7 @@ REGR_COUNT(<y>, <x>) * VAR_POP(<exprX>)
 
 [[fblangref-aggfuncs-regr-sxy]]
 === `REGR_SXY()`
+(((Функция, `REGR_SXY()`)))
 
 .Доступно в
 DSQL
@@ -1304,6 +1327,7 @@ REGR_COUNT(<y>, <x>) * COVAR_POP(<y>, <x>)
 
 [[fblangref-aggfuncs-regr_syy]]
 === `REGR_SYY()`
+(((Функция, `REGR_SYY()`)))
 
 .Доступно в
 DSQL

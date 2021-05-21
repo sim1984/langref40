@@ -1,15 +1,16 @@
 [[fblangref-windowfuncs]]
 = Оконные (аналитические) функции
-
+((Оконные функции)) ((Аналитические функции))
 
 Согласно SQL спецификации оконные функции (также известные как аналитические функции) являются своего рода агрегатными функциями, не уменьшающими степень детализации.
 При этом агрегированные данные выводятся вместе с неагрегированными.
 
+((OVER))
 Синтаксически вызов оконной функции есть указание её имени, за которым всегда следует ключевое слово OVER() с возможными аргументами внутри скобок.
 В этом и заключается её синтаксическое отличие от обычной функции или агрегатной функции.
-Оконные функции могут находиться только в списке SELECT и предложении ORDER BY.
+Оконные функции могут находиться только в списке `SELECT` и предложении ORDER BY.
 
-Предложение OVER может содержать разбивку по группам ("секционирование"), сортировку и рамку окна.
+Предложение `OVER` может содержать разбивку по группам ("секционирование"), сортировку и рамку окна.
 
 .Доступно в
 DSQL 
@@ -194,6 +195,7 @@ order by id;
 
 [[fblangref-windowfuncs-partition]]
 == Секционирование
+(((OVER, PARTITION BY)))
 
 Как и для агрегатных функций, которые могут работать отдельно или по отношению к группе, оконные функции тоже могут работать для групп, которые называются "секциями" (partition) или разделами. 
 
@@ -238,6 +240,7 @@ id department salary percentage
 
 [[fblangref-windowfuncs-order-by]]
 == Сортировка
+(((OVER, ORDER BY)))
 
 Предложение `ORDER BY` может быть использовано с секционированием или без него.
 Предложение `ORDER BY` внутри `OVER` задаёт порядок, в котором оконная функция будет обрабатывать строки.
@@ -325,6 +328,7 @@ ID BYDATE     CREDIT_AMOUNT PAY    S_AMOUNT S_AMOUNT2 BALANCE
 
 [[fblangref-windowfuncs-framing]]
 == Рамка окна
+(((OVER, RANGE))) (((OVER, ROWS)))
 
 Набор строк внутри секции, которым оперирует оконная функция, называется _рамкой окна_ (кадры окна).
 Рамка окна определяет, какие строки следует учитывать для текущей строки при оценке оконной функции.
@@ -551,6 +555,7 @@ id salary dense_rank rank      percent_rank         cume_dist ntile row_number s
 
 [[fblangref-windowfuncs-dense-rank]]
 === `DENSE_RANK()`
+(((Функция, `DENSE_RANK()`)))
 
 .Доступно в
 DSQL
@@ -603,6 +608,7 @@ id salary dense_rank
 
 [[fblangref-windowfuncs-rank]]
 === `RANK()`
+(((Функция, `RANK()`)))
 
 .Доступно в
 DSQL
@@ -655,6 +661,7 @@ id salary rank
 
 [[fblangref-windowfuncs-percent-rank]]
 === `PERCENT_RANK()`
+(((Функция, `PERCENT_RANK()`)))
 
 .Доступно в
 DSQL
@@ -714,6 +721,7 @@ id salary percent_rank
 
 [[fblangref-windowfuncs-cume-dist]]
 === `CUME_DIST()`
+(((Функция, `CUME_DIST()`)))
 
 .Доступно в
 DSQL
@@ -767,6 +775,7 @@ id salary    cume_dist
 
 [[fblangref-windowfuncs-ntile]]
 === `NTILE()`
+(((Функция, `NTILE()`)))
 
 .Доступно в
 DSQL
@@ -831,6 +840,7 @@ id salary        ntile
 
 [[fblangref-windowfuncs-row-number]]
 === `ROW_NUMBER()`
+(((Функция, `ROW_NUMBER()`)))
 
 .Доступно в
 DSQL
@@ -967,6 +977,7 @@ id salary first_value last_value nth_value    lag   lead
 
 [[fblangref-windowfuncs-first-value]]
 === `FIRST_VALUE()`
+(((Функция, `FIRST_VALUE()`)))
 
 .Доступно в
 DSQL
@@ -1004,6 +1015,7 @@ FIRST_VALUE(<expr>) OVER {<window_specification> | _window_name_}
 
 [[fblangref-windowfuncs-lag]]
 === `LAG()`
+(((Функция, `LAG()`)))
 
 .Доступно в
 DSQL
@@ -1090,6 +1102,7 @@ bydate        cost    change   percent_change
 
 [[fblangref-windowfuncs-last-value]]
 === `LAST_VALUE()`
+(((Функция, `LAST_VALUE()`)))
 
 .Доступно в
 DSQL
@@ -1127,6 +1140,7 @@ LAST_VALUE(<expr>) OVER {<window_specification> | _window_name_}
 
 [[fblangref-windowfuncs-lead]]
 === `LEAD()`
+(((Функция, `LEAD()`)))
 
 .Доступно в
 DSQL
@@ -1177,6 +1191,7 @@ _offset_ не может быть отрицательным значением 
 
 [[fblangref-windowfuncs-nth_value]]
 === `NTH_VALUE()`
+(((Функция, `NTH_VALUE()`)))
 
 .Доступно в
 DSQL
