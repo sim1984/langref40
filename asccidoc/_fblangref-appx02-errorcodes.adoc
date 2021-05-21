@@ -1,0 +1,918 @@
+
+:sectnums!:
+
+[appendix]
+[[fblangref-appx-errorcodes]]
+= Обработка ошибок, коды и сообщения
+
+Приложение включает: 
+
+* <<fblangref-appx02-sqlstates,Коды ошибок SQLSTATE и их описание>>
+* <<fblangref-appx02_gdscode,"Коды ошибок GDSCODE их описание, и SQLCODE">>
+
+
+.Пользовательские исключения
+[NOTE]
+====
+В Firebird DDL существует простой синтаксис для создания пользовательских исключений для использования в PSQL, с текстами сообщений до 1021 символов.
+Подробности см. <<fblangref-ddl-exception-create,CREATE EXCEPTION>> главы DDL.
+Подробности использования пользовательских исключений см. <<fblangref-psql-statements-exception,EXCEPTION>> главы PSQL.
+====
+
+В большинстве случаев, коды ошибок `SQLCODE` не соотносятся с кодами `SQLSTATE` "`один в один`". Коды ошибок `SQLSTATE` соответствуют SQL стандарту.
+В то же время `SQLCODE` использовались много лет и в настоящий момент считаются устаревшими.
+В следующих версиях поддержка `SQLCODE` может полностью прекратиться.
+
+[[fblangref-appx02-sqlstates]]
+== Коды ошибок `SQLSTATE` и их описание
+
+В данной главе приведены коды ошибок для контекстной переменной `SQLSTATE` и их описания.
+Коды ошибок `SQLSTATE` построены следующим образом: пяти символьный код ошибки состоит и SQL класса ошибки (2 символа) и SQL подкласса (3 символа).
+
+[[fblangref-appx02-tbl-sqlstates]]
+.Коды ошибок `SQLSTATE`
+[cols=">1,<3,<3", options="header",stripes="none"]
+|===
+| SQLSTATE
+| Связанное сообщение
+| Примечание
+
+2+<|__SQLCLASS 00 (Success)__
+|
+
+|0
+|Success 
+|Успех
+
+2+<|__SQLCLASS 01 (Warning)__
+|Класс 01 (предупреждения)
+
+|01000
+|General Warning
+|Общее предупреждение 
+
+|01001
+|Cursor operation conflict 
+|Конфликт при операции с курсором 
+
+|01002
+|Disconnect error 
+|Ошибка, связанная с разъединением 
+
+|01003
+|NULL value eliminated in set function 
+|Значение NULL устраняется в определении функции
+
+|01004
+|String data, right-truncated 
+|Строковые данные, обрезание справа
+
+|01005
+|Insufficient item descriptor areas 
+|Недостаточно элементов в области дескрипторов 
+
+|01006
+|Privilege not revoked 
+|Привилегии не отозваны
+
+|01007
+|Privilege not granted 
+|Привилегии не выданы 
+
+|01008
+|Implicit zero-bit padding 
+|Неявное обрезание нулевого бита
+
+|01100
+|Statement reset to unprepared 
+|Оператор сброшен в состояние unprepared 
+
+|01101
+|Ongoing transaction has been committed 
+|Текущая транзакция завершена COMMIT
+
+|01102
+|Ongoing transaction has been rolled back 
+|Текущая транзакция завершена ROLLED BACK
+
+2+<|__SQLCLASS 02 (No Data)__
+|Класс ошибок 02 (Нет данных) 
+
+|02000
+|No data found or no rows affected 
+|Данные не обнаружены или не затронуты строки
+
+2+<|__SQLCLASS 07 (Dynamic SQL error)__
+|Класс ошибок 07 (Ошибки DSQL) 
+
+|07000
+|Dynamic SQL error 
+|Ошибка DSQL
+
+|07001
+|Wrong number of input parameters 
+|Неверное число входных параметров 
+
+|07002
+|Wrong number of output parameters 
+|Неверное число выходных параметров 
+
+|07003
+|Cursor specification cannot be executed 
+|Определение курсора не может быть выполнено
+
+|07004
+|USING clause required for dynamic parameters 
+|Для динамического параметра требуется предложение USING
+
+|07005
+|Prepared statement not a cursor-specification 
+|Подготовленный оператор не является курсор - специфичным
+
+|07006
+|Restricted data type attribute violation 
+|Исключение по причине запрещенного типа данных для атрибута 
+
+|07007
+|USING clause required for result fields 
+|Для возвращаемого поля требуется предложение USING 
+
+|07008
+|Invalid descriptor count 
+|Неверный счетчик дескрипторов 
+
+|07009
+|Invalid descriptor index 
+|Неверный индекс дескриптора
+
+2+<|__SQLCLASS 08 (Connection Exception)__
+|Класс ошибок 08 (Исключения коннекта) 
+
+|08001
+|Client unable to establish connection 
+|Клиент не может установить соединение 
+
+|08002
+|Connection name in use 
+|Имя соединения уже используется
+
+|08003
+|Connection does not exist 
+|Соединение не существует
+
+|08004
+|Server rejected the connection 
+|Сервер отверг подключение
+
+|08006
+|Connection failure 
+|Ошибка при подключении 
+
+|08007
+|Transaction resolution unknown 
+|Неизвестно разрешение транзакции
+
+2+<|__SQLCLASS 0A (Feature Not Supported)__
+|Класс ошибок 0A (Возможность не поддерживается) 
+
+|0A000
+|Feature Not Supported
+|Возможность (конструкция) не поддерживается
+
+2+<|__SQLCLASS 0B (Invalid Transaction Initiation)__
+|Класс ошибок 0B (неверная инициализация транзакции)
+
+|0B000
+|Invalid transaction initiation
+|Неверная инициализация транзакции
+
+2+<|__SQLCLASS 0L (Invalid Grantor)__
+|Неверный грантодатель
+
+|0L000
+|Invalid grantor
+|Неверный грантодатель
+
+2+<|__SQLCLASS 0P (Invalid Role Specification)__
+|Класс ошибок 0P (неверная спецификация роли)
+
+|0P000
+|Invalid role specification
+|Неверная спецификация роли
+
+2+<|__SQLCLASS 0U (Attempt to Assign to Non-Updatable Column)__
+|Класс ошибок 0U (попытка присвоения не обновляемому столбцу)
+
+|0U000
+|Attempt to assign to non-updatable column
+|Попытка присвоения не обновляемому столбцу
+
+2+<|__SQLCLASS 0V (Attempt to Assign to Ordering Column)__
+|Класс ошибок 0V (попытка присвоения сортируемому столбцу) 
+
+|0V000
+|Attempt to assign to Ordering column
+|Попытка присвоения сортируемому столбцу
+
+2+<|__SQLCLASS 20 (Case Not Found For Case Statement)__
+|Класс 20 (не обнаружено вариантов для предложения CASE)
+
+|20000
+|Case not found for case statement
+|Не обнаружено вариантов для предложения CASE
+
+2+<|__SQLCLASS 21 (Cardinality Violation)__
+|Класс 21 (Нарушения определения)
+
+|21000
+|Cardinality violation
+|Нарушение определения
+
+|21S01
+|Insert value list does not match column list
+|Список вставляемых значений не соответствует списку столбцов
+
+|21S02
+|Degree of derived table does not match column list
+|Состояние производной таблицы не соответствует списку столбцов
+
+2+<|__SQLCLASS 22 (Data Exception)__
+|Класс ошибок 22 (исключения, вызванные данными)
+
+|22000
+|Data exception 
+|Исключения данных 
+
+|22001
+|String data, right truncation
+|Строковые данные, усечены справа
+
+|22002
+|Null value, no indicator parameter
+|Значение NULL, параметр не обозначен
+
+|22003
+|Numeric value out of range
+|Числовое значение вышло за предел допустимого
+
+|22004
+|Null value not allowed
+|Значение NULL не допустимо
+
+|22005
+|Error in assignment
+|Ошибка присваивания
+
+|22006
+|Null value in field reference
+|Значение NULL в поле ссылки 
+
+|22007
+|Invalid datetime format
+|Неверный формат даты/времени
+
+|22008
+|Datetime field overflow
+|Переполнение в поле даты/времени
+
+|22009
+|Invalid time zone displacement value
+|Неверная временная зона, неверное значение 
+
+|2200A
+|Null value in reference target
+|Значение NULL в целевой ссылке 
+
+|2200B
+|Escape character conflict
+|Конфликт символа управления
+
+|2200C
+|Invalid use of escape character
+|Неверное использование управляющего символа
+
+|2200D
+|Invalid escape octet
+|Неверный октет для управляющего символа
+
+|2200E
+|Null value in array target
+|Значение NULL в массиве назначения
+
+|2200F
+|Zero-length character string
+|Нулевая длина строки символов
+
+|2200G
+|Most specific type mismatch
+|Наиболее определенное несоответствие типов
+
+|22010
+|Invalid indicator parameter value
+|Неверный индикатор значения параметра
+
+|22011
+|Substring error
+|Ошибка подстроки
+
+|22012
+|Division by zero
+|Деление на ноль
+
+|22014
+|Invalid update value
+|Неверное значение в операции update
+
+|22015
+|Interval field overflow
+|Переполнение интервала в поле
+
+|22018
+|Invalid character value for cast
+|Неверный символ для преобразования типов
+
+|22019
+|Invalid escape character
+|Неверный символ управления
+
+|2201B
+|Invalid regular expression
+|Неверное регулярное выражение
+
+|2201C
+|Null row not permitted in table
+|Запись содержащая NULL не допустима для таблицы
+
+|22020
+|Invalid limit value
+|Неверное значение лимита
+
+|22021
+|Character not in repertoire
+|Символ вне диапазона 
+
+|22022
+|Indicator overflow
+|Переполнение индикатора
+
+|22023
+|Invalid parameter value
+|Неверное значение параметра 
+
+|22024
+|Character string not properly terminated
+|Символьная строка имеет некорректный замыкающий символ 
+
+|22025
+|Invalid escape sequence
+|Неверная управляющая последовательность
+
+|22026
+|String data, length mismatch
+|Строковые данные, длина неверная
+
+|22027
+|Trim error
+|Ошибка операции TRIM
+
+|22028
+|Row already exists
+|Строка уже существует 
+
+|2202D
+|Null instance used in mutator function
+|NULL экземпляр используется для мутирующей функции 
+
+|2202E
+|Array element error
+|Ошибка элемента массива 
+
+|2202F
+|Array data, right truncation
+|Данные массива, обрезание справа
+
+2+<|__SQLCLASS 23 (Integrity Constraint Violation)__
+|Класс ошибок 23 (Нарушение ограничения целостности)
+
+|23000
+|Integrity constraint violation
+|Нарушение ограничения целостности
+
+2+<|__SQLCLASS 24 (Invalid Cursor State)__
+|Класс ошибок 24 (неверное состояние курсора)
+
+|24000
+|Invalid cursor state
+|Неверное состояние курсора
+
+|24504
+|The cursor identified in the UPDATE, DELETE, SET, or GET
+statement is not positioned on a row
+|Курсор определенный для UPDATE, DELETE, SET или GET операции не
+позиционирован по строке
+
+2+<|__SQLCLASS 25 (Invalid Transaction State)__
+|Класс ошибок 25 (неверное состояние транзакции)
+
+|25000
+|Invalid transaction state
+|Неверное состояние транзакции 
+
+|25S01
+|Transaction state
+|Неверное состояние транзакции 
+
+|25S02
+|Transaction is still active
+|Транзакция до сих пор активная
+
+|25S03
+|Transaction is rolled back
+|Транзакция откачена
+
+2+<|__SQLCLASS 26 (Invalid SQL Statement Name)__
+|Класс ошибок 26 (неверное имя SQL предложения)
+
+|26000
+|Invalid SQL statement name
+|Неверное имя SQL предложения
+
+2+<|__SQLCLASS 27 (Triggered Data Change Violation)__
+|Класс ошибок 27 (ошибки изменения данных триггером)
+
+|27000
+|Triggered data change violation
+|Ошибки изменения данных триггером
+
+2+<|__SQLCLASS 28 (Invalid Authorization Specification)__
+|Класс ошибок 28 (неверная спецификация авторизации) 
+
+|28000
+|Invalid authorization specification
+|Неверная спецификация авторизации
+
+2+<|__SQLCLASS 2B (Dependent Privilege Descriptors Still Exist)__
+|Класс ошибок 2B (зависимые описания привилегий еще существуют)
+
+|2B000
+|Dependent privilege descriptors still exist
+|Зависимые описания привилегий еще существуют
+
+2+<|__SQLCLASS 2C (Invalid Character Set Name)__
+|Класс ошибок 2С (неверное имя набора символов)
+
+|2C000
+|Invalid character set name
+|Неверное имя набора символов
+
+2+<|__SQLCLASS 2D (Invalid Transaction Termination)__
+|Класс ошибок 2D (неверное завершение транзакции) 
+
+|2D000
+|Invalid transaction termination
+|Неверное завершение транзакции
+
+2+<|__SQLCLASS 2E (Invalid Connection Name)__
+|Класс ошибок 2E (неверное имя соединения)
+
+|2E000
+|Invalid connection name
+|Неверное имя соединения
+
+2+<|__SQLCLASS 2F (SQL Routine Exception)__
+|Класс ошибок 2F (процедурные исключения SQL)
+
+|2F000
+|SQL routine exception
+|Процедурное исключение SQL 
+
+|2F002
+|Modifying SQL-data not permitted
+|На модификацию SQL данных нет доступа
+
+|2F003
+|Prohibited SQL-statement attempted
+|Встретилось запрещенное SQL предложение
+
+|2F004
+|Reading SQL-data not permitted
+|Нет доступа на чтение SQL данных
+
+|2F005
+|Function executed no return statement
+|Исполняемая функция не имеет возвращаемого выражения
+
+2+<|__SQLCLASS 33 (Invalid SQL Descriptor Name)__
+|Класс ошибок 33 (неверное имя SQL описания)
+
+|33000
+|Invalid SQL descriptor name
+|Неверное имя SQL описания
+
+2+<|__SQLCLASS 34 (Invalid Cursor Name)__
+|Класс ошибок 34 (неверное имя курсора)
+
+|34000
+|Invalid cursor name
+|Неверное имя курсора
+
+2+<|__SQLCLASS 35 (Invalid Condition Number)__
+|Класс ошибок 35 (неверный номер условия)
+
+|35000
+|Invalid condition number
+|Неверный номер условия
+
+2+<|__SQLCLASS 36 (Cursor Sensitivity Exception)__
+|Класс ошибок 36 (ошибка восприятия курсора)
+
+|36001
+|Request rejected
+|Запрос отвергнут
+
+|36002
+|Request failed
+|Запрос ошибочный
+
+2+<|__SQLCLASS 37 (Invalid Identifier)__
+|Класс ошибок 37 (неверный идентификатор)
+
+|37000
+|Invalid identifier
+|Неверный идентификатор 
+
+|37001
+|Identifier too long
+|Идентификатор слишком длинный
+
+2+<|__SQLCLASS 38 (External Routine Exception)__
+|Класс ошибок 38 (ошибки внешних процедур) 
+
+|38000
+|External routine exception
+|Ошибка внешней процедуры
+
+2+<|__SQLCLASS 39 (External Routine Invocation Exception)__
+|Класс ошибок 39 (ошибка вызова внешней процедуры)
+
+|39000
+|External routine invocation exception
+|Ошибка вызова внешней процедуры
+
+2+<|__SQLCLASS 3B (Invalid Save Point)__
+|Класс ошибок 3B (неверная точка сохранения)
+
+|3B000
+|Invalid save point
+|Неверная точка сохранения
+
+2+<|__SQLCLASS 3C (Ambiguous Cursor Name)__
+|Класс ошибок 3C (имя курсора неоднозначное)
+
+|3C000
+|Ambiguous cursor name
+|Имя курсора неоднозначное
+
+2+<|__SQLCLASS 3D (Invalid Catalog Name)__
+|Класс ошибок 3D (неверное имя каталога)
+
+|3D000
+|Invalid catalog name
+|Неверное имя каталога
+
+|3D001
+|Catalog name not found
+|Каталог с таким именем не обнаружен
+
+2+<|__SQLCLASS 3F (Invalid Schema Name)__
+|Класс ошибок 3F (неверное имя схемы)
+
+|3F000
+|Invalid schema name
+|Неверное имя схемы
+
+2+<|__SQLCLASS 40 (Transaction Rollback)__
+|Класс ошибок 40 (откат транзакции)
+
+|40000
+|Ongoing transaction has been rolled back
+|Текущая транзакция была откачена
+
+|40001
+|Serialization failure
+|Отказ сериализации
+
+|40002
+|Transaction integrity constraint violation
+|Нарушение условия целостности транзакции
+
+|40003
+|Statement completion unknown
+|Неизвестно состояние завершения транзакции
+
+2+<|__SQLCLASS 42 (Syntax Error or Access Violation)__
+|Класс ошибок 42 (синтаксическая ошибка или ошибка
+                                доступа)
+
+|42000
+|Syntax error or access violation
+|Синтаксическая ошибка или ошибка доступа
+
+|42702
+|Ambiguous column reference
+|Неоднозначная ссылка на столбец
+
+|42725
+|Ambiguous function reference
+|Неоднозначная ссылка на функцию
+
+|42818
+|The operands of an operator or function are not
+                                compatible
+|Операнды оператора или функции являются не совместимыми
+
+|42S01
+|Base table or view already exists
+|Таблица в базе или view уже существует
+
+|42S02
+|Base table or view not found
+|Таблица в базе или view не найдена
+
+|42S11
+|Index already exists
+|Индекс уже существует
+
+|42S12
+|Index not found
+|Индекс не найден
+
+|42S21
+|Column already exists
+|Столбец уже существует
+
+|42S22
+|Column not found
+|Столбец не найден
+
+2+<|__SQLCLASS 44 (With Check Option Violation)__
+|Класс ошибок 44 (нарушение опции WITH CHECK)
+
+|44000
+|WITH CHECK OPTION Violation
+|Нарушение опции WITH CHECK
+
+2+<|__SQLCLASS 45 (Unhandled User-defined Exception)__
+|Класс ошибок 45 (необработанное исключение определенное пользователем)
+
+|45000
+|Unhandled user-defined exception
+|Необработанное исключение, определенное пользователем
+
+2+<|__SQLCLASS 54 (Program Limit Exceeded)__
+|Класс ошибок 54 (превышены ограничения программы)
+
+|54000
+|Program limit exceeded
+|Превышены ограничения программы
+
+|54001
+|Statement too complex
+|Выражение слишком сложное 
+
+|54011
+|Too many columns
+|Слишком много столбцов
+
+|54023
+|Too many arguments
+|Слишком много аргументов
+
+2+<|__SQLCLASS HY (CLI-specific Condition)__
+|Класс ошибок HY (условия CLI-specific)
+
+|HY000
+|CLI-specific condition
+|Условия CLI-specific
+
+|HY001
+|Memory allocation error
+|Ошибка выделения памяти
+
+|HY003
+|Invalid data type in application descriptor
+|Неверный тип данных в дескрипторе приложения
+
+|HY004
+|Invalid data type
+|Неверный тип данных
+
+|HY007
+|Associated statement is not prepared
+|Связанный оператор не подготовлен 
+
+|HY008
+|Operation canceled
+|Операция отменена
+
+|HY009
+|Invalid use of null pointer
+|Неправильное использование нулевого указателя
+
+|HY010
+|Function sequence error
+|Ошибка последовательности функций 
+
+|HY011
+|Attribute cannot be set now
+|Атрибут не может быть установлен сейчас 
+
+|HY012
+|Invalid transaction operation code
+|Неверный код транзакции операции
+
+|HY013
+|Memory management error
+|Ошибка управления памятью 
+
+|HY014
+|Limit on the number of handles exceeded
+|Достигнут лимит числа указателей
+
+|HY015
+|No cursor name available
+|Недоступен курсор без имени 
+
+|HY016
+|Cannot modify an implementation row descriptor
+|Невозможно изменить реализацию дескриптора строки
+
+|HY017
+|Invalid use of an automatically allocated descriptor
+handle
+|Неверное использование автоматически выделяемого дескриптора
+указателей
+
+|HY018
+|Server declined the cancellation request
+|Сервер отклонил запрос на отмену
+
+|HY019
+|Non-string data cannot be sent in pieces
+|Не строковые данные не могут быть отправлены по кускам
+
+|HY020
+|Attempt to concatenate a null value
+|Попытка конкатенации значения NULL
+
+|HY021
+|Inconsistent descriptor information
+|Противоречивая информация о дескрипторе
+
+|HY024
+|Invalid attribute value
+|Неверное значение атрибута 
+
+|HY055
+|Non-string data cannot be used with string routine
+|Не строковые данные не могут быть использованы со строковой
+процедурой
+
+|HY090
+|Invalid string length or buffer length
+|Неверная длина строки или длина буфера
+
+|HY091
+|Invalid descriptor field identifier
+|Неверный дескриптор идентификатора поля 
+
+|HY092
+|Invalid attribute identifier
+|Неверный идентификатор атрибута
+
+|HY095
+|Invalid FunctionId specified
+|Неверное указание ID функции 
+
+|HY096
+|Invalid information type
+|Неверный тип информации
+
+|HY097
+|Column type out of range
+|Тип столбца вне диапазона
+
+|HY098
+|Scope out of range
+|Определение вне диапазона 
+
+|HY099
+|Nullable type out of range
+|Типы с допустимыми NULL вне диапазона
+
+|HY100
+|Uniqueness option type out of range
+|Тип опции "уникальность" вне диапазона
+
+|HY101
+|Accuracy option type out of range
+|Тип опции "точность" вне диапазона
+
+|HY103
+|Invalid retrieval code
+|Неверный код поиска
+
+|HY104
+|Invalid LengthPrecision value
+|Неверное значение длина/точность
+
+|HY105
+|Invalid parameter type
+|Неверный тип параметра
+
+|HY106
+|Invalid fetch orientation
+|Неверное направление для fetch
+
+|HY107
+|Row value out of range
+|Значение строки вне диапазона
+
+|HY109
+|Invalid cursor position
+|Неверная позиция курсора
+
+|HY110
+|Invalid driver completion
+|Неверный код завершения драйвера
+
+|HY111
+|Invalid bookmark value
+|Неверное значение метки bookmark
+
+|HYC00
+|Optional feature not implemented
+|Опциональная функция не реализована
+
+|HYT00
+|Timeout expired
+|Достигнут тайм-аут
+
+|HYT01
+|Connection timeout expired
+|Достигнут тайм-аут соединения
+
+2+<|__SQLCLASS XX (Internal Error)__
+|SQLCLASS XX (внутренние ошибки)
+
+|XX000
+|Internal error
+|Внутренняя ошибка
+
+|XX001
+|Data corrupted
+|Данные разрушены
+
+|XX002
+|Index corrupted
+|Индекс разрушен
+|===
+
+[[fblangref-appx02-gdscode]]
+== Коды ошибок GDSCODE их описание, и SQLCODE
+
+Таблица ошибок содержит числовое и символьное значения `GDSCODE`, текст сообщения об ошибке и описание ошибки.
+Также приводится `SQLCODE` ошибки.
+
+[NOTE]
+====
+В настоящее время `SQLCODE` считаются устаревшим.
+В следующих версиях поддержка `SQLCODE` может полностью прекратиться.
+====
+
+////
+CSV produced against MSG.FDB with query:
+
+select
+	coalesce(se.SQL_CODE, 0) as "SQLCODE",
+	BIN_OR(0x14000000, BIN_SHL(BIN_AND(m.FAC_CODE, 0x1f), 16), BIN_AND(m.NUMBER, 0x3FFF)) as "GDSCODE",
+	m.SYMBOL as "Symbol",
+	m.TEXT as "Message Text"
+from MESSAGES m
+left join SYSTEM_ERRORS se
+	on se.GDS_SYMBOL = m.SYMBOL
+where m.SYMBOL is not null
+and se.FAC_CODE in (0, 7, 8, 13)
+order by se.SQL_CODE desc, 2
+////
+
+[[fblangref-appx02-tbl-errcodes01]]
+.Коды ошибок `GDSCODE`, `SQLCODE` и их описание
+[cols=">3,<5,<13,<15", options="header",format=csv]
+|===
+include::_fblangref30-appx02-errorcodes.csv[]
+|===
+
+
+
+:sectnums:

@@ -1,0 +1,926 @@
+
+:sectnums!:
+:ditto: &#12291;
+
+[appendix]
+[[fblangref-appx-charsets]]
+= Наборы символов и порядки сортировки
+
+
+.Наборы символов и порядки сортировки
+[cols="<2,^1,^1,<3,<4", options="header",stripes="none"]
+|===
+^| Название
+^| ID
+^| Байтов на символ
+^| Порядок сортировки
+^| Язык
+
+|ASCII
+|2
+|1
+|ASCII 
+|Английский 
+
+|BIG_5
+|56
+|2
+|BIG_5 
+|
+
+Китайский, Вьетнамский, Корейский. 
+
+|CP943C
+|68
+|2
+|CP943C
+|Японский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|CP943C_UNICODE
+|Японский.
+
+|CYRL
+|50
+|1
+|CYRL 
+|Русский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_RUS
+|Русский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_CYRL
+|Русский Paradox.
+
+|DOS437
+|10
+|1
+|DOS437 
+|Английский -- США.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_DEU437
+|Немецкий dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_ESP437
+|Испанский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_FIN437
+|Финский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_FRA437
+|Французский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_ITA437
+|Итальянский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_NLD437
+|Голландский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_SVE437
+|Шведский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_UK437
+|Английский (Великобритания) dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_US437
+|Английский (США) dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_ASCII
+|Кодовая страница Paradox -- ASCII.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_SWEDFIN
+|Шведский / Финский Paradox.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_INTL
+|Международный английский Paradox.
+
+|DOS737
+|9
+|1
+|DOS737 
+|Греческий. 
+
+|DOS775
+|15
+|1
+|DOS775 
+|Балтийский. 
+
+|DOS850
+|11
+|1
+|DOS850 
+|Латинский I (нет символа Евро).
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_DEU850
+|Немецкий.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_ESP850
+|Испанский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_FRA850
+|Французский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_FRC850
+|Французский -- Канада.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_ITA850
+|Итальянский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_NLD850
+|Голландский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_PTB850
+|Португальский -- Бразилия.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_SVE850
+|Шведский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_UK850
+|Английский -- Великобритания.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_US850
+|Английский -- США.
+
+|DOS852
+|45
+|1
+|DOS852
+|Латинский II.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_CSY
+|Чешский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_PLK
+|Польский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_SLO
+|Словацкий dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_CSY
+|Чешский Paradox.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_HUN
+|Венгерский Paradox.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_PLK
+|Польский Paradox.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_SLO
+|Словацкий Paradox.
+
+|DOS857
+|46
+|1
+|DOS857 
+|Турецкий.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_TRK
+|Турецкий dBase.
+
+|DOS858
+|16
+|1
+|DOS858 
+|Латинский I с символом Евро. 
+
+|DOS860
+|13
+|1
+|DOS860 
+|Португальский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_PTG860
+|Португальский dBase.
+
+|DOS861
+|47
+|1
+|DOS861 
+|Исландский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_ISL
+|Исландский Paradox.
+
+|DOS862
+|17
+|1
+|DOS862 
+|Иврит. 
+
+|DOS863
+|14
+|1
+|DOS863 
+|Французский -- Канада.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_FRC863
+|Французский dBase -- Канада.
+
+|DOS864
+|18
+|1
+|DOS864 
+|Арабский.
+
+|DOS865
+|12
+|1
+|DOS865 
+|Скандинавские.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_DAN865
+|Датский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DB_NOR865
+|Норвежский dBase.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PDOX_NORDAN4
+|Paradox Норвегия и Дания.
+
+|DOS866
+|48
+|1
+|DOS866 
+|Русский. 
+
+|DOS869
+|49
+|1
+|DOS869 
+|Современный греческий. 
+
+|EUCJ_0208
+|6
+|2
+|EUCJ_0208 
+|Японские EUC. 
+
+|GB_2312
+|57
+|2
+|GB_2312 
+|Упрощенный китайский (Гонконг, Корея). 
+
+|GB18030
+|69
+|4
+|GB18030
+|Китайский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|GB18030_UNICODE
+|Китайский.
+
+|GBK
+|67
+|2
+|GBK
+|Китайский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|GBK_UNICODE
+|Китайский.
+
+|ISO8859_1
+|21
+|1
+|ISO8859_1
+|Латинский I.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DA_DA
+|Датский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DE_DE
+|Немецкий.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|DU_NL
+|Голландский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|EN_UK
+|Английский, Великобритания.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|EN_US
+|Английский, США.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|ES_ES
+|Испанский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|ES_ES_CI_AI
+|Испанский не чувствительный к регистру символов и к акцентам
+                            (ударению).
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|FI_FI
+|Финский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|FR_CA
+|Французский, Канада.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|FR_FR
+|Французский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|FR_FR_CI_AI
+|Французский -- не чувствительный к регистру символов и к акцентам
+                            (ударению).
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|IS_IS
+|Исландский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|IT_IT
+|Итальянский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|NO_NO
+|Норвежский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PT_PT
+|Португальский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PT_BR
+|Португальский, Бразилия.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|SV_SV
+|Шведский.
+
+|ISO8859_2
+|22
+|1
+|ISO8859_2
+|Латинский 2 -- Центральная Европа (хорватский, чешский, венгерский,
+                            польский, румынский, сербский, словацкий, словенский).
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|CS_CZ
+|Чешский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|ISO_HUN
+|Венгерский -- не чувствительный к регистру и чувствительный к 
+                        акценту (ударению).
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|ISO_PLK
+|Польский.
+
+|ISO8859_3
+|23
+|1
+|ISO8859_3
+|Латинский 3 -- Южная Европа (мальтийский, эсперанто).
+
+|ISO8859_4
+|34
+|1
+|ISO8859_4
+|Латинский 4 -- Северная Европа (эстонский, латвийский, литовский,
+                            гренландский, саамский).
+
+|ISO8859_5
+|35
+|1
+|ISO8859_5
+|Кириллица (русский).
+
+|ISO8859_6
+|36
+|1
+|ISO8859_6
+|Арабский.
+
+|ISO8859_7
+|37
+|1
+|ISO8859_7
+|Греческий.
+
+|ISO8859_8
+|38
+|1
+|ISO8859_8
+|Иврит.
+
+|ISO8859_9
+|39
+|1
+|ISO8859_9
+|Латинский 5.
+
+|ISO8859_13
+|40
+|1
+|ISO8859_13
+|Латинский 7 -- Балтика.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|LT_LT
+|Литовский.
+
+|KOI8R
+|63
+|1
+|KOI8R
+|Русский. Словарное упорядочение.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|KOI8R_RU
+|Русский.
+
+|KOI8U
+|64
+|1
+|KOI8U
+|Украинский. Словарное упорядочение.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|KOI8U_UA
+|Украинский.
+
+|KSC_5601
+|44
+|2
+|KSC_5601
+|Корейский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|KSC_DICTIONARY
+|Корейский -- словарный порядок сортировки.
+
+|NEXT
+|19
+|1
+|NEXT
+|Кодирование NeXTSTEP.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|NXT_DEU
+|Немецкий.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|NXT_ESP
+|Испанский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|NXT_FRA
+|Французский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|NXT_ITA
+|Итальянский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|NXT_US
+|Английский, США.
+
+|NONE
+|0
+|1
+|NONE
+|Нейтральная кодовая страница. Перевод в верхний регистр выполняется
+                            только для кодов ASCII 97–122. Постарайтесь сделать так, чтобы этот
+                            набор символов никогда не появлялся в столбцах ваших баз данных.
+
+|OCTETS
+|1
+|1
+|OCTETS
+|Двоичные символы.
+
+|SJIS_0208
+|5
+|2
+|SJIS_0208
+|Японский.
+
+|TIS620
+|66
+|1
+|TIS620
+|Тайский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|TIS620_UNICODE
+|Тайский.
+
+|UNICODE_FSS
+|3
+|3
+|UNICODE_FSS
+|UNICODE
+
+|UTF8
+|4
+|4
+|UTF8
+|UNICODE 4.0.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|USC_BASIC
+|UNICODE 4.0.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|UNICODE
+|UNICODE 4.0.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|UNICODE_CI
+|UNICODE 4.0. Не чувствительна к регистру символов.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|UNICODE_CI_AI
+|UNICODE 4.0. Не чувствительна к регистру символов и к акцентам
+                            (ударению).
+
+|WIN1250
+|51
+|1
+|WIN1250
+|ANSI -- Центральная Европа.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|BS_BA
+|Боснийский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_CSY
+|Чешский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_HUN
+|Венгерский -- не чувствительный к регистру и чувствительный к акценту
+                            (ударению).
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_HUNDC
+|Венгерский -- словарная сортировка.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_PLK
+|Польский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_SLOV
+|Словенский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN_CZ
+|Чешский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN_CZ_CI
+|Чешский без различия строчных и прописных букв.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN_CZ_CI_AI
+|Чешский без различия строчных и прописных букв, нечувствительный к
+                            знакам ударения.
+
+|WIN1251
+|52
+|1
+|WIN1251
+|ANSI кириллица.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN1251_UA
+|Украинский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_CYRL
+|Paradox кириллица (русский).
+
+|WIN1252
+|53
+|1
+|WIN1252
+|ANSI -- Латинский I.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_INTL
+|Английский интернациональный.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_INTL850
+|Paradox многоязыковый Латинский I.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_NORDAN4
+|Норвежский и датский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_SPAN
+|Paradox испанский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_SWEDFIN
+|Шведский и финский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN_PTBR
+|Португальский, Бразилия.
+
+|WIN1253
+|54
+|1
+|WIN1253
+|ANSI греческий.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_GREEK
+|Paradox греческий.
+
+|WIN1254
+|55
+|1
+|WIN1254
+|ANSI турецкий.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|PXW_TURK
+|Paradox турецкий.
+
+|WIN1255
+|58
+|1
+|WIN1255
+|ANSI иврит.
+
+|WIN1256
+|59
+|1
+|WIN1256
+|ANSI арабский.
+
+|WIN1257
+|60
+|1
+|WIN1257
+|ANSI балтийский.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN1257_EE
+|Эстонский. Словарное упорядочение.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN1257_LT
+|Литовский. Словарное упорядочение.
+
+|{nbsp}{nbsp}{ditto}
+|{ditto}
+|{ditto}
+|WIN1257_LV
+|Латвийский. Словарное упорядочение.
+
+|WIN1258
+|65
+|1
+|WIN1258
+|Вьетнамский.
+|===
+
+:sectnums:

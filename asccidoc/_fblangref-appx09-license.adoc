@@ -1,0 +1,24 @@
+
+:sectnums!:
+
+[appendix]
+[[_fblangref_license]]
+= Лицензионное соглашение
+
+Содержание данного Документа распространяется на условиях лицензии "`Public
+            Documentation License Version 1.0`" (далее "`Лицензия`"); Вы можете использовать этот Документ, только если согласны с условиями Лицензии.
+Копии текста Лицензии доступны по адресам http://www.firebirdsql.org/pdfmanual/pdl.pdf (PDF) и http://www.firebirdsql.org/manual/pdl.html (HTML). 
+
+Оригинальное название документа [ref]_Руководство по языку SQL
+        Firebird_.
+
+Copyright (C) 2020.
+Все права защищены.
+Адрес электронной почты для контакта: mailto:case@firebirdsql.org[]
+
+Далее представлен оригинальный текст раздела, так как его перевод не имеет равноценной юридической силы. 
+
+The contents of this Documentation are subject to the Public Documentation License Version 1.0 (the "`License`"); you may only use this Documentation if you comply with the terms of this License.
+Copies of the License are available at http://www.firebirdsql.org/pdfmanual/pdl.pdf (PDF) and http://www.firebirdsql.org/manual/pdl.html (HTML). 
+
+:sectnums:
