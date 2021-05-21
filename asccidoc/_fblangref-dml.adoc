@@ -2940,7 +2940,7 @@ ORDER BY <ordering-item> [, <ordering-item> ...]
   [NULLS {FIRST | LAST}]
 ----
 
-[[fblangref30-dml-tbl-orderby]]
+[[fblangref-dml-tbl-orderby]]
 .Параметры предложения ORDER BY
 [cols="<1,<3", options="header",stripes="none"]
 |===
@@ -3617,7 +3617,7 @@ CTE могут быть рекурсивными, т.е. ссылающимис�
 <column-list> ::= _column-alias_ [, _column-alias_ ...]
 ----
 
-[[fblangref30-dml-tbl-cte]]
+[[fblangref-dml-tbl-cte]]
 .Параметры CTE
 [cols="<1,<3", options="header",stripes="none"]
 |===

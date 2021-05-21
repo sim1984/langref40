@@ -150,7 +150,7 @@ CREATE USER "Alex" PASSWORD 'bz23ds';
 * Пользователи вошедшие с ролью или получившие её привилегии (роль назначена по умолчанию), которой назначена системная привилегия `USER_MANAGEMENT`.
 
 
-[[fblangref30-security-user-create-exmpl]]
+[[fblangref-security-user-create-exmpl]]
 === Примеры `CREATE USER`
 
 .Создание пользователя

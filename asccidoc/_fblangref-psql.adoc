@@ -594,9 +594,9 @@ DDL триггеры срабатывают на указанные событи
 
 .Переменные доступные в пространстве имён DDL_TRIGGER:* EVENT_TYPE -- тип события (CREATE, ALTER, DROP)
 * OBJECT_TYPE -- тип объекта (TABLE, VIEW и д.р.)
-* DDL_EVENT -- имя события ([replaceable]``<ddl event item>``),
+* DDL_EVENT -- имя события (`<ddl event item>`),
 +
-где [replaceable]``<ddl event item>`` = EVENT_TYPE || ' ' || OBJECT_TYPE
+где `<ddl event item>` = `EVENT_TYPE || ' ' || OBJECT_TYPE`
 * OBJECT_NAME -- имя объекта метаданных
 * SQL_TEXT -- текст SQL запроса
 
@@ -1942,10 +1942,10 @@ PSQL
 ^| Параметр
 ^| Описание
 
-|[replaceable]``paramless_stmt``
+|paramless_stmt
 |Строковый литерал или переменная, содержащая не параметризованный SQL запрос.
 
-|[replaceable]``stmt_with_params``
+|stmt_with_params
 |Строковый литерал или переменная, содержащая параметризованный SQL запрос.
 
 |paramname

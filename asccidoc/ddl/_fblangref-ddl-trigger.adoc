@@ -251,7 +251,7 @@ DML триггеры выполняются на уровне строки (за
 [[fblangref-ddl-trigger-declare]]
 ===== Объявление локальных переменных, курсоров и подпрограмм
 
-В необязательной секции [replaceable]``declarations`` описаны локальные переменные триггера, именованные курсоры и подпрограммы (подпроцедуры и подфункции). Подробности вы можете посмотреть в главе "`Процедурный язык PSQL`" в разделах
+В необязательной секции `<declarations>` описаны локальные переменные триггера, именованные курсоры и подпрограммы (подпроцедуры и подфункции). Подробности вы можете посмотреть в главе "`Процедурный язык PSQL`" в разделах
 <<fblangref-psql-statements-declare-var,DECLARE VARIABLE>> и
 <<fblangref-psql-statements-declare-cursor,DECLARE CURSOR>>,
 <<fblangref-psql-statements-declare-procedure,DECLARE PROCEDURE>>,
@@ -520,9 +520,9 @@ END
 
 * `EVENT_TYPE` – тип события (CREATE, ALTER, DROP)
 * `OBJECT_TYPE` – тип объекта (TABLE, VIEW и д.р.)
-* `DDL_EVENT` – имя события ([replaceable]``<ddl event item>``),
+* `DDL_EVENT` – имя события (`<ddl event item>`),
 +
-где [replaceable]``<ddl event item>`` = `EVENT_TYPE || ' ' || OBJECT_TYPE`
+где `<ddl event item>` = `EVENT_TYPE || ' ' || OBJECT_TYPE`
 * `OBJECT_NAME` – имя объекта метаданных
 * `OLD_OBJECT_NAME` – имя объекта метаданных до переименования
 * `NEW_OBJECT_NAME` – имя объекта метаданных после переименования

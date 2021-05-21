@@ -127,7 +127,7 @@ _to_name_ является не обязательным аргументом.
 Это действует приблизительно так же как с настройками: настройки уровня базы данных ([path]_databases.conf_) перекрывают глобальные настройки ([path]_firebird.conf_).
 ====
 
-[[fblangref30-security-mapping-create-who]]
+[[fblangref-security-mapping-create-who]]
 === Кто может создать отображение
 
 * `SYSDBA`;
