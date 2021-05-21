@@ -94,9 +94,15 @@ Language Reference for Firebird 4.0
 -   PDF —
     <https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf>
 
+-   PDF (Asciidoc) —
+    <https://github.com/sim1984/langref40/releases/download/langref40/fblangref40.pdf>
+
 -   одностраничный HTML —
     <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip>
 
 -   многостраничный HTML —
     <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip>
+
+-   HTML (Asciidoc) —
+    <https://github.com/sim1984/langref40/releases/download/langref40/fblangref40.html>
      
