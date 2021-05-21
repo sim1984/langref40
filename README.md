@@ -6,7 +6,6 @@ Language Reference for Firebird 4.0
 В руководстве также приводятся практические примеры использования SQL, многие из
 которых взяты из реальной практики.
 
-  
 
 Что содержит данный документ
 ----------------------------
@@ -33,7 +32,7 @@ Language Reference for Firebird 4.0
 
 -   Безопасность и операторы управления доступом;
 
--   Операторы управления сессионым окружением;
+-   Операторы управления сессионным окружением;
 
 -   Операторы и предикаты (утверждения);
 
@@ -49,7 +48,6 @@ Language Reference for Firebird 4.0
 
 Вопросы, не связанные с SQL в данном документе не рассматриваются.
 
- 
 
 Авторство
 ---------
@@ -76,13 +74,11 @@ Language Reference for Firebird 4.0
 Симонов.
 
 
-
 Благодарности
 -------------
 
 Благодарим Влада Хорсуна, Александра Пешкова, Павла Зотова за помощь в создании
 этого документа.
-
 
 
 Обновления
@@ -91,18 +87,20 @@ Language Reference for Firebird 4.0
 Так как СУБД Firebird постоянно развивается, то изменяется и улучшается его
 документация. Вы можете получить самые свежие версии этого документа по адресам:
 
--   PDF —
-    <https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf>
-
+ 
 -   PDF (Asciidoc) —
-    <https://github.com/sim1984/langref40/releases/download/langref40/fblangref40.pdf>
-
--   одностраничный HTML —
-    <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip>
-
--   многостраничный HTML —
-    <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip>
+    <https://github.com/sim1984/langref40/releases/download/langref40/firebird-40-language-reference.pdf>
 
 -   HTML (Asciidoc) —
-    <https://github.com/sim1984/langref40/releases/download/langref40/fblangref40.html>
-     
+    <hhttps://github.com/sim1984/langref40/releases/download/langref40/firebird-40-language-reference-html.zip>
+
+-   PDF (Docbook) —
+    <https://github.com/sim1984/langref40/releases/download/langref40/langref40.pdf>
+
+-   одностраничный HTML (Docbook) —
+    <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html.zip>
+
+-   многостраничный HTML (Docbook) —
+    <https://github.com/sim1984/langref40/releases/download/langref40/langref40-html-chunks.zip>
+
+    
