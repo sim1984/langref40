@@ -10,10 +10,10 @@
 
 [[fblangref-ddl-function-create]]
 == `CREATE FUNCTION`
-((CREATE FUNCTION))
 
 .Назначение
 Создание новой хранимой функции.
+(((CREATE FUNCTION)))
 
 .Доступно в
 DSQL
@@ -194,8 +194,8 @@ CREATE FUNCTION _funcname_ [(<inparam> [, <inparam> ...])]
 
 [[fblangref-ddl-function-create_deterministic]]
 === Детерминированные функции
-(((CREATE FUNCTION, DETERMINISTIC)))
 
+(((CREATE FUNCTION, DETERMINISTIC)))
 Необязательное предложение `DETERMINISTIC` указывает, что функция детерминированная.
 Детерминированные функции каждый раз возвращают один и тот же результат, если предоставлять им один и тот же набор входных значений.
 Недетерминированные функции могут возвращать каждый раз разные результаты, даже если предоставлять им один и тот же набор входных значений.
@@ -238,8 +238,8 @@ SELECT n, fn_t() FROM t
 
 [[fblangref-ddl-function-create-sql-security]]
 === Привилегии выполнения
-(((CREATE FUNCTION, SQL SECURITY)))
 
+(((CREATE FUNCTION, SQL SECURITY)))
 Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется хранимая функция.
 Если выбрана опция `INVOKER`, то хранимая функция выполняется с привилегиями вызывающего пользователя.
 Если выбрана опция `DEFINER`, то хранимая функция выполняется с привилегиями определяющего пользователя (владельца функции). Эти привилегии будут дополнены привилегиями выданные самой хранимой функции с помощью оператора `GRANT`.
@@ -462,10 +462,10 @@ END
 
 [[fblangref-ddl-function-alter]]
 == `ALTER FUNCTION`
-((ALTER FUNCTION))
 
 .Назначение
 Изменение существующей хранимой функции.
+(((ALTER FUNCTION)))
 
 .Доступно в
 DSQL
@@ -535,10 +535,10 @@ END
 
 [[fblangref-ddl-function-createoralter]]
 == `CREATE OR ALTER FUNCTION`
-((CREATE OR ALTER FUNCTION))
 
 .Назначение
 Создание новой или изменение существующей хранимой функции.
+(((CREATE OR ALTER FUNCTION)))
 
 .Доступно в
 DSQL
@@ -587,10 +587,10 @@ END
 
 [[fblangref-ddl-function-drop]]
 == `DROP FUNCTION`
-((DROP FUNCTION))
 
 .Назначение
 Удаление хранимой функции.
+(((DROP FUNCTION)))
 
 .Доступно в
 DSQL
@@ -643,10 +643,10 @@ DROP FUNCTION ADD_INT;
 
 [[fblangref-ddl-function-recreate]]
 == `RECREATE FUNCTION`
-((RECREATE FUNCTION))
 
 .Назначение
 Создание новой или пересоздание существующей хранимой функции.
+(((RECREATE FUNCTION)))
 
 .Доступно в
 DSQL

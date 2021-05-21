@@ -17,10 +17,10 @@
 
 [[fblangref-security-roles-create]]
 == `CREATE ROLE`
-((CREATE ROLE))
 
 .Назначение
 Создание новой роли.
+(((CREATE ROLE)))
 
 .Доступно в
 DSQL, ESQL
@@ -61,8 +61,8 @@ CREATE ROLE _rolename_
 
 [[fblangref-security-roles-system]]
 === Роли с системными привилегиями
-(((CREATE ROLE, SET SYSTEM PRIVILEGES TO)))
 
+(((CREATE ROLE, SET SYSTEM PRIVILEGES TO)))
 Предложение `SET SYSTEM PRIVILEGES TO` позволяет создать роль с системными привилегиями.
 Системные привилегии это части привилегий администратора.
 Таким образом, через делегирование роли с системными привилегиями пользователю можно передавать ему часть прав администратора БД.
@@ -197,10 +197,10 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
 
 [[fblangref-security-roles-alter]]
 == ALTER ROLE
-((ALTER ROLE))
 
 .Назначение
 Изменение системных привилегий роли.
+(((ALTER ROLE)))
 
 .Доступно в
 DSQL, ESQL
@@ -255,10 +255,10 @@ ALTER ROLE RDB$ADMIN {SET | DROP} AUTO ADMIN MAPPING
 
 [[fblangref-security-roles-drop]]
 == `DROP ROLE`
-((DROP ROLE))
 
 .Назначение
 Удаление существующей роли.
+(((DROP ROLE)))
 
 .Доступно в
 DSQL, ESQL

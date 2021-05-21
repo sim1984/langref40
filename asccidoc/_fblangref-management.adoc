@@ -83,10 +83,10 @@
 
 [[fblangref-management-timeout-set-statement-timeout]]
 ==== `SET STATEMENT TIMEOUT`
-((SET STATEMENT TIMEOUT))
 
 .Назначение
 Установка тайм-аута выполнения SQL операторов на уровне соединения.
+(((SET STATEMENT TIMEOUT)))
 
 .Доступно в
 DSQL
@@ -177,10 +177,10 @@ SET LOCAL_TIMEOUT _int_
 
 [[fblangref-management-timeout-set-session-idle-timeout]]
 ==== `SET SESSION IDLE TIMEOUT`
-((SET SESSION IDLE TIMEOUT))
 
 .Назначение
 Установка тайм-аута простоя соединения на уровне соединения.
+(((SET SESSION IDLE TIMEOUT)))
 
 .Доступно в
 DSQL.
@@ -236,10 +236,10 @@ SET SESSION IDLE TIMEOUT 8 HOUR
 
 [[fblangref-management-extconnpool-setsize]]
 === `ALTER EXTERNAL CONNECTIONS POOL SET SIZE`
-((ALTER EXTERNAL CONNECTIONS POOL SET SIZE))
 
 .Назначение
 Устанавливает максимальное количество бездействующих соединений.
+(((ALTER EXTERNAL CONNECTIONS POOL SET SIZE)))
 
 .Синтаксис
 [listing,subs=+quotes]
@@ -265,10 +265,10 @@ ALTER EXTERNAL CONNECTIONS POOL SET SIZE _size_
 
 [[fblangref-management-extconnpool-setlifetime]]
 === `ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME`
-((ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME))
 
 .Назначение
 Устанавливает время жизни бездействующих соединений.
+(((ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME)))
 
 .Синтаксис
 [listing,subs=+quotes]
@@ -295,10 +295,10 @@ ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME _value_ <time_part>
 
 [[fblangref-management-extconnpool-clearall]]
 === `ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL`
-((ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL))
 
 .Назначение
 Закрывает все бездействующие соединения.
+(((ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL)))
 
 .Синтаксис
 [listing,subs=+quotes]
@@ -311,10 +311,10 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL
 
 [[fblangref-management-extconnpool-clearoldest]]
 === `ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST`
-((ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST))
 
 .Назначение
 Закрывает бездействующие соединения у которых истекло время жизни.
+(((ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST)))
 
 .Синтаксис
 [listing,subs=+quotes]
@@ -329,10 +329,10 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST
 
 [[fblangref-management-setrole]]
 === `SET ROLE`
-((SET ROLE))
 
 .Назначение
 Изменение текущей роли.
+(((SET ROLE)))
 
 .Доступно в
 DSQL.
@@ -374,10 +374,10 @@ MANAGER
 
 [[fblangref-management-role_settrustedrole]]
 === `SET TRUSTED ROLE`
-((SET TRUSTED ROLE))
 
 .Назначение
 Установка доверенной роли.
+(((SET TRUSTED ROLE)))
 
 .Доступно в
 DSQL
@@ -409,10 +409,10 @@ SET TRUSTED ROLE
 
 [[fblangref-management-settimezone]]
 === `SET TIME ZONE`
-((SET TIME ZONE))
 
 .Назначение
 Изменение часового пояса сеанса.
+(((SET TIME ZONE)))
 
 .Синтаксис
 [listing,subs=+quotes]
@@ -464,10 +464,10 @@ set time zone local;
 
 [[fblangref-management-decfloat_round]]
 === `SET DECFLOAT ROUND`
-((SET DECFLOAT ROUND))
 
 .Назначение
 Изменение режима округления для типа `DECFLOAT`.
+(((SET DECFLOAT ROUND)))
 
 [listing,subs=+quotes]
 ----
@@ -524,10 +524,10 @@ SET DECFLOAT ROUND HALF_DOWN;
 
 [[fblangref-management-decfloat_traps]]
 === `SET DECFLOAT TRAPS TO`
-((SET DECFLOAT TRAPS TO))
 
 .Назначение
 Изменение обработки ошибок для типа `DECFLOAT`.
+(((SET DECFLOAT TRAPS TO)))
 
 .Синтаксис:
 [listing]
@@ -557,11 +557,11 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
 
 [[fblangref-management-set-bind]]
 == `SET BIND OF`
-((SET BIND OF))
 
 .Назначение
 Изменение привязки типа.
 Обеспечение совместимости со старыми клиентами.
+(((SET BIND OF)))
 
 .Синтаксис
 [listing]
@@ -718,10 +718,10 @@ SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
 
 [[fblangref-management-resetsession]]
 == `ALTER SESSION RESET`
-((ALTER SESSION RESET))
 
 .Назначение
 Сброс сессионного окружения.
+(((ALTER SESSION RESET)))
 
 .Доступно в
 DSQL

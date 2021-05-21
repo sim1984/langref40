@@ -9,10 +9,10 @@
 
 [[fblangref-ddl-procedure-create]]
 == `CREATE PROCEDURE`
-((CREATE PROCEDURE))
 
 .Назначение
 Создание новой хранимой функции.
+(((CREATE PROCEDURE)))
 
 .Доступно в
 DSQL, ESQL
@@ -196,8 +196,8 @@ RETURNS (<outparam> [, <outparam> ...])
 
 [[fblangref-ddl-procedure-create-sql-security]]
 === Привилегии выполнения
-(((CREATE PROCEDURE, SQL SECURITY)))
 
+(((CREATE PROCEDURE, SQL SECURITY)))
 Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется хранимая процедура.
 Если выбрана опция `INVOKER`, то хранимая процедура выполняется с привилегиями вызывающего пользователя.
 Если выбрана опция `DEFINER`, то хранимая процедура выполняется с привилегиями определяющего пользователя (владельца ХП). Эти привилегии будут дополнены привилегиями выданные самой хранимой процедуре с помощью оператора `GRANT`.
@@ -340,10 +340,10 @@ CREATE PROCEDURE gen_rows (
 
 [[fblangref-ddl-procedure-alter]]
 == `ALTER PROCEDURE`
-((ALTER PROCEDURE))
 
 .Назначение
 Изменение существующей хранимой процедуры.
+(((ALTER PROCEDURE)))
 
 .Доступно в
 DSQL, ESQL
@@ -415,10 +415,10 @@ END
 
 [[fblangref-ddl-procedure-createoralter]]
 == `CREATE OR ALTER PROCEDURE`
-((CREATE OR ALTER PROCEDURE))
 
 .Назначение
 Создание новой или изменение существующей хранимой процедуры.
+(((CREATE OR ALTER PROCEDURE)))
 
 .Доступно в
 DSQL, ESQL
@@ -472,10 +472,10 @@ END
 
 [[fblangref-ddl-procedure-drop]]
 == `DROP PROCEDURE`
-((DROP PROCEDURE))
 
 .Назначение
 Удаление существующей хранимой процедуры.
+(((DROP PROCEDURE)))
 
 .Доступно в
 DSQL, ESQL
@@ -526,10 +526,10 @@ DROP PROCEDURE GET_EMP_PROJ;
 
 [[fblangref-ddl-procedure-recreate]]
 == `RECREATE PROCEDURE`
-((RECREATE PROCEDURE))
 
 .Назначение
 Создание новой или пересоздание существующей хранимой процедуры.
+(((RECREATE PROCEDURE)))
 
 .Доступно в
 DSQL, ESQL

@@ -5,10 +5,10 @@
 
 [[fblangref-security-revoke]]
 == REVOKE
-((REVOKE))
 
 .Назначение
 Отмена привилегий или отбор ролей.
+(((REVOKE)))
 
 .Доступно в
 DSQL
@@ -181,8 +181,8 @@ REVOKE ALL ON PLG$SRP_VIEW FROM SYSTEM PRIVILEGE USER_MANAGEMENT;
 
 [[fblangref-security-revoke-grant-option]]
 === Предложение `GRANT OPTION FOR`
-(((REVOKE, GRANT OPTION FOR)))
 
+(((REVOKE, GRANT OPTION FOR)))
 Необязательное предложение `GRANT OPTION FOR` отменяет для соответствующего пользователя или роли право предоставления другим пользователям или ролям привилегии к таблицам, представлениям, триггерам, хранимым процедурам.
 
 [[fblangref-security-revoke-grantopt-examples]]
@@ -217,8 +217,8 @@ FROM ROLE MANAGER;
 
 [[fblangref-security-revoke-roles-admopt]]
 ==== Предложение `ADMIN OPTION FOR`
-(((REVOKE, ADMIN OPTION FOR)))
 
+(((REVOKE, ADMIN OPTION FOR)))
 Необязательное предложение `ADMIN OPTION FOR` отменяет ранее предоставленную административную опцию (право на передачу предоставленной пользователю роли другим) из грантополучателей, не отменяя прав на роль.
 
 [[fblangref-security-revoke-roles-examples]]
@@ -242,8 +242,8 @@ REVOKE ADMIN OPTION FOR MANAGER FROM USER ALEX;
 
 [[fblangref-security-revoke-grantedby]]
 === Предложение `GRANTED BY`
-(((REVOKE, GRANTED BY)))
 
+(((REVOKE, GRANTED BY)))
 При предоставлении прав в базе данных в качестве лица, предоставившего эти права, обычно записывается текущий пользователь.
 Используя предложение `GRANTED BY` можно предоставлять права от имени другого пользователя.
 При использовании оператора `REVOKE` после `GRANTED BY` права будут удалены только в том случае, если они были зарегистрированы от удаляющего пользователя.
@@ -275,8 +275,8 @@ FROM USER IVAN GRANTED BY ALEX;
 
 [[fblangref-security-revoke_all_on_all]]
 === `REVOKE ALL ON ALL`
-(((REVOKE, ALL ON ALL)))
 
+(((REVOKE, ALL ON ALL)))
 Если после ключевого слова `REVOKE` указано предложение `ALL ON ALL`, то это позволяет отменить все привилегии (включая роли) на всех объектах от одного или более пользователей и/или ролей.
 Это быстрый способ "`очистить`" (отобрать) права, когда пользователю должен быть заблокирован доступ к базе данных.
 

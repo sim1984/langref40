@@ -31,10 +31,10 @@ UDF принципиально небезопасны.
 
 [[fblangref-ddl-extfunc-declare]]
 == `DECLARE EXTERNAL FUNCTION`
-((DECLARE EXTERNAL FUNCTION))
 
 .Назначение
 Объявление в базе данных функции определённой пользователем (UDF).
+(((DECLARE EXTERNAL FUNCTION)))
 
 .Доступно в
 DSQL, ESQL
@@ -224,6 +224,7 @@ ENTRY_POINT 'fbtruncate' MODULE_NAME 'fbudf';
 
 .Назначение
 Изменение точки входа и/или имени модуля для функции определённой пользователем (UDF).
+(((ALTER EXTERNAL FUNCTION)))
 
 .Доступно в
 DSQL
@@ -295,10 +296,10 @@ ALTER EXTERNAL FUNCTION invl MODULE_NAME 'fbudf2';
 
 [[fblangref-ddl-extfunc-drop]]
 == `DROP EXTERNAL FUNCTION`
-((DROP EXTERNAL FUNCTION))
 
 .Назначение
 Удаление объявления функции определённой пользователем (UDF) из базы данных.
+(((DROP EXTERNAL FUNCTION)))
 
 .Доступно в
 DSQL, ESQL.

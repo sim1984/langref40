@@ -11,10 +11,10 @@
 
 [[fblangref-ddl-view-create]]
 == `CREATE VIEW`
-((CREATE VIEW))
 
 .Назначение
 Создание нового представления.
+(((CREATE VIEW)))
 
 .Доступно в
 DSQL
@@ -97,8 +97,8 @@ AS <select_statement>
 
 [[fblangref-ddl-view-checkoptions]]
 === `WITH CHECK OPTIONS`
-(((CREATE VIEW, WITH CHECK OPTIONS)))
 
+(((CREATE VIEW, WITH CHECK OPTIONS)))
 Необязательное предложение `WITH CHECK OPTIONS` задаёт для изменяемого представления требования проверки вновь введённых или модифицируемых данных условию, указанному в предложении WHERE оператора выборки `SELECT`.
 При попытке вставки новой записи или модификации записи проверяется, выполняется ли для этой записи условие в предложении `WHERE`, если условие не выполняется, то вставка/модификация не выполняется и будет выдано соответствующее диагностическое сообщение.
 
@@ -285,10 +285,10 @@ VALUES('007 coordinates skyfall', 'pif-paf!', 'oh! waw!');
 
 [[fblangref-ddl-view-alter]]
 == `ALTER VIEW`
-((ALTER VIEW))
 
 .Назначение
 Изменение существующего представления.
+(((ALTER VIEW)))
 
 .Доступно в
 DSQL
@@ -371,10 +371,10 @@ FROM PRICE;
 
 [[fblangref-ddl-view-createoralter]]
 == `CREATE OR ALTER VIEW`
-((CREATE OR ALTER VIEW))
 
 .Назначение
 Создание нового или изменение существующего представления.
+(((CREATE OR ALTER VIEW)))
 
 .Доступно в
 DSQL
@@ -440,10 +440,10 @@ FROM PRICE;
 
 [[fblangref-ddl-view-drop]]
 == `DROP VIEW`
-((DROP VIEW))
 
 .Назначение
 Удаление существующего представления.
+(((DROP VIEW)))
 
 .Доступно в
 DSQL
@@ -495,10 +495,10 @@ DROP VIEW PRICE_WITH_MARKUP;
 
 [[fblangref-ddl-view-recreate]]
 == `RECREATE VIEW`
-((RECREATE VIEW))
 
 .Назначение
 Создание нового или пересоздание существующего представления.
+(((RECREATE VIEW)))
 
 .Доступно в
 DSQL

@@ -8,10 +8,10 @@
 
 [[fblangref-ddl-index-create]]
 == `CREATE INDEX`
-((CREATE INDEX))
 
 .Назначение
 Создание индекса для таблицы.
+(((CREATE INDEX)))
 
 .Доступно в
 DSQL, ESQL.
@@ -65,8 +65,8 @@ ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);
 
 [[fblangref-ddl-index-unique]]
 === Уникальные индексы
-(((CREATE INDEX, UNIQUE)))
 
+(((CREATE INDEX, UNIQUE)))
 Если при создании индекса указано ключевое слово `UNIQUE`, то индекс гарантирует уникальность значений ключей.
 Такой индекс называется уникальным.
 Уникальный индекс не является ограничением уникальности. 
@@ -75,8 +75,8 @@ ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);
 
 [[fblangref-ddl-index-direction]]
 === Направление индекса
-(((CREATE INDEX, ASCENDING))) (((CREATE INDEX, DESCENDING)))
 
+(((CREATE INDEX, ASCENDING))) (((CREATE INDEX, DESCENDING)))
 Все индексы в Firebird являются однонаправленными.
 Индекс может быть построен в восходящем и нисходящем порядке.
 Ключевые слова `ASC[ENDING]` (сокращённо `ASC`) и `DESC[ENDING]` используются для указания направленности индекса.
@@ -90,8 +90,8 @@ ADD CONSTRAINT PK_COUNTRY PRIMARY KEY (ID);
 
 [[fblangref-ddl-index-computed]]
 === Вычисляемые индексы или индексы по выражению
-(((CREATE INDEX, COMPUTED BY)))
 
+(((CREATE INDEX, COMPUTED BY)))
 При создании индекса вместо одного или нескольких столбцов вы также можете указать одно выражение, используя предложение `COMPUTED BY`.
 Такой индекс называется вычисляемым или индексом по выражению.
 Вычисляемые индексы используются в запросах, в которых условие в предложениях `WHERE`, `ORDER BY` или `GROUP BY` в точности совпадает с выражением в определении индекса.
@@ -261,10 +261,10 @@ WHERE UPPER(NAME) STARTING WITH UPPER('Iv');
 
 [[fblangref-ddl-index-alter]]
 == `ALTER INDEX`
-((ALTER INDEX))
 
 .Назначение
 Перевод индекса в активное/неактивное состояние, перестройка индекса.
+(((ALTER INDEX)))
 
 .Доступно в
 DSQL, ESQL.
@@ -289,7 +289,8 @@ ALTER INDEX _indexname_ {ACTIVE | INACTIVE};
 Оператор `ALTER INDEX` переводит индекс в активное/неактивное состояние.
 Возможность изменения структуры и порядка сортировки ключей этот оператор не предусматривает.
 
-`INACTIVE`:: (((ALTER INDEX, INACTIVE)))
+`INACTIVE`::
+(((ALTER INDEX, INACTIVE)))
 При выборе опции `INACTIVE`, индекс переводится из активного в неактивное состояние. Перевод индекса в неактивное состояние по своему действию похоже на команду `DROP INDEX` за исключением того, что определение индекса сохраняется в базе данных. Невозможно перевести в неактивное состояние индекс участвующий в ограничении.
 +
 Активный индекс может быть отключен, только если отсутствуют запросы использующие этот индекс, иначе будет возвращена ошибка "`object in use`".
@@ -306,7 +307,8 @@ ALTER INDEX _indexname_ {ACTIVE | INACTIVE};
 Перевод индекса в неактивное состояние может быть полезен при массовой вставке, модификации или удалении записей из таблицы, для которой этот индекс построен. 
 ====
 
-`ACTIVE`:: (((ALTER INDEX, ACTIVE)))
+`ACTIVE`::
+(((ALTER INDEX, ACTIVE)))
 При выборе альтернативы `ACTIVE` индекс переводится из неактивного состояния в активное. При переводе индекса из неактивного состояния в активное -- индекс перестраивается.
 +
 [TIP]
@@ -358,10 +360,10 @@ ALTER INDEX IDX_UPDATER ACTIVE;
 
 [[fblangref-ddl-index-drop]]
 == `DROP INDEX`
-((DROP INDEX))
 
 .Назначение
 Удаление индекса из базы данных.
+(((DROP INDEX)))
 
 .Доступно в
 DSQL, ESQL.
@@ -412,10 +414,10 @@ DROP INDEX IDX_UPDATER;
 
 [[fblangref-ddl-index-stat]]
 == `SET STATISTICS`
-((SET STATISTICS))
 
 .Назначение
 Пересчёт селективности индекса.
+(((SET STATISTICS)))
 
 .Доступно в
 DSQL, ESQL.

@@ -18,10 +18,10 @@
 
 [[fblangref-ddl-sequence-create]]
 == `CREATE SEQUENCE`
-((CREATE SEQUENCE)) ((CREATE GENERATOR))
 
 .Назначение
 Создание новой последовательности (генератора).
+(((CREATE SEQUENCE))) (((CREATE GENERATOR)))
 
 .Доступно в
 DSQL, ESQL
@@ -132,10 +132,10 @@ CREATE SEQUENCE EMP_NO_GEN START WITH 5 INCREMENT BY 10;
 
 [[fblangref-ddl-sequence-alter]]
 == `ALTER SEQUENCE`
-((ALTER SEQUENCE)) ((ALTER GENERATOR))
 
 .Назначение
 Изменение последовательности (генератора).
+(((ALTER SEQUENCE))) (((ALTER GENERATOR)))
 
 .Доступно в
 DSQL, ESQL
@@ -240,10 +240,10 @@ ALTER SEQUENCE EMP_NO_GEN INCREMENT BY 10;
 
 [[fblangref-ddl-sequence-createoralter]]
 == `CREATE OR ALTER SEQUENCE`
-((CREATE OR ALTER SEQUENCE)) ((CREATE OR ALTER GENERATOR))
 
 .Назначение
 Создание новой или изменение существующей последовательности (генератора).
+(((CREATE OR ALTER SEQUENCE))) (((CREATE OR ALTER GENERATOR)))
 
 .Доступно в
 DSQL, ESQL
@@ -302,10 +302,10 @@ INCREMENT BY 1;
 
 [[fblangref-ddl-sequence-drop]]
 == `DROP SEQUENCE`
-((DROP SEQUENCE)) ((DROP GENERATOR))
 
 .Назначение
 Удаление последовательности (генератора).
+(((DROP SEQUENCE))) (((DROP GENERATOR)))
 
 .Доступно в
 DSQL, ESQL
@@ -358,10 +358,10 @@ DROP SEQUENCE EMP_NO_GEN;
 
 [[fblangref-ddl-sequence-recreate]]
 == `RECREATE SEQUENCE`
-((RECREATE SEQUENCE)) ((RECREATE GENERATOR))
 
 .Назначение
 Создание или пересоздание последовательности (генератора).
+(((RECREATE SEQUENCE))) (((RECREATE GENERATOR)))
 
 .Доступно в
 DSQL, ESQL
@@ -412,10 +412,10 @@ INCREMENT BY 1;
 
 [[fblangref-ddl-sequence-setgen]]
 == `SET GENERATOR`
-((SET GENERATOR))
 
 .Назначение
-Устанавливает значение последовательности или генератора в заданное значение. 
+Устанавливает значение последовательности или генератора в заданное значение.
+(((SET GENERATOR)))
 
 .Доступно в
 DSQL, ESQL

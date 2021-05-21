@@ -7,8 +7,8 @@
 
 Приложение включает: 
 
-* <<fblangref-appx02-sqlstates,Коды ошибок SQLSTATE и их описание>>
-* <<fblangref-appx02-gdscode,"Коды ошибок GDSCODE их описание, и SQLCODE">>
+* <<fblangref-appx02-sqlstates>>
+* <<fblangref-appx02-gdscode>>
 
 
 .Пользовательские исключения
@@ -879,7 +879,7 @@ handle
 |===
 
 [[fblangref-appx02-gdscode]]
-== Коды ошибок GDSCODE их описание, и SQLCODE
+== Коды ошибок `GDSCODE` их описание, и `SQLCODE`
 
 Таблица ошибок содержит числовое и символьное значения `GDSCODE`, текст сообщения об ошибке и описание ошибки.
 Также приводится `SQLCODE` ошибки.
@@ -912,7 +912,6 @@ order by se.SQL_CODE desc, 2
 |===
 include::_fblangref-appx02-errorcodes.csv[]
 |===
-
 
 
 :sectnums:

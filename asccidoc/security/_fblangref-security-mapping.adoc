@@ -22,10 +22,10 @@
 
 [[fblangref-security-mappingcreate]]
 == `CREATE MAPPING`
-((CREATE MAPPING))
 
 .Назначение
 Создание отображения объекта безопасности.
+(((CREATE MAPPING)))
 
 .Доступно в
 DSQL
@@ -221,10 +221,10 @@ TO USER GUEST;
 
 [[fblangref-security-mappingalter]]
 == `ALTER MAPPING`
-((ALTER MAPPING))
 
 .Назначение
 Изменение отображения объекта безопасности.
+(((ALTER MAPPING)))
 
 .Доступно в
 DSQL.
@@ -283,10 +283,10 @@ FROM USER U1 TO USER U3;
 
 [[fblangref-security-mappingcreateoralter]]
 == `CREATE OR ALTER MAPPING`
-((CREATE OR ALTER MAPPING))
 
 .Назначение
 Создание или изменение отображения объекта безопасности.
+(((CREATE OR ALTER MAPPING)))
 
 .Доступно в
 DSQL
@@ -333,10 +333,10 @@ FROM USER U1 TO USER U4;
 
 [[fblangref-security-mappingdrop]]
 == DROP MAPPING
-((DROP MAPPING))
 
 .Назначение
 Удаление отображения объекта безопасности.
+(((DROP MAPPING)))
 
 .Доступно в
 DSQL

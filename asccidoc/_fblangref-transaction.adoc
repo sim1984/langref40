@@ -25,10 +25,10 @@ Firebird имеет небольшое количество SQL оператор
 
 [[fblangref-transaction-set_transaction]]
 == `SET TRANSACTION`
-((SET TRANSACTION))
 
 .Назначение
 Задаёт параметры транзакции и стартует её.
+(((SET TRANSACTION)))
 
 .Доступно в
 DSQL, ESQL
@@ -147,8 +147,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
 [[fblangref-transaction-set_transaction_access_mode]]
 ==== Режим доступа
-(((SET TRANSACTION, READ ONLY))) (((SET TRANSACTION, READ WRITE)))
 
+(((SET TRANSACTION, READ ONLY))) (((SET TRANSACTION, READ WRITE)))
 Для транзакций существует два режима доступа к данным базы данных: `READ WRITE` и `READ ONLY`.
 
 * При режиме доступа `READ WRITE` операции в контексте данной транзакции могут быть как операциями чтения, так и операциями изменения данных.
@@ -172,8 +172,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
 [[fblangref-transaction-set_transaction_wait_mode]]
 ===== Режим `WAIT`
-(((SET TRANSACTION, WAIT)))
 
+(((SET TRANSACTION, WAIT)))
 В режиме `WAIT` (режим по умолчанию) при появлении конфликта с параллельными транзакциями, выполняющими конкурирующие обновления данных в той же базе данных, такая транзакция будет ожидать завершения конкурирующей транзакции путём её подтверждения (`COMMIT`) или отката (`ROLLBACK`). Иными словами, клиентское приложение будет переведено в режим ожидания до момента разрешения конфликта.
 
 Если для режима `WAIT` задать предложение `LOCK TIMEOUT`, то ожидание будет продолжаться только указанное в этом предложении количество секунд.
@@ -185,8 +185,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
 [[fblangref-transaction-set_transaction_no_wait_mode]]
 ===== Режим `NO WAIT`
-(((SET TRANSACTION, NO WAIT)))
 
+(((SET TRANSACTION, NO WAIT)))
 Если установлен режим разрешения блокировок `NO WAIT`, то при появлении конфликта блокировки данная транзакция немедленно вызовет исключение базы данных.
 
 В Firebird API режиму `NO WAIT` соответствует константа `isc_tpb_nowait`.
@@ -199,8 +199,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
 [[fblangref-transaction-set_transaction_isolation_level]]
 ==== `ISOLATION LEVEL`
-(((SET TRANSACTION, ISOLATION LEVEL)))
 
+(((SET TRANSACTION, ISOLATION LEVEL)))
 Уровень изолированности транзакций -- значение, определяющее уровень, при котором в транзакции допускаются несогласованные данные, то есть степень изолированности одной транзакции от другой.
 Изменения, внесённые некоторым оператором, будут видны всем последующим операторам, запущенным в рамках этой же транзакции, независимо от её уровня изолированности.
 Изменения произведённые в рамках другой транзакции остаются невидимыми для текущей транзакции до тех пор, пока они не подтверждены.
@@ -218,8 +218,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
 [[fblangref-transaction-isolation_level_snapshot]]
 ===== Уровень изолированности `SNAPSHOT`
-(((SET TRANSACTION, SNAPSHOT)))
 
+(((SET TRANSACTION, SNAPSHOT)))
 Уровень изолированности `SNAPSHOT` (уровень изолированности по умолчанию) означает, что этой транзакции видны лишь те изменения, фиксация которых произошла не позднее момента старта этой транзакции.
 Любые подтверждённые изменения, сделанные другими конкурирующими транзакциями, не будут видны в такой транзакции в процессе ее активности без её перезапуска.
 Чтобы увидеть эти изменения, нужно завершить транзакцию (подтвердить её или выполнить полный откат, но не откат на точку сохранения) и запустить транзакцию заново. 
@@ -233,8 +233,8 @@ WAIT ISOLATION LEVEL SNAPSHOT;
 
 [[fblangref-transaction-isolation_level_snapshot_atnumber]]
 ====== Предложение `AT NUMBER`
-(((SET TRANSACTION, SNAPSHOT, AT NUMBER)))
 
+(((SET TRANSACTION, SNAPSHOT, AT NUMBER)))
 Транзакцию с уровнем изолированности `SNAPSHOT` можно запустить на основе другой транзакции, если известен номер её снимка.
 В этом случае эта новая транзакция может видеть те же самые данные, что и транзакция на основе которой она запущена.
 
@@ -267,8 +267,8 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-isolation_level_snapshot_table_stability]]
 ===== Уровень изолированности `SNAPSHOT TABLE STABILITY`
-(((SET TRANSACTION, SNAPSHOT TABLE STABILITY)))
 
+(((SET TRANSACTION, SNAPSHOT TABLE STABILITY)))
 Уровень изоляции транзакции `SNAPSHOT TABLE STABILITY` позволяет, как и в случае `SNAPSHOT`, также видеть только те изменения, фиксация которых произошла не позднее момента старта этой транзакции.
 При этом после старта такой транзакции в других клиентских транзакциях невозможно выполнение изменений ни в каких таблицах этой базы данных, уже каким-либо образом измененных первой транзакцией.
 Все такие попытки в параллельных транзакциях приведут к исключениям базы данных.
@@ -282,8 +282,8 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-isolation_level_read_commited]]
 ===== Уровень изолированности `READ COMMITTED`
-(((SET TRANSACTION, READ COMMITTED)))
 
+(((SET TRANSACTION, READ COMMITTED)))
 Уровень изолированности `READ COMMITTED` позволяет в транзакции без её перезапуска видеть все подтверждённые изменения данных базы данных, выполненные в других параллельных транзакциях.
 Неподтверждённые изменения не видны в транзакциях этого уровня изолированности.
 
@@ -293,8 +293,8 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-isolation_level_read_commited_record_version]]
 ====== `RECORD_VERSION`
-(((SET TRANSACTION, READ COMMITTED, RECORD_VERSION))) (((SET TRANSACTION, READ COMMITTED, NO RECORD_VERSION)))
 
+(((SET TRANSACTION, READ COMMITTED, RECORD_VERSION))) (((SET TRANSACTION, READ COMMITTED, NO RECORD_VERSION)))
 Для этого уровня изолированности можно указать один из двух значений дополнительной характеристики в зависимости от желаемого способа разрешения конфликтов: `RECORD_VERSION` и `NO RECORD_VERSION`.
 Как видно из их имён они являются взаимоисключающими.
 
@@ -321,8 +321,8 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-isolation_level_read_commited_read_consistency]]
 ====== `READ CONSISTENCY`
-(((SET TRANSACTION, READ COMMITTED, READ CONSISTENCY)))
 
+(((SET TRANSACTION, READ COMMITTED, READ CONSISTENCY)))
 Если указана эта опция, то транзакция с режимом изолированности `READ COMMITED` делает стабильный снимок базы данных на время выполнения оператора.
 Каждый новый оператор верхнего уровня создает собственный моментальный снимок базы данных, чтобы видеть последние потверждённые данные.
 Вложенные операторы (триггеры, вложенные хранимые процедуры и функции, динамические операторы и т.
@@ -366,8 +366,8 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-no_auto_undo]]
 ==== `NO AUTO UNDO`
-(((SET TRANSACTION, NO AUTO UNDO)))
 
+(((SET TRANSACTION, NO AUTO UNDO)))
 При использовании опции `NO AUTO UNDO` оператор `ROLLBACK` только помечает транзакцию как отменённую без удаления созданных в этой транзакции версий, которые будут удалены позднее в соответствии с выбранной политикой сборки мусора (см. параметр [parameter]``GCPolicy`` в [path]_firebird.conf_).
 
 Эта опция может быть полезна при выполнении транзакции, в рамках которой производится много отдельных операторов, изменяющих данные, и при этом есть уверенность, что эта транзакция будет чаще всего завершаться успешно, а не откатываться. 
@@ -376,15 +376,15 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-ignore_limbo]]
 ==== `IGNORE LIMBO`
-(((SET TRANSACTION, IGNORE LIMBO)))
 
+(((SET TRANSACTION, IGNORE LIMBO)))
 При указании опции `IGNORE LIMBO` игнорируются записи, создаваемые "`потерянными`" (т.е.
 не завершёнными) транзакциями (limbo transaction). Транзакции считается "`потерянной`", если не завершён второй этап двухфазного подтверждения (two-phase commit).
 
 [[fblangref-transaction-auto_commit]]
 ==== AUTO COMMIT
-(((SET TRANSACTION, AUTO COMMIT)))
 
+(((SET TRANSACTION, AUTO COMMIT)))
 При указании опции `AUTO COMMIT` транзакция автоматически подтверждается после успешного выполнения любого оператора.
 Если в процессе выполнения оператора произойдёт ошибка, то транзакция будет откачена.
 После подтверждения или отката транзакция продолжает оставаться активной, сохраняя свой идентификатор.
@@ -397,8 +397,8 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-set_transaction_reserving]]
 ==== RESERVING
-(((SET TRANSACTION, RESERVING)))
 
+(((SET TRANSACTION, RESERVING)))
 Предложение `RESERVING` в операторе `SET TRANSACTION` резервирует указанные в списке таблицы.
 Резервирование запрещает другим транзакциям вносить в эти таблицы изменения или (при определённых установках характеристик предложения резервирования) даже читать данные из этих таблиц, в то время как выполняется данная транзакция.
 Либо, наоборот, в этом предложении можно указать список таблиц, в которые параллельные транзакции могут вносить изменения, даже если запускается транзакция с уровнем изоляции `SNAPSHOT TABLE STABILITY`.
@@ -477,10 +477,10 @@ RDB$GET_CONTEXT('SYSTEM', 'SNAPSHOT_NUMBER')
 
 [[fblangref-transaction-commit]]
 == `COMMIT`
-((COMMIT))
 
 .Назначение
 Подтверждение транзакции.
+(((COMMIT)))
 
 .Доступно в
 DSQL, ESQL
@@ -544,10 +544,10 @@ COMMIT [WORK] [TRANSACTION _tr_name_]
 
 [[fblangref-transaction-rollback]]
 == `ROLLBACK`
-((ROLLBACK))
 
 .Назначение
 Откат транзакции.
+(((ROLLBACK)))
 
 .Доступно в
 DSQL, ESQL
@@ -605,8 +605,8 @@ ROLLBACK [WORK] [TRANSACTION _tr_name_]
 
 [[fblangref-transaction-rollback_to_savepoint]]
 === `ROLLBACK TO SAVEPOINT`
-(((ROLLBACK, ROLLBACK TO SAVEPOINT)))
 
+(((ROLLBACK, ROLLBACK TO SAVEPOINT)))
 Необязательное предложение `TO SAVEPOINT` в операторе `ROLLBACK` задаёт имя точки сохранения, на которую происходит откат.
 В этом случае отменяются все изменения, произошедшие в рамках транзакции, начиная с созданной точки сохранения (`SAVEPOINT`).
 
@@ -621,10 +621,10 @@ ROLLBACK [WORK] [TRANSACTION _tr_name_]
 
 [[fblangref-transaction-savepoint]]
 == `SAVEPOINT`
-((SAVEPOINT))
 
 .Назначение
 Создание точки сохранения.
+(((SAVEPOINT)))
 
 .Доступно в
 DSQL
@@ -660,8 +660,6 @@ SAVEPOINT _sp_name_
 Если точка сохранения уже не нужна, но вы ещё не готовы закончить транзакцию, то можно ее удалить оператором <<fblangref-transaction-realese_savepoint,RELEASE SAVEPOINT>>, тем самым освобождая ресурсы.
 ====
 
-_Примеры:_
-
 .DSQL сессия с использованием точек сохранения
 [example]
 ====
@@ -687,10 +685,10 @@ SELECT * FROM TEST; -- возвращает одну строку
 
 [[fblangref-transaction-realese_savepoint]]
 == RELEASE SAVEPOINT
-((RELEASE SAVEPOINT))
 
 .Назначение
 Удаление точки сохранения.
+(((RELEASE SAVEPOINT)))
 
 .Доступно в
 DSQL

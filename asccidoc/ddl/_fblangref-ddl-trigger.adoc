@@ -12,10 +12,10 @@
 
 [[fblangref-ddl-trigger-create]]
 == `CREATE TRIGGER`
-((CREATE TRIGGER))
 
 .Назначение
 Создание нового триггера.
+(((CREATE TRIGGER)))
 
 .Доступно в
 DSQL, ESQL
@@ -178,8 +178,8 @@ CREATE TRIGGER _trigname_ {
 
 [[fblangref-ddl-trigger-create-sql-security]]
 === Привилегии выполнения
-(((CREATE TRIGGER, SQL SECURITY)))
 
+(((CREATE TRIGGER, SQL SECURITY)))
 Необязательное предложение `SQL SECURITY` позволяет задать с какими привилегиями выполняется триггер.
 Если выбрана опция `INVOKER`, то триггер выполняется с привилегиями вызывающего пользователя.
 Если выбрана опция `DEFINER`, то триггер выполняется с привилегиями определяющего пользователя (владельца). Эти привилегии будут дополнены привилегиями выданные самому триггеру с помощью оператора `GRANT`.
@@ -221,15 +221,15 @@ DML триггеры выполняются на уровне строки (за
 
 [[fblangref-ddl-trigger-state]]
 ==== Состояние триггера
-(((CREATE TRIGGER, ACTIVE))) (((CREATE TRIGGER, INACTIVE)))
 
+(((CREATE TRIGGER, ACTIVE))) (((CREATE TRIGGER, INACTIVE)))
 Триггер может быть в одном из двух состояний активном (`ACTIVE`) или неактивном (`INACTIVE`). Запускаются только активные триггеры.
 По умолчанию триггеры создаются в активном состоянии.
 
 [[fblangref-ddl-trigger-table-phase]]
 ==== Фаза
-(((CREATE TRIGGER, BEFORE))) (((CREATE TRIGGER, AFTER)))
 
+(((CREATE TRIGGER, BEFORE))) (((CREATE TRIGGER, AFTER)))
 Триггер может выполняться в одной из двух фаз, связанных с запрошенными изменениями состояния данных.
 Ключевое слово `BEFORE` означает, что триггер вызывается до наступления соответствующего события (событий, если их указано несколько), `AFTER` -- после наступления события (событий).
 
@@ -243,8 +243,8 @@ DML триггеры выполняются на уровне строки (за
 
 [[fblangref-ddl-trigger-position]]
 ==== Порядок срабатывания
-(((CREATE TRIGGER, POSITION)))
 
+(((CREATE TRIGGER, POSITION)))
 Ключевое слово `POSITION` позволяет задать порядок, в котором будут выполняться триггеры с одинаковой фазой и событием (или группы событий). По умолчанию позиция равна 0.
 Если позиции для триггеров не заданы, или несколько триггеров имеют одно и то же значение позиции, то такие триггеры будут выполняться в алфавитном порядке их имен.
 
@@ -270,8 +270,8 @@ DML триггеры выполняются на уровне строки (за
 
 [[fblangref-ddl-trigger-external]]
 ==== Внешние триггеры
-(((CREATE TRIGGER, EXTERNAL)))
 
+(((CREATE TRIGGER, EXTERNAL)))
 Триггер может быть расположена во внешнем модуле.
 В этом случае вместо тела триггера указывается место его расположения во внешнем модуле с помощью предложения `EXTERNAL NAME`.
 Аргументом этого предложения является строка, в которой через разделитель указано имя внешнего модуля, имя процедуры внутри модуля и определённая пользователем информация.
@@ -815,10 +815,10 @@ recreate table t1 (
 
 [[fblangref-ddl-trigger-alter]]
 == `ALTER TRIGGER`
-((ALTER TRIGGER))
 
 .Назначение
 Изменение существующего триггера.
+(((ALTER TRIGGER)))
 
 .Доступно в
 DSQL, ESQL
@@ -845,7 +845,7 @@ ALTER TRIGGER _trigname_
 
 В операторе изменения триггера можно изменить:
 
-* Состояние активности (`ACTIVE | `INACTIVE`);
+* Состояние активности (`ACTIVE | INACTIVE`);
 * Фазу (`BEFORE | AFTER`);
 * Событие(я);
 * Позицию срабатывания;
@@ -974,10 +974,10 @@ END
 
 [[fblangref-ddl-trigger-createoralter]]
 == `CREATE OR ALTER TRIGGER`
-((CREATE OR ALTER TRIGGER))
 
 .Назначение
 Создание нового или изменение существующего триггера.
+(((CREATE OR ALTER TRIGGER)))
 
 .Доступно в
 DSQL, ESQL
@@ -1020,10 +1020,10 @@ END
 
 [[fblangref-ddl-trigger-drop]]
 == `DROP TRIGGER`
-((DROP TRIGGER))
 
 .Назначение
 Удаление существующего триггера.
+(((DROP TRIGGER)))
 
 .Доступно в
 DSQL, ESQL
@@ -1079,10 +1079,10 @@ DROP TRIGGER set_cust_no;
 
 [[fblangref-ddl-trigger-recreate]]
 == `RECREATE TRIGGER`
-((RECREATE TRIGGER))
 
 .Назначение
 Создание нового или пересоздание существующего триггера.
+(((RECREATE TRIGGER)))
 
 .Доступно в
 DSQL, ESQL

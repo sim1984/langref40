@@ -710,10 +710,10 @@ END
 
 [[fblangref-psql-statements-declare-var]]
 === `DECLARE VARIABLE`
-((DECLARE VARIABLE))
 
 .Назначение
 Объявление локальной переменной.
+(((DECLARE VARIABLE)))
 
 .Доступно в
 PSQL
@@ -857,10 +857,10 @@ END
 
 [[fblangref-psql-statements-declare-cursor]]
 === `DECLARE ... CURSOR`
-((DECLARE CURSOR))
 
 .Назначение:
 Объявление курсора.
+(((DECLARE CURSOR)))
 
 .Доступно в:
 PSQL
@@ -896,8 +896,8 @@ DECLARE [VARIABLE] _cursor_name_
 
 [[fblangref-psql-cursor-forward-and-scrolable]]
 ==== Однонаправленные и прокручиваемые курсоры
-(((DECLARE CURSOR, SCROLL))) (((DECLARE CURSOR, NO SCROLL)))
 
+(((DECLARE CURSOR, SCROLL))) (((DECLARE CURSOR, NO SCROLL)))
 Курсор может быть однонаправленными прокручиваемым.
 Необязательное предложение `SCROLL` делает курсор двунаправленным (прокручиваемым), предложение `NO SCROLL` -- однонаправленным.
 По умолчанию курсоры являются однонаправленными.
@@ -984,10 +984,10 @@ END
 
 [[fblangref-psql-statements-declare-procedure]]
 === `DECLARE PROCEDURE`
-((DECLARE PROCEDURE))
 
 .Назначение
 Объявление и реализация подпроцедуры.
+(((DECLARE PROCEDURE)))
 
 .Доступно в
 PSQL
@@ -1143,10 +1143,10 @@ END!
 
 [[fblangref-psql-statements-declare-function]]
 === DECLARE FUNCTION
-((DECLARE FUNCTION))
 
 .Назначение
 Объявление и реализация подфункции.
+(((DECLARE FUNCTION)))
 
 .Доступно в
 PSQL
@@ -1267,10 +1267,10 @@ END!
 
 [[fblangref-psql-statements-beginend]]
 === `BEGIN ... END`
-((BEGIN)) ((END))
 
 .Назначение
 Обозначение составного оператора.
+(((BEGIN))) (((END)))
 
 .Доступно в
 PSQL.
@@ -1366,10 +1366,10 @@ SET TERM ;^
 
 [[fblangref-psql-statements_if]]
 === `IF ... THEN ... ELSE`
-((IF)) (((IF, THEN))) (((IF, ELSE)))
 
 .Назначение
 Условный переход.
+(((IF))) (((IF, THEN))) (((IF, ELSE)))
 
 .Доступно в
 PSQL
@@ -1488,10 +1488,10 @@ ELSE
 
 [[fblangref-psql-statements-while]]
 === `WHILE ... DO`
-((WHILE))
 
 .Назначение
 Циклическое выполнение операторов.
+(((WHILE)))
 
 .Доступно в
 PSQL
@@ -1565,10 +1565,10 @@ S
 
 [[fblangref-psql-statements-break]]
 === `BREAK`
-((BREAK))
 
 .Назначение
 Выход из цикла.
+(((BREAK)))
 
 .Синтаксис
 [listing,subs=+quotes]
@@ -1616,10 +1616,10 @@ END
 
 [[fblangref-psql-statements-leave]]
 === `LEAVE`
-((LEAVE))
 
 .Назначение
 Выход из цикла.
+(((LEAVE)))
 
 .Доступно в
 PSQL
@@ -1729,10 +1729,10 @@ END
 
 [[fblangref-psql-statements-continue]]
 === `CONTINUE`
-((CONTINUE))
 
 .Назначение
 Досрочное начало новой итерации цикла.
+(((CONTINUE)))
 
 .Доступно в
 PSQL
@@ -1799,10 +1799,10 @@ END
 
 [[fblangref-psql-statements-exit]]
 === `EXIT`
-((EXIT))
 
 .Назначение
 Завершение работы процедуры, функции или триггера.
+(((EXIT)))
 
 .Доступно в
 PSQL
@@ -1848,10 +1848,10 @@ END
 
 [[fblangref-psql-statements-suspend]]
 === `SUSPEND`
-((SUSPEND))
 
 .Назначение
 Передача значений параметров в буфер и приостановка выполнения процедуры (PSQL блока) до тех пор, пока вызывающая сторона не получит результат.
+(((SUSPEND)))
 
 .Доступно в
 PSQL
@@ -1906,10 +1906,10 @@ END
 
 [[fblangref-psql-statements-execstmt]]
 === `EXECUTE STATEMENT`
-((EXECUTE STATEMENT))
 
 .Назначение
 Выполнение динамически созданных SQL операторов.
+(((EXECUTE STATEMENT)))
 
 .Доступно в
 PSQL
@@ -2130,9 +2130,11 @@ END
 [[fblangref-psql-statements-execstmt-wautonomous]]
 ==== `WITH {AUTONOMOUS | COMMON} TRANSACTION`
 
+(((EXECUTE STATEMENT, WITH AUTONOMOUS TRANSACTION)))
 По умолчанию оператор выполняется в контексте текущей транзакции.
 При использовании предложения `WITH AUTONOMOUS TRANSACTION` запускается новая транзакция с такими же параметрами, как и текущая.
 Она будет подтверждена, если оператор выполнился без ошибок и отменена (откачена) в противном случае.
+(((EXECUTE STATEMENT, WITH COMMON TRANSACTION)))
 С предложением `WITH COMMON TRANSACTION` по возможности используется текущая транзакция.
 
 Если оператор должен работать в отдельном соединении, то используется уже запущенная в этом соединении транзакция (если таковая транзакция имеется). В противном случае стартует новая транзакция с параметрами текущей транзакции.
@@ -2140,16 +2142,16 @@ END
 
 [[fblangref-psql-statements-execstmt-wcaller]]
 ==== `WITH CALLER PRIVILEGES`
-(((EXECUTE STATEMENT, WITH CALLER PRIVILEGES)))
 
+(((EXECUTE STATEMENT, WITH CALLER PRIVILEGES)))
 По умолчанию операторы SQL выполняются с правами текущего пользователя.
 Спецификация `WITH CALLER PRIVILEGES` добавляет к ним привилегии для вызова хранимой процедуры или триггера, так же как если бы оператор выполнялся непосредственно подпрограммой.
 `WITH CALLER PRIVILEGES` не имеет никакого эффекта, если также присутствует предложение `ON EXTERNAL`.
 
 [[fblangref-psql-statements-execstmt-onexternal]]
 ==== `ON EXTERNAL [DATA SOURCE]`
-(((EXECUTE STATEMENT, ON EXTERNAL)))
 
+(((EXECUTE STATEMENT, ON EXTERNAL)))
 С предложением `ON EXTERNAL DATA SOURCE` оператор выполняется в отдельном соединении с той же или другой базой данных, возможно даже на другом сервере.
 Если строка подключения имеет значение `NULL` или `''` (пустая строка), предложение `ON EXTERNAL` считается отсутствующим и оператор выполняется для текущей базы данных.
 Строка подключения подробно описана в операторе `CREATE DATABASE`
@@ -2266,8 +2268,8 @@ END
 
 [[fblangref-psql-statements-execstmt-asuser]]
 ==== AS USER, PASSWORD и ROLE
-(((EXECUTE STATEMENT, ON EXTERNAL, AS USER))) (((EXECUTE STATEMENT, ON EXTERNAL, PASSWORD))) (((EXECUTE STATEMENT, ON EXTERNAL, ROLE)))
 
+(((EXECUTE STATEMENT, ON EXTERNAL, AS USER))) (((EXECUTE STATEMENT, ON EXTERNAL, PASSWORD))) (((EXECUTE STATEMENT, ON EXTERNAL, ROLE)))
 Необязательные предложения `AS USER`, `PASSWORD` и `ROLE` позволяют указывать от имени какого пользователя, и с какой ролью будет выполняться SQL оператор.
 То, как авторизуется пользователь и открыто ли отдельное соединение, зависит от присутствия и значений параметров `ON EXTERNAL [DATA SOURCE]`, `AS USER`, `PASSWORD` и `ROLE`.
 
@@ -2303,10 +2305,10 @@ END
 
 [[fblangref-psql-statements-forselect]]
 === `FOR SELECT`
-((FOR SELECT))
 
 .Назначение
-Цикл по строкам результата выполнения оператора SELECT.
+Цикл по строкам результата выполнения оператора `SELECT`.
+(((FOR SELECT)))
 
 .Доступно в
 PSQL
@@ -2559,10 +2561,10 @@ END
 
 [[fblangref-psql-statements-forexec]]
 === `FOR EXECUTE STATEMENT`
-((FOR EXECUTE STATEMENT))
 
 .Назначение
 Выполнение динамически созданных SQL операторов с возвратом нескольких строк данных.
+(((FOR EXECUTE STATEMENT)))
 
 .Доступно в
 PSQL
@@ -2629,10 +2631,10 @@ END
 
 [[fblangref-psql-statements-open]]
 === `OPEN`
-((OPEN))
 
 .Назначение
 Открытие курсора.
+(((OPEN)))
 
 .Доступно в
 PSQL
@@ -2780,10 +2782,10 @@ END
 
 [[fblangref-psql-statements-fetch]]
 === `FETCH`
-((FETCH))
 
 .Назначение
 Чтение записи из набора данных, связанного с курсором.
+(((FETCH)))
 
 .Доступно в
 PSQL
@@ -3038,10 +3040,10 @@ END
 
 [[fblangref-psql-statements-close]]
 === `CLOSE`
-((CLOSE))
 
 .Назначение
 Закрытие курсора.
+(((CLOSE)))
 
 .Доступно в
 PSQL
@@ -3078,10 +3080,10 @@ CLOSE _cursor_name_;
 
 [[fblangref-psql-statements-antonomous]]
 === `IN AUTONOMOUS TRANSACTION`
-((IN AUTONOMOUS TRANSACTION))
 
 .Назначение
 Выполнение составного оператора в автономной транзакции.
+(((IN AUTONOMOUS TRANSACTION)))
 
 .Доступно в
 PSQL.
@@ -3155,10 +3157,10 @@ END
 
 [[fblangref-psql-statements-post]]
 === `POST_EVENT`
-((POST_EVENT))
 
 .Назначение
 Посылка события (сообщения) клиентским приложениям.
+(((POST_EVENT)))
 
 .Доступно в
 PSQL
@@ -3209,10 +3211,10 @@ SET TERM ;^
 
 [[fblangref-psql-return]]
 === `RETURN`
-((RETURN))
 
 .Назначение
 Возврат значения из хранимой функции
+(((RETURN)))
 
 .Доступно в
 PSQL
@@ -3282,10 +3284,10 @@ RETURN _value_;
 
 [[fblangref-psql-statements-exception]]
 ==== `EXCEPTION`
-((EXCEPTION))
 
 .Назначение
 Возбуждение пользовательского исключения или повторный вызов исключения.
+(((EXCEPTION)))
 
 .Доступно в
 PSQL
@@ -3476,10 +3478,10 @@ END^
 
 [[fblangref-psql-statements-when]]
 ==== `WHEN ... DO`
-((WHEN ... DO))
 
 .Назначение
 Обработка ошибок.
+(((WHEN ... DO)))
 
 .Доступно в
 PSQL

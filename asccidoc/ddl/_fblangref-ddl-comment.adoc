@@ -7,10 +7,10 @@
 
 [[fblangref-ddl-commenton]]
 == `COMMENT ON`
-((COMMENT ON))
 
 .Назначение
 Документирование метаданных.
+(((COMMENT ON)))
 
 .Доступно в
 DSQL, ESQL

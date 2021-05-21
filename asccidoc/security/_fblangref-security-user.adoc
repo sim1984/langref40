@@ -13,10 +13,10 @@
 
 [[fblangref-security-user-create]]
 == `CREATE USER`
-((CREATE USER))
 
 .Назначение
 Создание учётной записи пользователя Firebird.
+(((CREATE USER)))
 
 .Доступно в
 DSQL
@@ -216,10 +216,10 @@ GRANT ADMIN ROLE;
 
 [[fblangref-security-user-alter]]
 == `ALTER USER`
-((ALTER USER))
 
 .Назначение:
 Изменение учётной записи пользователя Firebird.
+(((ALTER USER)))
 
 .Доступно в:
 DSQL.
@@ -255,7 +255,7 @@ ALTER {USER _username_ | CURRENT USER}
 
 Необязательные предложения `FIRSTNAME`, `MIDDLENAME` и `LASTNAME` позволяют изменить дополнительные атрибуты пользователя, такие как имя пользователя (имя человека), отчество и фамилия соответственно.
 
-(((ALTER USER, ACTIVE)))(((ALTER USER, INACTIVE)))
+(((ALTER USER, ACTIVE))) (((ALTER USER, INACTIVE)))
 Атрибут `INACTIVE` позволяет сделать учётную запись неактивной.
 Это удобно когда необходимо временно отключить учётную запись без её удаления.
 Атрибут `ACTIVE` позволяет вернуть неактивную учётную запись в активное состояние.
@@ -370,10 +370,10 @@ TAGS (BIRTHYEAR = '1971', DROP CITY);
 
 [[fblangref-security-user-createoralter]]
 == `CREATE OR ALTER USER`
-((CREATE OR ALTER USER))
 
 .Назначение
 Создание или изменение учётной записи пользователя Firebird.
+(((CREATE OR ALTER USER)))
 
 .Доступно в
 DSQL
@@ -426,10 +426,10 @@ INACTIVE;
 
 [[fblangref-security-user-drop]]
 == `DROP USER`
-((DROP USER))
 
 .Назначение
 Удаление учётной записи пользователя Firebird
+(((DROP USER)))
 
 .Доступно в
 DSQL
@@ -500,10 +500,10 @@ DROP USER Godzilla USING PLUGIN Legacy_UserManager;
 
 [[fblangref-security-user-recreate]]
 == `RECREATE USER`
-((RECREATE USER))
 
 .Назначение
 Создание новой учётной записи пользователя Firebird или пересоздание существующей.
+(((RECREATE USER)))
 
 .Доступно в
 DSQL
