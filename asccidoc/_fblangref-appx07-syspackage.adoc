@@ -6,36 +6,30 @@
 = Системные пакеты
 
 [[fblangref-syspackage-timezoneutil]]
-== RDB$TIME_ZONE_UTIL
-(((RDB$TIME_ZONE_UTIL)))
+== `RDB$TIME_ZONE_UTIL`
 
 Данный пакет содержит процедуры и функции для работы с часовыми поясами.
 
 [[fblangref-syspackage-timezoneutil_databaseversion]]
-=== Функция DATABASE_VERSION
-(((RDB$TIME_ZONE_UTIL,DATABASE_VERSION)))
+=== Функция `RDB$TIME_ZONE_UTIL.DATABASE_VERSION()`
 
 Функция `RDB$TIME_ZONE_UTIL.DATABASE_VERSION` возвращает версию базы данных часовых поясов (из библиотеки icu).
 
-.Тип возвращаемого результата:
-VARCHAR(10) CHARACTER SET ASCII
-
-.Пример:
+.Тип возвращаемого результата
+`VARCHAR(10) CHARACTER SET ASCII`
 
 
 .Использование функции RDB$TIME_ZONE_UTIL.DATABASE_VERSION
+[example]
 ====
-
 [source,sql]
 ----
-
 SELECT rdb$time_zone_util.database_version()
 FROM rdb$database;
 ----
 
-
+[listing]
 ----
-
 DATABASE_VERSION
 ================
 2020d
@@ -43,85 +37,64 @@ DATABASE_VERSION
 ====
 
 [[fblangref-syspackage-timezoneutil_transitions]]
-=== Процедура TRANSITIONS
+=== Процедура `RDB$TIME_ZONE_UTIL.TRANSITIONS()`
 
 Процедура `RDB$TIME_ZONE_UTIL.TRANSITIONS` возвращает набор правил для часового пояса между начальной и конечной временной меткой.
 
 
-
-.Входные параметры процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS
-[cols="1,1,1", frame="all", options="header"]
+.Входные параметры процедуры `RDB$TIME_ZONE_UTIL.TRANSITIONS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
-| Параметр
-| Тип
-| Описание
+^| Параметр
+^| Тип
+^| Описание
 
-|``RDB$TIME_ZONE_NAME``
-|``CHAR(63)``
-|
+|RDB$TIME_ZONE_NAME
+|`CHAR(63)`
+|Наименование часового пояса
 
-Наименование часового пояса
+|RDB$FROM_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Начало интервала дат
 
-|``RDB$FROM_TIMESTAMP``
-|``TIMESTAMP WITH TIME ZONE``
-|
-
-Начало интервала дат
-
-|``RDB$TO_TIMESTAMP``
-|``TIMESTAMP WITH TIME ZONE``
-|
-
-Окончание интервала дат
+|RDB$TO_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Окончание интервала дат
 |===
 
-
-
-.Выходные параметры процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS
-[cols="1,1,1", frame="all", options="header"]
+.Выходные параметры процедуры `RDB$TIME_ZONE_UTIL.TRANSITIONS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
-| Параметр
-| Тип
-| Описание
+^| Параметр
+^| Тип
+^| Описание
 
-|``RDB$START_TIMESTAMP``
-|``TIMESTAMP WITH TIME ZONE``
-|
+|RDB$START_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Дата начала действия правила
 
-Дата начала действия правила
-
-|``RDB$END_TIMESTAMP``
-|``TIMESTAMP WITH TIME ZONE``
+|RDB$END_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
 |Дата окончания действия правила
 
-|``RDB$ZONE_OFFSET``
-|``SMALLINT``
-|
+|RDB$ZONE_OFFSET
+|`SMALLINT`
+|Смещение времени в минутах для заданного часового пояса
 
-Смещение времени в минутах для заданного часового пояса
+|RDB$DST_OFFSET
+|`SMALLINT`
+|Летнее смещение времени в минутах для заданного часового пояса
 
-|``RDB$DST_OFFSET``
-|``SMALLINT``
-|
-
-Летнее смещение времени в минутах для заданного часового пояса
-
-|``RDB$EFFECTIVE_OFFSET``
-|``SMALLINT``
-|
-
-Эффективное смещение, вычисляется как `RDB$ZONE_OFFSET + RDB$DST_OFFSET`
+|RDB$EFFECTIVE_OFFSET
+|`SMALLINT`
+|Эффективное смещение, вычисляется как `RDB$ZONE_OFFSET + RDB$DST_OFFSET`
 |===
 
-.Пример:
 
-
-.Использование процедуры RDB$TIME_ZONE_UTIL.TRANSITIONS
+.Использование процедуры `RDB$TIME_ZONE_UTIL.TRANSITIONS`
 ====
-
 [source,sql]
 ----
-
 SELECT 
   RDB$START_TIMESTAMP,
   RDB$END_TIMESTAMP,
@@ -134,9 +107,8 @@ FROM rdb$time_zone_util.transitions(
     timestamp '2019-01-01');
 ----
 
-
+[listing]
 ----
-
          RDB$START_TIMESTAMP            RDB$END_TIMESTAMP ZONE_OFF DST_OFF  OFF
 ============================ ============================ ======== ======= ====
 2016-10-16 03:00:00.0000 GMT 2017-02-19 01:59:59.9999 GMT     -180      60 -120

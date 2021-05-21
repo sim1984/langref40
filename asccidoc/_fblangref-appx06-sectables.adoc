@@ -12,10 +12,8 @@
 В этом смысле эти псевдо-таблицы подобны таблицам семейства MON$, используемых для мониторинга сервера.
 
 
-
 .Безопасность:* Полный доступ ко всей информации, предоставляемой таблицами безопасности, имеют SYSDBA и владелец базы данных;
 * Обычные пользователи ограничены информацией о самих себе, другие пользователи невидимы для них.
-
 
 [IMPORTANT]
 ====
@@ -24,37 +22,29 @@
 ====
 
 
-
 .Псевдотаблицы безопасности
-[cols="1,1", frame="all", options="header"]
-|===
-| Таблица
-| Содержание
 
-|<<fblangref-sectables-global_auth_mapping,SEC$GLOBAL_AUTH_MAPPING>>
-|Сведения о глобальных отображениях.
+<<fblangref-sectables-global_auth_mapping,`SEC$GLOBAL_AUTH_MAPPING`>>::
+Сведения о глобальных отображениях.
 
-|<<fblangref-sectables-users,SEC$USERS>>
-|Список пользователей в текущей базе данных безопасности.
+<<fblangref-sectables-users,`SEC$USERS`>>::
+Список пользователей в текущей базе данных безопасности.
 
-|<<fblangref-sectables-user_attributes,SEC$USER_ATTRIBUTES>>
-|Сведения о дополнительных атрибутах пользователей.
-|===
+<<fblangref-sectables-user_attributes,`SEC$USER_ATTRIBUTES`>>::
+Сведения о дополнительных атрибутах пользователей.
+
 
 [[fblangref-sectables-global_auth_mapping]]
-== SEC$GLOBAL_AUTH_MAPPING
-(((SEC$GLOBAL_AUTH_MAPPING)))
+== `SEC$GLOBAL_AUTH_MAPPING`
 
 Сведения о глобальных отображениях.
 
-
-
-.Описание столбцов таблицы SEC$GLOBAL_AUTH_MAPPING
+.Описание столбцов таблицы `SEC$GLOBAL_AUTH_MAPPING`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
-| Наименование столбца
-| Тип данных
-| Описание
+^| Наименование столбца
+^| Тип данных
+^| Описание
 
 |SEC$MAP_NAME
 |CHAR(63)
@@ -62,18 +52,15 @@
 
 |SEC$MAP_USING
 |CHAR(1)
-|Является ли аутентификация общесерверной (S) или обычной
-                                (P).
+|Является ли аутентификация общесерверной (S) или обычной (P).
 
 |SEC$MAP_PLUGIN
 |CHAR(63)
-|Имя плагина аутентификации, из которого происходит
-                                отображение.
+|Имя плагина аутентификации, из которого происходит отображение.
 
 |SEC$MAP_DB
 |CHAR(63)
-|Имя базы данных, в которой прошла аутентификация. Из неё
-                                происходит отображение.
+|Имя базы данных, в которой прошла аутентификация. Из неё происходит отображение.
 
 |SEC$MAP_FROM_TYPE
 |CHAR(63)
@@ -86,26 +73,24 @@
 |SEC$MAP_TO_TYPE
 |SMALLINT
 |
+Тип объекта, в который будет произведено отображение:
 
-Тип объекта, в который будет произведено отображение: 
-
-* 0 -- USER;
-* 1 -- ROLE.
+`0` -- USER; +
+`1` -- ROLE.
 
 
 |SEC$MAP_TO
 |CHAR(63)
 |Наименование объекта, в который будет произведено отображение
-                                (имя пользователя или роли).
+(имя пользователя или роли).
 
 |RDB$SYSTEM_FLAG
 |SMALLINT
 |
+Является ли отображение системным:
 
-Является ли отображение системным: 
-
-* 0 -- определено пользователем;
-* 1 -- определено системой.
+`0` -- определено пользователем; +
+`1` -- определено системой.
 
 
 |RDB$DESCRIPTION
@@ -114,19 +99,16 @@
 |===
 
 [[fblangref-sectables-users]]
-== SEC$USERS
-(((SEC$USERS)))
+== `SEC$USERS`
 
 Список пользователей в текущей базе данных безопасности.
 
-
-
-.Описание столбцов таблицы SEC$USERS
+.Описание столбцов таблицы `SEC$USERS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
-| Наименование столбца
-| Тип данных
-| Описание
+^| Наименование столбца
+^| Тип данных
+^| Описание
 
 |SEC$USER_NAME
 |CHAR(63)
@@ -150,8 +132,8 @@
 
 |SEC$ADMIN
 |BOOLEAN
-|Отражает, имеет ли пользователь права RDB$ADMIN в базе данных
-                                безопасности.
+|Отражает, имеет ли пользователь права `RDB$ADMIN` в базе данных
+безопасности.
 
 |SEC$DESCRIPTION
 |BLOB TEXT
@@ -160,23 +142,20 @@
 |SEC$PLUGIN
 |CHAR(63)
 |Имя плагина управления пользователями, с помощью которого был
-                                создан данный пользователь.
+создан данный пользователь.
 |===
 
 [[fblangref-sectables-user_attributes]]
-== SEC$USER_ATTRIBUTES
-(((SEC$USER_ATTRIBUTES)))
+== `SEC$USER_ATTRIBUTES`
 
 Сведения о дополнительных атрибутах пользователей.
 
-
-
-.Описание столбцов таблицы SEC$USER_ATTRIBUTES
+.Описание столбцов таблицы `SEC$USER_ATTRIBUTES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
-| Наименование столбца
-| Тип данных
-| Описание
+^| Наименование столбца
+^| Тип данных
+^| Описание
 
 |SEC$USER_NAME
 |CHAR(63)
@@ -193,18 +172,15 @@
 |SEC$PLUGIN
 |CHAR(63)
 |Имя плагина управления пользователями, с помощью которого был
-                                создан данный пользователь.
+создан данный пользователь.
 |===
-
-.Примеры
 
 
 .Отображение списка пользователей и их атрибутов
 [example]
-
+====
 [source,sql]
 ----
- 
 SELECT CAST(U.SEC$USER_NAME AS CHAR(20)) AS LOGIN,
     CAST(A.SEC$KEY AS CHAR(10)) AS TAG,
     CAST(A.SEC$VALUE AS CHAR(20)) AS "VALUE",
@@ -213,6 +189,8 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
     ON U.SEC$USER_NAME = A.SEC$USER_NAME
    AND U.SEC$PLUGIN = A.SEC$PLUGIN;
 ----
+
+[listing]
 ----
 
    LOGIN                TAG        VALUE                PLUGIN
@@ -222,5 +200,6 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
    ALEX                 C          sample               Srp
    SYSDBA               <null>     <null>               Legacy_UserManager
 ----
+====
 
 :sectnums:

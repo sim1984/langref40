@@ -1617,7 +1617,7 @@ max_char_length = FLOOR((page_size / 4 – 9) / N),
 
 Последовательность сортировки (COLLATE) тоже может повлиять на максимальную длину индексируемой строки.
 Полный список доступных наборов символов и нестандартных порядков сортировки доступен в приложении
-<<_charset_coll,Наборы символов и порядки сортировки>>.
+<<fblangref-appx-charsets,Наборы символов и порядки сортировки>>.
 
 .См. также
 <<fblangref-ddl-database-create,`CREATE DATABASE`>>, <<fblangref-datatypes-chartypes-collation,Порядок сортировки>>, <<fblangref-dml-select,`SELECT`>>, <<fblangref-dml-select-where,`WHERE`>>, <<fblangref-dml-select-groupby,`GROUP BY`>>, <<fblangref-dml-select-orderby,`ORDER BY`>>

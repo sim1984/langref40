@@ -108,7 +108,7 @@ VALUES ('RDB$FIELD_SUB_TYPE', -33, 'MIDI');
 
 Выполнить оператор `DECLARE FILTER` могут: 
 
-* <<_fblangref-security-administrators,Администраторы>>
+* <<fblangref-security-administrators,Администраторы>>
 * Пользователи с привилегией `CREATE FILTER`.
 
 Пользователь, создавший BLOB фильтр, становится его владельцем.

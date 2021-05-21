@@ -226,7 +226,7 @@ ____
 
 Для управления пользователями через утилиту [app]``gsec`` роль `RDB$ADMIN` должна быть указана в переключателе [parameter]``-role``.
 
-[[_fblangref_security-autoadminmapping]]
+[[fblangref-security-autoadminmapping]]
 === `AUTO ADMIN MAPPING`
 
 .Операционная система

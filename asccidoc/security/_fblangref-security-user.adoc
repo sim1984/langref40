@@ -569,4 +569,4 @@ FROM SEC$USERS U
 ====
 
 .Подробное описание псевдотаблиц безопасности смотри в:
-<<fblangref-sectables-users,SEC$USERS>>, <<fblangref-sectables-user-attributes,SEC$USER_ATTRIBUTES>>.
+<<fblangref-sectables-users,SEC$USERS>>, <<fblangref-sectables-user_attributes,SEC$USER_ATTRIBUTES>>.

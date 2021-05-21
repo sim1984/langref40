@@ -1,24 +1,33 @@
-
 :sectnums!:
 
 [appendix]
-[[_fblangref_license]]
-= Лицензионное соглашение
+[[fblangref-license]]
+= License notice
 
-Содержание данного Документа распространяется на условиях лицензии "`Public
-            Documentation License Version 1.0`" (далее "`Лицензия`"); Вы можете использовать этот Документ, только если согласны с условиями Лицензии.
-Копии текста Лицензии доступны по адресам http://www.firebirdsql.org/pdfmanual/pdl.pdf (PDF) и http://www.firebirdsql.org/manual/pdl.html (HTML). 
+The contents of this Documentation are subject to the Public Documentation License Version 1.0 (the "`License`");
+you may only use this Documentation if you comply with the terms of this License.
+Copies of the License are available at https://www.firebirdsql.org/pdfmanual/pdl.pdf (PDF) and https://www.firebirdsql.org/manual/pdl.html (HTML).
 
-Оригинальное название документа [ref]_Руководство по языку SQL
-        Firebird_.
+The Original Documentation is titled [ref]_Firebird 4.0 Language Reference_.
+This Documentation was derived from [ref]_Firebird 2.5 Language Reference_.
 
-Copyright (C) 2020.
-Все права защищены.
-Адрес электронной почты для контакта: mailto:case@firebirdsql.org[]
+The Initial Writers of the Original Documentation are: Paul Vinkenoog, Dmitry Yemanov, Thomas Woinke and Mark Rotteveel.
+Writers of text originally in Russian are Denis Simonov, Dmitry Filippov, Alexander Karpeykin, Alexey Kovyazin and Dmitry Kuzmenko.
 
-Далее представлен оригинальный текст раздела, так как его перевод не имеет равноценной юридической силы. 
+Copyright (C) 2008-2021.
+All Rights Reserved.
+Initial Writers contact: paul at vinkenoog dot nl.
 
-The contents of this Documentation are subject to the Public Documentation License Version 1.0 (the "`License`"); you may only use this Documentation if you comply with the terms of this License.
-Copies of the License are available at http://www.firebirdsql.org/pdfmanual/pdl.pdf (PDF) and http://www.firebirdsql.org/manual/pdl.html (HTML). 
+Writers and Editors of included PDL-licensed material are: J. Beesley, Helen Borrie, Arno Brinkman, Frank Ingermann, Vlad Khorsun, Alex Peshkov, Nickolay Samofatov, Adriano dos Santos Fernandes, Dmitry Yemanov.
+
+Included portions are Copyright (C) 2001-2020 by their respective authors.
+All Rights Reserved.
+
+Contributor(s): Mark Rotteveel, Denis Simonov.
+
+Portions created by Mark Rotteveel and Denis Simonov are Copyright (C) 2018-2021.
+All Rights Reserved.
+(Contributor contact(s): mrotteveel at users dot sourceforge dot net). +
+(Contributor contact(s): sim-mail at list dot ru).
 
 :sectnums:

@@ -307,7 +307,7 @@ TO PROCEDURE ADD_EMP_PROJ;
 ====
 
 [[fblangref-security-grant-execute-exmpl]]
-==== Примеры пердоставления привилегии `EXECUTE`
+==== Примеры предоставления привилегии `EXECUTE`
 
 .Предоставление привилегии `EXECUTE`
 [example]

@@ -7,7 +7,7 @@
 
 При первоначальном создании базы данных система управления базами данных создаёт множество системных таблиц.
 В системных таблицах хранятся метаданные -- описания всех объектов базы данных.
-Системные таблицы содержат префикс RDB$ в имени. 
+Системные таблицы содержат префикс `RDB$` в имени.
 
 
 .Системные таблицы
@@ -202,7 +202,7 @@
 [[fblangref-systables-backup_history]]
 == `RDB$BACKUP_HISTORY`
 
-Таблица хранит историю копирования базы данных при помощи утилиты nbackup.
+Таблица хранит историю копирования базы данных при помощи утилиты _nbackup_.
 
 .Описание столбцов таблицы `RDB$BACKUP_HISTORY`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -292,7 +292,7 @@
 |RDB$SECURITY_CLASS
 |CHAR(63)
 |Может ссылаться на класс безопасности, определённый в таблице
-RDB$SECURITY_CLASSES для применения ограничений управления доступом
+`RDB$SECURITY_CLASSES` для применения ограничений управления доступом
 для всех пользователей этого набора символов.
 
 |RDB$OWNER_NAME
@@ -303,7 +303,7 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 [[fblangref-systables-check_constraints]]
 == `RDB$CHECK_CONSTRAINTS`
 
-Описывает соответствие имён триггеров именам ограничений, связанных с характеристиками NOT NULL, ограничениями CHECK и предложениями ON UPDATE, ON DELETE в ограничениях внешнего ключа.
+Описывает соответствие имён триггеров именам ограничений, связанных с характеристиками `NOT NULL`, ограничениями `CHECK` и предложениями `ON UPDATE`, `ON DELETE` в ограничениях внешнего ключа.
 
 
 .Описание столбцов таблицы `RDB$CHECK_CONSTRAINTS`
@@ -358,10 +358,10 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 |Атрибуты сортировки. Представляет собой битовую маску,
 
 где 1-й бит показывает учитывать ли конечные пробелы при сравнении
-(0 -- NO PAD; 1 -- PAD SPACE); +
+(0 -- `NO PAD`; 1 -- `PAD SPACE`); +
 2-й бит показывает является ли сравнение
-чувствительным к регистру символов (0 -- CASE SENSITIVE, 1 -- CASE INSENSITIVE); +
-3-й бит показывает будет ли сравнение чувствительным к акцентам (0 -- ACCENT SENSITIVE, 1 -- ACCENT SENSITIVE).
+чувствительным к регистру символов (0 -- `CASE SENSITIVE`, 1 -- `CASE INSENSITIVE`); +
+3-й бит показывает будет ли сравнение чувствительным к акцентам (0 -- `ACCENT SENSITIVE`, 1 -- `ACCENT SENSITIVE`).
 
 Таким образом, значение 5 означает, что сравнение не является чувствительным к конечным пробелам и к акцентированным буквам.
 
@@ -390,7 +390,7 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 |RDB$SECURITY_CLASS
 |CHAR(63)
 |Может ссылаться на класс безопасности, определённый в таблице
-RDB$SECURITY_CLASSES для применения ограничений управления доступом
+`RDB$SECURITY_CLASSES` для применения ограничений управления доступом
 для всех пользователей этой сортировки.
 
 |RDB$OWNER_NAME
@@ -435,7 +435,7 @@ Firebird.
 
 |RDB$CONFIG_IS_SET
 |BOOLEAN
-|TRUE, если значение установлено пользователем, FALSE в противном
+|`TRUE`, если значение установлено пользователем, `FALSE` в противном
 случае.
 
 |RDB$CONFIG_SOURCE
@@ -444,7 +444,7 @@ Firebird.
 относительно корневой папки firebird, например: "`firebird.conf`", "`databases.conf`" или
 специальное значение "`DPB`", если параметр был
 установлен в DPB, если значение параметра не было задано, то это
-поле содержит NULL.
+поле содержит `NULL`.
 |===
 
 [[fblangref-systables-database]]
@@ -470,28 +470,28 @@ Firebird.
 
 |RDB$SECURITY_CLASS
 |CHAR(63)
-|Класс безопасности, определённый в RDB$SECURITY_CLASSES, для
+|Класс безопасности, определённый в `RDB$SECURITY_CLASSES`, для
 обращения к общим для базы данных ограничениям доступа.
 
 |RDB$CHARACTER_SET_NAME
 |CHAR(63)
 |Имя набора символов по умолчанию для базы данных, установленного
-в предложении DEFAULT CHARACTER SET при создании базы данных. NULL --
-набор символов NONE.
+в предложении `DEFAULT CHARACTER SET` при создании базы данных. `NULL` --
+набор символов `NONE`.
 
 |RDB$LINGER
 |INTEGER
 |Количество секунд "задержки" (установленной оператором `alter database set linger`)
 до закрытия последнего соединения базы данных (в SuperServer).
-Если задержка не установлена, то содержит NULL.
+Если задержка не установлена, то содержит `NULL`.
 
 |RDB$SQL_SECURITY
 |BOOLEAN
-|Режим SQL SECURITY по умолчанию (DEFINER или INVOKER) для вновь создаваемым объектам:
+|Режим `SQL SECURITY` по умолчанию (`DEFINER` или `INVOKER`) для вновь создаваемым объектам:
 
-NULL -- режим по умолчанию (INVOKER); +
-FALSE -- INVOKER. Вновь создаваемые объекты выполняются с правами вызывающего пользователя; +
-TRUE -- DEFINER. Вновь создаваемые объекты выполняются с правами определяющего пользователя.
+`NULL` -- режим по умолчанию (`INVOKER`); +
+`FALSE` -- `INVOKER`. Вновь создаваемые объекты выполняются с правами вызывающего пользователя; +
+`TRUE` -- `DEFINER`. Вновь создаваемые объекты выполняются с правами определяющего пользователя.
 
 |===
 
@@ -635,7 +635,7 @@ TRUE -- DEFINER. Вновь создаваемые объекты выполня
 |RDB$SECURITY_CLASS
 |CHAR(63)
 |Может ссылаться на класс безопасности, определённый в таблице
-RDB$SECURITY_CLASSES для применения ограничений управления доступом
+`RDB$SECURITY_CLASSES` для применения ограничений управления доступом
 для всех пользователей этого исключения.
 
 |RDB$OWNER_NAME
@@ -649,7 +649,7 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 Размерности столбцов, являющихся массивами.
 
 
-.Описание столбцов таблицы RDB$FIELD_DIMENSIONS
+.Описание столбцов таблицы `RDB$FIELD_DIMENSIONS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -683,7 +683,7 @@ RDB$FIELD_NAME таблицы RDB$FIELDS.
 
 [NOTE]
 ====
-Столбец RDB$FIELDS.RDB$FIELD_NAME ссылается на RDB$RELATION_FIELDS.RDB$FIELD_SOURCE, но не на RDB$RELATION_FIELDS.RDB$FIELD_NAME. 
+Столбец `RDB$FIELDS.RDB$FIELD_NAME` ссылается на `RDB$RELATION_FIELDS.RDB$FIELD_SOURCE`, но не на `RDB$RELATION_FIELDS.RDB$FIELD_NAME`.
 ====
 
 
@@ -698,7 +698,7 @@ RDB$FIELD_NAME таблицы RDB$FIELDS.
 |CHAR(63)
 |Уникальное имя домена, созданного пользователем, или домена,
 автоматически построенного ядром Firebird для столбца таблицы. Во
-втором случае имя будет начинаться с символов 'RDB$'.
+втором случае имя будет начинаться с символов `RDB$`.
 
 |RDB$QUERY_NAME
 |CHAR(63)
@@ -707,12 +707,12 @@ RDB$FIELD_NAME таблицы RDB$FIELDS.
 |RDB$VALIDATION_BLR
 |BLOB BLR
 |Двоичное представление (BLR) выражения SQL, задающее проверку
-значения CHECK у домена.
+значения `CHECK` у домена.
 
 |RDB$VALIDATION_SOURCE
 |BLOB TEXT
 |Оригинальный исходный текст на языке SQL, задающий проверку
-                                значения CHECK.
+значения `CHECK`.
 
 |RDB$COMPUTED_BLR
 |BLOB BLR
@@ -733,50 +733,48 @@ RDB$FIELD_NAME таблицы RDB$FIELDS.
 
 |RDB$FIELD_LENGTH
 |SMALLINT
-|Размер столбца в байтах. FLOAT, DATE, TIME, INTEGER занимают 4
-байта. DOUBLE PRECISION, BIGINT, TIMESTAMP и идентификатор BLOB -- 8
-байтов. Для типов данных CHAR и VARCHAR столбец задаёт максимальное
+|Размер столбца в байтах. `FLOAT`, `DATE`, `TIME`, `INTEGER` занимают 4
+байта. `DOUBLE PRECISION`, `BIGINT`, `TIMESTAMP` и идентификатор `BLOB` -- 8
+байтов. Для типов данных `CHAR` и `VARCHAR` столбец задаёт максимальное
 количество байтов, указанное при объявлении строкового домена
 (столбца).
 
 |RDB$FIELD_SCALE
 |SMALLINT
-|Отрицательное число задаёт масштаб для столбцов DECIMAL и NUMERIC -- количество
+|Отрицательное число задаёт масштаб для столбцов `DECIMAL` и `NUMERIC` -- количество
 дробных знаков после десятичной точки.
 
 |RDB$FIELD_TYPE
 |SMALLINT
-a|
+|Код типа данных для столбца:
 
-Код типа данных для столбца:
+7 – `SMALLINT`; +
+8 – `INTEGER`; +
+10 – `FLOAT`; +
+12 – `DATE`; +
+13 – `TIME WITHOUT TIME ZONE`; +
+14 – `CHAR` или `BINARY`; +
+16 – `BIGINT`; +
+23 – `BOOLEAN`; +
+24 – `DECFLOAT(16)`; +
+25 – `DECFLOAT(34)`; +
+26 – `INT128`; +
+27 – `DOUBLE PRECISION`; +
+28 – `TIME WITH TIME ZONE`; +
+29 – `TIMESTAMP WITH TIME ZONE`;
+35 – `TIMESTAMP WITHOUT TIME ZONE`; +
+37 – `VARCHAR` или `VARBINARY`; +
+261 – `BLOB`.
 
-* 7 – SMALLINT;
-* 8 – INTEGER;
-* 10 – FLOAT;
-* 12 – DATE;
-* 13 – TIME;
-* 14 – CHAR (BINARY);
-* 16 – BIGINT;
-* 23 – BOOLEAN;
-* 24 – DECFLOAT(16);
-* 25 – DECFLOAT(34);
-* 26 – INT128;
-* 27 – DOUBLE PRECISION;
-* 28 – TIME WITH TIME ZONE;
-* 29 – TIMESTAMP WITH TIME ZONE;
-* 35 – TIMESTAMP;
-* 37 – VARCHAR (VARBINARY);
-* 261 – BLOB.
+Коды для `DECIMAL` и `NUMERIC` имеют тот же размер, что и целые типы, используемые для их хранения.
 
-Коды для DECIMAL и NUMERIC имеют тот же размер, что и целые типы, используемые для их хранения.
-
-Для типов BINARY, VARBINARY поле RDB$FIELD_SUB_TYPE = 0, для CHAR и VARCHAR поле RDB$FIELD_SUB_TYPE = 1.
+Для типов `BINARY`, `VARBINARY` поле `RDB$FIELD_SUB_TYPE = 0`, для `CHAR` и `VARCHAR` поле `RDB$FIELD_SUB_TYPE = 1`.
 
 |RDB$FIELD_SUB_TYPE
 |SMALLINT
 a|
 
-Для типа данных BLOB задаёт подтип: 
+Для типа данных `BLOB` задаёт подтип:
 
 * 0 – не определён;
 * 1 – текст;
@@ -786,16 +784,17 @@ a|
 * 5 – кодированное описание метаданных таблицы;
 * 6 – описание транзакции к нескольким базам данных, которая не завершилась нормально.
 
-Для типа данных CHAR задаёт: 
+Для типа данных `CHAR` задаёт:
 
 * 0 – неопределённые данные;
 * 1 – фиксированные двоичные данные.
 
-Для целочисленных типов данных (SMALLINT, INTEGER, BIGINT) и чисел с фиксированной точкой (NUMERIC, DECIMAL) задаёт конкретный тип данных: 
+Для целочисленных типов данных (`SMALLINT`, `INTEGER`, `BIGINT`, `INT128`) и
+чисел с фиксированной точкой (`NUMERIC`, `DECIMAL`) задаёт конкретный тип данных:
 
-* 0 или NULL – тип данных соответствует значению в поле RDB$FIELD_TYPE;
-* 1 – NUMERIC;
-* 2 – DECIMAL.
+* 0 или `NULL` – тип данных соответствует значению в поле `RDB$FIELD_TYPE`;
+* 1 – `NUMERIC`;
+* 2 – `DECIMAL`.
 
 
 |RDB$MISSING_VALUE
@@ -808,13 +807,12 @@ a|
 
 |RDB$DESCRIPTION
 |BLOB TEXT
-|Произвольный текст комментария для домена (столбца
-                                таблицы).
+|Произвольный текст комментария для домена (столбца таблицы).
 
 |RDB$SYSTEM_FLAG
 |SMALLINT
 |Признак: значение 1 – домен, автоматически созданный системой,
-                                значение 0 – домен определён пользователем.
+значение 0 – домен определён пользователем.
 
 |RDB$QUERY_HEADER
 |BLOB TEXT
@@ -822,8 +820,8 @@ a|
 
 |RDB$SEGMENT_LENGTH
 |SMALLINT
-|Для столбцов BLOB задаёт длину буфера BLOB в байтах. Для
-                                остальных типов данных содержит NULL.
+|Для столбцов `BLOB` задаёт длину буфера `BLOB` в байтах. Для
+остальных типов данных содержит `NULL`.
 
 |RDB$EDIT_STRING
 |VARCHAR(127)
@@ -832,7 +830,7 @@ a|
 |RDB$EXTERNAL_LENGTH
 |SMALLINT
 |Длина столбца в байтах, если он входит в состав внешней таблицы.
-Всегда NULL для обычных таблиц.
+Всегда `NULL` для обычных таблиц.
 
 |RDB$EXTERNAL_SCALE
 |SMALLINT
@@ -841,28 +839,26 @@ a|
 
 |RDB$EXTERNAL_TYPE
 |SMALLINT
-a|
+|Тип данных поля, как он представляется во внешней таблице.
 
-Тип данных поля, как он представляется во внешней таблице.
+7 – `SMALLINT`; +
+8 – `INTEGER`; +
+10 – `FLOAT`; +
+12 – `DATE`; +
+13 – `TIME WITHOUT TIME ZONE`; +
+14 – `CHAR`; +
+16 – `BIGINT`; +
+23 – `BOOLEAN`; +
+24 – `DECFLOAT(16)`; +
+25 – `DECFLOAT(34)`; +
+26 – `INT128`; +
+27 – `DOUBLE PRECISION`; +
+28 – `TIME WITH TIME ZONE`; +
+29 – `TIMESTAMP WITH TIME ZONE`; +
+35 – `TIMESTAMP WITHOUT TIME ZONE`; +
+37 – `VARCHAR`.
 
-* 7 – SMALLINT;
-* 8 – INTEGER;
-* 10 – FLOAT;
-* 12 – DATE;
-* 13 – TIME;
-* 14 – CHAR;
-* 16 – BIGINT;
-* 23 – BOOLEAN;
-* 24 – DECFLOAT(16);
-* 25 – DECFLOAT(34);
-* 26 – INT128;
-* 27 – DOUBLE PRECISION;
-* 28 – TIME WITH TIME ZONE;
-* 29 – TIMESTAMP WITH TIME ZONE;
-* 35 – TIMESTAMP;
-* 37 – VARCHAR.
-
-Коды для DECIMAL и NUMERIC имеют тот же размер, что и целые типы, используемые для их хранения.
+Коды для `DECIMAL` и `NUMERIC` имеют тот же размер, что и целые типы, используемые для их хранения.
 
 |RDB$DIMENSIONS
 |SMALLINT
@@ -876,7 +872,7 @@ a|
 
 |RDB$CHARACTER_LENGTH
 |SMALLINT
-|Длина столбцов CHAR или VARCHAR в символах (не в байтах).
+|Длина столбцов `CHAR` или `VARCHAR` в символах (не в байтах).
 
 |RDB$COLLATION_ID
 |SMALLINT
@@ -886,18 +882,18 @@ a|
 |RDB$CHARACTER_SET_ID
 |SMALLINT
 |Идентификатора набора символов для символьного столбца, столбца
-BLOB или домена.
+`BLOB` или домена.
 
 |RDB$FIELD_PRECISION
 |SMALLINT
 |Указывает общее количество цифр для числового типа данных с
-фиксированной точкой (DECIMAL и NUMERIC). Для целочисленных типов
-данных значением является 0, для всех остальных типов данных – NULL.
+фиксированной точкой (`DECIMAL` и `NUMERIC`). Для целочисленных типов
+данных значением является 0, для всех остальных типов данных – `NULL`.
 
 |RDB$SECURITY_CLASS
 |CHAR(63)
 |Может ссылаться на класс безопасности, определённый в таблице
-RDB$SECURITY_CLASSES для применения ограничений управления доступом
+`RDB$SECURITY_CLASSES` для применения ограничений управления доступом
 для всех пользователей этого домена.
 
 |RDB$OWNER_NAME
@@ -941,13 +937,13 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 
 |RDB$SHADOW_NUMBER
 |SMALLINT
-|Номер набора оперативных копий. Если строка описывает вторичный файл базы данных, то значением поля будет NULL или 0.
+|Номер набора оперативных копий. Если строка описывает вторичный файл базы данных, то значением поля будет `NULL` или `0`.
 |===
 
 [[fblangref-systables-filters]]
-== RDB$FILTERS
+== `RDB$FILTERS`
 
-Содержит данные о BLOB-фильтрах.
+Содержит данные о `BLOB`-фильтрах.
 
 .Описание столбцов таблицы RDB$FILTERS
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
@@ -958,15 +954,15 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 
 |RDB$FUNCTION_NAME
 |CHAR(63)
-|Уникальное имя фильтра BLOB.
+|Уникальное имя фильтра `BLOB`.
 
 |RDB$DESCRIPTION
 |BLOB TEXT
-|Написанная пользователем документация о фильтре BLOB и используемых двух подтипах.
+|Написанная пользователем документация о фильтре `BLOB` и используемых двух подтипах.
 
 |RDB$MODULE_NAME
 |VARCHAR(255)
-|Имя динамической библиотеки / совместно используемого объекта, где расположен код фильтра BLOB.
+|Имя динамической библиотеки / совместно используемого объекта, где расположен код фильтра `BLOB`.
 
 |RDB$ENTRYPOINT
 |CHAR(255)
@@ -974,11 +970,11 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 
 |RDB$INPUT_SUB_TYPE
 |SMALLINT
-|Подтип BLOB для преобразуемых данных.
+|Подтип `BLOB` для преобразуемых данных.
 
 |RDB$OUTPUT_SUB_TYPE
 |SMALLINT
-|Подтип BLOB, в который преобразуются входные данные.
+|Подтип `BLOB`, в который преобразуются входные данные.
 
 |RDB$SYSTEM_FLAG
 |SMALLINT
@@ -988,24 +984,24 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 |RDB$SECURITY_CLASS
 |CHAR(63)
 |Может ссылаться на класс безопасности, определённый в таблице
-RDB$SECURITY_CLASSES для применения ограничений управления доступом
-для всех пользователей этого BLOB фильтра.
+`RDB$SECURITY_CLASSES` для применения ограничений управления доступом
+для всех пользователей этого `BLOB` фильтра.
 
 |RDB$OWNER_NAME
 |CHAR(63)
-|Имя пользователя -- владельца (создателя) BLOB фильтра.
+|Имя пользователя -- владельца (создателя) `BLOB` фильтра.
 |===
 
 [[fblangref-systables-formats]]
-== RDB$FORMATS
+== `RDB$FORMATS`
 
-Таблица RDB$FORMATS хранит данные об изменениях метаданных таблиц.
+Таблица `RDB$FORMATS` хранит данные об изменениях метаданных таблиц.
 Каждый раз, когда метаданные таблицы изменяются, таблица получает новый номер формата.
 Когда номер формата любой таблицы достигает 255 (или 32000 для представлений), вся база данных становится недоступной для работы с ней.
 В этом случае необходимо выполнить резервное копирование с помощью утилиты [app]``gbak``, после чего восстановить эту копию и продолжить работу с заново созданной базой данных.
 
 
-.Описание столбцов таблицы RDB$FORMATS
+.Описание столбцов таблицы `RDB$FORMATS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1028,11 +1024,11 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 |===
 
 [[fblangref-systables-function_arguments]]
-== RDB$FUNCTION_ARGUMENTS
+== `RDB$FUNCTION_ARGUMENTS`
 
 Параметры хранимых или внешних функций.
 
-.Описание столбцов таблицы RDB$FUNCTION_ARGUMENTS
+.Описание столбцов таблицы `RDB$FUNCTION_ARGUMENTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1049,14 +1045,12 @@ RDB$SECURITY_CLASSES для применения ограничений упра
 
 |RDB$MECHANISM
 |SMALLINT
-a|
+|Механизм передачи параметра для Legacy функций:
 
-Механизм передачи параметра для Legacy функций: 
-
-* 0 -- по значению;
-* 1 -- по ссылке;
-* 2 -- через дескриптор;
-* 3 -- через дескриптор BLOB.
+0 -- по значению; +
+1 -- по ссылке; +
+2 -- через дескриптор; +
+3 -- через дескриптор BLOB.
 
 
 |RDB$FIELD_TYPE
@@ -1064,24 +1058,24 @@ a|
 |
 Код типа данных аргумента:
 
-7 -- SMALLINT; +
-8 -- INTEGER; +
-12 -- DATE; +
-13 -- TIME; +
-14 -- CHAR; +
-16 -- BIGINT; +
-23 -- BOOLEAN; +
-24 -- DECFLOAT(16); +
-25 -- DECFLOAT(34); +
-26 -- INT128; +
-27 -- DOUBLE PRECISION; +
-28 – TIME WITH TIME ZONE; +
-29 – TIMESTAMP WITH TIME ZONE; +
-35 -- TIMESTAMP; +
-37 -- VARCHAR; +
-40 -- CSTRING; +
+7 -- `SMALLINT`; +
+8 -- `INTEGER`; +
+12 -- `DATE`; +
+13 -- `TIME WITHOUT TIME ZONE`; +
+14 -- `CHAR`; +
+16 -- `BIGINT`; +
+23 -- `BOOLEAN`; +
+24 -- `DECFLOAT(16)`; +
+25 -- `DECFLOAT(34)`; +
+26 -- `INT128`; +
+27 -- `DOUBLE PRECISION`; +
+28 – `TIME WITH TIME ZONE`; +
+29 – `TIMESTAMP WITH TIME ZONE`; +
+35 -- `TIMESTAMP WITHOUT TIME ZONE`; +
+37 -- `VARCHAR`; +
+40 -- `CSTRING`; +
 45 -- blob id; +
-261 -- BLOB.
+261 -- `BLOB`.
 
 
 |RDB$FIELD_SCALE
@@ -1094,20 +1088,20 @@ a|
 |
 Длина аргумента в байтах:
 
-1 -- для BOOLEAN; +
-2 -- для SMALLINT; +
-4 -- для INTEGER; +
-4 -- для DATE; +
-4 -- для TIME; +
-8 -- для TIME WITH TIME ZONE; +
-8 -- для BIGINT; +
-8 -- для DOUBLE PRECISION; +
-8 -- для TIMESTAMP; +
-8 -- для DECFLOAT(16); +
+1 -- для `BOOLEAN`; +
+2 -- для `SMALLINT`; +
+4 -- для `INTEGER`; +
+4 -- для `DATE`; +
+4 -- для `TIME WITHOUT TIME ZONE`; +
+8 -- для `TIME WITH TIME ZONE`; +
+8 -- для `BIGINT`; +
+8 -- для `DOUBLE PRECISION`; +
+8 -- для `TIMESTAMP WITHOUT TIME ZONE`; +
+8 -- для `DECFLOAT(16)`; +
 8 -- для blob id; +
-12 -- для TIMESTAMP WITH TIME ZONE; +
-16 -- для DECFLOAT(34); +
-16 -- для INT128.
+12 -- для `TIMESTAMP WITH TIME ZONE`; +
+16 -- для `DECFLOAT(34)`; +
+16 -- для `INT128`.
 
 
 |RDB$FIELD_SUB_TYPE
@@ -1125,7 +1119,7 @@ a|
 
 |RDB$CHARACTER_LENGTH
 |SMALLINT
-|Длина аргумента CHAR или VARCHAR в символах (но не в байтах).
+|Длина аргумента CHAR или VARCHAR в символах (не в байтах).
 
 |RDB$PACKAGE_NAME
 |CHAR(63)
@@ -1141,7 +1135,7 @@ a|
 |Имя домена, созданного пользователем (при использовании ссылки на
 домен вместо типа), или домена, автоматически построенного системой
 для параметра функции. Во втором случае имя будет начинаться с
-символов 'RDB$'.
+символов `RDB$`.
 
 |RDB$DEFAULT_VALUE
 |BLOB BLR
@@ -1168,7 +1162,7 @@ a|
 0 -- по значению; +
 1 -- по ссылке; +
 2 -- через дескриптор; +
-3 -- через дескриптор BLOB.
+3 -- через дескриптор `BLOB`.
 
 
 |RDB$FIELD_NAME
@@ -1192,11 +1186,11 @@ a|
 |===
 
 [[fblangref-systables-functions]]
-== RDB$FUNCTIONS
+== `RDB$FUNCTIONS`
 
 Описание хранимых или внешних функций.
 
-.Описание столбцов таблицы RDB$FUNCTIONS
+.Описание столбцов таблицы `RDB$FUNCTIONS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1298,24 +1292,24 @@ a|
 |SMALLINT
 |Флаг детерминистической функции.
 
-1 -- если функция детерминистическая (DETERMINISTIC), +
+1 -- если функция детерминистическая (`DETERMINISTIC`), +
 в противном случае -- 0.
 
 |RDB$SQL_SECURITY
 |BOOLEAN
 |С какими правами выполняется функция:
 
-TRUE -- с правами определяющего пользователя (SQL SECURITY DEFINER); +
-FALSE -- с правами вызывающего пользователя (SQL SECURITY INVOKER); +
-NULL -- привилегии выполнения наследуется от пакета.
+`TRUE` -- с правами определяющего пользователя (`SQL SECURITY DEFINER`); +
+`FALSE` -- с правами вызывающего пользователя (`SQL SECURITY INVOKER`); +
+`NULL` -- привилегии выполнения наследуется от пакета.
 |===
 
 [[fblangref-systables-generators]]
-== RDB$GENERATORS
+== `RDB$GENERATORS`
 
 Сведения о генераторах (последовательностях).
 
-.Описание столбцов таблицы RDB$GENERATORS
+.Описание столбцов таблицы `RDB$GENERATORS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1364,14 +1358,14 @@ NULL -- привилегии выполнения наследуется от п
 |===
 
 [[fblangref-systables-index_segments]]
-== RDB$INDEX_SEGMENTS
+== `RDB$INDEX_SEGMENTS`
 
 Сегменты и позиции индексов.
 Таблица описывает все столбцы таблицы, входящие в состав конкретного индекса.
 Для каждого столбца индекса создаётся отдельная строка в данной таблице.
 
 
-.Описание столбцов таблицы RDB$INDEX_SEGMENTS
+.Описание столбцов таблицы `RDB$INDEX_SEGMENTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1401,12 +1395,12 @@ NULL -- привилегии выполнения наследуется от п
 |===
 
 [[fblangref-systables-indices]]
-== RDB$INDICES
+== `RDB$INDICES`
 
 Определение индексов базы данных (созданных пользователем или системой). Описывает каждый индекс, созданный пользователем или системой.
 Для каждого столбца таблицы, входящего в состав индекса, присутствует строка системной таблицы RDB$INDEX_SEGMENTS, где описываются характеристики столбца индекса.
 
-.Описание столбцов таблицы RDB$INDICES
+.Описание столбцов таблицы `RDB$INDICES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1421,7 +1415,7 @@ NULL -- привилегии выполнения наследуется от п
 |RDB$RELATION_NAME
 |CHAR(63)
 |Имя таблицы, к которой применяется индекс. Соответствует
-RDB$RELATION_NAME в строке таблицы RDB$RELATIONS.
+`RDB$RELATION_NAME` в строке таблицы `RDB$RELATIONS`.
 
 |RDB$INDEX_ID
 |SMALLINT
@@ -1450,7 +1444,7 @@ RDB$RELATION_NAME в строке таблицы RDB$RELATIONS.
 0 -- активный; +
 1 -- неактивный; +
 3 -- состояние только для Foreign Key. Это состояние существует только во время восстановления данных. 
-Оно необходимо чтобы различать частично "`неактивное`" состояние некоторых индексов от неактивного состояния всех индексов (gbak -i).
+Оно необходимо чтобы различать частично "`неактивное`" состояние некоторых индексов от неактивного состояния всех индексов (`gbak -i`).
 
 
 |RDB$INDEX_TYPE
@@ -1490,11 +1484,11 @@ RDB$RELATION_NAME в строке таблицы RDB$RELATIONS.
 |===
 
 [[fblangref-systables-log_files]]
-== RDB$LOG_FILES
+== `RDB$LOG_FILES`
 
 В настоящей версии не используется.
 
-.Описание столбцов таблицы RDB$LOG_FILES
+.Описание столбцов таблицы `RDB$LOG_FILES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1527,11 +1521,11 @@ RDB$RELATION_NAME в строке таблицы RDB$RELATIONS.
 |===
 
 [[fblangref-systables-packages]]
-== RDB$PACKAGES
+== `RDB$PACKAGES`
 
 Сведения о PSQL пакетах.
 
-.Описание столбцов таблицы RDB$PACKAGES
+.Описание столбцов таблицы `RDB$PACKAGES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1578,16 +1572,16 @@ RDB$RELATION_NAME в строке таблицы RDB$RELATIONS.
 |BOOLEAN
 |С какими правами выполняется процедуры и функции пакета:
 
-TRUE -- с правами определяющего пользователя (SQL SECURITY DEFINER); +
-FALSE -- с правами вызывающего пользователя (SQL SECURITY INVOKER).
+`TRUE` -- с правами определяющего пользователя (`SQL SECURITY DEFINER`); +
+`FALSE` -- с правами вызывающего пользователя (`SQL SECURITY INVOKER`).
 |===
 
 [[fblangref-systables-pages]]
-== RDB$PAGES
+== `RDB$PAGES`
 
 Сведения о страницах базы данных.
 
-.Описание столбцов таблицы RDB$PAGES
+.Описание столбцов таблицы `RDB$PAGES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1597,7 +1591,7 @@ FALSE -- с правами вызывающего пользователя (SQL 
 |RDB$PAGE_NUMBER
 |INTEGER
 |Уникальный номер физически созданной страницы базы
-                                данных.
+данных.
 
 |RDB$RELATION_ID
 |SMALLINT
@@ -1614,11 +1608,11 @@ FALSE -- с правами вызывающего пользователя (SQL 
 |===
 
 [[fblangref-systables-procedure_parameters]]
-== RDB$PROCEDURE_PARAMETERS
+== `RDB$PROCEDURE_PARAMETERS`
 
 Описывает параметры хранимых процедур.
 
-.Описание столбцов таблицы RDB$PROCEDURE_PARAMETERS
+.Описание столбцов таблицы `RDB$PROCEDURE_PARAMETERS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1647,7 +1641,7 @@ FALSE -- с правами вызывающего пользователя (SQL 
 |Имя домена, созданного пользователем (при использовании ссылки на
 домен вместо типа), или домена, автоматически построенного системой
 для параметра процедуры. Во втором случае имя будет начинаться с
-символов 'RDB$'.
+символов `RDB$`.
 
 |RDB$DESCRIPTION
 |BLOB TEXT
@@ -1673,7 +1667,7 @@ FALSE -- с правами вызывающего пользователя (SQL 
 
 |RDB$NULL_FLAG
 |SMALLINT
-|Признак допустимости пустого значения NULL.
+|Признак допустимости пустого значения `NULL`.
 
 |RDB$PARAMETER_MECHANISM
 |SMALLINT
@@ -1703,7 +1697,7 @@ FALSE -- с правами вызывающего пользователя (SQL 
 |===
 
 [[fblangref-systables-procedures]]
-== RDB$PROCEDURES
+== `RDB$PROCEDURES`
 
 Описывает хранимые процедуры.
 
@@ -1769,7 +1763,7 @@ FALSE -- с правами вызывающего пользователя (SQL 
 |
 Тип процедуры: 
 
-1 -- селективная хранимая процедура (содержит в своём составе оператор SUSPEND); +
+1 -- селективная хранимая процедура (содержит в своём составе оператор `SUSPEND`); +
 2 -- выполняемая хранимая процедура.
 
 
@@ -1807,17 +1801,17 @@ FALSE -- с правами вызывающего пользователя (SQL 
 |BOOLEAN
 |С какими правами выполняется процедура:
 
-TRUE -- с правами определяющего пользователя (SQL SECURITY DEFINER); +
-FALSE -- с правами вызывающего пользователя (SQL SECURITY INVOKER); +
-NULL -- привилегии выполнения наследуется от пакета.
+`TRUE` -- с правами определяющего пользователя (`SQL SECURITY DEFINER`); +
+`FALSE` -- с правами вызывающего пользователя (`SQL SECURITY INVOKER`); +
+`NULL` -- привилегии выполнения наследуется от пакета.
 |===
 
 [[fblangref-systables-publication_tables]]
-== RDB$PUBLICATION_TABLES
+== `RDB$PUBLICATION_TABLES`
 
 Таблицы включенные в набор репликации (публикацию).
 
-.Описание столбцов таблицы RDB$PUBLICATION_TABLES
+.Описание столбцов таблицы `RDB$PUBLICATION_TABLES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1834,7 +1828,7 @@ NULL -- привилегии выполнения наследуется от п
 |===
 
 [[fblangref-systables-publications]]
-== RDB$PUBLICATIONS
+== `RDB$PUBLICATIONS`
 
 Публикации.
 Публикация -- набор таблиц для репликации.
@@ -1879,11 +1873,11 @@ NULL -- привилегии выполнения наследуется от п
 ====
 
 [[fblangref-systables-ref_constraints]]
-== RDB$REF_CONSTRAINTS
+== `RDB$REF_CONSTRAINTS`
 
 Описания именованных ограничений базы данных (внешних ключей).
 
-.Описание столбцов таблицы RDB$REF_CONSTRAINTS
+.Описание столбцов таблицы `RDB$REF_CONSTRAINTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1902,7 +1896,7 @@ NULL -- привилегии выполнения наследуется от п
 
 |RDB$MATCH_OPTION
 |CHAR(7)
-|Не используется. Текущим значением является FULL во всех
+|Не используется. Текущим значением является `FULL` во всех
 случаях.
 
 |RDB$UPDATE_RULE
@@ -1919,11 +1913,11 @@ NULL -- привилегии выполнения наследуется от п
 |===
 
 [[fblangref-systables-relation_constraints]]
-== RDB$RELATION_CONSTRAINTS
+== `RDB$RELATION_CONSTRAINTS`
 
 Описание всех ограничений на уровне таблиц: первичного, уникального, внешнего ключей, ограничений `CHECK`, `NOT NULL`.
 
-.Описание столбцов таблицы RDB$RELATION_CONSTRAINTS
+.Описание столбцов таблицы `RDB$RELATION_CONSTRAINTS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -1958,11 +1952,11 @@ NULL -- привилегии выполнения наследуется от п
 |===
 
 [[fblangref-systables-relation_fields]]
-== RDB$RELATION_FIELDS
+== `RDB$RELATION_FIELDS`
 
 Характеристики столбцов таблиц и представлений.
 
-.Описание столбцов таблицы RDB$RELATION_FIELDS
+.Описание столбцов таблицы `RDB$RELATION_FIELDS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2051,7 +2045,7 @@ NULL -- привилегии выполнения наследуется от п
 
 |RDB$DEFAULT_SOURCE
 |BLOB TEXT
-|Исходный текст предложения DEFAULT, если присутствует.
+|Исходный текст предложения `DEFAULT`, если присутствует.
 
 |RDB$COLLATION_ID
 |SMALLINT
@@ -2064,20 +2058,20 @@ NULL -- привилегии выполнения наследуется от п
 
 |RDB$IDENTITY_TYPE
 |SMALLINT
-|Для IDENTITY столбцов определённых
+|Для `IDENTITY` столбцов определённых
 
-GENERATED BY DEFAULT хранит значение 0, +
-GENERATED ALWAYS хранит значение 1. 
+`GENERATED BY DEFAULT` хранит значение 0, +
+`GENERATED ALWAYS` хранит значение 1.
 
-Для не IDENTITY столбцов хранит NULL.
+Для не `IDENTITY` столбцов хранит `NULL`.
 |===
 
 [[fblangref-systables-relations]]
-== RDB$RELATIONS
+== `RDB$RELATIONS`
 
 Хранит некоторые характеристики таблиц и представлений.
 
-.Описание столбцов таблицы RDB$RELATIONS
+.Описание столбцов таблицы `RDB$RELATIONS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2087,13 +2081,13 @@ GENERATED ALWAYS хранит значение 1.
 |RDB$VIEW_BLR
 |BLOB BLR
 |Для представления содержит на языке BLR спецификации запроса. Для
-таблицы в поле содержится NULL.
+таблицы в поле содержится `NULL`.
 
 |RDB$VIEW_SOURCE
 |BLOB TEXT
 |Для представления содержит оригинальный исходный текст запроса на
 языке SQL (включая пользовательские комментарии). Для таблицы в поле
-содержится NULL.
+содержится `NULL`.
 
 |RDB$DESCRIPTION
 |BLOB TEXT
@@ -2168,25 +2162,25 @@ a|
 * 0 – постоянная таблица созданная пользователем или системная таблица;
 * 1 – представление;
 * 2 – внешняя таблица;
-* 3 – виртуальная таблица (таблицы мониторинга MON$, псевдотаблицы безопасности SEC$);
-* 4 – GTT уровня соединения (PRESERVE ROWS);
-* 5 – GTT уровня транзакции (DELETE ROWS).
+* 3 – виртуальная таблица (таблицы мониторинга `MON$`, псевдотаблицы безопасности `SEC$`);
+* 4 – GTT уровня соединения (`PRESERVE ROWS`);
+* 5 – GTT уровня транзакции (`DELETE ROWS`).
 
 
 |RDB$SQL_SECURITY
 |BOOLEAN
 |С какими правами вычисляются вычисляемые столбцы:
 
-TRUE -- с правами определяющего пользователя (SQL SECURITY DEFINER); +
-FALSE или NULL -- с правами вызывающего пользователя (SQL SECURITY INVOKER).
+`TRUE` -- с правами определяющего пользователя (`SQL SECURITY DEFINER`); +
+`FALSE` или `NULL` -- с правами вызывающего пользователя (`SQL SECURITY INVOKER`).
 |===
 
 [[fblangref-systables-roles]]
-== RDB$ROLES
+== `RDB$ROLES`
 
 Определение ролей.
 
-.Описание столбцов таблицы RDB$ROLES
+.Описание столбцов таблицы `RDB$ROLES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2250,12 +2244,11 @@ FALSE или NULL -- с правами вызывающего пользоват
 |===
 
 [[fblangref-systables-security_classes]]
-== RDB$SECURITY_CLASSES
+== `RDB$SECURITY_CLASSES`
 
 Списки управления доступом.
 
-
-.Описание столбцов таблицы RDB$SECURITY_CLASSES
+.Описание столбцов таблицы `RDB$SECURITY_CLASSES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2277,11 +2270,11 @@ FALSE или NULL -- с правами вызывающего пользоват
 |===
 
 [[fblangref-systables-timezones]]
-== RDB$TIME_ZONES
+== `RDB$TIME_ZONES`
 
 Виртуальная таблица со списком часовых поясов поддерживаемых сервером.
 
-.Описание столбцов таблицы RDB$TIME_ZONES
+.Описание столбцов таблицы `RDB$TIME_ZONES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2298,11 +2291,11 @@ FALSE или NULL -- с правами вызывающего пользоват
 |===
 
 [[fblangref-systables-transactions]]
-== RDB$TRANSACTIONS
+== `RDB$TRANSACTIONS`
 
-RDB$TRANSACTIONS хранит состояние распределённых и других транзакций, которые подготовлены для двухфазного подтверждения с явно подготовленным сообщением.
+`RDB$TRANSACTIONS` хранит состояние распределённых и других транзакций, которые подготовлены для двухфазного подтверждения с явно подготовленным сообщением.
 
-.Описание столбцов таблицы RDB$TRANSACTIONS
+.Описание столбцов таблицы `RDB$TRANSACTIONS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2336,11 +2329,11 @@ RDB$TRANSACTIONS хранит состояние распределённых и
 |===
 
 [[fblangref-systables-trigger_messages]]
-== RDB$TRIGGER_MESSAGES
+== `RDB$TRIGGER_MESSAGES`
 
 Сообщения триггеров.
 
-.Описание столбцов таблицы RDB$TRIGGER_MESSAGES
+.Описание столбцов таблицы `RDB$TRIGGER_MESSAGES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2361,11 +2354,11 @@ RDB$TRANSACTIONS хранит состояние распределённых и
 |===
 
 [[fblangref-systables-triggers]]
-== RDB$TRIGGERS
+== `RDB$TRIGGERS`
 
 Описания триггеров.
 
-.Описание столбцов таблицы RDB$TRIGGERS
+.Описание столбцов таблицы `RDB$TRIGGERS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2380,7 +2373,7 @@ RDB$TRANSACTIONS хранит состояние распределённых и
 |CHAR(63)
 |Имя таблицы или представления, для которого используется триггер.
 Если триггер применяется не к событию таблицы, а к событию базы
-данных, то в этом поле находится NULL.
+данных, то в этом поле находится `NULL`.
 
 |RDB$TRIGGER_SEQUENCE
 |SMALLINT
@@ -2391,82 +2384,27 @@ RDB$TRANSACTIONS хранит состояние распределённых и
 |BIGINT
 |Событие, на которое вызывается триггер:
 
-1 -- BEFORE INESRT; +
-2 -- AFTER INSERT; +
-3 -- BEFORE UPDATE; +
-4 -- AFTER UPDATE; +
-5 -- BEFORE DELETE; +
-6 -- AFTER DELETE; +
-17 -- BEFORE INSERT OR UPDATE; +
-18 -- AFTER INSERT OR UPDATE; +
-25 -- BEFORE INSERT OR DELETE; +
-26 -- AFTER INSERT OR DELETE; +
-27 -- BEFORE UPDATE OR DELETE; +
-28 -- AFTER UPDATE OR DELETE; +
-113 -- BEFORE INSERT OR UPDATE OR DELETE; +
-114 -- AFTER INSERT OR UPDATE OR DELETE; +
-8192 -- ON CONNECT; +
-8193 -- ON DISCONNECT; +
-8194 -- ON TRANSACTION START; +
-8195 -- ON TRANSACTION COMMIT; +
-8196 -- ON TRANSACTION ROLLBACK.
+1 -- `BEFORE INESRT`; +
+2 -- `AFTER INSERT`; +
+3 -- `BEFORE UPDATE`; +
+4 -- `AFTER UPDATE`; +
+5 -- `BEFORE DELETE`; +
+6 -- `AFTER DELETE`; +
+17 -- `BEFORE INSERT OR UPDATE`; +
+18 -- `AFTER INSERT OR UPDATE`; +
+25 -- `BEFORE INSERT OR DELETE`; +
+26 -- `AFTER INSERT OR DELETE`; +
+27 -- `BEFORE UPDATE OR DELETE`; +
+28 -- `AFTER UPDATE OR DELETE`; +
+113 -- `BEFORE INSERT OR UPDATE OR DELETE`; +
+114 -- `AFTER INSERT OR UPDATE OR DELETE`; +
+8192 -- `ON CONNECT`; +
+8193 -- `ON DISCONNECT`; +
+8194 -- `ON TRANSACTION START`; +
+8195 -- `ON TRANSACTION COMMIT`; +
+8196 -- `ON TRANSACTION ROLLBACK`.
 
-Для DDL триггеров тип триггера получается путём побитового ИЛИ над фазой события (0 - BEFORE, 1 - AFTER) и всех перечисленных типов событий: 
-
-CREATE TABLE -- `0x0000000000004002`; +
-ALTER TABLE -- `0x0000000000004004`; +
-DROP TABLE -- `0x0000000000004008`; +
-CREATE PROCEDURE -- `0x0000000000004010`; +
-ALTER PROCEDURE -- `0x0000000000004020`; +
-DROP PROCEDURE -- `0x0000000000004040`; +
-CREATE FUNCTION -- `0x0000000000004080`; +
-ALTER FUNCTION -- `0x0000000000004100`; +
-DROP FUNCTION -- `0x0000000000004200`; +
-CREATE TRIGGER -- `0x0000000000004400`; +
-ALTER TRIGGER -- `0x0000000000004800`; +
-DROP TRIGGER -- `0x0000000000005000`; +
-CREATE EXCEPTION -- `0x0000000000014000`; +
-ALTER EXCEPTION -- `0x0000000000024000`; +
-DROP EXCEPTION -- `0x0000000000044000`; +
-CREATE VIEW -- `0x0000000000084000`; +
-ALTER VIEW -- `0x0000000000104000`; +
-DROP VIEW -- `0x0000000000204000`; +
-CREATE DOMAIN -- `0x0000000000404000`; +
-ALTER DOMAIN -- `0x0000000000804000`; +
-DROP DOMAIN -- `0x0000000001004000`; +
-CREATE ROLE -- `0x0000000002004000`; +
-ALTER ROLE -- `0x0000000004004000`; +
-DROP ROLE -- `0x0000000008004000`; +
-CREATE INDEX -- `0x0000000010004000`; +
-ALTER INDEX -- `0x0000000020004000`; +
-DROP INDEX -- `0x0000000040004000`; +
-CREATE SEQUENCE -- `0x0000000080004000`; +
-ALTER SEQUENCE -- `0x0000000100004000`; +
-DROP SEQUENCE -- `0x0000000200004000`; +
-CREATE USER -- `0x0000000400004000`; +
-ALTER USER -- `0x0000000800004000`; +
-DROP USER -- `0x0000001000004000`; +
-СREATE COLLATION -- `0x0000002000004000`; +
-DROP COLLATION -- `0x0000004000004000`; +
-ALTER CHARACTER SET -- `0x0000008000004000`; +
-CREATE PACKAGE -- `0x0000010000004000`; +
-ALTER PACKAGE -- `0x0000020000004000`; +
-DROP PACKAGE -- `0x0000040000004000`; +
-CREATE PACKAGE BODY -- `0x0000080000004000`; +
-DROP PACKAGE BODY -- `0x0000100000004000`; +
-CREATE MAPPING -- `0x0000200000004000`; +
-ALTER MAPPING -- `0x0000400000004000`; +
-DROP MAPPING -- `0x0000800000004000`; +
-ANY DDL STATEMENT -- `0x7FFFFFFFFFFFDFFE`.
-
-Например, триггер
-
-BEFORE CREATE PROCEDURE OR CREATE FUNCTION будет иметь тип `0x0000000000004090`,
-AFTER CREATE PROCEDURE OR CREATE FUNCTION -- `0x0000000000004091`,
-BEFORE DROP FUNCTION OR DROP EXCEPTION -- `0x00000000000044200`,
-AFTER DROP FUNCTION OR DROP EXCEPTION -- `0x00000000000044201`,
-BEFORE DROP TRIGGER OR DROP DOMAIN -- `0x00000000001005000`,
-AFTER DROP TRIGGER OR DROP DOMAIN -- `0x00000000001005001`.
+Описание событий DDL триггеров смотри ниже.
 
 |RDB$TRIGGER_SOURCE
 |BLOB TEXT
@@ -2483,7 +2421,7 @@ AFTER DROP TRIGGER OR DROP DOMAIN -- `0x00000000001005001`.
 |RDB$TRIGGER_INACTIVE
 |SMALLINT
 |Указывает, является ли триггер в настоящее время неактивным (1)
-                                или активным (0).
+или активным (0).
 
 |RDB$SYSTEM_FLAG
 |SMALLINT
@@ -2516,17 +2454,75 @@ UDR.
 |BOOLEAN
 |С какими правами выполняется триггер:
 
-TRUE -- с правами определяющего пользователя (SQL SECURITY DEFINER); +
-FALSE -- с правами вызывающего пользователя (SQL SECURITY INVOKER); +
-NULL -- привилегии выполнения наследуется от таблицы.
+`TRUE` -- с правами определяющего пользователя (`SQL SECURITY DEFINER`); +
+`FALSE` -- с правами вызывающего пользователя (`SQL SECURITY INVOKER`); +
+`NULL` -- привилегии выполнения наследуется от таблицы.
 |===
 
+Для DDL триггеров тип триггера (`RDB$TRIGGER_TYPE`) получается путём побитового ИЛИ над фазой события (0 - `BEFORE`, 1 - `AFTER`) и всех перечисленных типов событий:
+
+* `CREATE TABLE` -- `0x0000000000004002`; +
+* `ALTER TABLE` -- `0x0000000000004004`; +
+* `DROP TABLE` -- `0x0000000000004008`; +
+* `CREATE PROCEDURE` -- `0x0000000000004010`; +
+* `ALTER PROCEDURE` -- `0x0000000000004020`; +
+* `DROP PROCEDURE` -- `0x0000000000004040`; +
+* `CREATE FUNCTION` -- `0x0000000000004080`; +
+* `ALTER FUNCTION` -- `0x0000000000004100`; +
+* `DROP FUNCTION` -- `0x0000000000004200`; +
+* `CREATE TRIGGER` -- `0x0000000000004400`; +
+* `ALTER TRIGGER` -- `0x0000000000004800`; +
+* `DROP TRIGGER` -- `0x0000000000005000`; +
+* `CREATE EXCEPTION` -- `0x0000000000014000`; +
+* `ALTER EXCEPTION` -- `0x0000000000024000`; +
+* `DROP EXCEPTION` -- `0x0000000000044000`; +
+* `CREATE VIEW` -- `0x0000000000084000`; +
+* `ALTER VIEW` -- `0x0000000000104000`; +
+* `DROP VIEW` -- `0x0000000000204000`; +
+* `CREATE DOMAIN` -- `0x0000000000404000`; +
+* `ALTER DOMAIN` -- `0x0000000000804000`; +
+* `DROP DOMAIN` -- `0x0000000001004000`; +
+* `CREATE ROLE` -- `0x0000000002004000`; +
+* `ALTER ROLE` -- `0x0000000004004000`; +
+* `DROP ROLE` -- `0x0000000008004000`; +
+* `CREATE INDEX` -- `0x0000000010004000`; +
+* `ALTER INDEX` -- `0x0000000020004000`; +
+* `DROP INDEX` -- `0x0000000040004000`; +
+* `CREATE SEQUENCE` -- `0x0000000080004000`; +
+* `ALTER SEQUENCE` -- `0x0000000100004000`; +
+* `DROP SEQUENCE` -- `0x0000000200004000`; +
+* `CREATE USER` -- `0x0000000400004000`; +
+* `ALTER USER` -- `0x0000000800004000`; +
+* `DROP USER` -- `0x0000001000004000`; +
+* `CREATE COLLATION` -- `0x0000002000004000`; +
+* `DROP COLLATION` -- `0x0000004000004000`; +
+* `ALTER CHARACTER SET` -- `0x0000008000004000`; +
+* `CREATE PACKAGE` -- `0x0000010000004000`; +
+* `ALTER PACKAGE` -- `0x0000020000004000`; +
+* `DROP PACKAGE` -- `0x0000040000004000`; +
+* `CREATE PACKAGE BODY` -- `0x0000080000004000`; +
+* `DROP PACKAGE BODY` -- `0x0000100000004000`; +
+* `CREATE MAPPING` -- `0x0000200000004000`; +
+* `ALTER MAPPING` -- `0x0000400000004000`; +
+* `DROP MAPPING` -- `0x0000800000004000`; +
+* `ANY DDL STATEMENT` -- `0x7FFFFFFFFFFFDFFE`.
+
+Например, триггер
+
+`BEFORE CREATE PROCEDURE OR CREATE FUNCTION` будет иметь тип `0x0000000000004090`, +
+`AFTER CREATE PROCEDURE OR CREATE FUNCTION` -- `0x0000000000004091`, +
+`BEFORE DROP FUNCTION OR DROP EXCEPTION` -- `0x00000000000044200`, +
+`AFTER DROP FUNCTION OR DROP EXCEPTION` -- `0x00000000000044201`, +
+`BEFORE DROP TRIGGER OR DROP DOMAIN` -- `0x00000000001005000`, +
+`AFTER DROP TRIGGER OR DROP DOMAIN` -- `0x00000000001005001`.
+
+
 [[fblangref-systables-types]]
-== RDB$TYPES
+== `RDB$TYPES`
 
 Описание перечислимых типов данных.
 
-.Описание столбцов таблицы RDB$TYPES
+.Описание столбцов таблицы `RDB$TYPES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2565,11 +2561,11 @@ NULL -- привилегии выполнения наследуется от т
 |===
 
 [[fblangref-systables-user_privileges]]
-== RDB$USER_PRIVILEGES
+== `RDB$USER_PRIVILEGES`
 
 Полномочия пользователей системы.
 
-.Описание столбцов таблицы RDB$USER_PRIVILEGES
+.Описание столбцов таблицы `RDB$USER_PRIVILEGES`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца
@@ -2579,31 +2575,31 @@ NULL -- привилегии выполнения наследуется от т
 |RDB$USER
 |CHAR(63)
 |Пользователь, роль или объект которому предоставляется данное полномочие.
-Если в качестве грантополучателя используется системная привилегия, то вместо имени системной привилегии в данное поле попадает значение перечисляемого типа RDB$SYSTEM_PRIVILEGES: 
+Если в качестве грантополучателя используется системная привилегия, то вместо имени системной привилегии в данное поле попадает значение перечисляемого типа `RDB$SYSTEM_PRIVILEGES`:
 
-1 – USER_MANAGEMENT; +
-2 – READ_RAW_PAGES; +
-3 – CREATE_USER_TYPES; +
-4 – USE_NBACKUP_UTILITY; +
-5 – CHANGE_SHUTDOWN_MODE; +
-6 – TRACE_ANY_ATTACHMENT; +
-7 – MONITOR_ANY_ATTACHMENT; +
-8 – ACCESS_SHUTDOWN_DATABASE; +
-9 – CREATE_DATABASE; +
-10 – DROP_DATABASE; +
-11 – USE_GBAK_UTILITY; +
-12 – USE_GSTAT_UTILITY; +
-13 – USE_GFIX_UTILITY; +
-14 – IGNORE_DB_TRIGGERS; +
-15 – CHANGE_HEADER_SETTINGS; +
-16 – SELECT_ANY_OBJECT_IN_DATABASE; +
-17 – ACCESS_ANY_OBJECT_IN_DATABASE; +
-18 – MODIFY_ANY_OBJECT_IN_DATABASE; +
-19 – CHANGE_MAPPING_RULES; +
-20 – USE_GRANTED_BY_CLAUSE; +
-21 – GRANT_REVOKE_ON_ANY_OBJECT; +
-22 – GRANT_REVOKE_ANY_DDL_RIGHT; +
-23 – CREATE_PRIVILEGED_ROLES.
+1 – `USER_MANAGEMENT`; +
+2 – `READ_RAW_PAGES`; +
+3 – `CREATE_USER_TYPES`; +
+4 – `USE_NBACKUP_UTILITY`; +
+5 – `CHANGE_SHUTDOWN_MODE`; +
+6 – `TRACE_ANY_ATTACHMENT`; +
+7 – `MONITOR_ANY_ATTACHMENT`; +
+8 – `ACCESS_SHUTDOWN_DATABASE`; +
+9 – `CREATE_DATABASE`; +
+10 – `DROP_DATABASE`; +
+11 – `USE_GBAK_UTILITY`; +
+12 – `USE_GSTAT_UTILITY`; +
+13 – `USE_GFIX_UTILITY`; +
+14 – `IGNORE_DB_TRIGGERS`; +
+15 – `CHANGE_HEADER_SETTINGS`; +
+16 – `SELECT_ANY_OBJECT_IN_DATABASE`; +
+17 – `ACCESS_ANY_OBJECT_IN_DATABASE`; +
+18 – `MODIFY_ANY_OBJECT_IN_DATABASE`; +
+19 – `CHANGE_MAPPING_RULES`; +
+20 – `USE_GRANTED_BY_CLAUSE`; +
+21 – `GRANT_REVOKE_ON_ANY_OBJECT`; +
+22 – `GRANT_REVOKE_ANY_DDL_RIGHT`; +
+23 – `CREATE_PRIVILEGED_ROLES`.
 
 |RDB$GRANTOR
 |CHAR(63)
@@ -2685,11 +2681,11 @@ M – membership (членство).
 |===
 
 [[fblangref-systables-view_relations]]
-== RDB$VIEW_RELATIONS
+== `RDB$VIEW_RELATIONS`
 
 Описывает представления. 
 
-.Описание столбцов таблицы RDB$VIEW_RELATIONS
+.Описание столбцов таблицы `RDB$VIEW_RELATIONS`
 [cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
 |===
 ^| Наименование столбца

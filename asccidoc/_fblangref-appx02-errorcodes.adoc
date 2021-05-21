@@ -8,7 +8,7 @@
 Приложение включает: 
 
 * <<fblangref-appx02-sqlstates,Коды ошибок SQLSTATE и их описание>>
-* <<fblangref-appx02_gdscode,"Коды ошибок GDSCODE их описание, и SQLCODE">>
+* <<fblangref-appx02-gdscode,"Коды ошибок GDSCODE их описание, и SQLCODE">>
 
 
 .Пользовательские исключения
