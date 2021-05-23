@@ -80,7 +80,7 @@
 
 	<xsl:param name="highlight.source" select="1"/>
     <xsl:param name="highlight.xslthl.config"
-        >file:/D:/fbdoc/langref40/xsl/highlighting/xslthl-config.xml</xsl:param>
+        >file:/D:/fbdoc/langref40/docbook//xsl/highlighting/xslthl-config.xml</xsl:param>
 
     <!-- Подсветка строк в теге programlising language="sql" -->
     <xsl:template match="xslthl:string" mode="xslthl">
