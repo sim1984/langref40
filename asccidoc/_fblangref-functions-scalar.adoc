@@ -350,177 +350,6 @@ COMMIT;
 .См. также:
 <<fblangref-scalarfuncs-get-context,`RDB$GET_CONTEXT`>>.
 
-[[fblangref-functions-security]]
-== Функции подсистемы безопасности
-
-[[fblangref-scalarfuncs-roleinuse]]
-=== `RDB$ROLE_IN_USE()`
-
-.Доступно в
-DSQL, PSQL
-(((Функция, `RDB$ROLE_IN_USE()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-RDB$ROLE_IN_USE (_role_name_)
-----
-
-.Параметры функции `RDB$ROLE_IN_USE`
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|role_name
-|Имя роли использование которой проверяется
-|===
-
-.Тип возвращаемого результата
-`BOOLEAN`
-
-Функция `RDB$ROLE_IN_USE` возвращает используется ли роль текущим пользователем.
-
-[NOTE]
-====
-Данная функция позволяет проверить использование любой роли: указанной явно (при входе в систему или изменённой с помощью оператора SET ROLE) и назначенной неявно (роли назначенные пользователю с использованием предложения DEFAULT).
-====
-
-
-.Использование функции `RDB$ROLE_IN_USE`
-[example]
-====
-[source,sql]
-----
--- Проверяем используется ли явно назначенная или 
--- неявно полученная роль MANAGER                                
-IF (RDB$ROLE_IN_USE('MANAGER')) THEN
-BEGIN
-  ...
-END
-----
-====
-
-.Список ролей используемых текущим подключением
-[example]
-====
-[source,sql]
-----
-SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
-----
-====
-
-.См. также:
-<<fblangref-security-grant-role,GRANT ROLE>>, <<fblangref-management-setrole,SET ROLE>>, <<fblangref-contextvars-current-role,CURRENT_ROLE>>.
-
-[[fblangref-scalarfuncs-system-privelege]]
-=== `RDB$SYSTEM_PRIVILEGE()`
-
-.Доступно в
-DSQL, PSQL
-(((Функция, `RDB$SYSTEM_PRIVILEGE()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-RDB$SYSTEM_PRIVILEGE (<privilege>)
-----
-
-.Параметры функции `RDB$SYSTEM_PRIVILEGE`
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|privilege
-|Проверяемая системная привилегия
-|===
-
-.Тип возвращаемого результата
-`BOOLEAN`
-
-Функция `RDB$SYSTEM_PRIVILEGE` используется системная привилегия текущим соединением.
-Список системных привилегий см.
-в <<fblangref-security-roles-create,CREATE ROLE>>.
-
-.Использование функции `RDB$SYSTEM_PRIVILEGE`
-[example]
-====
-[source,sql]
-----
-SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
-----
-====
-
-.См. также:
-<<fblangref-security-roles-create,CREATE ROLE>>. 
-
-[[fblangref-functions-error]]
-== Функции для обработки ошибок
-
-[[fblangref-scalarfuncs-rdberror]]
-=== `RDB$ERROR()`
-
-.Доступно в
-PSQL
-(((Функция, `RDB$ERROR()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-RDB$ERROR (<context>)   
-                            
-<context> ::= GDSCODE | SQLCODE | SQLSTATE | EXCEPTION | MESSAGE
-----
-
-.Тип возвращаемого результата
-Зависит от контекста
-
-Возвращает значение контекста активного исключения.
-Тип возвращаемого значения зависит от контекста.
-
-[NOTE]
-====
-Функция `RDB$ERROR` всегда возвращает `NULL` вне блока обработки ошибок `WHEN ... DO`.
-====
-
-Доступные контексты в качестве аргумента функции `RDB$ERROR`:
-
-`EXCEPTION`:: функция возвращает имя исключения, если активно исключение определённое пользователем, или `NULL` если активно одно из системных исключений.
-Для контекста `EXCEPTION` тип возвращаемого значения: `VARCHAR(63) CHARACTER SET UTF8`.
-
-`MESSAGE`:: функция возвращает интерпретированный текст активного исключения.
-Для контекста `MESSAGE` тип возвращаемого значения: `VARCHAR(1024) CHARACTER SET UTF8`.
-
-`GDSCODE`:: функция возвращает значение контекстной переменной `GDSCODE`.
-
-`SQLCODE`:: функция возвращает значение контекстной переменной `SQLCODE`.
-
-`SQLSTATE`:: функция возвращает значение контекстной переменной `SQLSTATE`.
-
-
-.Использование функции `RDB$ERROR` для сохранения текста ошибки в журнал
-[example]
-====
-[source,sql]
-----
-...
-BEGIN
-...
-WHEN ANY DO
-  EXECUTE PROCEDURE P_LOG_EXCEPTION(RDB$ERROR(MESSAGE));
-END
-...
-----
-====
-
-.См. также:
-<<fblangref-psql-statements-when,`WHEN ... DO`>>,
-<<fblangref-psql-statements-exception,`EXCEPTION`>>,
-<<fblangref-contextvars-gdscode,`GDSCODE`>>,
-<<fblangref-contextvars-sqlcode,`SQLCODE`>>,
-<<fblangref-contextvars-sqlstate,`SQLSTATE`>>.
-
 
 [[fblangref-functions-math]]
 == Математические функции
@@ -1596,6 +1425,126 @@ ASCII_VAL (_ch_)
 .См. также:
 <<fblangref-scalarfuncs-ascii-char>>.
 
+
+[[fblangref-scalarfuncs-base64decode]]
+=== `BASE64_DECODE()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `BASE64_DECODE()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+BASE64_DECODE (_base64_data_)
+----
+
+[[fblangref40-scalarfuncs-tbl-base64decode]]
+.Параметры функции `BASE64_DECODE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|base64_data
+|Данные в кодировке Base64, дополненные знаком `=` до длины кратной 4
+|===
+
+.Тип возвращаемого результата
+`BLOB` или `VARBINARY`
+
+`BASE64_DECODE` декодирует строку с данными закодированными алгоритмом base64
+и возвращает декодированное значение как `VARBINARY` или `BLOB` в зависимости от входного аргумента.
+
+Если длина типа _base64_data_ не кратна 4, то во время подготовки возникает ошибка.
+Если длина значения _base64_data_ не кратна 4, то во время выполнения возникает ошибка.
+
+Когда входной аргумент не является `BLOB`, то длина результирующего типа вычисляется как
+`__type_length__ * 3/4`, где _type_length_ -- максимальная длина в байтах типа входного аргумента.
+
+
+[[fblangref-scalarfuncs-base64decode-exmpl]]
+==== Примеры `BASE64_DECODE`
+
+.Использование `BASE64_DECODE`
+[example]
+====
+[source,sql]
+----
+select cast(base64_decode('VGVzdCBiYXNlNjQ=') as varchar(12))
+from rdb$database;
+----
+
+[listing]
+----
+CAST
+
+============
+Test base64
+----
+====
+
+.См. также:
+<<fblangref-scalarfuncs-base64encode>>.
+
+[[fblangref-scalarfuncs-base64encode]]
+=== `BASE64_ENCODE()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `BASE64_ENCODE()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+BASE64_ENCODE (_binary_data_)
+----
+
+[[fblangref-scalarfuncs-tbl-base64encode]]
+.Параметры функции `BASE64_ENCODE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|binary_data
+|Двоичные данные для кодирования
+|===
+
+.Тип возвращаемого результата
+`VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII`
+
+Функция `BASE64_ENCODE` кодирует _binary_data_ с помощью алгоритма base64 и
+возвращает закодированное значение как `VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII`
+в зависимости от типа входного аргумента.
+Возвращаемое значение дополняется знаком '```=```', чтобы его длина была кратна 4.
+
+Когда входной аргумент не является `BLOB`, длина результирующего типа вычисляется как `__type_length__ * 4 / 3` с округлением в большую сторону до числа, кратного четырем, где _type_length_ -- максимальная длина входного типа в байтах.
+
+[[fblangref-scalarfuncs-base64encode-exmpl]]
+==== Примеры `BASE64_ENCODE`
+
+.Использование функции `BASE64_ENCODE`
+[example]
+====
+[source,sql]
+----
+select base64_encode('Test base64')
+from rdb$database;
+----
+
+[listing]
+----
+BASE64_ENCODE
+================
+VGVzdCBiYXNlNjQ=
+----
+====
+
+.См. также:
+<<fblangref-scalarfuncs-base64decode>>, <<fblangref-scalarfuncs-hexencode>>.
+
+
 [[fblangref-scalarfuncs-bit-length]]
 === `BIT_LENGTH()`
 
@@ -1771,6 +1720,123 @@ SELECT HASH(x USING CRC32) FROM MyTable;
 
 См. также:
 <<fblangref-scalarfuncs-crypthash>>
+
+
+[[fblangref-scalarfuncs-hexdecode]]
+=== `HEX_DECODE()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `HEX_DECODE()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+HEX_DECODE (_hex_data_)
+----
+
+[[fblangref-scalarfuncs-tbl-hexdecode]]
+.Параметры функции `HEX_DECODE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|hex_data
+|Данные в шестнадцатеричном представлении.
+|===
+
+.Тип возвращаемого результата
+`VARBINARY` или `BLOB`
+
+Функция `HEX_DECODE` декодирует строку с шестнадцатеричными данными и возвращает декодированное значение
+как `VARBINARY` или `BLOB` в зависимости от типа входного и размера аргумента.
+Если длина типа _hex_data_ не кратна 2, во время подготовки возникает ошибка.
+Если длина значения _hex_data_ не кратна 2, во время выполнения возникает ошибка.
+
+Когда входной аргумент не является `BLOB`, то длина результирующего типа вычисляется как `__type_length__ / 2`,
+где _type_length_ -- максимальная длина в байтах типа входного аргумента.
+
+[[fblangref-scalarfuncs-hexdecode-exmpl]]
+==== Примеры `HEX_DECODE`
+
+.Использование функции `HEX_DECODE`
+[example]
+====
+[source,sql]
+----
+select cast(hex_decode('48657861646563696D616C') as varchar(12))
+from rdb$database;
+----
+
+[listing]
+----
+CAST
+============
+Hexadecimal
+----
+====
+
+.См. также:
+<<fblangref-scalarfuncs-hexencode>>, <<fblangref-scalarfuncs-base64decode>>.
+
+
+[[fblangref-scalarfuncs-hexencode]]
+=== `HEX_ENCODE()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `HEX_ENCODE()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+HEX_ENCODE (_binary_data_)
+----
+
+[[fblangref40-scalarfuncs-tbl-hexencode]]
+.Параметры функции `HEX_ENCODE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|binary_data
+|Двоичные данные для кодирования
+|===
+
+.Тип возвращаемого результата:
+`VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII`
+
+Функция `HEX_ENCODE` кодирует _binary_data_ шестнадцатеричным числом и возвращает закодированное значение
+как `VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII` в зависимости от входного аргумента.
+
+Когда входной аргумент не является `BLOB`, то длина результирующего типа вычисляется как `__type_length__ * 2`,
+где _type_length_ -- максимальная длина в байтах типа входного аргумента.
+
+[[fblangref-scalarfuncs-hexencode-exmpl]]
+==== Примеры `HEX_ENCODE`
+
+.Использование функции `HEX_ENCODE`
+[example]
+====
+[source,sql]
+----
+select hex_encode('Hexadecimal')
+from rdb$database;
+----
+
+[listing]
+----
+HEX_ENCODE
+======================
+48657861646563696D616C
+----
+====
+
+.См. также:
+<<fblangref-scalarfuncs-hexdecode>>, <<fblangref-scalarfuncs-base64encode>>
+
 
 [[fblangref-scalarfuncs-left]]
 === `LEFT()`
@@ -3140,6 +3206,7 @@ COMPARE_DECFLOAT (_decfloat1_, _decfloat2_)
 `SMALLINT`
 
 Функция `COMPARE_DECFLOAT` сравнивает два значения типа `DECFLOAT`, которые могут быть одинаковыми, разными или неупорядоченными.
+Замыкающие нули учитываются при сравнении.
 
 Функция возвращает:
 
@@ -3306,7 +3373,7 @@ TOTALORDER (_decfloat1_, _decfloat2_)
 `SMALLINT`
 
 Функция `TOTALORDER` сравнивает два значения типа `DECFLOAT`, включая специальные значения.
-Сравнение является точным. 
+Сравнение является точным. Замыкающие нули учитываются при сравнении.
 
 Функция возвращает:
 
@@ -3323,242 +3390,6 @@ TOTALORDER (_decfloat1_, _decfloat2_)
 
 См. также:
 <<fblangref-scalarfuncs-comparedecfloat>>
-
-[[fblangref-functions-binary]]
-== Кодирование и декодирование бинарных данных
-
-[[fblangref-scalarfuncs-base64decode]]
-=== `BASE64_DECODE()`
-
-.Доступно в
-DSQL, PSQL
-(((Функция, `BASE64_DECODE()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-BASE64_DECODE (_base64_data_)
-----
-
-[[fblangref40-scalarfuncs-tbl-base64decode]]
-.Параметры функции `BASE64_DECODE`
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|base64_data
-|Данные в кодировке Base64, дополненные знаком `=` до длины кратной 4
-|===
-
-.Тип возвращаемого результата
-`BLOB` или `VARBINARY`
-
-`BASE64_DECODE` декодирует строку с данными закодированными алгоритмом base64
-и возвращает декодированное значение как `VARBINARY` или `BLOB` в зависимости от входного аргумента.
-
-Если длина типа _base64_data_ не кратна 4, то во время подготовки возникает ошибка.
-Если длина значения _base64_data_ не кратна 4, то во время выполнения возникает ошибка.
-
-Когда входной аргумент не является `BLOB`, то длина результирующего типа вычисляется как
-`__type_length__ * 3/4`, где _type_length_ -- максимальная длина в байтах типа входного аргумента.
-
-
-[[fblangref-scalarfuncs-base64decode-exmpl]]
-==== Примеры `BASE64_DECODE`
-
-.Использование `BASE64_DECODE`
-[example]
-====
-[source,sql]
-----
-select cast(base64_decode('VGVzdCBiYXNlNjQ=') as varchar(12))
-from rdb$database;
-----
-
-[listing]
-----
-CAST
-
-============
-Test base64
-----
-====
-
-.См. также:
-<<fblangref-scalarfuncs-base64encode>>.
-
-[[fblangref-scalarfuncs-base64encode]]
-=== `BASE64_ENCODE()`
-
-.Доступно в
-DSQL, PSQL
-(((Функция, `BASE64_ENCODE()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-BASE64_ENCODE (_binary_data_)
-----
-
-[[fblangref-scalarfuncs-tbl-base64encode]]
-.Параметры функции `BASE64_ENCODE`
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|binary_data
-|Двоичные данные для кодирования
-|===
-
-.Тип возвращаемого результата
-`VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII`
-
-Функция `BASE64_ENCODE` кодирует _binary_data_ с помощью алгоритма base64 и
-возвращает закодированное значение как `VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII`
-в зависимости от типа входного аргумента.
-Возвращаемое значение дополняется знаком '```=```', чтобы его длина была кратна 4.
-
-Когда входной аргумент не является `BLOB`, длина результирующего типа вычисляется как `__type_length__ * 4 / 3` с округлением в большую сторону до числа, кратного четырем, где _type_length_ -- максимальная длина входного типа в байтах.
-
-[[fblangref-scalarfuncs-base64encode-exmpl]]
-==== Примеры `BASE64_ENCODE`
-
-.Использование функции `BASE64_ENCODE`
-[example]
-====
-[source,sql]
-----
-select base64_encode('Test base64')
-from rdb$database;
-----
-
-[listing]
-----
-BASE64_ENCODE
-================
-VGVzdCBiYXNlNjQ=
-----
-====
-
-.См. также:
-<<fblangref-scalarfuncs-base64decode>>, <<fblangref-scalarfuncs-hexencode>>.
-
-[[fblangref-scalarfuncs-hexdecode]]
-=== `HEX_DECODE()`
-
-.Доступно в
-DSQL, PSQL
-(((Функция, `HEX_DECODE()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-HEX_DECODE (_hex_data_)
-----
-
-[[fblangref-scalarfuncs-tbl-hexdecode]]
-.Параметры функции `HEX_DECODE`
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|hex_data
-|Данные в шестнадцатеричном представлении.
-|===
-
-.Тип возвращаемого результата
-`VARBINARY` или `BLOB`
-
-Функция `HEX_DECODE` декодирует строку с шестнадцатеричными данными и возвращает декодированное значение
-как `VARBINARY` или `BLOB` в зависимости от типа входного и размера аргумента.
-Если длина типа _hex_data_ не кратна 2, во время подготовки возникает ошибка.
-Если длина значения _hex_data_ не кратна 2, во время выполнения возникает ошибка.
-
-Когда входной аргумент не является `BLOB`, то длина результирующего типа вычисляется как `__type_length__ / 2`,
-где _type_length_ -- максимальная длина в байтах типа входного аргумента.
-
-[[fblangref-scalarfuncs-hexdecode-exmpl]]
-==== Примеры `HEX_DECODE`
-
-.Использование функции `HEX_DECODE`
-[example]
-====
-[source,sql]
-----
-select cast(hex_decode('48657861646563696D616C') as varchar(12))
-from rdb$database;
-----
-
-[listing]
-----
-CAST
-============
-Hexadecimal
-----
-====
-
-.См. также:
-<<fblangref-scalarfuncs-hexencode>>, <<fblangref-scalarfuncs-base64decode>>.
-
-
-[[fblangref-scalarfuncs-hexencode]]
-=== `HEX_ENCODE()`
-
-.Доступно в
-DSQL, PSQL
-(((Функция, `HEX_ENCODE()`)))
-
-.Синтаксис
-[listing,subs=+quotes]
-----
-HEX_ENCODE (_binary_data_)
-----
-
-[[fblangref40-scalarfuncs-tbl-hexencode]]
-.Параметры функции `HEX_ENCODE`
-[cols="<1,<3", options="header",stripes="none"]
-|===
-^| Параметр
-^| Описание
-
-|binary_data
-|Двоичные данные для кодирования
-|===
-
-.Тип возвращаемого результата:
-`VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII`
-
-Функция `HEX_ENCODE` кодирует _binary_data_ шестнадцатеричным числом и возвращает закодированное значение
-как `VARCHAR CHARACTER SET ASCII` или `BLOB SUB_TYPE TEXT CHARACTER SET ASCII` в зависимости от входного аргумента.
-
-Когда входной аргумент не является `BLOB`, то длина результирующего типа вычисляется как `__type_length__ * 2`,
-где _type_length_ -- максимальная длина в байтах типа входного аргумента.
-
-[[fblangref-scalarfuncs-hexencode-exmpl]]
-==== Примеры `HEX_ENCODE`
-
-.Использование функции `HEX_ENCODE`
-[example]
-====
-[source,sql]
-----
-select hex_encode('Hexadecimal')
-from rdb$database;
-----
-
-[listing]
-----
-HEX_ENCODE
-======================
-48657861646563696D616C
-----
-====
-
-.См. также:
-<<fblangref-scalarfuncs-hexdecode>>, <<fblangref-scalarfuncs-base64encode>>
 
 
 [[fblangref-functions-crypt]]
@@ -5223,6 +5054,71 @@ where rdb$db_key >= make_dbkey('SOMETABLE', 0, 0, 5)
 ----
 
 
+[[fblangref-scalarfuncs-rdberror]]
+=== `RDB$ERROR()`
+
+.Доступно в
+PSQL
+(((Функция, `RDB$ERROR()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+RDB$ERROR (<context>)
+
+<context> ::= GDSCODE | SQLCODE | SQLSTATE | EXCEPTION | MESSAGE
+----
+
+.Тип возвращаемого результата
+Зависит от контекста
+
+Возвращает значение контекста активного исключения.
+Тип возвращаемого значения зависит от контекста.
+
+[NOTE]
+====
+Функция `RDB$ERROR` всегда возвращает `NULL` вне блока обработки ошибок `WHEN ... DO`.
+====
+
+Доступные контексты в качестве аргумента функции `RDB$ERROR`:
+
+`EXCEPTION`:: функция возвращает имя исключения, если активно исключение определённое пользователем, или `NULL` если активно одно из системных исключений.
+Для контекста `EXCEPTION` тип возвращаемого значения: `VARCHAR(63) CHARACTER SET UTF8`.
+
+`MESSAGE`:: функция возвращает интерпретированный текст активного исключения.
+Для контекста `MESSAGE` тип возвращаемого значения: `VARCHAR(1024) CHARACTER SET UTF8`.
+
+`GDSCODE`:: функция возвращает значение контекстной переменной `GDSCODE`.
+
+`SQLCODE`:: функция возвращает значение контекстной переменной `SQLCODE`.
+
+`SQLSTATE`:: функция возвращает значение контекстной переменной `SQLSTATE`.
+
+
+.Использование функции `RDB$ERROR` для сохранения текста ошибки в журнал
+[example]
+====
+[source,sql]
+----
+...
+BEGIN
+...
+WHEN ANY DO
+  EXECUTE PROCEDURE P_LOG_EXCEPTION(RDB$ERROR(MESSAGE));
+END
+...
+----
+====
+
+.См. также:
+<<fblangref-psql-statements-when,`WHEN ... DO`>>,
+<<fblangref-psql-statements-exception,`EXCEPTION`>>,
+<<fblangref-contextvars-gdscode,`GDSCODE`>>,
+<<fblangref-contextvars-sqlcode,`SQLCODE`>>,
+<<fblangref-contextvars-sqlstate,`SQLSTATE`>>.
+
+
+
 [[fblangref-scalarfuncs-transaction-cn]]
 === `RDB$GET_TRANSACTION_CN()`
 
@@ -5287,3 +5183,104 @@ select rdb$get_transaction_cn(123) from rdb$database;
 За более детальной информацией о Commit Number, обратитесь к _Firebird 4.0 Release Notes_.
 ====
 
+[[fblangref-scalarfuncs-roleinuse]]
+=== `RDB$ROLE_IN_USE()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `RDB$ROLE_IN_USE()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+RDB$ROLE_IN_USE (_role_name_)
+----
+
+.Параметры функции `RDB$ROLE_IN_USE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|role_name
+|Имя роли использование которой проверяется
+|===
+
+.Тип возвращаемого результата
+`BOOLEAN`
+
+Функция `RDB$ROLE_IN_USE` возвращает используется ли роль текущим пользователем.
+
+[NOTE]
+====
+Данная функция позволяет проверить использование любой роли: указанной явно (при входе в систему или изменённой с помощью оператора SET ROLE) и назначенной неявно (роли назначенные пользователю с использованием предложения DEFAULT).
+====
+
+
+.Использование функции `RDB$ROLE_IN_USE`
+[example]
+====
+[source,sql]
+----
+-- Проверяем используется ли явно назначенная или
+-- неявно полученная роль MANAGER
+IF (RDB$ROLE_IN_USE('MANAGER')) THEN
+BEGIN
+  ...
+END
+----
+====
+
+.Список ролей используемых текущим подключением
+[example]
+====
+[source,sql]
+----
+SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
+----
+====
+
+.См. также:
+<<fblangref-security-grant-role,GRANT ROLE>>, <<fblangref-management-setrole,SET ROLE>>, <<fblangref-contextvars-current-role,CURRENT_ROLE>>.
+
+[[fblangref-scalarfuncs-system-privelege]]
+=== `RDB$SYSTEM_PRIVILEGE()`
+
+.Доступно в
+DSQL, PSQL
+(((Функция, `RDB$SYSTEM_PRIVILEGE()`)))
+
+.Синтаксис
+[listing,subs=+quotes]
+----
+RDB$SYSTEM_PRIVILEGE (<privilege>)
+----
+
+.Параметры функции `RDB$SYSTEM_PRIVILEGE`
+[cols="<1,<3", options="header",stripes="none"]
+|===
+^| Параметр
+^| Описание
+
+|privilege
+|Проверяемая системная привилегия
+|===
+
+.Тип возвращаемого результата
+`BOOLEAN`
+
+Функция `RDB$SYSTEM_PRIVILEGE` используется системная привилегия текущим соединением.
+Список системных привилегий см.
+в <<fblangref-security-roles-create,CREATE ROLE>>.
+
+.Использование функции `RDB$SYSTEM_PRIVILEGE`
+[example]
+====
+[source,sql]
+----
+SELECT RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) FROM RDB$DATABASE;
+----
+====
+
+.См. также:
+<<fblangref-security-roles-create,CREATE ROLE>>.

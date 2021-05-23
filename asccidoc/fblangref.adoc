@@ -1,7 +1,7 @@
 [[fblangref]]
 = Руководство по языку SQL СУБД Firebird 4.0
 Дмитрий Филиппов; Александр Карпейкин; Алексей Ковязин; Дмитрий Кузьменко; Денис Симонов; Paul Vinkenoog; Дмитрий Еманов; Mark Rotteveel
-1.0, от 21.05.2021
+1.0, от 23.05.2021
 
 Авторские права (C) 2017-2021 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0].
 Пожалуйста, обратитесь к <<fblangref-license,License Notice in the Appendix>>
@@ -48,12 +48,11 @@ include::_fblangref-appx05-montables.adoc[leveloffset=1]
 
 include::_fblangref-appx06-sectables.adoc[leveloffset=1]
 
-include::_fblangref-appx07-syspackage.adoc[leveloffset=1]
+include::_fblangref-appx07-charsets.adoc[leveloffset=1]
 
-include::_fblangref-appx08-charsets.adoc[leveloffset=1]
+include::_fblangref-appx08-license.adoc[leveloffset=1]
 
-include::_fblangref-appx09-license.adoc[leveloffset=1]
-
-
+ifndef::backend-html5[]
 [index]
 == Алфавитный указатель
+endif::[]
