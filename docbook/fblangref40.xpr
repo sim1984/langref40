@@ -412,7 +412,7 @@
         <file name="fblangref-intro.xml"/>
         <file name="fblangref-psql.xml"/>
         <file name="fblangref-security.xml"/>
-        <file name="fblangref-session.xml"/>
+        <file name="fblangref-management.xml"/>
         <file name="fblangref-structure.xml"/>
         <file name="fblangref-transaction.xml"/>
         <file name="fblangref.xml"/>

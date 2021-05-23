@@ -60,7 +60,7 @@
     <xi:include href="fblangref-context-var.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-transaction.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-security.xml" xpointer="element(/1)"/>
-    <xi:include href="fblangref-session.xml" xpointer="element(/1)"/>
+    <xi:include href="fblangref-management.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-appx01-supplement.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-appx02-errorcodes.xml" xpointer="element(/1)"/>
     <xi:include href="fblangref-appx03-reskeywords.xml" xpointer="element(/1)"/>
