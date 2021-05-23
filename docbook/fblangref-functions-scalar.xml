@@ -259,7 +259,7 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                             </row>
                             <row>
                                 <entry>SNAPSHOT_NUMBER</entry>
-                                <entry>Номер моментального снимка базы данных: уровеня транзакции
+                                <entry>Номер моментального снимка базы данных: уровня транзакции
                                     (для транзакции SNAPSHOT или CONSISTENCY) или уровня запроса
                                     (для транзакции READ COMMITTED READ CONSISTENCY). NULL, если
                                     моментальный снимок не существует.</entry>
@@ -344,8 +344,8 @@ RDB$GET_CONTEXT('<replaceable>&lt;namespace&gt;</replaceable>', '<replaceable>va
                 </table>
             </para>
             <note>
-                <para>Ещё раз обратите внимание на то, что пространства имён и имена переменных
-                    регистрочувствительны, должны быть не пустыми строками, и заключены в
+                <para>Ещё раз обратите внимание на то, что пространства имён и имена контекстных переменных
+                    чувствительны к регистру, должны быть не пустыми строками, и заключены в
                     кавычки!</para>
             </note>
 
