@@ -597,7 +597,7 @@ END
                 <para>Триггеры на события CONNECT и DISCONNECT срабатывают также при выполнении
                     оператора сброса сессионного окружения. Особенности обработки ошибок в триггерах
                     на события CONNECT и DISCONNECT смотри в секции <link
-                        linkend="fblangref-session-resetsession">ALTER SESSION RESET</link>.</para>
+                        linkend="fblangref-management-resetsession">ALTER SESSION RESET</link>.</para>
 
                 <para>Триггеры на события транзакций срабатывают при старте транзакции, её
                     подтверждении или откате. Не перехваченные исключения обрабатываются в

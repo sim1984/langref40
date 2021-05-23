@@ -172,7 +172,7 @@ FROM RDB$DATABASE;
             <title>См. также:</title>
 
             <para>
-                <link linkend="fblangref-session-role-setrole">SET ROLE</link>, <link
+                <link linkend="fblangref-management-setrole">SET ROLE</link>, <link
                     linkend="fblangref-scalarfuncs-get-context">RDB$GET_CONTEXT</link>, <link
                     linkend="fblangref-scalarfuncs-roleinuse">RDB$ROLE_IN_USE</link>. </para>
         </formalpara>
@@ -1013,7 +1013,7 @@ END
             <title>См. также:</title>
 
             <para>
-                <link linkend="fblangref-session-resetsession">ALTER SESSION RESET</link>.</para>
+                <link linkend="fblangref-management-resetsession">ALTER SESSION RESET</link>.</para>
         </formalpara>
     </section>
     <section xml:id="fblangref-contextvars-row_count">

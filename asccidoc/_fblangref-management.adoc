@@ -215,7 +215,7 @@ SET DECFLOAT
   | OVERFLOW | UNDERFLOW
 ----
 
-[[fblangref-management-decfloat_round]]
+[[fblangref-management-set-decfloat-round]]
 ==== `SET DECFLOAT ROUND`
 
 (((SET DECFLOAT, ROUND)))
@@ -325,7 +325,7 @@ SET DECFLOAT ROUND HALF_DOWN;
 |===
 
 
-[[fblangref-management-decfloat_traps]]
+[[fblangref-management-set-decfloat-traps]]
 ==== `SET DECFLOAT TRAPS`
 
 (((SET DECFLOAT, TRAPS)))
@@ -699,7 +699,7 @@ MANAGER
 ----
 ====
 
-[[fblangref-management-role_settrustedrole]]
+[[fblangref-management-role-settrustedrole]]
 === `SET TRUSTED ROLE`
 
 .Назначение

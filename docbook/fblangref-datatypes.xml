@@ -877,6 +877,7 @@ DECLARE VARIABLE v DECFLOAT(34);
                                     округление происходит к меньшему значению.</para>
                             </listitem>
                         </itemizedlist></para>
+                    
                     <para>
                         <table frame="all">
                             <title>Режимы округления</title>
@@ -977,6 +978,7 @@ DECLARE VARIABLE v DECFLOAT(34);
                             </tgroup>
                         </table>
                     </para>
+                    
                     <para>Режим округления можно изменить для текущей сессии используя оператор
                             <code>SET DECFLOAT ROUND</code>. По умолчанию используется режим
                         округления HALF_UP.</para>
@@ -1181,7 +1183,7 @@ SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Un
                         DECFLOAT. Для того чтобы старые приложения умели работать с типом DECFLOAT
                         вы можете настроить отображение значений DECFLOAT на другие доступные типы
                         данных c помощью оператора <link xmlns:xlink="http://www.w3.org/1999/xlink"
-                            linkend="fblangref-session-set_bind">SET BIND OF</link>.</para>
+                            linkend="fblangref-management-set-bind">SET BIND OF</link>.</para>
                     <formalpara>
                         <title>Примеры:</title>
                         <para>
@@ -1541,7 +1543,7 @@ DECIMAL(20, 2)            INT128 (data * 10<superscript>2</superscript>)
                 используется операционной системой в которой запущен процесс Firebird.</para>
 
             <para>Часовой пояс сеанса может быть изменён с помощью оператора <link
-                    linkend="fblangref-session-timezone-settimezone">SET TIME ZONE</link> или сброшен
+                    linkend="fblangref-management-settimezone">SET TIME ZONE</link> или сброшен
                 в исходное значение с помощью <code>SET TIME ZONE LOCAL</code>.</para>
 
             <para>Часовой пояс может быть задан строкой с регионом часового пояса (например,
@@ -1565,7 +1567,7 @@ DECIMAL(20, 2)            INT128 (data * 10<superscript>2</superscript>)
                     использовать расширенные типы данных в таблицах, процедурах и т. д. Единственный
                     способ использовать эти типы данных — это приведение типов данных, включая
                     инструкцию SET BIND (дополнительную информацию смотри в <link
-                        linkend="fblangref-session-set_bind">SET BIND OF</link>).</para>
+                        linkend="fblangref-management-set-bind">SET BIND OF</link>).</para>
             </note>
 
             <section xml:id="fblangref-datatypes-datetime-timezone-get_timezone">
@@ -1725,7 +1727,7 @@ EXTENDED TIME WITH TIME ZONE
                     расширенные типы данных в таблицах, процедурах и т. д. Единственный способ
                     использовать эти типы данных — это приведение типов данных, включая инструкцию
                     SET BIND (дополнительную информацию смотри в <link
-                        linkend="fblangref-session-set_bind">SET BIND OF</link>).</para>
+                        linkend="fblangref-management-set-bind">SET BIND OF</link>).</para>
             </important>
 
             <example>
@@ -1789,7 +1791,7 @@ EXTENDED TIMESTAMP WITH TIME ZONE
                     расширенные типы данных в таблицах, процедурах и т. д. Единственный способ
                     использовать эти типы данных — это приведение типов данных, включая инструкцию
                     SET BIND (дополнительную информацию смотри в <link
-                        linkend="fblangref-session-set_bind">SET BIND OF</link>).</para>
+                        linkend="fblangref-management-set-bind">SET BIND OF</link>).</para>
             </important>
 
             <example>

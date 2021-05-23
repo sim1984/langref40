@@ -2383,7 +2383,7 @@ FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
             ключевого слова DEFAULT. Любые другие привилегии, предоставленные пользователю, не будут
             затронуты при его входе в систему с указанной ролью. Вход в систему с несколькими ролями
             не поддерживается, однако вы можете права нескольких ролей назначенных по умолчанию. Вы
-            можете изменить текущую роль с помощью оператора <link linkend="fblangref-session-role">SET
+            можете изменить текущую роль с помощью оператора <link linkend="fblangref-management-role">SET
                 ROLE</link>.</para>
         <para>Роли могут быть грантованы другие роли. При входе с этой ролью пользователь
             автоматически получит права всех ролей выданных с использованием ключевого слова
@@ -2712,7 +2712,7 @@ SET SYSTEM PRIVILEGES TO USE_GBAK_UTILITY, USE_GSTAT_UTILITY, IGNORE_DB_TRIGGERS
                         <link linkend="fblangref-security-roles-drop">DROP ROLE</link>, <link
                             linkend="fblangref-security-priv-grant">GRANT</link>, <link
                             linkend="fblangref-security-priv-revoke">REVOKE</link>, <link
-                            linkend="fblangref-session-role-setrole">SET ROLE</link>, <link
+                            linkend="fblangref-management-setrole">SET ROLE</link>, <link
                             linkend="fblangref-scalarfuncs-system-privelege"
                             >RDB$SYSTEM_PRIVILEGE</link>. </para>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE chapter>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-session" xml:lang="ru">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="fblangref-management"
+    xml:lang="ru">
     <info>
         <title>Сессионное окружение</title>
     </info>
@@ -32,7 +33,511 @@
             </listitem>
         </itemizedlist></para>
 
-    <section xml:id="fblangref-session-timeout">
+    <section xml:id="fblangref-management-datatypes">
+        <info>
+            <title>Поведение типов данных</title>
+        </info>
+
+
+        <section xml:id="fblangref-management-set-bind">
+            <info>
+                <title>SET BIND</title>
+            </info>
+            <indexterm>
+                <primary>SET BIND</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение привязки типа. Обеспечение совместимости со старыми
+                    клиентами.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET BIND 
+  OF {<replaceable>&lt;type-from&gt;</replaceable> | TIME ZONE} 
+  TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY | EXTENDED | NATIVE }
+</literallayout>
+                </para>
+            </formalpara>
+
+            <para>
+                <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Параметры оператора SET BIND OF</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Параметр</entry>
+                                <entry align="center">Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><replaceable>type-from</replaceable></entry>
+                                <entry>
+                                    <para>Тип данных для которого задаётся правило
+                                        преобразования.</para>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><replaceable>type-to</replaceable></entry>
+                                <entry>
+                                    <para>Тип данных в который следует преобразовать.</para>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+
+            <para>Данный оператор позволяет задать правила описания типов возвращаемых клиенту
+                нестандартным способом — тип <replaceable>type-from</replaceable> автоматически
+                преобразуется к типу <replaceable>type-to</replaceable>.</para>
+
+            <para>Если используется неполное определение типа (например CHAR вместо
+                    CHAR(<replaceable>n</replaceable>)) в левой части SET BIND OF приведения, то
+                преобразование будет осуществляться для всех CHAR столбцов, а не только для CHAR(1).
+                Специальный неполный тип TIME ZONE обозначает все типы (а именно TIME и TIMESTAMP) с
+                TIME ZONE. Когда неполное определение типа используется в правой части оператора
+                (часть TO), сервер автоматически определит недостающие детали этого типа на основе
+                исходного столбца.</para>
+            <para>Изменение связывания любого NUMERIC и DECIMAL типа не влияет на соответствующий
+                базовый целочисленный тип. Напротив, изменение привязки целочисленного типа данных
+                также влияет на соответствующие NUMERIC и DECIMAL.</para>
+
+            <para>Ключевое слово LEGACY в части TO используется, когда тип данных, отсутствующий в
+                предыдущей версии Firebird, должен быть представлен способом понятным для старого
+                клиентского программного обеспечения (возможна некоторая потеря данных). Существуют
+                следующие преобразования в LEGACY типы: <table frame="all">
+                    <?dbfo keep-together='auto'?>
+                    <title>Преобразования в legacy типы</title>
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" align="left"/>
+                        <colspec colname="c2" colnum="2" align="left"/>
+                        <thead>
+                            <row>
+                                <entry align="center">Native тип</entry>
+                                <entry align="center">Legacy тип</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>BOOLEAN</entry>
+                                <entry>CHAR(5)</entry>
+                            </row>
+                            <row>
+                                <entry>DECFLOAT</entry>
+                                <entry>DOUBLE PRECISION</entry>
+                            </row>
+                            <row>
+                                <entry>INT128</entry>
+                                <entry>BIGINT</entry>
+                            </row>
+                            <row>
+                                <entry>TIME WITH TIME ZONE</entry>
+                                <entry>TIME WITHOUT TIME ZONE</entry>
+                            </row>
+                            <row>
+                                <entry>TIMESTAMP WITH TIME ZONE</entry>
+                                <entry>TIMESTAMP WITHOUT TIME ZONE</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+            <para>Использование EXTENDED в части TO заставляет Firebird использовать расширенную
+                форму типа в части FROM. В настоящее время он работает только для <code>{TIME |
+                    TIMESTAMP} WITH TIME ZONE</code> — они принудительно приводятся к <code>EXTENDED
+                    {TIME | TIMESTAMP} WITH TIME ZONE</code>.</para>
+
+            <para>Установка NATIVE означает, что тип будет использоваться так, как если бы для него
+                не было предыдущих правил преобразования.</para>
+
+            <para>Ту же функциональность можно получить используй тэг <code>isc_dpb_set_bind</code>
+                в DPB. Кроме того, преобразование типов в legacy типы доступные в предыдущих версиях
+                Firebird можно установить с помощью параметра
+                    <parameter>DataTypeCompatibility</parameter> в
+                    <filename>firebird.conf</filename> или <filename>databases.conf</filename>. Чем
+                позже введено правило (.conf -> DPB -> SQL), тем выше его приоритет.</para>
+
+            <formalpara>
+                <title>Примеры</title>
+                <para>
+                    <programlisting language="sql">
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--native    
+</programlisting>
+                    <screen>
+                   CAST
+=======================
+                 123.45                    
+                </screen>
+                    <programlisting language="sql">
+SET BIND OF DECFLOAT TO DOUBLE PRECISION;
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--double
+</programlisting>
+                    <screen>
+                   CAST
+=======================
+      123.4500000000000                    
+                </screen>
+                    <programlisting language="sql">
+SET BIND OF DECFLOAT(34) TO CHAR;
+SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--всё ещё double
+</programlisting>
+                    <screen>
+                   CAST
+=======================
+      123.4500000000000                    
+                </screen>
+                    <programlisting language="sql">
+SELECT CAST('123.45' AS DECFLOAT(34)) FROM RDB$DATABASE;	--text
+</programlisting>
+                    <screen>
+CAST
+==========================================
+123.45                   
+                </screen>
+                </para>
+            </formalpara>
+
+            <example>
+                <title>Использование SET BIND OF TIME ZONE TO EXTENDED</title>
+
+                <para>Если на стороне клиента отсутствует библиотека ICU, то результат следующего
+                    запроса будет таким: <programlisting language="sql">
+SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
+</programlisting>
+                    <screen>
+                                        CURRENT_TIMESTAMP
+=========================================================
+2020-02-21 16:26:48.0230 GMT*                  
+                </screen>
+                </para>
+                <para>Для того чтобы получить значение смещения времени относительно GMT выполните
+                    следующее: <programlisting language="sql">
+SET BIND OF TIME ZONE TO EXTENDED;
+SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
+</programlisting>
+                    <screen>
+                                        CURRENT_TIMESTAMP
+=========================================================
+2020-02-21 19:26:55.6820 +03:00                 
+                </screen>
+                </para>
+            </example>
+        </section>
+
+
+        <section xml:id="fblangref-management-setdecfloat">
+            <info>
+                <title>Управление обработкой DECFLOAT</title>
+            </info>
+            <indexterm>
+                <primary>SET DECFLOAT</primary>
+            </indexterm>
+
+            <formalpara>
+                <title>Назначение:</title>
+
+                <para>Изменение режима округления и поведения при ошибках для типа DECFLOAT.</para>
+            </formalpara>
+
+            <formalpara>
+                <title>Синтаксис:</title>
+                <para>
+                    <literallayout class="monospaced">
+SET DECFLOAT
+  { ROUND <replaceable>&lt;round_mode&gt;</replaceable>
+  | TRAPS TO [<replaceable>&lt;trap_opt&gt;</replaceable> [, <replaceable>&lt;trap_opt&gt;</replaceable> ...]] }
+
+<replaceable>&lt;round_mode&gt;</replaceable> ::=
+    CEILING | UP | HALF_UP | HALF_EVEN
+  | HALF_DOWN | DOWN | FLOOR | REROUND
+
+<replaceable>&lt;trap_opt&gt;</replaceable> ::=
+    DIVISON_BY_ZERO | INEXACT | INVALID_OPERATION
+  | OVERFLOW | UNDERFLOW                  
+                        </literallayout>
+                </para>
+            </formalpara>
+
+            <section xml:id="fblangref-management-set-decfloat-round">
+                <info>
+                    <title>SET DECFLOAT ROUND</title>
+                </info>
+                <indexterm>
+                    <primary>SET DECFLOAT</primary>
+                    <secondary>ROUND</secondary>
+                </indexterm>
+
+
+
+                <para>Оператор <code>SET DECFLOAT ROUND</code> изменяет режим округления для текущей
+                    сессии. Поддерживаются следующие режимы округления совместимые со стандартом
+                    IEEE: <variablelist>
+                        <varlistentry>
+                            <term>CEILING</term>
+                            <listitem>
+                                <para>Округление сверху. Если все отбрасываемые цифры равны нулю или
+                                    знак числа отрицателен, последняя не отбрасываемая цифра не
+                                    меняется. В противном случае последняя не отбрасываемая цифра
+                                    инкрементируется на единицу (округляется в большую
+                                    сторону).</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>UP</term>
+                            <listitem>
+                                <para>Округление по направлению от нуля (усечение с приращением).
+                                    Отбрасываемые значения игнорируются.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>HALF_UP</term>
+                            <listitem>
+                                <para>Округление к ближайшему значению. Если результат
+                                    равноудаленный, выполняется округление в большую сторону. Если
+                                    отбрасываемые значения больше чем или равны половине (0.5)
+                                    единицы в следующей левой позиции, последняя не отбрасываемая
+                                    цифра инкрементируется на единицу (округляется в большую
+                                    сторону). В противном случае отбрасываемые значения
+                                    игнорируются. Этот режим округления используется в Firebird по
+                                    умолчанию.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>HALF_EVEN</term>
+                            <listitem>
+                                <para>Округление к ближайшему значению. Если результат
+                                    равноудаленный, выполняется округление так, чтобы последняя
+                                    цифра была четной. Если отбрасываемые значения больше половины
+                                    (0.5) единицы в следующей левой позиции, последняя не
+                                    отбрасываемая цифра инкрементируется на единицу (округляется в
+                                    большую сторону). Если они меньше половины, результат не
+                                    корректируется (то есть отбрасываемые знаки игнорируются). В
+                                    противном случае, когда отбрасываемые значения точно равны
+                                    половине, последняя не отбрасываемая цифра не меняется, если она
+                                    является четной и инкрементируется на единицу (округляется в
+                                    большую сторону) в противном случае (чтобы получить четную
+                                    цифру). Этот режим округления называется также банковским
+                                    округлением и дает ощущение справедливого округления.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>HALF_DOWN</term>
+                            <listitem>
+                                <para>Округление к ближайшему значению. Если результат
+                                    равноудаленный, выполняется округление в меньшую сторону. Если
+                                    отбрасываемые значения больше чем или равны половине (0.5)
+                                    единицы в следующей левой позиции, последняя не отбрасываемая
+                                    цифра декрементируется на единицу (округляется в меньшую
+                                    сторону). В противном случае отбрасываемые значения
+                                    игнорируются.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>DOWN</term>
+                            <listitem>
+                                <para>Округление по направлению к нулю (усечение). Отбрасываемые
+                                    значения игнорируются.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>FLOOR</term>
+                            <listitem>
+                                <para>Округление снизу. Если все отбрасываемые цифры равны нулю или
+                                    знак положителен, последняя не отбрасываемая цифра не меняется.
+                                    В противном случае (знак отрицателен) последняя не отбрасываемая
+                                    цифра инкрементируется на единицу.</para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>REROUND</term>
+                            <listitem>
+                                <para>Округление к большему значению, если округляется 0 или 5, в
+                                    противном случае округление происходит к меньшему
+                                    значению.</para>
+                            </listitem>
+                        </varlistentry>
+                    </variablelist>
+                </para>
+
+                <formalpara>
+                    <title>Примеры:</title>
+
+                    <para>
+                        <example>
+                            <title>Изменение режима округления</title>
+
+                            <para><programlisting language="sql"> 
+SET DECFLOAT ROUND HALF_DOWN;
+                </programlisting>
+                            </para>
+                        </example>
+                    </para>
+                </formalpara>
+
+
+                <para>
+                    <table frame="all">
+                        <title>Режимы округления</title>
+                        <?dbfo keep-together='auto'?>
+                        <tgroup cols="7">
+                            <colspec colname="c1" colnum="1" colwidth="2.2*" align="left"/>
+                            <colspec colname="c2" colnum="2" colwidth="0.5*" align="right"/>
+                            <colspec colname="c3" colnum="3" colwidth="0.5*" align="right"/>
+                            <colspec colname="c4" colnum="4" colwidth="0.5*" align="right"/>
+                            <colspec colname="c5" colnum="5" colwidth="0.5*" align="right"/>
+                            <colspec colname="c6" colnum="6" colwidth="0.5*" align="right"/>
+                            <colspec colname="c7" colnum="7" colwidth="0.5*" align="right"/>
+                            <thead>
+                                <row>
+                                    <entry align="center">Режим округления</entry>
+                                    <entry align="center">12.341</entry>
+                                    <entry align="center">12.345</entry>
+                                    <entry align="center">12.349</entry>
+                                    <entry align="center">12.355</entry>
+                                    <entry>12.405</entry>
+                                    <entry align="center">-12.345</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>CEILING</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>UP</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.35</entry>
+                                </row>
+                                <row>
+                                    <entry>HALF_UP</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.35</entry>
+                                </row>
+                                <row>
+                                    <entry>HALF_EVEN</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>HALF_DOWN</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>DOWN</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                                <row>
+                                    <entry>FLOOR</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.35</entry>
+                                    <entry>12.40</entry>
+                                    <entry>-12.35</entry>
+                                </row>
+                                <row>
+                                    <entry>REROUND</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.34</entry>
+                                    <entry>12.36</entry>
+                                    <entry>12.41</entry>
+                                    <entry>-12.34</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </para>
+
+            </section>
+
+            <section xml:id="fblangref-management-set-decfloat-traps">
+                <info>
+                    <title>SET DECFLOAT TRAPS</title>
+                </info>
+                <indexterm>
+                    <primary>SET DECFLOAT</primary>
+                    <secondary>TRAPS TO</secondary>
+                </indexterm>
+
+                <formalpara>
+                    <title>Назначение:</title>
+
+                    <para>Изменение обработки ошибок для типа DECFLOAT.</para>
+                </formalpara>
+                <formalpara>
+                    <title>Синтаксис:</title>
+                    <para>
+                        <literallayout class="monospaced">
+SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>      
+                            
+<replaceable>&lt;traps list&gt;</replaceable> ::= <replaceable>&lt;trap&gt;</replaceable>[, <replaceable>&lt;trap&gt;</replaceable>[, ... <replaceable>&lt;trap&gt;</replaceable>]]        
+                            
+<replaceable>&lt;trap&gt;</replaceable> ::= 
+    Division_by_zero 
+  | Inexact
+  | Invalid_operation
+  | Overflow 
+  | Underflow                           
+                        </literallayout>
+                    </para>
+                </formalpara>
+
+                <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
+                    Invalid_operation, Overflow, Underflow.</para>
+                <example>
+                    <title>Установка ситуаций для которых будет генерироваться исключение</title>
+
+                    <para>
+                        <programlisting language="sql"> 
+SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Underflow;
+                </programlisting>
+                    </para>
+                </example>
+            </section>
+
+        </section>
+
+    </section>
+
+    <section xml:id="fblangref-management-timeout">
         <info>
             <title>Тайм-ауты</title>
         </info>
@@ -46,7 +551,7 @@
                 </listitem>
             </itemizedlist></para>
 
-        <section xml:id="fblangref-session-timeout-statemen">
+        <section xml:id="fblangref-management-timeout-statement">
             <title>Тайм-аут выполнения SQL оператора</title>
 
             <para>Данная функциональность позволяет автоматически прекратить выполнение SQL
@@ -101,7 +606,7 @@
                     <listitem>
                         <para>На уровне соединения. Может быть установлен с использованием API (в
                             миллисекундах) или с помощью SQL оператора <link
-                                linkend="fblangref-session-timeout-set_statement_timeout">SET
+                                linkend="fblangref-management-timeout-set-statement-timeout">SET
                                 STATEMENT TIMEOUT</link>. Область действия текущее
                             подключение.</para>
                     </listitem>
@@ -143,7 +648,7 @@
                 используется движком Firebird. Кроме того, тайм-аут игнорируется для DDL
                 операторов.</para>
 
-            <section xml:id="fblangref-session-timeout-set_statement_timeout">
+            <section xml:id="fblangref-management-timeout-set-statement-timeout">
                 <info>
                     <title>SET STATEMENT TIMEOUT</title>
                     <keywordset>
@@ -235,7 +740,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
 
         </section>
 
-        <section xml:id="fblangref-session-timeout-idle_session">
+        <section xml:id="fblangref-management-timeout-idle-session">
             <title>Тайм-аут простоя соединения</title>
 
             <para>Данная функциональность позволяет автоматически закрывать пользовательские
@@ -283,7 +788,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                     <listitem>
                         <para>На уровне подключения. Может быть установлен с использованием API (в
                             секундах) или с помощью SQL оператора <link
-                                linkend="fblangref-session-timeout-set_session_idle_timeout">SET
+                                linkend="fblangref-management-timeout-set-session-idle-timeout">SET
                                 SESSION IDLE TIMEOUT</link>. Область действия все операторы в
                             текущем подключении.</para>
                     </listitem>
@@ -311,7 +816,7 @@ SET LOCAL_TIMEOUT <replaceable>int</replaceable>
                 Единственная гарантия которую может дать Firebird это то, что тайм-аут не сработает
                 раньше указанного момента.</para>
 
-            <section xml:id="fblangref-session-timeout-set_session_idle_timeout">
+            <section xml:id="fblangref-management-timeout-set-session-idle-timeout">
                 <info>
                     <title>SET SESSION IDLE TIMEOUT</title>
                     <keywordset>
@@ -393,7 +898,7 @@ SET SESSION IDLE TIMEOUT 8 HOUR
     </section>
 
 
-    <section xml:id="fblangref-session-extconnpool">
+    <section xml:id="fblangref-management-extconnpool">
         <info>
             <title>Пул внешних соединений</title>
             <keywordset>
@@ -418,7 +923,7 @@ SET SESSION IDLE TIMEOUT 8 HOUR
             MODIFY_EXT_CONN_POOL. Подробнее о системных привилегиях см. <link
                 linkend="fblangref-security-roles-create">CREATE ROLE</link>.</para>
 
-        <section xml:id="fblangref-session-extconnpool-setsize">
+        <section xml:id="fblangref-management-extconnpool-setsize">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL SET SIZE</title>
             </info>
@@ -478,7 +983,7 @@ ALTER EXTERNAL CONNECTIONS POOL SET SIZE <replaceable>&lt;size&gt;</replaceable>
 
         </section>
 
-        <section xml:id="fblangref-session-extconnpool-setlifetime">
+        <section xml:id="fblangref-management-extconnpool-setlifetime">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME</title>
             </info>
@@ -539,7 +1044,7 @@ ALTER EXTERNAL CONNECTIONS POOL SET LIFETIME <replaceable>&lt;value&gt;</replace
 
         </section>
 
-        <section xml:id="fblangref-session-extconnpool-clearall">
+        <section xml:id="fblangref-management-extconnpool-clearall">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL</title>
             </info>
@@ -572,7 +1077,7 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR ALL
 
         </section>
 
-        <section xml:id="fblangref-session-extconnpool-clearoldest">
+        <section xml:id="fblangref-management-extconnpool-clearoldest">
             <info>
                 <title>ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST</title>
             </info>
@@ -605,11 +1110,11 @@ ALTER EXTERNAL CONNECTIONS POOL CLEAR OLDEST
     </section>
 
 
-    <section xml:id="fblangref-session-role">
+    <section xml:id="fblangref-management-role">
         <info>
             <title>Изменение текущей роли</title>
         </info>
-        <section xml:id="fblangref-session-role-setrole">
+        <section xml:id="fblangref-management-setrole">
             <info>
                 <title>SET ROLE</title>
                 <keywordset>
@@ -689,7 +1194,7 @@ MANAGER
                 </para>
             </formalpara>
         </section>
-        <section xml:id="fblangref-session-role-settrustedrole">
+        <section xml:id="fblangref-management-role-settrustedrole">
             <info>
                 <title>SET TRUSTED ROLE</title>
                 <keywordset>
@@ -740,12 +1245,12 @@ SET TRUSTED ROLE
         </section>
     </section>
 
-    <section xml:id="fblangref-session-timezone">
+    <section xml:id="fblangref-management-timezone">
         <info>
             <title>Управление часовым поясом сеанса</title>
         </info>
 
-        <section xml:id="fblangref-session-timezone-settimezone">
+        <section xml:id="fblangref-management-settimezone">
             <info>
                 <title>SET TIME ZONE</title>
             </info>
@@ -784,9 +1289,9 @@ SET TIME ZONE { <replaceable>&lt;time zone string&gt;</replaceable> | LOCAL }
                 'SESSION_TIMEZONE' в качестве имени переменной.</para>
 
             <note>
-                <para>Выполнение <code>ALTER SESSION RESET</code> оказывает такое же влияние на часовой пояс
-                    сеанса, что и <code>SET TIME ZONE LOCAL</code>, но также сбрасывает другие свойства сеанса.
-                </para>
+                <para>Выполнение <code>ALTER SESSION RESET</code> оказывает такое же влияние на
+                    часовой пояс сеанса, что и <code>SET TIME ZONE LOCAL</code>, но также сбрасывает
+                    другие свойства сеанса. </para>
             </note>
 
             <formalpara>
@@ -815,381 +1320,13 @@ set time zone local;
                 <title>См. также:</title>
 
                 <para>
-                    <link linkend="fblangref-datatypes-datetime-timezone">Часовой пояс</link>. </para>
+                    <link linkend="fblangref-datatypes-datetime-timezone">Часовой пояс</link>.
+                </para>
             </formalpara>
         </section>
     </section>
 
-    <section xml:id="fblangref-session-decfloat">
-        <info>
-            <title>Управление обработкой DECFLOAT</title>
-        </info>
-
-        <section xml:id="fblangref-session-decfloat-round">
-            <info>
-                <title>SET DECFLOAT ROUND</title>
-            </info>
-            <indexterm>
-                <primary>SET DECFLOAT ROUND</primary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Изменение режима округления для типа DECFLOAT.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <literallayout class="monospaced">
-SET DECFLOAT ROUND <replaceable>&lt;mode&gt;</replaceable>                      
-                        </literallayout>
-                </para>
-            </formalpara>
-            <para>
-                <table frame="all">
-                    <?dbfo keep-together='auto'?>
-                    <title>Параметры оператора SET DECFLOAT ROUND</title>
-                    <tgroup cols="2">
-                        <colspec colname="colArgument" colnum="1" colwidth="1.2*" align="left"/>
-                        <colspec colname="colDesc" colnum="2" colwidth="2.8*" align="justify"/>
-                        <thead>
-                            <row valign="middle">
-                                <entry align="center">Параметр</entry>
-                                <entry align="center">Описание</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry><replaceable>mode</replaceable></entry>
-                                <entry>
-                                    <para>Режим округления.</para>
-                                </entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
-            </para>
-            <para>Оператор SET DECFLOAT ROUND изменяет режим округления для текущей сессии.
-                Поддерживаются следующие режимы округления совместимые со стандартом IEEE: <itemizedlist>
-                    <listitem>
-                        <para><emphasis role="bold">CEILING</emphasis>. Округление сверху. Если все
-                            отбрасываемые цифры равны нулю или знак числа отрицателен, последняя не
-                            отбрасываемая цифра не меняется. В противном случае последняя не
-                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
-                            сторону).</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">UP</emphasis>. Округление по направлению от нуля
-                            (усечение с приращением). Отбрасываемые значения игнорируются.</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">HALF_UP</emphasis>. Округление к ближайшему
-                            значению. Если результат равноудаленный, выполняется округление в
-                            большую сторону. Если отбрасываемые значения больше чем или равны
-                            половине (0.5) единицы в следующей левой позиции, последняя не
-                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
-                            сторону). В противном случае отбрасываемые значения игнорируются. Этот
-                            режим округления используется в Firebird по умолчанию.</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">HALF_EVEN</emphasis>. Округление к ближайшему
-                            значению. Если результат равноудаленный, выполняется округление так,
-                            чтобы последняя цифра была четной. Если отбрасываемые значения больше
-                            половины (0.5) единицы в следующей левой позиции, последняя не
-                            отбрасываемая цифра инкрементируется на единицу (округляется в большую
-                            сторону). Если они меньше половины, результат не корректируется (то есть
-                            отбрасываемые знаки игнорируются). В противном случае, когда
-                            отбрасываемые значения точно равны половине, последняя не отбрасываемая
-                            цифра не меняется, если она является четной и инкрементируется на
-                            единицу (округляется в большую сторону) в противном случае (чтобы
-                            получить четную цифру). Этот режим округления называется также
-                            банковским округлением и дает ощущение справедливого округления.</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">HALF_DOWN</emphasis>. Округление к ближайшему
-                            значению. Если результат равноудаленный, выполняется округление в
-                            меньшую сторону. Если отбрасываемые значения больше чем или равны
-                            половине (0.5) единицы в следующей левой позиции, последняя не
-                            отбрасываемая цифра декрементируется на единицу (округляется в меньшую
-                            сторону). В противном случае отбрасываемые значения игнорируются.</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">DOWN</emphasis>. Округление по направлению к
-                            нулю (усечение). Отбрасываемые значения игнорируются.</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">FLOOR</emphasis>. Округление снизу. Если все
-                            отбрасываемые цифры равны нулю или знак положителен, последняя не
-                            отбрасываемая цифра не меняется. В противном случае (знак отрицателен)
-                            последняя не отбрасываемая цифра инкрементируется на единицу.</para>
-                    </listitem>
-                    <listitem>
-                        <para><emphasis role="bold">REROUND</emphasis>. Округление к большему
-                            значению, если округляется 0 или 5, в противном случае округление
-                            происходит к меньшему значению.</para>
-                    </listitem>
-                </itemizedlist></para>
-
-            <formalpara>
-                <title>Примеры:</title>
-
-                <para>
-                    <example>
-                        <title>Изменение режима округления</title>
-
-                        <para><programlisting language="sql"> 
-SET DECFLOAT ROUND HALF_DOWN;
-                </programlisting>
-                        </para>
-                    </example>
-                </para>
-            </formalpara>
-
-            <para>Подробнее о режимах округления для типа DECFLOAT см. <link
-                    linkend="fblangref-datatypes-float-decfloat-round-mode">Режимы
-                округления</link>.</para>
-        </section>
-
-        <section xml:id="fblangref-session-decfloat-traps">
-            <info>
-                <title>SET DECFLOAT TRAPS TO</title>
-            </info>
-            <indexterm>
-                <primary>SET DECFLOAT TRAPS TO</primary>
-            </indexterm>
-
-            <formalpara>
-                <title>Назначение:</title>
-
-                <para>Изменение обработки ошибок для типа DECFLOAT.</para>
-            </formalpara>
-            <formalpara>
-                <title>Синтаксис:</title>
-                <para>
-                    <literallayout class="monospaced">
-SET DECFLOAT TRAPS TO <replaceable>&lt;traps list&gt;</replaceable>      
-                            
-<replaceable>&lt;traps list&gt;</replaceable> ::= <replaceable>&lt;trap&gt;</replaceable>[, <replaceable>&lt;trap&gt;</replaceable>[, ... <replaceable>&lt;trap&gt;</replaceable>]]        
-                            
-<replaceable>&lt;trap&gt;</replaceable> ::= 
-    Division_by_zero 
-  | Inexact
-  | Invalid_operation
-  | Overflow 
-  | Underflow                           
-                        </literallayout>
-                </para>
-            </formalpara>
-
-            <para>По умолчанию исключения генерируется для следующих ситуаций: Division_by_zero,
-                Invalid_operation, Overflow, Underflow.</para>
-            <example>
-                <title>Установка ситуаций для которых будет генерироваться исключение</title>
-
-                <para>
-                    <programlisting language="sql"> 
-SET DECFLOAT TRAPS TO Division_by_zero, Inexact, Invalid_operation, Overflow, Underflow;
-                </programlisting>
-                </para>
-            </example>
-        </section>
-
-    </section>
-
-    <section xml:id="fblangref-session-set_bind">
-        <info>
-            <title>SET BIND OF</title>
-        </info>
-        <indexterm>
-            <primary>SET BIND OF</primary>
-        </indexterm>
-
-        <formalpara>
-            <title>Назначение:</title>
-
-            <para>Изменение привязки типа. Обеспечение совместимости со старыми клиентами.</para>
-        </formalpara>
-
-        <formalpara>
-            <title>Синтаксис:</title>
-            <para>
-                <literallayout class="monospaced">
-SET BIND OF {<replaceable>&lt;type-from&gt;</replaceable> | TIME ZONE} TO { <replaceable>&lt;type-to&gt;</replaceable> | LEGACY | EXTENDED | NATIVE }
-                                                     </literallayout>
-            </para>
-        </formalpara>
-
-        <para>
-            <table frame="all">
-                <?dbfo keep-together='auto'?>
-                <title>Параметры оператора SET BIND OF</title>
-                <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="1.2*" align="left"/>
-                    <colspec colname="c2" colnum="2" colwidth="2.8*" align="justify"/>
-                    <thead>
-                        <row>
-                            <entry align="center">Параметр</entry>
-                            <entry align="center">Описание</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry><replaceable>type-from</replaceable></entry>
-                            <entry>
-                                <para>Тип данных для которого задаётся правило
-                                    преобразования.</para>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry><replaceable>type-to</replaceable></entry>
-                            <entry>
-                                <para>Тип данных в который следует преобразовать.</para>
-                            </entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table>
-        </para>
-
-        <para>Данный оператор позволяет задать правила описания типов возвращаемых клиенту
-            нестандартным способом — тип <replaceable>type-from</replaceable> автоматически
-            преобразуется к типу <replaceable>type-to</replaceable>.</para>
-
-        <para>Если используется неполное определение типа (например CHAR вместо
-                CHAR(<replaceable>n</replaceable>)) в левой части SET BIND OF приведения, то
-            преобразование будет осуществляться для всех CHAR столбцов, а не только для CHAR(1).
-            Специальный неполный тип TIME ZONE обозначает все типы (а именно TIME и TIMESTAMP) с
-            TIME ZONE. Когда неполное определение типа используется в правой части оператора (часть
-            TO), сервер автоматически определит недостающие детали этого типа на основе исходного
-            столбца.</para>
-        <para>Изменение связывания любого NUMERIC и DECIMAL типа не влияет на соответствующий
-            базовый целочисленный тип. Напротив, изменение привязки целочисленного типа данных также
-            влияет на соответствующие NUMERIC и DECIMAL.</para>
-
-        <para>Ключевое слово LEGACY в части TO используется, когда тип данных, отсутствующий в
-            предыдущей версии Firebird, должен быть представлен способом понятным для старого
-            клиентского программного обеспечения (возможна некоторая потеря данных). Существуют
-            следующие преобразования в LEGACY типы: <table frame="all">
-                <?dbfo keep-together='auto'?>
-                <title>Преобразования в legacy типы</title>
-                <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" align="left"/>
-                    <colspec colname="c2" colnum="2" align="left"/>
-                    <thead>
-                        <row>
-                            <entry align="center">Native тип</entry>
-                            <entry align="center">Legacy тип</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry>BOOLEAN</entry>
-                            <entry>CHAR(5)</entry>
-                        </row>
-                        <row>
-                            <entry>DECFLOAT</entry>
-                            <entry>DOUBLE PRECISION</entry>
-                        </row>
-                        <row>
-                            <entry>INT128</entry>
-                            <entry>BIGINT</entry>
-                        </row>
-                        <row>
-                            <entry>TIME WITH TIME ZONE</entry>
-                            <entry>TIME WITHOUT TIME ZONE</entry>
-                        </row>
-                        <row>
-                            <entry>TIMESTAMP WITH TIME ZONE</entry>
-                            <entry>TIMESTAMP WITHOUT TIME ZONE</entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table>
-        </para>
-        <para>Использование EXTENDED в части TO заставляет Firebird использовать расширенную форму
-            типа в части FROM. В настоящее время он работает только для <code>{TIME | TIMESTAMP}
-                WITH TIME ZONE</code> — они принудительно приводятся к <code>EXTENDED {TIME |
-                TIMESTAMP} WITH TIME ZONE</code>.</para>
-
-        <para>Установка NATIVE означает, что тип будет использоваться так, как если бы для него не
-            было предыдущих правил преобразования.</para>
-
-        <para>Ту же функциональность можно получить используй тэг <code>isc_dpb_set_bind</code> в
-            DPB. Кроме того, преобразование типов в legacy типы доступные в предыдущих версиях
-            Firebird можно установить с помощью параметра
-                <parameter>DataTypeCompatibility</parameter> в <filename>firebird.conf</filename>
-            или <filename>databases.conf</filename>. Чем позже введено правило (.conf -> DPB ->
-            SQL), тем выше его приоритет.</para>
-
-        <formalpara>
-            <title>Примеры</title>
-            <para>
-                <programlisting language="sql">
-SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--native    
-</programlisting>
-                <screen>
-                   CAST
-=======================
-                 123.45                    
-                </screen>
-                <programlisting language="sql">
-SET BIND OF DECFLOAT TO DOUBLE PRECISION;
-SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--double
-</programlisting>
-                <screen>
-                   CAST
-=======================
-      123.4500000000000                    
-                </screen>
-                <programlisting language="sql">
-SET BIND OF DECFLOAT(34) TO CHAR;
-SELECT CAST('123.45' AS DECFLOAT(16)) FROM RDB$DATABASE;	--всё ещё double
-</programlisting>
-                <screen>
-                   CAST
-=======================
-      123.4500000000000                    
-                </screen>
-                <programlisting language="sql">
-SELECT CAST('123.45' AS DECFLOAT(34)) FROM RDB$DATABASE;	--text
-</programlisting>
-                <screen>
-CAST
-==========================================
-123.45                   
-                </screen>
-            </para>
-        </formalpara>
-
-        <example>
-            <title>Использование SET BIND OF TIME ZONE TO EXTENDED</title>
-
-            <para>Если на стороне клиента отсутствует библиотека ICU, то результат следующего
-                запроса будет таким: <programlisting language="sql">
-SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
-</programlisting>
-                <screen>
-                                        CURRENT_TIMESTAMP
-=========================================================
-2020-02-21 16:26:48.0230 GMT*                  
-                </screen>
-            </para>
-            <para>Для того чтобы получить значение смещения времени относительно GMT выполните
-                следующее: <programlisting language="sql">
-SET BIND OF TIME ZONE TO EXTENDED;
-SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;
-</programlisting>
-                <screen>
-                                        CURRENT_TIMESTAMP
-=========================================================
-2020-02-21 19:26:55.6820 +03:00                 
-                </screen>
-            </para>
-        </example>
-    </section>
-
-    <section xml:id="fblangref-session-resetsession">
+    <section xml:id="fblangref-management-resetsession">
         <info>
             <title>ALTER SESSION RESET</title>
             <keywordset>

@@ -626,7 +626,7 @@ SELECT * FROM RDB$ROLES WHERE RDB$ROLE_IN_USE(RDB$ROLE_NAME)
 
                 <para>
                     <link linkend="fblangref-security-priv-grant-role">GRANT ROLE</link>, <link
-                        linkend="fblangref-session-role-setrole">SET ROLE</link>, <link
+                        linkend="fblangref-management-setrole">SET ROLE</link>, <link
                         linkend="fblangref-contextvars-current_role">CURRENT_ROLE</link>. </para>
             </formalpara>
         </section>
