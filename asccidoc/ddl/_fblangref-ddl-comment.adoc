@@ -22,7 +22,8 @@ COMMENT ON <object> IS {'_sometext_' | NULL}
 <object> ::= 
     DATABASE 
   | <basic-type> _objectname_
-  | COLUMN _relationname_._fieldname_
+  | USER _username_ [USING PLUGIN _plugin_name_]  
+  | COLUMN _relationname_._fieldname_  
   | [PROCEDURE | FUNCTION] PARAMETER
     [_package_name_.] _routinename_._paramname_
   | {PROCEDURE | [EXTERNAL] FUNCTION} 
@@ -43,7 +44,6 @@ COMMENT ON <object> IS {'_sometext_' | NULL}
   | TRIGGER 
   | VIEW    
   
-COMMENT ON USER <username> [USING PLUGIN <plugin_name>] IS {'_sometext_' | NULL}
 ----
 
 [[fblangref-ddl-tbl-commenton]]
