@@ -87,7 +87,7 @@ CREATE TRIGGER _trigname_ {
 
 <routine-body> ::=
     <psql-routine-spec>
-  | <external-body-reference>
+  | <external-routine-spec>
 
 <psql-routine-spec> ::=
   [<rights-clause>] <psql-routine-body>
@@ -99,8 +99,11 @@ CREATE TRIGGER _trigname_ {
 <psql-module-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
-<external-body-reference> ::=
-  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]
+<external-routine-spec> ::= 
+  <external-routine-reference>
+  [AS <extbody>]
+
+<external-routine-reference> ::= EXTERNAL NAME <extname> ENGINE <engine>
 
 <extname> ::= '<module-name>!<routine-name>[!<misc-info>]'
 ----

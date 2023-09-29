@@ -22,7 +22,7 @@ DSQL, ESQL
 [listing,subs="+quotes,macros"]
 ----
 CREATE PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
-RETURNS (<outparam> [, <outparam> ...])
+[ RETURNS (<outparam> [, <outparam> ...]) ]
 <routine body> 
   
 <inparam> ::= <param_decl> [{= | DEFAULT} <value>]  
@@ -32,9 +32,7 @@ RETURNS (<outparam> [, <outparam> ...])
 <value> ::=  {_literal_ | NULL | _context_var_}
                     
 <param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
-                    
-<extname> ::= '<module name>!<routine name>[!<misc info>]'    
-
+                      
 <type> ::= <datatype> | [TYPE OF] _domain_name_ | TYPE OF COLUMN _rel_._col_
                     
 <datatype> ::= 
@@ -48,7 +46,7 @@ RETURNS (<outparam> [, <outparam> ...])
 
 <routine-body> ::=
     <psql-routine-spec>
-  | <external-body-reference>
+  | <external-routine-spec>
 
 <psql-routine-spec> ::=
   [<rights-clause>] <psql-routine-body>
@@ -60,8 +58,11 @@ RETURNS (<outparam> [, <outparam> ...])
 <psql-module-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
-<external-body-reference> ::=
-  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]
+<external-routine-spec> ::= 
+  <external-routine-reference>
+  [AS <extbody>]
+
+<external-routine-reference> ::= EXTERNAL NAME <extname> ENGINE <engine>
 
 <extname> ::= '<module-name>!<routine-name>[!<misc-info>]'
 ----
@@ -352,7 +353,7 @@ DSQL, ESQL
 [listing,subs="+quotes,macros"]
 ----
 ALTER PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
-RETURNS (<outparam> [, <outparam> ...])
+[ RETURNS (<outparam> [, <outparam> ...]) ]
 <routine-body>
 
 Подробнее см. <<fblangref-ddl-proc-create-syntax,CREATE PROCEDURE>>.
@@ -427,7 +428,7 @@ DSQL, ESQL
 [listing,subs="+quotes,macros"]
 ----
 CREATE OR ALTER PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
-RETURNS (<outparam> [, <outparam> ...])
+[ RETURNS (<outparam> [, <outparam> ...]) ]
 <routine-body>
 
 Подробнее см. <<fblangref-ddl-proc-create-syntax,CREATE PROCEDURE>>.
@@ -538,7 +539,7 @@ DSQL, ESQL
 [listing,subs="+quotes,macros"]
 ----
 RECREATE PROCEDURE _procname_ [(<inparam> [, <inparam> ...])]
-RETURNS (<outparam> [, <outparam> ...])
+[ RETURNS (<outparam> [, <outparam> ...]) ]
 <routine-body>
 
 Подробнее см. <<fblangref-ddl-proc-create-syntax,CREATE PROCEDURE>>.

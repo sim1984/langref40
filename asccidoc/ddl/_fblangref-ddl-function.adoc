@@ -33,8 +33,6 @@ CREATE FUNCTION _funcname_ [(<inparam> [, <inparam> ...])]
                     
 <param_decl> ::= _paramname_ <type> [NOT NULL] [COLLATE _collation_]
                     
-<extname> ::= '<module name>!<routine name>[!<misc info>]'    
-
 <type> ::=
     <datatype>
   | [TYPE OF] _domain_
@@ -51,7 +49,7 @@ CREATE FUNCTION _funcname_ [(<inparam> [, <inparam> ...])]
 
 <routine-body> ::=
     <psql-routine-spec>
-  | <external-body-reference>
+  | <external-routine-spec>
                     
 <psql-routine-spec> ::=
   [<rights-clause>] <psql-routine-body>
@@ -63,8 +61,11 @@ CREATE FUNCTION _funcname_ [(<inparam> [, <inparam> ...])]
 <psql-module-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
-<external-body-reference> ::=
-  EXTERNAL NAME '<extname>' ENGINE <engine> [AS <extbody>]  
+<external-routine-spec> ::= 
+  <external-routine-reference>
+  [AS <extbody>]
+
+<external-routine-reference> ::= EXTERNAL NAME <extname> ENGINE <engine>
 
 <extname> ::= '<module-name>!<routine-name>[!<misc-info>]'
 ----
