@@ -38,7 +38,7 @@ END
                             
 <function_decl> ::=
   FUNCTION _func_name_ [(<in_params>)]
-  RETURNS <type> [COLLATE collation] 
+  RETURNS <type> [NOT NULL] [COLLATE collation] 
   [DETERMINISTIC]   
                             
 <procedure_decl> ::=
@@ -60,13 +60,11 @@ END
 <type> ::= <datatype> | [TYPE OF] _domain_name_ | TYPE OF COLUMN _rel_._col_
                     
 <datatype> ::= 
-    <scalar_datatype> | <blob_datatype> | <array_datatype>                   
+    <scalar_datatype> | <blob_datatype>                 
                     
 <scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
 
 <blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
-
-<array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
 ----
 
 [[fblangref-ddl-tbl-createpkg]]

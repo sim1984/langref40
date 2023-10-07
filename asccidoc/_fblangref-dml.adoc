@@ -5434,7 +5434,7 @@ DSQL
 ----
 EXECUTE BLOCK [(<inparams>)]
   [RETURNS (<outparams>)]
-  <psql-module-body>
+  <psql-routine-body>
 
 <inparams> ::= <param_decl> = ? [, <inparams> ]
 
@@ -5454,7 +5454,7 @@ EXECUTE BLOCK [(<inparams>)]
 
 <blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
                 
-<psql-module-body> ::=
+<psql-routine-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 ----
 

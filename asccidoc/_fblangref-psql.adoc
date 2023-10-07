@@ -368,9 +368,9 @@ SET TERM ;^
 EXECUTE BLOCK
   [(<inparam> = ? [, <inparam> = ? ...])]
   [RETURNS (<outparam> [, <outparam> ...])]
-  <psql-module-body>
+  <psql-routine-body>
 
-<psql-module-body> ::=
+<psql-routine-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 ----
 
@@ -1004,13 +1004,13 @@ PSQL
 <subproc-implimentation> ::=
   DECLARE PROCEDURE _subprocname_ [(<input-parameters>)]
   [RETURNS (<output-parameters>)]
-  <psql-module-body>
+  <psql-routine-body>
 
 <input-parameters> ::= <inparam> [, <inparam> ...]
 
 <output-parameters> ::= <outparam> [, <outparam> ...]
 
-<psql-module-body> ::=
+<psql-routine-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 ----
 
@@ -1163,13 +1163,13 @@ PSQL
 <subfunc-implimentation> ::=
   DECLARE FUNCTION _subfuncname_ [(<input-parameters>)]
   RETURNS <type> [COLLATE _collation_] [DETERMINISTIC]
-  <psql-module-body>
+  <psql-routine-body>
 
 <input-parameters> ::= <inparam> [, <inparam> ...]
 
 <output-parameters> ::= <outparam> [, <outparam> ...]
 
-<psql-module-body> ::=
+<psql-routine-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 ----
 

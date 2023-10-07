@@ -96,7 +96,7 @@ CREATE TRIGGER _trigname_ {
 <rights-clause> ::=
   SQL SECURITY {DEFINER | INVOKER}
 
-<psql-module-body> ::=
+<psql-routine-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
 <external-routine-spec> ::= 

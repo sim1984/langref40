@@ -28,7 +28,7 @@ END
 
 <function_decl> ::=
   FUNCTION _func_name_ [(<in_params>)]
-  RETURNS <type> [COLLATE _collation_]
+  RETURNS <type> [NOT NULL] [COLLATE _collation_]
   [DETERMINISTIC]
 
 <procedure_decl> ::=
@@ -41,7 +41,7 @@ END
 
 <function_impl> ::=
   FUNCTION _func_name_ [(<in_impl_params>)]
-  RETURNS <type> [COLLATE _collation_]
+  RETURNS <type> [NOT NULL] [COLLATE _collation_]
   [DETERMINISTIC]
   <routine-body>
 
@@ -67,19 +67,17 @@ END
 <type> ::= <datatype> | [TYPE OF] _domain_name_ | TYPE OF COLUMN _rel_._col_
 
 <datatype> ::=
-    <scalar_datatype> | <blob_datatype> | <array_datatype>
+    <scalar_datatype> | <blob_datatype>
 
 <scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
 
 <blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
 
-<array_datatype> ::= См. <<fblangref-datatypes-syntax-array,Синтаксис массивов>>
-
 <routine-body> ::=
     <psql-routine-body>
   | <external-routine-spec>
 
-<psql-module-body> ::=
+<psql-routine-body> ::=
   См. <<fblangref-psql-elements-body-syntax,Синтаксис тела модуля>>
 
 <external-routine-spec> ::= 
