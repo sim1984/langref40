@@ -42,25 +42,28 @@ DSQL, ESQL
 .Синтаксис
 [listing,subs="+quotes,macros"]
 ----
+DECLARE EXTERNAL FUNCTION funcname
+  [{ <arg_desc_list> | ( <arg_desc_list> ) }]
+  RETURNS { <return_value> | ( <return_value> ) }
+  ENTRY_POINT '_entry_point_' MODULE_NAME '_library_name_'
 
-DECLARE EXTERNAL FUNCTION _funcname_
-[<arg_type_decl> [, <arg_type_decl> ...]]
-RETURNS { 
-  <sqltype> [BY {DESCRIPTOR | VALUE}] | 
-  CSTRING(_length_) |
-  PARAMETER _param_num_ }
-[FREE_IT]
-ENTRY_POINT '_entry_point_' MODULE_NAME '_library_name_';
+<arg_desc_list> ::=
+  <arg_type_decl> [, <arg_type_decl> ...]
 
-<arg_type_decl> ::= 
-  <sqltype> [{BY DESCRIPTOR} | NULL] | 
-  CSTRING(_length_) [NULL]
-  
-<sqltype> ::= <scalar_datatype> |  <blob_datatype> 
+<arg_type_decl> ::=
+  <udf_data_type> [BY {DESCRIPTOR | SCALAR_ARRAY} | NULL]
+
+<udf_data_type> ::=
+    <scalar_datatype>
+  | BLOB
+  | CSTRING(_length_) [ CHARACTER SET _charset_ ]
+
+<return_value> ::=
+    <udf_data_type> { BY VALUE | BY DESCRIPTOR [FREE_IT] | FREE_IT }
+  | PARAMETER _param_num_ 
   
 <scalar_datatype> ::=  См. <<fblangref-datatypes-syntax-scalar,Синтаксис скалярных типов данных>>
 
-<blob_datatype> ::= См. <<fblangref-datatypes-syntax-blob,Синтаксис типа данных BLOB>>
 ----
 
 .Параметры оператора `DECLARE EXTERNAL FUNCTION`
@@ -87,11 +90,14 @@ ENTRY_POINT '_entry_point_' MODULE_NAME '_library_name_';
 |Максимальная длина нуль терминальной строки.
 Указывается в байтах. 
 
+|charset
+|Кодировка строки. 
+
 |param_num
 |Номер входного параметра, который будет возвращён функцией.
 |===
 
-Оператор `DECLARE EXTERNAL FUNCTION` делает доступным функцию, определенную пользователем (UDF), в базе данных.
+Оператор `DECLARE EXTERNAL FUNCTION` делает доступным внешнюю функцию, определенную пользователем (UDF), в базе данных.
 Внешние функции должны быть объявлены в каждой базе данных, которая собирается их использовать.
 Не нужно объявлять UDF, если вы никогда не будете её использовать.
 
@@ -100,7 +106,6 @@ ENTRY_POINT '_entry_point_' MODULE_NAME '_library_name_';
 
 Входные параметры функции перечисляются через запятую сразу после имени функции.
 Для каждого параметра указывается SQL тип данных.
-Массивы не могут использоваться в качестве параметров функций.
 Помимо SQL типов можно указать тип `CSTRING`.
 В этом случае параметр является нуль терминальной строкой с максимальной длиной _length_ байт.
 Существует несколько механизмов передачи параметра из движка Firebird во внешнюю функцию, каждый из этих механизмов будет рассмотрен отдельно.
@@ -130,9 +135,11 @@ ENTRY_POINT '_entry_point_' MODULE_NAME '_library_name_';
 Предложение `BY SCALAR_ARRAY` используется при передаче массивов в качестве входных параметров.
 В отличие от других типов, вы не можете вернуть массив из UDF. 
 
-Обязательное предложение RETURNS описывает выходной параметр возвращаемый функцией.
+Обязательное предложение `RETURNS` описывает выходной параметр возвращаемый функцией.
 Функция всегда возвращает только один параметр.
-Выходной параметр может быть любым SQL типом (кроме массива и элемента массива) или нуль терминальной строкой (`CSTRING`). Выходной параметр может быть передан по ссылке, по дескриптору или по значению.
+Выходной параметр может быть любым SQL типом (кроме массива и элемента массива) или нуль терминальной строкой (`CSTRING`). 
+
+Выходной параметр может быть передан по ссылке, по дескриптору или по значению.
 По умолчанию выходной параметр передаётся по ссылке.
 Если указано предложение `BY DESCRIPTOR`, то выходной параметр передаётся по дескриптору.
 Если указано предложение `BY VALUE`, то выходной параметр передаётся по значению.
