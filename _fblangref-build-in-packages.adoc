@@ -1,0 +1,123 @@
+[[fblangref-build-in-packages]]
+= Системные пакеты
+
+Системные пакеты предоставляют служебные хранимые процедуры и функции.
+
+.Список системных пакетов
+<<fblangref-build-in-packages-time-zone-util-pkg>>::
+Утилиты поддержки часовых поясов
+
+[[fblangref-build-in-packages-time-zone-util-pkg]]
+== Пакет `RDB$TIME_ZONE_UTIL`
+
+(((RDB$TIME_ZONE_UTIL)))
+Пакет `RDB$TIME_ZONE_UTIL` содержит процедуры и функции для работы с часовыми поясами.
+
+[[fblangref-build-in-packages-time-zone-util-version]]
+=== Функция `RDB$TIME_ZONE_UTIL.DATABASE_VERSION()`
+
+Функция `RDB$TIME_ZONE_UTIL.DATABASE_VERSION` возвращает версию базы данных часовых поясов (из библиотеки icu).
+
+.Тип возвращаемого результата
+`VARCHAR(10) CHARACTER SET ASCII`
+
+
+.Использование функции RDB$TIME_ZONE_UTIL.DATABASE_VERSION
+[example]
+====
+[source,sql]
+----
+SELECT rdb$time_zone_util.database_version()
+FROM rdb$database;
+----
+
+[listing]
+----
+DATABASE_VERSION
+================
+2021a
+----
+====
+
+[[fblangref-build-in-packages-timezone-zone-util-transitions]]
+=== Процедура `RDB$TIME_ZONE_UTIL.TRANSITIONS()`
+
+Процедура `RDB$TIME_ZONE_UTIL.TRANSITIONS` возвращает набор правил для часового пояса между начальной и конечной временной меткой.
+
+
+.Входные параметры процедуры `RDB$TIME_ZONE_UTIL.TRANSITIONS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|RDB$TIME_ZONE_NAME
+|`CHAR(63)`
+|Наименование часового пояса
+
+|RDB$FROM_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Начало интервала дат
+
+|RDB$TO_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Окончание интервала дат
+|===
+
+.Выходные параметры процедуры `RDB$TIME_ZONE_UTIL.TRANSITIONS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Параметр
+^| Тип
+^| Описание
+
+|RDB$START_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Дата начала действия правила
+
+|RDB$END_TIMESTAMP
+|`TIMESTAMP WITH TIME ZONE`
+|Дата окончания действия правила
+
+|RDB$ZONE_OFFSET
+|`SMALLINT`
+|Смещение времени в минутах для заданного часового пояса
+
+|RDB$DST_OFFSET
+|`SMALLINT`
+|Летнее смещение времени в минутах для заданного часового пояса
+
+|RDB$EFFECTIVE_OFFSET
+|`SMALLINT`
+|Эффективное смещение, вычисляется как `RDB$ZONE_OFFSET + RDB$DST_OFFSET`
+|===
+
+
+.Использование процедуры `RDB$TIME_ZONE_UTIL.TRANSITIONS`
+====
+[source,sql]
+----
+SELECT
+  RDB$START_TIMESTAMP,
+  RDB$END_TIMESTAMP,
+  RDB$ZONE_OFFSET AS ZONE_OFF,
+  RDB$DST_OFFSET AS DST_OFF,
+  RDB$EFFECTIVE_OFFSET AS OFF
+FROM rdb$time_zone_util.transitions(
+    'America/Sao_Paulo',
+    timestamp '2017-01-01',
+    timestamp '2019-01-01');
+----
+
+[listing]
+----
+         RDB$START_TIMESTAMP            RDB$END_TIMESTAMP ZONE_OFF DST_OFF  OFF
+============================ ============================ ======== ======= ====
+2016-10-16 03:00:00.0000 GMT 2017-02-19 01:59:59.9999 GMT     -180      60 -120
+2017-02-19 02:00:00.0000 GMT 2017-10-15 02:59:59.9999 GMT     -180       0 -180
+2017-10-15 03:00:00.0000 GMT 2018-02-18 01:59:59.9999 GMT     -180      60 -120
+2018-02-18 02:00:00.0000 GMT 2018-10-21 02:59:59.9999 GMT     -180       0 -180
+2018-10-21 03:00:00.0000 GMT 2019-02-17 01:59:59.9999 GMT     -180      60 -120
+----
+====

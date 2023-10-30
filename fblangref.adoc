@@ -28,6 +28,8 @@ include::_fblangref-functions-aggregate.adoc[leveloffset=1]
 
 include::_fblangref-functions-window.adoc[leveloffset=1]
 
+include::_fblangref-build-in-packages.adoc[leveloffset=1]
+
 include::_fblangref-context-var.adoc[leveloffset=1]
 
 include::_fblangref-transaction.adoc[leveloffset=1]
@@ -48,9 +50,11 @@ include::_fblangref-appx05-montables.adoc[leveloffset=1]
 
 include::_fblangref-appx06-sectables.adoc[leveloffset=1]
 
-include::_fblangref-appx07-charsets.adoc[leveloffset=1]
+include::_fblangref-appx07-plgtables.adoc[leveloffset=1]
 
-include::_fblangref-appx08-license.adoc[leveloffset=1]
+include::_fblangref-appx08-charsets.adoc[leveloffset=1]
+
+include::_fblangref-appx09-license.adoc[leveloffset=1]
 
 ifndef::backend-html5[]
 [index]

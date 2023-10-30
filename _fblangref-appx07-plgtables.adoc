@@ -1,0 +1,266 @@
+:sectnums!:
+:ditto: &#12291;
+
+[appendix]
+[[fblangref-appx-plgtables]]
+= Таблицы плагинов
+
+Таблицы плагинов — это таблицы или представления, созданные для или с помощью различных плагинов для движка Firebird. Стандартные таблицы плагинов имеют префикс `PLG$` (но могут иметь и другие).
+
+Таблицы плагинов не всегда существуют. Например, некоторые таблицы существуют только в базе данных безопасности, а другие таблицы будут созданы только при первом использовании плагина.
+
+В этом приложении описаны только таблицы плагинов, созданные плагинами, включенными в стандартную поставку Firebird 4.0.
+
+Таблицы плагинов не считаются системными таблицами.
+
+== Плагин управления пользователями `Srp`
+
+[[fblangref-appx-plgsrp]]
+=== Таблица `PLG$SRP`
+
+Таблица `PLG$SRP` хранит список пользователей и информацию для их аутентификации плагинами аутентификации семейства SRP.
+
+.Описание столбцов таблицы `PLG$SRP`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PLG$USER_NAME
+|VARCHAR(63)
+|Имя пользователя
+
+|PLG$VERIFIER
+|VARBINARY(128)
+|Srp verifier
+
+|PLG$SALT
+|VARBINARY(32)
+|Соль
+
+|PLG$COMMENT
+|BLOB SUB_TYPE TEXT
+|Текстовый комментарий
+
+|PLG$FIRST
+|VARCHAR(32)
+|Первое имя (имя)
+
+|PLG$MIDDLE
+|VARCHAR(32)
+|Среднее имя (отчество)
+
+|PLG$LAST
+|VARCHAR(32)
+|Последнее имя (фамилия)
+
+|PLG$ATTRIBUTES
+|BLOB SUB_TYPE TEXT
+|Пользовательские аттрибуты (теги)
+
+|PLG$ACTIVE
+|BOOLEAN
+|Флаг - активен ли пользователь
+
+|===
+
+[[fblangref-appx-plgsrpview]]
+=== Представление `PLG$SRP_VIEW`
+
+Представление `PLG$SRP_VIEW` определяет какие пользователи доступны для просмотра через виртуальную таблицу `SEC$USERS` и
+изменения с помощью оператор `ALTER USER ...`.
+
+.Описание столбцов представления `PLG$SRP_VIEW`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PLG$USER_NAME
+|VARCHAR(63)
+|Имя пользователя
+
+|PLG$VERIFIER
+|VARBINARY(128)
+|Srp verifier
+
+|PLG$SALT
+|VARBINARY(32)
+|Соль
+
+|PLG$COMMENT
+|BLOB SUB_TYPE TEXT
+|Текстовый комментарий
+
+|PLG$FIRST
+|VARCHAR(32)
+|Первое имя (имя)
+
+|PLG$MIDDLE
+|VARCHAR(32)
+|Среднее имя (отчество)
+
+|PLG$LAST
+|VARCHAR(32)
+|Последнее имя (фамилия)
+
+|PLG$ATTRIBUTES
+|BLOB SUB_TYPE TEXT
+|Пользовательские аттрибуты (теги)
+
+|PLG$ACTIVE
+|BOOLEAN
+|Флаг - активен ли пользователь
+
+|===
+
+Данное представление хранит следующий SQL запрос
+
+[source,sql]
+----
+SELECT 
+  PLG$USER_NAME, 
+  PLG$VERIFIER, 
+  PLG$SALT, 
+  PLG$COMMENT, 
+  PLG$FIRST, 
+  PLG$MIDDLE, 
+  PLG$LAST, 
+  PLG$ATTRIBUTES, 
+  PLG$ACTIVE 
+FROM PLG$SRP 
+WHERE RDB$SYSTEM_PRIVILEGE(USER_MANAGEMENT) OR CURRENT_USER = PLG$SRP.PLG$USER_NAME
+----
+
+== Плагин управления пользователями `Legacy_UserManager`
+
+[[fblangref-appx-plgusers]]
+=== Таблица `PLG$USERS`
+
+Таблица `PLG$USERS` хранит список пользователей и информацию для их аутентификации плагином аутентификации `Legacy_Auth`.
+
+.Описание столбцов таблицы `PLG$USERS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PLG$USER_NAME
+|VARCHAR(63)
+|Имя пользователя
+
+|PLG$GROUP_NAME
+|VARCHAR(63)
+|Имя группы
+
+|PLG$GROUP_NAME
+|VARCHAR(63)
+|Имя группы
+
+|PLG$UID
+|INTEGER
+|Идентификатор пользователя в POSIX
+
+|PLG$GID
+|INTEGER
+|Идентификатор группы в POSIX
+
+|PLG$PASSWD
+|VARBINARY(64)
+|Хеш пароля
+
+|PLG$COMMENT
+|BLOB SUB_TYPE TEXT
+|Текстовый комментарий
+
+|PLG$FIRST_NAME
+|VARCHAR(32)
+|Первое имя (имя)
+
+|PLG$MIDDLE_NAME
+|VARCHAR(32)
+|Среднее имя (отчество)
+
+|PLG$LAST_NAME
+|VARCHAR(32)
+|Последнее имя (фамилия)
+
+|===
+
+[[fblangref-appx-plgusersview]]
+=== Представление `PLG$VIEW_USERS`
+
+Представление `PLG$VIEW_USERS` определяет какие пользователи доступны для просмотра через виртуальную таблицу `SEC$USERS` и
+изменения с помощью оператор `ALTER USER ...`.
+
+.Описание столбцов представления `PLG$VIEW_USERS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|PLG$USER_NAME
+|VARCHAR(63)
+|Имя пользователя
+
+|PLG$GROUP_NAME
+|VARCHAR(63)
+|Имя группы
+
+|PLG$GROUP_NAME
+|VARCHAR(63)
+|Имя группы
+
+|PLG$UID
+|INTEGER
+|Идентификатор пользователя в POSIX
+
+|PLG$GID
+|INTEGER
+|Идентификатор группы в POSIX
+
+|PLG$PASSWD
+|VARBINARY(64)
+|Хеш пароля
+
+|PLG$COMMENT
+|BLOB SUB_TYPE TEXT
+|Текстовый комментарий
+
+|PLG$FIRST_NAME
+|VARCHAR(32)
+|Первое имя (имя)
+
+|PLG$MIDDLE_NAME
+|VARCHAR(32)
+|Среднее имя (отчество)
+
+|PLG$LAST_NAME
+|VARCHAR(32)
+|Последнее имя (фамилия)
+
+|===
+
+Данное представление хранит следующий SQL запрос
+
+[source,sql]
+----
+SELECT 
+  PLG$USER_NAME, 
+  PLG$GROUP_NAME, 
+  PLG$UID, 
+  PLG$GID, 
+  PLG$PASSWD,
+  PLG$COMMENT, 
+  PLG$FIRST_NAME, 
+  PLG$MIDDLE_NAME, 
+  PLG$LAST_NAME
+FROM PLG$USERS
+WHERE CURRENT_USER = 'SYSDBA'
+   OR CURRENT_ROLE = 'RDB$ADMIN'
+   OR CURRENT_USER = PLG$USERS.PLG$USER_NAME
+----
