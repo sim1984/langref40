@@ -18,6 +18,8 @@ endif::[]
 ifdef::backend-html5[]
 :source-highlighter: highlight.js
 endif::[]
+:fb-full-version: 4.0.4
+:secdb: security4.fdb
 
 Авторские права (C) 2017-2023 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0].
 Пожалуйста, обратитесь к <<fblangref-license,License Notice in the Appendix>>

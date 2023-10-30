@@ -1118,7 +1118,7 @@ select rdb$get_context('SYSTEM', 'SESSION_TIMEZONE') from rdb$database;
 Часовой пояс может быть задан строкой с регионом часового пояса (например, America/Sao_Paulo), или в виде
 смещения "`часов:минут`" относительно GMT (например, -03:00).
 Список региональных часовых поясов и их идентификаторов можно посмотреть в таблице <<fblangref-systables-timezones,RDB$TIME_ZONES>>.
-Правила преобразования региональных часовых поясов в смещение в минутах можно получить с помощью процедуры <<fblangref-datatypes-timezone-zone-util-transitions,RDB$TIME_ZONE_UTIL.TRANSITIONS>>.
+Правила преобразования региональных часовых поясов в смещение в минутах можно получить с помощью процедуры <<fblangref-build-in-packages-timezone-zone-util-transitions,RDB$TIME_ZONE_UTIL.TRANSITIONS>>.
 
 `{TIME | TIMESTAMP} WITH TIMEZONE` считается равным другому `{TIME | TIMESTAMP} WITH TIMEZONE`, если их преобразование
 в UTC равно, например `time '10:00 -02' = time '09:00 -03'`, поскольку оба времени эквивалентны `time '12:00 GMT'`.
