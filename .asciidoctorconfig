@@ -1,21 +1,5 @@
-:doctype: book
 :encoding: utf-8
-:lang: ru
-:icons: font
 :numbered:
-:sectnums:
-:sectanchors:
-:experimental:
-:toc: left
-:toclevels: 4
-:outlinelevels: 6:0
-:imagesdir: images
-ifdef::backend-pdf[]
-:source-highlighter: coderay
-endif::[]
-ifdef::backend-html5[]
-:source-highlighter: highlight.js
-endif::[]
 :stylesdir: {asciidoctorconfigdir}/theme/firebird-html
 :stylesheet: firebird.css
 :pdf-fontsdir: {asciidoctorconfigdir}/theme/fonts
@@ -43,4 +27,3 @@ ifdef::preface-title[:preface-title: Предисловие]
 :untitled-label: Без названия
 :version-label: Версия
 :warning-caption: Предупреждение
-

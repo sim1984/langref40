@@ -2,6 +2,22 @@
 = Руководство по языку SQL СУБД Firebird 4.0
 Дмитрий Филиппов; Александр Карпейкин; Алексей Ковязин; Дмитрий Кузьменко; Денис Симонов; Paul Vinkenoog; Дмитрий Еманов; Mark Rotteveel
 1.0.9, от 30.10.2023
+:doctype: book
+:lang: ru
+:sectnums:
+:sectanchors:
+:toc: left
+:toclevels: 4
+:outlinelevels: 6:0
+:icons: font
+:experimental:
+:imagesdir: images
+ifdef::backend-pdf[]
+:source-highlighter: coderay
+endif::[]
+ifdef::backend-html5[]
+:source-highlighter: highlight.js
+endif::[]
 
 Авторские права (C) 2017-2023 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0].
 Пожалуйста, обратитесь к <<fblangref-license,License Notice in the Appendix>>
