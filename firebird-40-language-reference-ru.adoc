@@ -18,6 +18,7 @@ endif::[]
 ifdef::backend-html5[]
 :source-highlighter: highlight.js
 endif::[]
+include::../../attributes-ru.adoc[]
 :fb-full-version: 4.0.5
 :secdb: security4.fdb
 
