@@ -1,1 +1,13 @@
-{}
+{
+    "asciidoc.antora.showEnableAntoraPrompt": false,
+    "[asciidoc]": {
+        "editor.wordWrap": "bounded",
+        "editor.wordWrapColumn": 120
+    },
+    "editor.rulers": [120],
+    "editor.tabSize": 4,
+    "cSpell.language": "ru,en",
+    "cSpell.maxNumberOfProblems": 5000,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+}
