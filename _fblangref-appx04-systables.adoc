@@ -401,7 +401,7 @@
 
 |RDB$CONFIG_IS_SET
 |BOOLEAN
-|`TRUE`, если значение установлено пользователем, `FALSE` в противном случае.
+|`TRUE`, если значение установлено пользователем, `FALSE` -- в противном случае.
 
 |RDB$CONFIG_SOURCE
 |VARCHAR(255) CHARACTER SET UTF8
