@@ -5,14 +5,12 @@
 [[fblangref-sectables]]
 = Таблицы безопасности
 
-Виртуальные таблицы безопасности имеют префикс имени `SEC$`. Они отображают данные из текущей базы данных безопасности.
-Эти таблицы являются виртуальными в том смысле, что до обращения к ним со стороны пользователя, никаких данных в них не записано.
-Они заполняются данными только в момент запроса пользователя.
-При этом описания этих таблиц в базе данных присутствуют постоянно.
-В этом смысле эти виртуальные таблицы подобны таблицам семейства `MON$`, используемых для мониторинга сервера.
+Виртуальные таблицы безопасности имеют префикс имени `SEC$`. Они отображают данные из текущей базы данных безопасности. Эти таблицы являются виртуальными в том смысле, что до обращения к ним со стороны пользователя, никаких данных в них не записано. Они заполняются данными только в момент запроса пользователя. При этом описания этих таблиц в базе данных присутствуют постоянно. В этом смысле эти виртуальные таблицы подобны таблицам семейства `MON$`, используемых для мониторинга сервера.
 
 
-.Безопасность:* Полный доступ ко всей информации, предоставляемой таблицами безопасности, имеют `SYSDBA` и владелец базы данных;
+.Безопасность:
+
+* Полный доступ ко всей информации, предоставляемой таблицами безопасности, имеют `SYSDBA` и владелец базы данных;
 * Обычные пользователи ограничены информацией о самих себе, другие пользователи невидимы для них.
 
 [IMPORTANT]
@@ -24,15 +22,42 @@
 
 .Виртуальные таблицы безопасности
 
-<<fblangref-sectables-global_auth_mapping,`SEC$GLOBAL_AUTH_MAPPING`>>::
+<<fblangref-sectables-db_creators>>::
+Список пользователей, которые могут создать новую базу данных.
+
+<<fblangref-sectables-global_auth_mapping>>::
 Сведения о глобальных отображениях.
 
-<<fblangref-sectables-users,`SEC$USERS`>>::
+<<fblangref-sectables-users>>::
 Список пользователей в текущей базе данных безопасности.
 
-<<fblangref-sectables-user_attributes,`SEC$USER_ATTRIBUTES`>>::
+<<fblangref-sectables-user_attributes>>::
 Сведения о дополнительных атрибутах пользователей.
 
+[[fblangref-sectables-db_creators]]
+== `SEC$DB_CREATORS`
+
+Список пользователей, которые могут создать новую базу данных.
+
+.Описание столбцов таблицы `SEC$DB_CREATORS`
+[cols="<4m,<3m,<5", frame="all", options="header",stripes="none"]
+|===
+^| Наименование столбца
+^| Тип данных
+^| Описание
+
+|SEC$USER
+|CHAR(63) CHARACTER SET UTF8
+|Имя пользователя.
+
+|SEC$USER_TYPE
+|SMALLINT
+|Тип пользователя:
+
+8 -- пользователь; +
+13 -- роль.
+
+|===
 
 [[fblangref-sectables-global_auth_mapping]]
 == `SEC$GLOBAL_AUTH_MAPPING`
@@ -47,27 +72,27 @@
 ^| Описание
 
 |SEC$MAP_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя глобального отображения.
 
 |SEC$MAP_USING
-|CHAR(1)
+|CHAR(1) CHARACTER SET UTF8
 |Является ли аутентификация общесерверной (S) или обычной (P).
 
 |SEC$MAP_PLUGIN
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя плагина аутентификации, из которого происходит отображение.
 
 |SEC$MAP_DB
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя базы данных, в которой прошла аутентификация. Из неё происходит отображение.
 
 |SEC$MAP_FROM_TYPE
-|CHAR(63)
-|Тип объекта, который будет отображён. 
+|CHAR(63) CHARACTER SET UTF8
+|Тип объекта, который будет отображён.
 
 |SEC$MAP_FROM
-|CHAR(255)
+|CHAR(255) CHARACTER SET UTF8
 |Имя объекта, из которого будет произведено отображение.
 
 |SEC$MAP_TO_TYPE
@@ -80,7 +105,7 @@
 
 
 |SEC$MAP_TO
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Наименование объекта, в который будет произведено отображение
 (имя пользователя или роли).
 
@@ -92,10 +117,9 @@
 `0` -- определено пользователем; +
 `1` -- определено системой.
 
-
 |RDB$DESCRIPTION
-|BLOB TEXT
-|Произвольное текстовое описание порядка сортировки.
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
+|Текстовое описание отображения.
 |===
 
 [[fblangref-sectables-users]]
@@ -111,19 +135,19 @@
 ^| Описание
 
 |SEC$USER_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя пользователя.
 
 |SEC$FIRST_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Первое имя (имя).
 
 |SEC$MIDDLE_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Среднее имя (отчество).
 
 |SEC$LAST_NAME
-|VARCHAR(32)
+|VARCHAR(32) CHARACTER SET UTF8
 |Последнее имя (фамилия).
 
 |SEC$ACTIVE
@@ -136,13 +160,12 @@
 безопасности.
 
 |SEC$DESCRIPTION
-|BLOB TEXT
+|BLOB SUB_TYPE TEXT CHARACTER SET UTF8
 |Комментарий к пользователю.
 
 |SEC$PLUGIN
-|CHAR(63)
-|Имя плагина управления пользователями, с помощью которого был
-создан данный пользователь.
+|CHAR(63) CHARACTER SET UTF8
+|Имя плагина управления пользователями, с помощью которого был создан данный пользователь.
 |===
 
 [[fblangref-sectables-user_attributes]]
@@ -158,21 +181,20 @@
 ^| Описание
 
 |SEC$USER_NAME
-|CHAR(63)
+|CHAR(63) CHARACTER SET UTF8
 |Имя пользователя.
 
 |SEC$KEY
-|VARCHAR(63)
+|VARCHAR(63) CHARACTER SET UTF8
 |Имя атрибута.
 
 |SEC$VALUE
-|VARCHAR(255)
+|VARCHAR(255) CHARACTER SET UTF8
 |Значение атрибута.
 
 |SEC$PLUGIN
-|CHAR(63)
-|Имя плагина управления пользователями, с помощью которого был
-создан данный пользователь.
+|CHAR(63) CHARACTER SET UTF8
+|Имя плагина управления пользователями, с помощью которого был создан данный пользователь.
 |===
 
 
@@ -181,13 +203,16 @@
 ====
 [source,sql]
 ----
-SELECT CAST(U.SEC$USER_NAME AS CHAR(20)) AS LOGIN,
-    CAST(A.SEC$KEY AS CHAR(10)) AS TAG,
-    CAST(A.SEC$VALUE AS CHAR(20)) AS "VALUE",
-    U.SEC$PLUGIN AS "PLUGIN"
-FROM SEC$USERS U LEFT JOIN SEC$USER_ATTRIBUTES A
-    ON U.SEC$USER_NAME = A.SEC$USER_NAME
-   AND U.SEC$PLUGIN = A.SEC$PLUGIN;
+SELECT
+  CAST(U.SEC$USER_NAME AS CHAR(20)) AS LOGIN,
+  CAST(A.SEC$KEY AS CHAR(10)) AS TAG,
+  CAST(A.SEC$VALUE AS CHAR(20)) AS "VALUE",
+  U.SEC$PLUGIN AS "PLUGIN"
+FROM
+  SEC$USERS U
+  LEFT JOIN SEC$USER_ATTRIBUTES A
+       ON U.SEC$USER_NAME = A.SEC$USER_NAME
+      AND U.SEC$PLUGIN = A.SEC$PLUGIN;
 ----
 
 [listing]
