@@ -152,8 +152,7 @@
 
 |SEC$ADMIN
 |BOOLEAN
-|Отражает, имеет ли пользователь права `RDB$ADMIN` в базе данных
-безопасности.
+|Отражает, имеет ли пользователь права `RDB$ADMIN` в базе данных безопасности.
 
 |SEC$DESCRIPTION
 |BLOB SUB_TYPE TEXT CHARACTER SET UTF8
