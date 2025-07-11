@@ -389,7 +389,7 @@
 
 |RDB$CONFIG_NAME
 |VARCHAR(63) CHARACTER SET ASCII
-|Наименование параметра, например "`DefaultDbCachePages`", "`TempCacheLimit`" и т. д.
+|Наименование параметра, например `DefaultDbCachePages`, `TempCacheLimit` и т. д.
 
 |RDB$CONFIG_VALUE
 |VARCHAR(255) CHARACTER SET UTF8
@@ -405,7 +405,7 @@
 
 |RDB$CONFIG_SOURCE
 |VARCHAR(255) CHARACTER SET UTF8
-|Имя конфигурационного файла, в котором был задан параметр, относительно корневой папки firebird, например: "`firebird.conf`", "`databases.conf`" или специальное значение "`DPB`", если параметр был установлен в DPB, если значение параметра не было задано, то это поле содержит `NULL`.
+|Имя конфигурационного файла, в котором был задан параметр, относительно корневой папки firebird, например: `firebird.conf`, `databases.conf` или специальное значение "`DPB`", если параметр был установлен в DPB, если значение параметра не было задано, то это поле содержит `NULL`.
 |===
 
 [[fblangref-systables-database]]
