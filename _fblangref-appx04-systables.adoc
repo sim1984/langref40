@@ -2406,7 +2406,7 @@ M -- membership (членство).
 
 |RDB$GRANT_OPTION
 |SMALLINT
-|Содержит ли полномочие `WITH {GRANT | ADMIN} OPTION`:
+|Содержит ли полномочие `WITH {GRANT \| ADMIN} OPTION`:
 
 0 - не содержит; +
 1 - WITH GRANT OPTION; +
