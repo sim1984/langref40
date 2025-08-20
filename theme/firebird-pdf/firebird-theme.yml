@@ -32,13 +32,13 @@ firebird:
     light_yellow: '#FFFFEC'
 link:
   font_color: $firebird_color_darkblue
-literal:
-  font_color: null
+codespan:
+  font_color: '#000000'
 heading:
   font_family: Noto Sans
   font_color: $firebird_color_blue
 title_page:
-  align: center 
+  align: center
   logo_image: image:./images/firebird_logo_400x400.png[pdfwidth=25%,align=center]
   title:
     font_family: Noto Sans
@@ -81,4 +81,3 @@ footer:
 admonition:
   caption:
     font_style: bold
-    
