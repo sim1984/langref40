@@ -7,7 +7,12 @@
     "editor.rulers": [120],
     "editor.tabSize": 4,
     "cSpell.language": "ru,en",
-    "cSpell.maxNumberOfProblems": 5000,
+    "cSpell.maxNumberOfProblems": 10000,
     "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    "cSpell.words": [
+        "DATEADD", "DATEDIFF", "DECFLOAT",
+		"LPAD", "PSQL", "RPAD", "TRUNC", "SAVEPOINT", "SMALLINT",
+        "VARBINARY", "VARCHAR"
+    ]
 }

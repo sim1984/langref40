@@ -22,7 +22,7 @@ include::../../attributes-ru.adoc[]
 :fb-full-version: 4.0.6
 :secdb: security4.fdb
 
-Авторские права (C) 2017-2025 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0].
+Авторские права (C) 2017-2026 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0]. +
 Пожалуйста, обратитесь к <<fblangref-license,License Notice in the Appendix>>
 
 toc::[]
@@ -57,23 +57,25 @@ include::_fblangref-security.adoc[leveloffset=1]
 
 include::_fblangref-management.adoc[leveloffset=1]
 
-include::_fblangref-appx01-supplement.adoc[leveloffset=1]
+include::appx/_fblangref-appx01-supplement.adoc[leveloffset=1]
 
-include::_fblangref-appx02-errorcodes.adoc[leveloffset=1]
+include::appx/_fblangref-appx02-errorcodes.adoc[leveloffset=1]
 
-include::_fblangref-appx03-reskeywords.adoc[leveloffset=1]
+include::appx/_fblangref-appx03-reskeywords.adoc[leveloffset=1]
 
-include::_fblangref-appx04-systables.adoc[leveloffset=1]
+include::appx/_fblangref-appx04-systables.adoc[leveloffset=1]
 
-include::_fblangref-appx05-montables.adoc[leveloffset=1]
+include::appx/_fblangref-appx05-montables.adoc[leveloffset=1]
 
-include::_fblangref-appx06-sectables.adoc[leveloffset=1]
+include::appx/_fblangref-appx06-sectables.adoc[leveloffset=1]
 
-include::_fblangref-appx07-plgtables.adoc[leveloffset=1]
+include::appx/_fblangref-appx07-plgtables.adoc[leveloffset=1]
 
-include::_fblangref-appx08-charsets.adoc[leveloffset=1]
+include::appx/_fblangref-appx08-charsets.adoc[leveloffset=1]
 
-include::_fblangref-appx09-license.adoc[leveloffset=1]
+include::appx/_fblangref-appx09-limits.adoc[leveloffset=1]
+
+include::appx/_fblangref-appx10-license.adoc[leveloffset=1]
 
 ifndef::backend-html5[]
 [index]
