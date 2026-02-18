@@ -12,7 +12,10 @@
     "files.insertFinalNewline": true,
     "cSpell.words": [
         "DATEADD", "DATEDIFF", "DECFLOAT",
-		"LPAD", "PSQL", "RPAD", "TRUNC", "SAVEPOINT", "SMALLINT",
+        "GDSCODE",
+		"LOCALTIME", "LOCALTIMESTAMP",
+        "LPAD", "PSQL", "RPAD", "TRUNC",
+        "SAVEPOINT", "SMALLINT", "SQLCODE", "SQLSTATE",
         "VARBINARY", "VARCHAR"
     ]
 }
