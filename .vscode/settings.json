@@ -16,6 +16,7 @@
 		"LOCALTIME", "LOCALTIMESTAMP",
         "LPAD", "PSQL", "RPAD", "TRUNC",
         "SAVEPOINT", "SMALLINT", "SQLCODE", "SQLSTATE",
-        "VARBINARY", "VARCHAR"
+        "VARBINARY", "VARCHAR",
+        "подзапрос", "подзапроса", "подзапросов", "подзапросом", "подзапросы", "подзапросами"
     ]
 }
