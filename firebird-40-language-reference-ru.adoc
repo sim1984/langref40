@@ -1,7 +1,7 @@
 [[fblangref]]
 = Руководство по языку SQL СУБД Firebird 4.0
 Дмитрий Филиппов; Александр Карпейкин; Алексей Ковязин; Дмитрий Кузьменко; Денис Симонов; Paul Vinkenoog; Дмитрий Еманов; Mark Rotteveel
-1.0.17, от 08.03.2026
+1.0.18, от 17.04.2026
 :doctype: book
 :lang: ru
 :sectnums:
@@ -19,7 +19,7 @@ ifdef::backend-html5[]
 :source-highlighter: highlight.js
 endif::[]
 include::../../attributes-ru.adoc[]
-:fb-full-version: 4.0.6
+:fb-full-version: 4.0.7
 :secdb: security4.fdb
 
 Авторские права (C) 2017-2026 Firebird Project и всех участвующих авторов на https://www.firebirdsql.org/manual/pdl.html[Public Documentation License Version 1.0]. +
