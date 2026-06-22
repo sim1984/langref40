@@ -5536,9 +5536,8 @@ RDB$SYSTEM_PRIVILEGE (<privilege>)
 .Тип возвращаемого результата
 `BOOLEAN`
 
-Функция `RDB$SYSTEM_PRIVILEGE` используется системная привилегия текущим соединением.
-Список системных привилегий см.
-в <<fblangref-security-roles-create,CREATE ROLE>>.
+Функция `RDB$SYSTEM_PRIVILEGE` возвращает `TRUE`, если системная привилегия используется текущим соединением, в противном случае -- `FALSE`. +
+Список системных привилегий см. в <<fblangref-security-roles-create,CREATE ROLE>>.
 
 .Использование функции `RDB$SYSTEM_PRIVILEGE`
 [example]
